@@ -1,7 +1,8 @@
 {
   "author": "Karel Ledru-Mathe",
+  "description": "Command Line tool for i18next",
   "name": "i18next-parser",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "bin": {
     "i18next": "index.js"
   },

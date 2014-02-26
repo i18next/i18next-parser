@@ -38,8 +38,7 @@ var Parser = require('./src/parser');
 var helpers = require('./src/helpers');
 
 var parser = Parser({
-    defaultNamespace: program.namespace,
-    functions
+    defaultNamespace: program.namespace
 });
 var stat = fs.statSync(file)
 var translations = {}
