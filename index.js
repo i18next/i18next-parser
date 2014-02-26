@@ -1,12 +1,18 @@
 #!/usr/bin/env node
 
 var _           = require('lodash');
+var colors      = require('colors');
 var program     = require('commander');
 var path        = require('path');
 var fs          = require('fs');
 var mkdirp      = require('mkdirp');
 var readdirp    = require('readdirp');
 var concat      = require('concat-stream');
+
+var FileBuffer = require('./src/FileBuffer');
+var Parser = require('./src/Parser');
+var helpers = require('./src/helpers');
+
 
 
 // CONFIG THE PROGRAM
@@ -32,19 +38,31 @@ program.locales = program.locales.split(',')
 program.functions = program.functions.split(',')
 
 
-// RUN THE PROGRAM
-// ===============
-var isFile = require('./src/isFile');
-var Parser = require('./src/parser');
-var helpers = require('./src/helpers');
 
+// CONFIG THE STREAM TRANSFORMS
+// ============================
+var bufferize = FileBuffer();
 var parser = Parser({
     defaultNamespace: program.namespace,
     functions: program.functions,
     regex: program.parser
 });
+
+
+
+// RUN THE PROGRAM
+// ===============
 var stat = fs.statSync(file)
 var translations = {}
+
+
+var intro = "\n"+
+"i18next Parser".yellow + "\n" + 
+"--------------".yellow + "\n" +
+"Target: ".green + file + "\n" +
+"Output: ".green + program.output + "\n\n";
+console.log(intro);
+
 
 if ( stat.isDirectory() ) {
     if (program.recursive) {
@@ -57,10 +75,11 @@ if ( stat.isDirectory() ) {
 }
 else {
     stream = fs.createReadStream( file, {encoding: 'utf8'} )
+    console.log("[parse] ".green + file);
 }
 
 stream
-    .pipe(isFile)
+    .pipe(bufferize)
     .pipe(parser)
     .pipe(concat(function(data) {
         data = _.uniq(data);

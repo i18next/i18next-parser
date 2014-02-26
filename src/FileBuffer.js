@@ -3,17 +3,18 @@ var util = require('util');
 var fs = require('fs');
 
 
-function IsFile(options) {
+function FileBuffer(options) {
     options = options || {};
     options.objectMode = true;
     Transform.call(this, options);
 }
-util.inherits(IsFile, Transform);
+util.inherits(FileBuffer, Transform);
 
-IsFile.prototype._transform = function(data, encoding, done) {
+FileBuffer.prototype._transform = function(data, encoding, done) {
 
     // Make sure it is a buffer
     if ( ! Buffer.isBuffer(data) && data.fullPath ) {
+        console.log("[parse] ".green + data.fullPath);
         data = fs.readFileSync(data.fullPath);
     }
 
@@ -21,4 +22,6 @@ IsFile.prototype._transform = function(data, encoding, done) {
     done();
 };
 
-module.exports = new IsFile();
+module.exports = function(options) {
+    return new FileBuffer(options);
+}
