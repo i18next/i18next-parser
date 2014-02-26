@@ -8,12 +8,19 @@ function Parser(options, transformConfig) {
     Transform.call(this, transformConfig);
 
     this.defaultNamespace = options.defaultNamespace;
+    this.functions = options.functions;
+    this.regex = options.regex;
 }
 util.inherits(Parser, Transform);
 
 Parser.prototype._transform = function(data, encoding, done) {
 
-    matches = data.toString().match(/t\(\s*(('((\\')?[^']+)+[^\\]')|("((\\")?[^"]+)+[^\\]"))/g) || []
+    fnPattern = '(' + this.functions.join(')|(').replace('.', '\\.') + ')'
+    pattern = '[^a-zA-Z0-9]('+fnPattern+')(\\(|\\s)\\s*((\'((\\\\\')?[^\']+)+[^\\\\]\')|("((\\\\")?[^"]+)+[^\\\\]"))'
+    regex = new RegExp( this.regex || pattern, 'g' )
+    this.functions
+
+    matches = data.toString().match(regex) || []
     self = this
     if (matches && matches.length) {
         matches = matches.map(function(match) {

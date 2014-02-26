@@ -83,9 +83,42 @@ locales/en/my_default_namespace.json
 ...
 ```
 
+**Change the translation functions**
+
+`i18next /path/to/file/or/dir -f __,_e`
+
+This will parse any of the following function calls in your code and extract the key:
+
+```
+__('key'
+__ 'key'
+__("key"
+__ "key"
+_e('key'
+_e 'key'
+_e("key"
+_e "key"
+```
+
+Note1: we don't match the closing parenthesis as you may want to pass arguments to your translation function.
+
+Note2: the parser is smart about escaped single or double quotes you may have in your key.
+
+**Change the regex**
+
+`i18next /path/to/file/or/dir -r "(.*)"`
+
+You must pass the regex as a string. That means that you will have to properly escape it.
+
+The regex used by default is:
+
+`/[^a-zA-Z0-9]((t)|(i18n\.t))(\(|\s)\s*(('((\\')?[^']+)+[^\\]')|("((\\")?[^"]+)+[^\\]"))/g`
+
+
 ---
 
 ## Next
 
-- Parse more patterns
+- Make the program output something
+- file filter pattern to pass to readdirp
 - Gulp plugin
