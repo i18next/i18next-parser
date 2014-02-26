@@ -18,15 +18,14 @@ npm install i18next-parser -g
 
 ## Usage
 
-`i18next /path/to/file/or/dir [-orfnl]`
+`i18next /path/to/file/or/dir [-orpfnl]`
 
-## Options
-
-- **-o, --output**: Where to write the locale files.
+- **-o, --output <directory>**: Where to write the locale files.
 - **-r, --recursive**: Is --output is a directory, parses files in sub directories.
-- **-f, --function**: Function names to parse
-- **-n, --namespace**: Default namespace in i18next. Defaults to `translation`
-- **-l, --locales**: The locales in your applications. Defaults to `en,fr`
+- **-f, --function <list>**: Function names to parse. Defaults to `t,i18n.t`
+- **-p, --parser <string>**: A custom regex for the parser to use.
+- **-n, --namespace <string>**: Default namespace in i18next. Defaults to `translation`
+- **-l, --locales <list>**: The locales in your applications. Defaults to `en,fr`
 
 ---
 

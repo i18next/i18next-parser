@@ -12,12 +12,13 @@ var concat      = require('concat-stream');
 // CONFIG THE PROGRAM
 // ==================
 program
-  .version('0.0.1')
-  .option('-o, --output [directory]', 'The directory to output parsed keys', path.resolve(__dirname, 'locales'))
-  .option('-r, --recursive', 'Parse sub directories')
-  .option('-f, --function', 'The funciton names to parse in your code')
-  .option('-n, --namespace [string]', 'The default namespace (translation by default)', 'translation')
-  .option('-l, --locales [array]', 'The locales in your application', 'en,fr')
+  .version('0.0.3')
+  .option('-r, --recursive'           , 'Parse sub directories')
+  .option('-p, --parser <string>'     , 'A custom regex to use to parse your code')
+  .option('-o, --output <directory>'  , 'The directory to output parsed keys'             , path.resolve(__dirname, 'locales'))
+  .option('-f, --functions <list>'    , 'The function names to parse in your code'        , 't,i18n.t')
+  .option('-n, --namespace <string>'  , 'The default namespace (translation by default)'  , 'translation')
+  .option('-l, --locales <list>'      , 'The locales in your application'                 , 'en,fr')
   .parse(process.argv);
 
 if (process.argv[2]) {
@@ -28,7 +29,7 @@ else {
 }
 
 program.locales = program.locales.split(',')
-
+program.functions = program.functions.split(',')
 
 
 // RUN THE PROGRAM
@@ -38,7 +39,9 @@ var Parser = require('./src/parser');
 var helpers = require('./src/helpers');
 
 var parser = Parser({
-    defaultNamespace: program.namespace
+    defaultNamespace: program.namespace,
+    functions: program.functions,
+    regex: program.parser
 });
 var stat = fs.statSync(file)
 var translations = {}
