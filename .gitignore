@@ -1,0 +1,26 @@
+# Folder view configuration files
+.DS_Store
+Desktop.ini
+
+# Thumbnail cache files
+._*
+Thumbs.db
+
+# Files that might appear on external disks
+.Spotlight-V100
+.Trashes
+
+# mount files
+.apdisk
+.fseventsd
+
+# Editor files
+*.sublime-*
+*.swp
+/sftp-config.json
+
+# node files
+node_modules/
+npm-debug.log
+
+# project files

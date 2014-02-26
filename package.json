@@ -1,0 +1,25 @@
+{
+  "author": "Karel Ledru-Mathe",
+  "name": "i18next-parser",
+  "version": "0.0.1",
+  "bin": {
+    "i18next": "index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/karellm/i18next-parser"
+  },
+  "dependencies": {
+    "lodash": "~2.4.1",
+    "readdirp": "~0.3.3",
+    "concat-stream": "~1.4.1",
+    "commander": "~2.1.0",
+    "mkdirp": "~0.3.5"
+  },
+  "engines": {
+    "node": ">=0.10.22"
+  },
+  "devDependencies": {
+    "tap": "~0.4.8"
+  }
+}
