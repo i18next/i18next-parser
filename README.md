@@ -1,12 +1,12 @@
 # i18next Parser
 
-A simple command line that lets you parse a directory and extract the translations keys from it.
+A simple command line that lets you parse your code and extract the translations keys in it.
 
 ## Features
 
-- Parse a single file or a directory (recursively or not)
-- Write the one json file per locale and per namespace
-- Remove old keys your code doesn't use anymore and place them in a file `namespace_old.json`.
+- Parses a single file or a directory (recursively or not)
+- Creates one json file per locale and per namespace.
+- Remove old keys your code doesn't use anymore and place them in a `namespace_old.json` file. It is usefull to avoid losing translations you may want to reuse.
 
 ## Installation
 
