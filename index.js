@@ -69,8 +69,7 @@ if ( stat.isDirectory() ) {
         stream = readdirp( { root: file } )
     }
     else {
-        // TODO NOT RECURSIVE
-        stream = readdirp( { root: file } )
+        stream = readdirp( { root: file, depth: 0 } )
     }    
 }
 else {
