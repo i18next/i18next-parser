@@ -25,6 +25,8 @@ program
   .option('-f, --functions <list>'    , 'The function names to parse in your code'        , 't,i18n.t')
   .option('-n, --namespace <string>'  , 'The default namespace (translation by default)'  , 'translation')
   .option('-l, --locales <list>'      , 'The locales in your application'                 , 'en,fr')
+  .option('--directoryFilter <list>'  , 'Filter directories')
+  .option('--fileFilter <list>'       , 'Filter files')
   .parse(process.argv);
 
 if (process.argv[2]) {
@@ -65,11 +67,20 @@ console.log(intro);
 
 
 if ( stat.isDirectory() ) {
+    args = { root: file }
+    if( program.directoryFilter ) {
+        args.directoryFilter = program.directoryFilter.split(',');
+    }
+    if( program.fileFilter ) {
+        args.fileFilter = program.fileFilter.split(',');
+    }
+
     if (program.recursive) {
-        stream = readdirp( { root: file } )
+        stream = readdirp( args );
     }
     else {
-        stream = readdirp( { root: file, depth: 0 } )
+        args.depth = 0;
+        stream = readdirp( args );
     }    
 }
 else {

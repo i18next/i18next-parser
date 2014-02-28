@@ -83,6 +83,12 @@ locales/en/my_default_namespace.json
 ...
 ```
 
+**Filter files and folders**
+
+`i18next /path/to/file/or/dir -filterFolder *.hbs,*.js -filterFolder !.git`
+
+In recursive mode, it will parse `*.hbs` and `*.js` files and skip `.git` folder. This options is passed to readdirp. To learn more, read [their documentation](https://github.com/thlorenz/readdirp#filters).
+
 **Change the translation functions**
 
 `i18next /path/to/file/or/dir -f __,_e`
@@ -119,6 +125,4 @@ The regex used by default is:
 
 ## Next
 
-- Make the program output something
-- file filter pattern to pass to readdirp
 - Gulp plugin
