@@ -7,9 +7,9 @@ var path        = require('path');
 var fs          = require('fs');
 var mkdirp      = require('mkdirp');
 var readdirp    = require('readdirp');
+var through2    = require('through2');
 var concat      = require('concat-stream');
 
-var FileBuffer = require('./src/FileBuffer');
 var Parser = require('./src/Parser');
 var helpers = require('./src/helpers');
 
@@ -43,7 +43,6 @@ program.functions = program.functions.split(',')
 
 // CONFIG THE STREAM TRANSFORMS
 // ============================
-var bufferize = FileBuffer();
 var parser = Parser({
     defaultNamespace: program.namespace,
     functions: program.functions,
@@ -89,7 +88,16 @@ else {
 }
 
 stream
-    .pipe(bufferize)
+    .pipe(through2( { objectMode: true }, function (data, encoding, done) {
+        // process readdirp stream
+        if ( ! Buffer.isBuffer(data) && data.fullPath ) {
+            console.log("[parse] ".green + data.fullPath);
+            data = fs.readFileSync(data.fullPath);
+        }
+
+        this.push( data );
+        done();
+    }) )
     .pipe(parser)
     .pipe(concat(function(data) {
         data = _.uniq(data);
