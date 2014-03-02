@@ -8,9 +8,11 @@ var File        = require('vinyl');
 var path        = require('path');
 var _           = require('lodash');
 
-const PLUGIN_NAME = 'gulp-i18next';
+const PLUGIN_NAME = 'i18next-parser';
 
 function Parser(options, transformConfig) {
+    self = this
+
     this.defaultNamespace = options.namespace || 'translation';
     this.functions = options.functions || ['t', 'i18n.t'];
     this.locales = options.locales || ['en','fr'];
@@ -18,7 +20,11 @@ function Parser(options, transformConfig) {
     this.regex = options.parser;
     this.translations = [];
 
-    ['']
+    ['functions', 'locales'].forEach(function( attr ) {
+        if ( (typeof self[ attr ] !== 'object') || ! self[ attr ].length ) {
+            throw new PluginError(PLUGIN_NAME, '`'+attr+'` must be an array');
+        }
+    });
 
     transformConfig = transformConfig || {};
     transformConfig.objectMode = true;
