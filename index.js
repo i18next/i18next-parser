@@ -1,140 +1,143 @@
-#!/usr/bin/env node
-
-var _           = require('lodash');
-var colors      = require('colors');
-var program     = require('commander');
-var path        = require('path');
+var gutil       = require('gulp-util');
+var PluginError = gutil.PluginError;
+var Transform   = require('stream').Transform;
+var util        = require('util');
+var helpers     = require('./src/helpers');
 var fs          = require('fs');
-var mkdirp      = require('mkdirp');
-var readdirp    = require('readdirp');
-var through2    = require('through2');
-var concat      = require('concat-stream');
+var File        = require('vinyl');
+var path        = require('path');
+var _           = require('lodash');
 
-var Parser = require('./src/Parser');
-var helpers = require('./src/helpers');
+const PLUGIN_NAME = 'gulp-i18next';
 
+function Parser(options, transformConfig) {
+    this.defaultNamespace = options.namespace || 'translation';
+    this.functions = options.functions || ['t', 'i18n.t'];
+    this.locales = options.locales || ['en','fr'];
+    this.output = options.output || 'locales';
+    this.regex = options.parser;
+    this.translations = [];
 
+    ['']
 
-// CONFIG THE PROGRAM
-// ==================
-program
-  .version('0.0.3')
-  .option('-r, --recursive'           , 'Parse sub directories')
-  .option('-p, --parser <string>'     , 'A custom regex to use to parse your code')
-  .option('-o, --output <directory>'  , 'The directory to output parsed keys'             , path.resolve(__dirname, 'locales'))
-  .option('-f, --functions <list>'    , 'The function names to parse in your code'        , 't,i18n.t')
-  .option('-n, --namespace <string>'  , 'The default namespace (translation by default)'  , 'translation')
-  .option('-l, --locales <list>'      , 'The locales in your application'                 , 'en,fr')
-  .option('--directoryFilter <list>'  , 'Filter directories')
-  .option('--fileFilter <list>'       , 'Filter files')
-  .parse(process.argv);
-
-if (process.argv[2]) {
-    file = path.resolve(__dirname, process.argv[2]);
+    transformConfig = transformConfig || {};
+    transformConfig.objectMode = true;
+    Transform.call(this, transformConfig);
 }
-else {
-    file = __dirname;
-}
+util.inherits(Parser, Transform);
 
-program.locales = program.locales.split(',')
-program.functions = program.functions.split(',')
+Parser.prototype._transform = function(file, encoding, done) {
 
-
-
-// CONFIG THE STREAM TRANSFORMS
-// ============================
-var parser = Parser({
-    defaultNamespace: program.namespace,
-    functions: program.functions,
-    regex: program.parser
-});
-
-
-
-// RUN THE PROGRAM
-// ===============
-var stat = fs.statSync(file)
-var translations = {}
-
-
-var intro = "\n"+
-"i18next Parser".yellow + "\n" + 
-"--------------".yellow + "\n" +
-"Target: ".green + file + "\n" +
-"Output: ".green + program.output + "\n\n";
-console.log(intro);
-
-
-if ( stat.isDirectory() ) {
-    args = { root: file }
-    if( program.directoryFilter ) {
-        args.directoryFilter = program.directoryFilter.split(',');
-    }
-    if( program.fileFilter ) {
-        args.fileFilter = program.fileFilter.split(',');
+    if (file.isStream()) {
+        this.emit( 'error', new PluginError( PLUGIN_NAME, 'Streams not supported' ) );
+        return done();
     }
 
-    if (program.recursive) {
-        stream = readdirp( args );
-    }
-    else {
-        args.depth = 0;
-        stream = readdirp( args );
-    }    
-}
-else {
-    stream = fs.createReadStream( file, {encoding: 'utf8'} )
-    console.log("[parse] ".green + file);
-}
-
-stream
-    .pipe(through2( { objectMode: true }, function (data, encoding, done) {
-        // process readdirp stream
-        if ( ! Buffer.isBuffer(data) && data.fullPath ) {
-            console.log("[parse] ".green + data.fullPath);
-            data = fs.readFileSync(data.fullPath);
+    if(file.isNull()) {
+        if ( file.path && fs.existsSync( file.path ) ) {
+            data = fs.readFileSync( file.path );
         }
-
-        this.push( data );
-        done();
-    }) )
-    .pipe(parser)
-    .pipe(concat(function(data) {
-        data = _.uniq(data);
-
-        for (var index in data) {
-            key = data[index];
-            translations = helpers.hashFromString(key, translations)
+        else {
+            this.emit( 'error', new PluginError( PLUGIN_NAME, 'File has no content and is not readable' ) );
+            return done();
         }
+    }
 
-        for (var i in program.locales) {
-            locale = program.locales[i]
+    if(file.isBuffer()) {
+        // nothing to do
+    }
 
-            for (var namespace in translations) {
-                namespaceFile = path.resolve( program.output, locale, namespace+'.json' )
-                namespaceOldFile = path.resolve( program.output, locale, namespace+'_old.json' )
+    this.base = this.base || file.base;
 
-                if ( fs.existsSync(namespaceFile) ) {
-                    currentTranslations = JSON.parse( fs.readFileSync( namespaceFile ) );
-                }
-                else {
-                    currentTranslations = {}
-                }
+    this.emit( 'parsing', file.path );
 
-                if ( fs.existsSync(namespaceOldFile) ) {
-                    oldTranslations = JSON.parse( fs.readFileSync( namespaceOldFile ) );
-                }
-                else {
-                    oldTranslations = {}
-                }
+    fnPattern = this.functions.join( ')|(' ).replace( '.', '\\.' )
+    fnPattern = '(' + fnPattern + ')'
+    pattern = '[^a-zA-Z0-9]('+fnPattern+')(\\(|\\s)\\s*((\'((\\\\\')?[^\']+)+[^\\\\]\')|("((\\\\")?[^"]+)+[^\\\\]"))'
+    regex = new RegExp( this.regex || pattern, 'g' )
 
-                merged = helpers.mergeHash(currentTranslations, translations[namespace]);
-                mergedOldTranslations = _.extend( oldTranslations, merged['old'] )
+    matches = data.toString().match( regex ) || []
+    self = this
+    if ( matches && matches.length ) {
+        matches = matches.forEach(function( match ) {
+            match = match.substring( 4, match.length-1 );
 
-                mkdirp.sync( path.resolve( program.output, locale) )
-
-                fs.writeFileSync( namespaceFile, JSON.stringify( merged['new'], null, 2 ) )
-                fs.writeFileSync( namespaceOldFile, JSON.stringify( mergedOldTranslations, null, 2 ) )
+            // Ensure there is a namespace
+            if ( match.indexOf( ':' ) == -1 ) {
+                match = self.defaultNamespace + '.' + match
             }
+            else {
+                match = match.replace( ':', '.' );
+            }
+
+            self.translations.push( match );
+        });
+    }
+
+    done();
+};
+
+Parser.prototype._flush = function(done) {
+
+    var self = this;
+    var translationsHash = {};
+
+    self.translations = _.uniq( self.translations );
+
+    for (var index in self.translations) {
+        key = self.translations[index];
+        translationsHash = helpers.hashFromString( key, translationsHash );
+    }
+
+    var base = path.resolve( self.base, self.output );
+
+    for (var i in self.locales) {
+        var locale = self.locales[i];
+
+        var localeBase = path.resolve( self.base, self.output, locale );
+
+        for (var namespace in translationsHash) {
+
+            var namespacePath = path.resolve( localeBase, namespace + '.json' );
+            var namespaceOldPath = path.resolve( localeBase, namespace + '_old.json' );
+
+            if ( fs.existsSync( namespacePath ) ) {
+                currentTranslations = JSON.parse( fs.readFileSync( namespacePath ) );
+            }
+            else {
+                currentTranslations = {}
+            }
+
+            if ( fs.existsSync( namespaceOldPath ) ) {
+                oldTranslations = JSON.parse( fs.readFileSync( namespaceOldPath ) );
+            }
+            else {
+                oldTranslations = {}
+            }
+
+            mergedTranslations = helpers.mergeHash( currentTranslations, translationsHash[namespace] );
+            mergedTranslations['old'] = _.extend( oldTranslations, mergedTranslations['old'] );
+
+            mergedTranslationsFile = new File({
+              path: namespacePath,
+              base: base,
+              contents: new Buffer( JSON.stringify( mergedTranslations['new'], null, 2 ) )
+            });
+
+            mergedOldTranslationsFile = new File({
+              path: namespaceOldPath,
+              base: base,
+              contents: new Buffer( JSON.stringify( mergedTranslations['old'], null, 2 ) )
+            });
+
+            self.push( mergedTranslationsFile );
+            self.push( mergedOldTranslationsFile );
         }
-    }));
+    }
+
+    done();
+};
+
+module.exports = function(options, transformConfig) {
+    return new Parser(options, transformConfig);
+};

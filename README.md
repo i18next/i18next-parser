@@ -4,6 +4,7 @@ A simple command line that lets you parse your code and extract the translations
 
 ## Features
 
+- Is a stream transform (so it works with gulp)
 - Parses a single file or a directory (recursively or not)
 - Creates one json file per locale and per namespace.
 - Remove old keys your code doesn't use anymore and place them in a `namespace_old.json` file. It is usefull to avoid losing translations you may want to reuse.
@@ -120,9 +121,3 @@ The regex used by default is:
 
 `/[^a-zA-Z0-9]((t)|(i18n\.t))(\(|\s)\s*(('((\\')?[^']+)+[^\\]')|("((\\")?[^"]+)+[^\\]"))/g`
 
-
----
-
-## Next
-
-- Gulp plugin
