@@ -2,7 +2,7 @@
   "author": "Karel Ledru-Mathe",
   "description": "Command Line tool for i18next",
   "name": "i18next-parser",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "bin": {
     "i18next": "./bin/cli.js"
   },
@@ -10,9 +10,6 @@
     "type": "git",
     "url": "https://github.com/karellm/i18next-parser"
   },
-  "files": [
-    "index.js"
-  ],
   "dependencies": {
     "lodash": "~2.4.1",
     "readdirp": "~0.3.3",
