@@ -51,27 +51,24 @@ Parser.prototype._transform = function(file, encoding, done) {
 
     this.emit( 'parsing', file.path );
 
-    fnPattern = this.functions.join( ')|(' ).replace( '.', '\\.' )
-    fnPattern = '(' + fnPattern + ')'
-    pattern = '[^a-zA-Z0-9]('+fnPattern+')(\\(|\\s)\\s*((\'((\\\\\')?[^\']+)+[^\\\\]\')|("((\\\\")?[^"]+)+[^\\\\]"))'
+    fnPattern = this.functions.join( ')|(?:' ).replace( '.', '\\.' )
+    fnPattern = '(?:' + fnPattern + ')'
+    pattern = '[^a-zA-Z0-9](?:'+fnPattern+')(?:\\(|\\s)\\s*(?:(?:\'((?:(?:\\\\\')?[^\']+)+[^\\\\])\')|(?:"((?:(?:\\\\")?[^"]+)+[^\\\\])"))'
     regex = new RegExp( this.regex || pattern, 'g' )
 
-    matches = data.toString().match( regex ) || []
+    matches = regex.exec( data.toString() ) || []
     self = this
     if ( matches && matches.length ) {
-        matches = matches.forEach(function( match ) {
-            match = match.substring( 4, match.length-1 );
+        match = matches[1] || matches[2];
+        
+        if ( match.indexOf( ':' ) == -1 ) {
+            match = self.defaultNamespace + '.' + match
+        }
+        else {
+            match = match.replace( ':', '.' );
+        }
 
-            // Ensure there is a namespace
-            if ( match.indexOf( ':' ) == -1 ) {
-                match = self.defaultNamespace + '.' + match
-            }
-            else {
-                match = match.replace( ':', '.' );
-            }
-
-            self.translations.push( match );
-        });
+        self.translations.push( match );
     }
 
     done();

@@ -119,5 +119,5 @@ You must pass the regex as a string. That means that you will have to properly e
 
 The regex used by default is:
 
-`/[^a-zA-Z0-9]((t)|(i18n\.t))(\(|\s)\s*(('((\\')?[^']+)+[^\\]')|("((\\")?[^"]+)+[^\\]"))/g`
+`/[^a-zA-Z0-9](?:(?:t)|(?:i18n\.t))(?:\(|\s)\s*(?:(?:'((?:(?:\\')?[^']+)+[^\\])')|(?:"((?:(?:\\")?[^"]+)+[^\\])"))/g`
 
