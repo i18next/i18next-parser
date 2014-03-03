@@ -14,7 +14,7 @@ function Parser(options, transformConfig) {
     self = this
 
     this.defaultNamespace = options.namespace || 'translation';
-    this.functions = options.functions || ['t', 'i18n.t'];
+    this.functions = options.functions || ['t'];
     this.locales = options.locales || ['en','fr'];
     this.output = options.output || 'locales';
     this.regex = options.parser;
