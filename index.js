@@ -62,9 +62,10 @@ Parser.prototype._transform = function(file, encoding, done) {
     pattern = '[^a-zA-Z0-9](?:'+fnPattern+')(?:\\(|\\s)\\s*(?:(?:\'((?:(?:\\\\\')?[^\']+)+[^\\\\])\')|(?:"((?:(?:\\\\")?[^"]+)+[^\\\\])"))'
     regex = new RegExp( this.regex || pattern, 'g' )
 
-    matches = regex.exec( data.toString() ) || []
+    fileContent = data.toString()
     self = this
-    if ( matches && matches.length ) {
+
+    while ( matches = regex.exec( fileContent ) ) {
         match = matches[1] || matches[2];
         
         if ( match.indexOf( ':' ) == -1 ) {
@@ -75,6 +76,7 @@ Parser.prototype._transform = function(file, encoding, done) {
         }
 
         self.translations.push( match );
+        
     }
 
     done();
