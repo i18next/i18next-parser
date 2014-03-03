@@ -2,7 +2,7 @@
   "author": "Karel Ledru-Mathe",
   "description": "Command Line tool for i18next",
   "name": "i18next-parser",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "bin": {
     "i18next": "./bin/cli.js"
   },
@@ -27,5 +27,11 @@
   "devDependencies": {
     "mocha": "~1.17.1",
     "assert": "~1.1.1"
-  }
+  },
+  "keywords": [
+    "gulpplugin",
+    "i18next",
+    "parser",
+    "commandline"
+  ]
 }
