@@ -1,6 +1,6 @@
 # i18next Parser
 
-A simple command line that lets you parse your code and extract the translations keys in it.
+A simple command line and gulp plugin that lets you parse your code and extract the translations keys in it.
 
 ## Features
 
@@ -17,13 +17,32 @@ npm install i18next-parser -g
 
 ---
 
-## Usage
+## Gulp Usage
+
+```javascript
+var i18next = require('i18next-parser');
+
+gulp.task('i18next', function() {
+    gulp.src('app/**')
+        .pipe(i18next({locales: ['en', 'de'], functions: ['__', '_e']}))
+        .pipe(gulp.dest('locales'));
+});
+```
+
+- **functions**: An array of functions names to parse. Defaults to `['t']`
+- **namespace**: Default namespace in i18next. Defaults to `translation`
+- **locales**: An array of the locales in your applications. Defaults to `['en','fr']`
+- **regex**: A custom regex for the parser to use.
+
+---
+
+## CLI Usage
 
 `i18next /path/to/file/or/dir [-orpfnl]`
 
 - **-o, --output <directory>**: Where to write the locale files.
 - **-r, --recursive**: Is --output is a directory, parses files in sub directories.
-- **-f, --function <list>**: Function names to parse. Defaults to `t,i18n.t`
+- **-f, --function <list>**: Function names to parse. Defaults to `t`
 - **-p, --parser <string>**: A custom regex for the parser to use.
 - **-n, --namespace <string>**: Default namespace in i18next. Defaults to `translation`
 - **-l, --locales <list>**: The locales in your applications. Defaults to `en,fr`
@@ -121,3 +140,8 @@ The regex used by default is:
 
 `/[^a-zA-Z0-9](?:(?:t)|(?:i18n\.t))(?:\(|\s)\s*(?:(?:'((?:(?:\\')?[^']+)+[^\\])')|(?:"((?:(?:\\")?[^"]+)+[^\\])"))/g`
 
+---
+
+## Next
+
+- If a new translation key is added check if a translation is available in the old file
