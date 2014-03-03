@@ -12,6 +12,8 @@ const PLUGIN_NAME = 'i18next-parser';
 
 function Parser(options, transformConfig) {
     self = this
+    options = options || {}
+    transformConfig = transformConfig || {}
 
     this.defaultNamespace = options.namespace || 'translation';
     this.functions = options.functions || ['t'];
