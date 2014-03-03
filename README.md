@@ -15,6 +15,12 @@ A simple command line and gulp plugin that lets you parse your code and extract 
 npm install i18next-parser -g
 ```
 
+## Tests
+
+```
+mocha --reporter nyan test.js
+```
+
 ---
 
 ## Gulp Usage
