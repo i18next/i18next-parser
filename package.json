@@ -25,6 +25,7 @@
     "node": ">=0.10.22"
   },
   "devDependencies": {
-    "tap": "~0.4.8"
+    "mocha": "~1.17.1",
+    "assert": "~1.1.1"
   }
 }
