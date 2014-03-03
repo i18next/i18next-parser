@@ -99,6 +99,6 @@ stream
         mkdirp.sync( file.base );
         fs.writeFileSync( file.path, file.contents );
 
-        this.push( data );
+        this.push( file );
         done();
     }));
