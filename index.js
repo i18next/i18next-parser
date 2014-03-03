@@ -92,7 +92,7 @@ Parser.prototype._flush = function(done) {
     var self = this;
     var translationsHash = {};
 
-    self.translations = _.uniq( self.translations );
+    self.translations = _.uniq( self.translations ).sort();
 
     for (var index in self.translations) {
         key = self.translations[index];
