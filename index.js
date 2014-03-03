@@ -40,7 +40,10 @@ Parser.prototype._transform = function(file, encoding, done) {
     }
 
     if(file.isNull()) {
-        if ( file.path && fs.existsSync( file.path ) ) {
+        if ( file.stat.isDirectory() ) {
+            return done();
+        }
+        else if ( file.path && fs.existsSync( file.path ) ) {
             data = fs.readFileSync( file.path );
         }
         else {
@@ -50,7 +53,7 @@ Parser.prototype._transform = function(file, encoding, done) {
     }
 
     if(file.isBuffer()) {
-        // nothing to do
+        data = file.contents;
     }
 
     this.base = this.base || file.base;
