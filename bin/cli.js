@@ -13,7 +13,7 @@ var mkdirp      = require('mkdirp');
 var Parser         = require('../index');
 
 program
-  .version('0.1.3')
+  .version('0.1.4')
   .option('-r, --recursive'           , 'Parse sub directories')
   .option('-p, --parser <string>'     , 'A custom regex to use to parse your code')
   .option('-o, --output <directory>'  , 'The directory to output parsed keys')
