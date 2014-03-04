@@ -64,7 +64,7 @@ Parser.prototype._transform = function(file, encoding, done) {
 
     fnPattern = this.functions.join( ')|(?:' ).replace( '.', '\\.' )
     fnPattern = '(?:' + fnPattern + ')'
-    pattern = '[^a-zA-Z0-9](?:'+fnPattern+')(?:\\(|\\s)\\s*(?:(?:\'((?:(?:\\\\\')?[^\']+)+[^\\\\])\')|(?:"((?:(?:\\\\")?[^"]+)+[^\\\\])"))'
+    pattern = '[^a-zA-Z0-9_](?:'+fnPattern+')(?:\\(|\\s)\\s*(?:(?:\'((?:(?:\\\\\')?[^\']+)+[^\\\\])\')|(?:"((?:(?:\\\\")?[^"]+)+[^\\\\])"))'
     regex = new RegExp( this.regex || pattern, 'g' )
 
     fileContent = data.toString()
