@@ -13,7 +13,7 @@ var mkdirp      = require('mkdirp');
 var Parser         = require('../index');
 
 program
-  .version('0.1.4')
+  .version('0.1.5')
   .option('-r, --recursive'           , 'Parse sub directories')
   .option('-p, --parser <string>'     , 'A custom regex to use to parse your code')
   .option('-o, --output <directory>'  , 'The directory to output parsed keys')
@@ -96,7 +96,7 @@ stream
     .pipe(parser.on('parsing', function(path) { console.log("[parse] ".green + path) }))
     .pipe(through( { objectMode: true }, function (file, encoding, done) {
         
-        mkdirp.sync( file.base );
+        mkdirp.sync( path.dirname( file.path ) );
         fs.writeFileSync( file.path, file.contents );
 
         this.push( file );
