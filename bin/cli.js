@@ -34,7 +34,7 @@ else {
 // Parse passed values
 program.locales = program.locales && program.locales.split(',')
 program.functions = program.functions && program.functions.split(',')
-program.output = program.output && path.resolve(process.cwd(), program.output)
+program.output = program.output && path.resolve(process.cwd(), program.output) || path.resolve(process.cwd(), 'locales')
 program.directoryFilter = program.directoryFilter && program.directoryFilter.split(',')
 program.fileFilter = program.fileFilter && program.fileFilter.split(',')
 
