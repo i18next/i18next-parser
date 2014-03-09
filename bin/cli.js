@@ -9,9 +9,11 @@ var readdirp    = require('readdirp');
 var through     = require('through2');
 var File        = require('vinyl');
 var mkdirp      = require('mkdirp');
+var Parser      = require('../index');
 
-var Parser         = require('../index');
 
+// Configure the command line
+// ==========================
 program
   .version('0.1.5')
   .option('-r, --recursive'           , 'Parse sub directories')
@@ -24,32 +26,49 @@ program
   .option('--fileFilter <list>'       , 'Filter files')
   .parse(process.argv);
 
-if (process.argv[2]) {
+
+
+// Define the target directory
+// ===========================
+var option = process.argv[2];
+
+if ( option && option.charAt(0) !== '-' ) {
     file = path.resolve(process.cwd(), process.argv[2]);
 }
 else {
     file = process.cwd();
 }
 
+if ( ! fs.existsSync(file) ) {
+    console.log( "\n" + "Error: ".red + file + " is not a file or directory\n" );
+    process.exit( 1 );
+}
+
+
 // Parse passed values
-program.locales = program.locales && program.locales.split(',')
-program.functions = program.functions && program.functions.split(',')
-program.output = program.output && path.resolve(process.cwd(), program.output) || path.resolve(process.cwd(), 'locales')
-program.directoryFilter = program.directoryFilter && program.directoryFilter.split(',')
-program.fileFilter = program.fileFilter && program.fileFilter.split(',')
+// ===================
+program.locales = program.locales && program.locales.split(',');
+program.functions = program.functions && program.functions.split(',');
+program.output = program.output && path.resolve(process.cwd(), program.output) || path.resolve(process.cwd(), 'locales');
+program.directoryFilter = program.directoryFilter && program.directoryFilter.split(',');
+program.fileFilter = program.fileFilter && program.fileFilter.split(',');
+
+
 
 // Welcome message
+// ===============
 var intro = "\n"+
 "i18next Parser".yellow + "\n" + 
 "--------------".yellow + "\n" +
-"Target: ".green + file + "\n" +
+"Input:  ".green + file + "\n" +
 "Output: ".green + program.output + "\n\n";
+
 console.log(intro);
 
 
-var parser = Parser(program);
 
-// Is it a file or folder
+// Create a stream from the input
+// ==============================
 var stat = fs.statSync(file)
 
 if ( stat.isDirectory() ) {
@@ -60,22 +79,25 @@ if ( stat.isDirectory() ) {
     if( program.fileFilter ) {
         args.fileFilter = program.fileFilter;
     }
-
-    if (program.recursive) {
-        stream = readdirp( args );
-    }
-    else {
+    if ( ! program.recursive) {
         args.depth = 0;
-        stream = readdirp( args );
-    }    
+    }
+
+    stream = readdirp( args );
 }
 else {
     stream = new Readable( { objectMode: true } );
     stream._read = function() {
         stream.push( new File( { path: file } ) );
         stream.push( null );
-    } 
+    }
 }
+
+
+
+// Parse the stream
+// ================
+var parser = Parser(program);
 
 stream
     .pipe(through( { objectMode: true }, function (data, encoding, done) {
@@ -92,13 +114,15 @@ stream
         }
 
         done();
-    }) )
+    }))
     .pipe(parser.on('parsing', function(path) { console.log("[parse] ".green + path) }))
     .pipe(through( { objectMode: true }, function (file, encoding, done) {
         
-        mkdirp.sync( path.dirname( file.path ) );
+        mkdirp.sync( path.dirname(file.path) );
+
         fs.writeFileSync( file.path, file.contents );
 
         this.push( file );
+
         done();
     }));
