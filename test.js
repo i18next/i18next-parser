@@ -1,30 +1,29 @@
-var assert = require('assert')
-var File = require('vinyl')
-var through = require('through2')
-var Parser = require('./index')
-var helpers = require('./src/helpers')
-var hashFromString = helpers.hashFromString
-var mergeHash = helpers.mergeHash
+var assert          = require('assert')
+var File            = require('vinyl')
+var through         = require('through2')
+var Parser          = require('./index')
+var helpers         = require('./src/helpers')
+var hashFromString  = helpers.hashFromString
+var mergeHash       = helpers.mergeHash
+var replaceEmpty    = helpers.replaceEmpty
+
+
 
 describe('i18next-parser', function () {
     it('parses globally on multiple lines', function (done) {
-
         var result;
-
+        var i18nextParser = Parser();
         var fakeFile = new File({
             contents: new Buffer("asd t('first') t('second') \n asd t('third') ad t('fourth')")
         });
 
-        var i18nextParser = Parser();
-
         i18nextParser.on('data', function (file) {
             if ( file.relative === 'en/translation.json' ) {
-                result = file.contents;
+                result = JSON.parse( file.contents );
             }
         });
-
         i18nextParser.on('end', function (file) {
-            assert.deepEqual( JSON.parse( result ), { first: '', second: '', third: '', fourth: '' } )
+            assert.deepEqual( result, { first: '', second: '', third: '', fourth: '' } )
             done();
         });
 
@@ -33,20 +32,17 @@ describe('i18next-parser', function () {
 
     it('should create two files per namespace and per locale', function (done) {
         var results = [];
-
-        var fakeFile = new File({
-            contents: new Buffer("asd t('ns1:first') t('second') \n asd t('ns2:third') ad t('fourth')")
-        });
-
         var i18nextParser = Parser({
             locales: ['en', 'de', 'fr'],
             namespace: 'default'
+        });
+        var fakeFile = new File({
+            contents: new Buffer("asd t('ns1:first') t('second') \n asd t('ns2:third') ad t('fourth')")
         });
 
         i18nextParser.on('data', function (file) {
             results.push(file.relative);
         });
-
         i18nextParser.on('end', function (file) {
 
             var expectedFiles = [
@@ -66,11 +62,10 @@ describe('i18next-parser', function () {
     });
 
     it('returns buffers', function (done) {
+        var i18nextParser = Parser();
         var fakeFile = new File({
             contents: new Buffer("asd t('first') t('second') \n asd t('third') ad t('fourth')")
         }); 
-
-        var i18nextParser = Parser();
 
         i18nextParser.once('data', function (file) {
             assert(file.isBuffer());
@@ -81,12 +76,13 @@ describe('i18next-parser', function () {
     });
 });
 
+
+
 describe('mergeHash helper function', function () {
     it('replaces `target` keys with `source`', function (done) {
         var source = { key1: 'value1' }
         var target = { key1: '' }
-        
-        var res = mergeHash(source, target)
+        var res    = mergeHash(source, target)
 
         assert.deepEqual(res['new'], { key1: 'value1' })
         assert.deepEqual(res['old'], {})
@@ -96,8 +92,7 @@ describe('mergeHash helper function', function () {
     it('leaves untouched `target` keys not in `source`', function (done) {
         var source = { key1: 'value1' }
         var target = { key1: '', key2: '' }
-        
-        var res = mergeHash(source, target)
+        var res    = mergeHash(source, target)
 
         assert.deepEqual(res['new'], { key1: 'value1', key2: '' })
         assert.deepEqual(res['old'], {})
@@ -107,9 +102,7 @@ describe('mergeHash helper function', function () {
     it('populates `old` object with keys from `source` not in `target`', function (done) {
         var source = { key1: 'value1', key2: 'value2' }
         var target = { key1: '' }
-        
-
-        var res = mergeHash(source, target)
+        var res    = mergeHash(source, target)
 
         assert.deepEqual(res['new'], { key1: 'value1' })
         assert.deepEqual(res['old'], { key2: 'value2' })
@@ -184,6 +177,77 @@ describe('hashFromString helper function', function () {
         var res = hashFromString('one.two.three')
 
         assert.deepEqual(res, { one: { two: { three: '' } } })
+        done()
+    })
+})
+
+describe('replaceEmpty helper function', function () {
+    it('replaces `target` empty keys with `source` ones', function (done) {
+        var source = { key1: 'value1' }
+        var target = { key1: '' }
+        var res    = replaceEmpty(source, target)
+
+        assert.deepEqual(res, { key1: 'value1' })
+        done()
+    })
+
+    it('leaves untouched `target` keys that are not empty', function (done) {
+        var source = { key1: 'value1' }
+        var target = { key1: 'value2' }
+        var res    = replaceEmpty(source, target)
+
+        assert.deepEqual(res, { key1: 'value2' })
+        done()
+    })
+
+    it('leaves untouched `target` keys not in `source`', function (done) {
+        var source = { key1: 'value1' }
+        var target = { key1: '', key2: '' }
+        var res    = replaceEmpty(source, target)
+
+        assert.deepEqual(res, { key1: 'value1', key2: '' })
+        done()
+    })
+
+    it('works with deep objects', function (done) {
+        var source = { 
+            key1: 'value1',
+            key2: {
+                key21: 'value21',
+                key22: {
+                    key221: 'value221',
+                    key222: 'value222'
+                },
+                key23: 'value23'
+            }
+        }
+        var target = { 
+            key1: '',
+            key2: {
+                key21: '',
+                key22: {
+                    key222: '',
+                    key223: ''
+                },
+                key24: ''
+            },
+            key3: ''
+        }        
+        var res = replaceEmpty(source, target)
+        var expected_target = { 
+            key1: 'value1',
+            key2: {
+                key21: 'value21',
+                key22: {
+                    key222: 'value222',
+                    key223: ''
+                },
+                key24: ''
+            },
+            key3: ''
+        }
+
+        assert.deepEqual(res, expected_target)
         done()
     })
 })
