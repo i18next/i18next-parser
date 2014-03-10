@@ -4,10 +4,16 @@ A simple command line and gulp plugin that lets you parse your code and extract 
 
 ## Features
 
-- Is a stream transform (so it works with gulp)
 - Parses a single file or a directory (recursively or not)
 - Creates one json file per locale and per namespace.
 - Remove old keys your code doesn't use anymore and place them in a `namespace_old.json` file. It is usefull to avoid losing translations you may want to reuse.
+- Restore keys from the `_old` file if the one in the translation file is empty.
+- Is a stream transform (so it works with gulp)
+
+
+---
+
+
 
 ## Installation
 
@@ -21,7 +27,11 @@ npm install i18next-parser -g
 mocha --reporter nyan test.js
 ```
 
+
+
 ---
+
+
 
 ## Gulp Usage
 
@@ -40,7 +50,11 @@ gulp.task('i18next', function() {
 - **locales**: An array of the locales in your applications. Defaults to `['en','fr']`
 - **regex**: A custom regex for the parser to use.
 
+
+
 ---
+
+
 
 ## CLI Usage
 
@@ -56,6 +70,8 @@ gulp.task('i18next', function() {
 ---
 
 ## Exemples
+
+
 
 **Parse single file or directory**
 
@@ -75,6 +91,8 @@ locales/fr/namespace1_old.json
 ...
 ```
 
+
+
 **Change the output directory**
 
 `i18next /path/to/file/or/dir -o /output/directory`
@@ -85,6 +103,8 @@ It will create the file in the specified folder:
 /output/directory/en/translation.json
 ...
 ```
+
+
 
 **Change the locales**
 
@@ -98,6 +118,8 @@ locales/de/...
 locales/sp/...
 ```
 
+
+
 **Change the default namespace**
 
 `i18next /path/to/file/or/dir -n my_default_namespace`
@@ -109,11 +131,15 @@ locales/en/my_default_namespace.json
 ...
 ```
 
+
+
 **Filter files and folders**
 
 `i18next /path/to/file/or/dir -filterFolder *.hbs,*.js -filterFolder !.git`
 
 In recursive mode, it will parse `*.hbs` and `*.js` files and skip `.git` folder. This options is passed to readdirp. To learn more, read [their documentation](https://github.com/thlorenz/readdirp#filters).
+
+
 
 **Change the translation functions**
 
@@ -136,6 +162,8 @@ Note1: we don't match the closing parenthesis as you may want to pass arguments 
 
 Note2: the parser is smart about escaped single or double quotes you may have in your key.
 
+
+
 **Change the regex**
 
 `i18next /path/to/file/or/dir -r "(.*)"`
@@ -145,9 +173,3 @@ You must pass the regex as a string. That means that you will have to properly e
 The regex used by default is:
 
 `/[^a-zA-Z0-9](?:(?:t)|(?:i18n\.t))(?:\(|\s)\s*(?:(?:'((?:(?:\\')?[^']+)+[^\\])')|(?:"((?:(?:\\")?[^"]+)+[^\\])"))/g`
-
----
-
-## Next
-
-- If a new translation key is added check if a translation is available in the old file
