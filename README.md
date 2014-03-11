@@ -27,13 +27,24 @@ npm install i18next-parser -g
 mocha --reporter nyan test.js
 ```
 
+---
 
+## CLI Usage
+
+`i18next /path/to/file/or/dir [-orpfnl]`
+
+- **-o, --output <directory>**: Where to write the locale files.
+- **-r, --recursive**: Is --output is a directory, parses files in sub directories.
+- **-f, --function <list>**: Function names to parse. Defaults to `t`
+- **-p, --parser <string>**: A custom regex for the parser to use.
+- **-n, --namespace <string>**: Default namespace in i18next. Defaults to `translation`
+- **-l, --locales <list>**: The locales in your applications. Defaults to `en,fr`
 
 ---
 
-
-
 ## Gulp Usage
+
+[Gulp](http://gulpjs.com/) defines itself as the streaming build system. Put simply, it is like Grunt, but performant and elegant.
 
 ```javascript
 var i18next = require('i18next-parser');
@@ -52,63 +63,29 @@ gulp.task('i18next', function() {
 
 
 
----
+**Events**
 
+The transform emit a `reading` event for each file it parses:
 
+`.pipe( i18next().on('reading', function(path) {  }) )`
 
-## CLI Usage
+The transform emit a `writing` event for each file it passes to the stream:
 
-`i18next /path/to/file/or/dir [-orpfnl]`
-
-- **-o, --output <directory>**: Where to write the locale files.
-- **-r, --recursive**: Is --output is a directory, parses files in sub directories.
-- **-f, --function <list>**: Function names to parse. Defaults to `t`
-- **-p, --parser <string>**: A custom regex for the parser to use.
-- **-n, --namespace <string>**: Default namespace in i18next. Defaults to `translation`
-- **-l, --locales <list>**: The locales in your applications. Defaults to `en,fr`
+`.pipe( i18next().on('reading', function(path) {  }) )`
 
 ---
 
 ## Exemples
 
+**Change the locales (cli and gulp)**
 
-
-**Parse single file or directory**
-
-`i18next /path/to/file/or/dir`
-
-It will create the following files in the directory from which you run the command:
-
-```
-locales/en/translation.json
-locales/en/namespace1.json
-locales/en/translation_old.json
-locales/en/namespace1_old.json
-locales/fr/translation.json
-locales/fr/namespace1.json
-locales/fr/translation_old.json
-locales/fr/namespace1_old.json
-...
-```
-
-
-
-**Change the output directory**
-
-`i18next /path/to/file/or/dir -o /output/directory`
-
-It will create the file in the specified folder:
-
-```
-/output/directory/en/translation.json
-...
-```
-
-
-
-**Change the locales**
+Command line: 
 
 `i18next /path/to/file/or/dir -l en,de,sp`
+
+Gulp:
+
+`.pipe(i18next({locales: ['en', 'de', 'sp']}))`
 
 This will create a directory per locale in the output folder:
 
@@ -120,9 +97,15 @@ locales/sp/...
 
 
 
-**Change the default namespace**
+**Change the default namespace (cli and gulp)**
+
+Command line: 
 
 `i18next /path/to/file/or/dir -n my_default_namespace`
+
+Gulp:
+
+`.pipe(i18next({namespace: 'my_default_namespace'}))`
 
 This will add all the translation from the default namespace in the following file:
 
@@ -133,17 +116,15 @@ locales/en/my_default_namespace.json
 
 
 
-**Filter files and folders**
+**Change the translation functions (cli and gulp)**
 
-`i18next /path/to/file/or/dir -filterFolder *.hbs,*.js -filterFolder !.git`
-
-In recursive mode, it will parse `*.hbs` and `*.js` files and skip `.git` folder. This options is passed to readdirp. To learn more, read [their documentation](https://github.com/thlorenz/readdirp#filters).
-
-
-
-**Change the translation functions**
+Command line:
 
 `i18next /path/to/file/or/dir -f __,_e`
+
+Gulp:
+
+`.pipe(i18next({functions: ['__', '_e']}))`
 
 This will parse any of the following function calls in your code and extract the key:
 
@@ -164,12 +145,39 @@ Note2: the parser is smart about escaped single or double quotes you may have in
 
 
 
-**Change the regex**
+**Change the regex (cli and gulp)**
+
+Command line:
 
 `i18next /path/to/file/or/dir -r "(.*)"`
+
+Gulp:
+
+`.pipe(i18next({regex: '(.*)'}))`
 
 You must pass the regex as a string. That means that you will have to properly escape it.
 
 The regex used by default is:
 
 `/[^a-zA-Z0-9](?:(?:t)|(?:i18n\.t))(?:\(|\s)\s*(?:(?:'((?:(?:\\')?[^']+)+[^\\])')|(?:"((?:(?:\\")?[^"]+)+[^\\])"))/g`
+
+
+
+**Change the output directory (cli)**
+
+`i18next /path/to/file/or/dir -o /output/directory`
+
+It will create the file in the specified folder:
+
+```
+/output/directory/en/translation.json
+...
+```
+
+
+
+**Filter files and folders (cli)**
+
+`i18next /path/to/file/or/dir -filterFolder *.hbs,*.js -filterFolder !.git`
+
+In recursive mode, it will parse `*.hbs` and `*.js` files and skip `.git` folder. This options is passed to readdirp. To learn more, read [their documentation](https://github.com/thlorenz/readdirp#filters).

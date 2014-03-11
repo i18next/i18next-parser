@@ -94,7 +94,7 @@ Parser.prototype._transform = function(file, encoding, done) {
     // ===============
     var fileContent = data.toString();
 
-    this.emit( 'parsing', file.path );
+    this.emit( 'reading', file.path );
 
     while ( matches = regex.exec( fileContent ) ) {
         match = matches[1] || matches[2];
@@ -188,6 +188,9 @@ Parser.prototype._flush = function(done) {
               base: base,
               contents: new Buffer( JSON.stringify( mergedTranslations['old'], null, 2 ) )
             });
+
+            this.emit( 'writing', namespacePath );
+            this.emit( 'writing', namespaceOldPath );
 
             self.push( mergedTranslationsFile );
             self.push( mergedOldTranslationsFile );

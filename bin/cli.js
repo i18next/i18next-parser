@@ -115,7 +115,7 @@ stream
 
         done();
     }))
-    .pipe(parser.on('parsing', function(path) { console.log("[parse] ".green + path) }))
+    .pipe(parser.on('reading', function(path) { console.log("[parse] ".green + path) }))
     .pipe(through( { objectMode: true }, function (file, encoding, done) {
         
         mkdirp.sync( path.dirname(file.path) );
