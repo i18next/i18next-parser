@@ -25,7 +25,7 @@ npm install i18next-parser -g
 ## Tests
 
 ```
-mocha --reporter nyan test.js
+mocha --reporter nyan test/test.js
 ```
 
 ---
