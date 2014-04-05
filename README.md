@@ -73,6 +73,10 @@ The transform emit a `writing` event for each file it passes to the stream:
 
 `.pipe( i18next().on('reading', function(path) {  }) )`
 
+The transform emit a `json_error` event if the JSON.parse on json files fail. It is passed the error name (like `SyntaxError`) and the error message (like `Unexpected token }`):
+
+`.pipe( i18next().on('reading', function(name, message) {  }) )`
+
 ---
 
 ## Exemples

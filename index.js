@@ -151,14 +151,24 @@ Parser.prototype._flush = function(done) {
             var namespaceOldPath = path.resolve( localeBase, namespace + '_old.json' );
 
             if ( fs.existsSync( namespacePath ) ) {
-                currentTranslations = JSON.parse( fs.readFileSync( namespacePath ) );
+                try {
+                    currentTranslations = JSON.parse( fs.readFileSync( namespacePath ) );
+                }
+                catch (error) {
+                    this.emit( 'json_error', error.name, error.message );
+                }
             }
             else {
                 currentTranslations = {}
             }
 
             if ( fs.existsSync( namespaceOldPath ) ) {
-                oldTranslations = JSON.parse( fs.readFileSync( namespaceOldPath ) );
+                try {
+                    oldTranslations = JSON.parse( fs.readFileSync( namespaceOldPath ) );
+                }
+                catch (error) {
+                    this.emit( 'json_error', error.name, error.message );
+                }
             }
             else {
                 oldTranslations = {}
