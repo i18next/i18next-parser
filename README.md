@@ -8,6 +8,7 @@ A simple command line and gulp plugin that lets you parse your code and extract 
 - Creates one json file per locale and per namespace.
 - Remove old keys your code doesn't use anymore and place them in a `namespace_old.json` file. It is usefull to avoid losing translations you may want to reuse.
 - Restore keys from the `_old` file if the one in the translation file is empty.
+- Handles plural keys of the form `key_plural` and `key_plural_0`
 - Is a stream transform (so it works with gulp)
 
 

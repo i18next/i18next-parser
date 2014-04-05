@@ -1,8 +1,8 @@
 var assert          = require('assert')
 var File            = require('vinyl')
 var through         = require('through2')
-var Parser          = require('./index')
-var helpers         = require('./src/helpers')
+var Parser          = require('../index')
+var helpers         = require('../src/helpers')
 var hashFromString  = helpers.hashFromString
 var mergeHash       = helpers.mergeHash
 var replaceEmpty    = helpers.replaceEmpty
@@ -74,6 +74,20 @@ describe('i18next-parser', function () {
 
         i18nextParser.end(fakeFile);
     });
+
+    it('returns buffers', function (done) {
+        var i18nextParser = Parser();
+        var fakeFile = new File({
+            contents: new Buffer("asd t('first') t('second') \n asd t('third') ad t('fourth')")
+        }); 
+
+        i18nextParser.once('data', function (file) {
+            assert(file.isBuffer());
+            done();
+        });
+
+        i18nextParser.end(fakeFile);
+    });
 });
 
 
@@ -106,6 +120,26 @@ describe('mergeHash helper function', function () {
 
         assert.deepEqual(res['new'], { key1: 'value1' })
         assert.deepEqual(res['old'], { key2: 'value2' })
+        done()
+    })
+
+    it('restores plural keys when the singular one exists', function (done) {
+        var source = { key1: '', key1_plural: 'value1' }
+        var target = { key1: '' }
+        var res    = mergeHash(source, target)
+
+        assert.deepEqual(res['new'], { key1: '', key1_plural: 'value1' })
+        assert.deepEqual(res['old'], {})
+        done()
+    })
+
+    it('does not restores plural keys when the singular one does not', function (done) {
+        var source = { key1: '', key1_plural: 'value1' }
+        var target = { key2: '' }
+        var res    = mergeHash(source, target)
+
+        assert.deepEqual(res['new'], { key2: '' })
+        assert.deepEqual(res['old'], { key1: '', key1_plural: 'value1' })
         done()
     })
 

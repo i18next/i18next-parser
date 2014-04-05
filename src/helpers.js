@@ -1,4 +1,7 @@
-
+// Takes a `path` of the form 'foo.bar' and
+// turn it into a hash {foo: {bar: ""}}.
+// The generated hash can be attached to an
+// optional `hash`.
 function hashFromString(path, hash) {
     var parts   = path.split('.');
     var tmp_obj = hash || {};
@@ -16,6 +19,11 @@ function hashFromString(path, hash) {
     return obj;
 }
 
+
+// Takes a `source` hash and make sure its value
+// are pasted in the `target` hash, if the target
+// hash has the corresponding key. If not, the
+// value is added to an `old` hash.
 function mergeHash(source, target, old) {
     var target = target || {};
     var old    = old || {};
@@ -32,7 +40,15 @@ function mergeHash(source, target, old) {
             }
         }
         else {
-            old[key] = source[key]
+            pluralMatch = /_plural(_\d+)?$/.test( key );
+            singularKey = key.replace( /_plural(_\d+)?$/, '' );
+
+            if ( pluralMatch && target[singularKey] !== undefined ) {
+                target[key] = source[key]
+            }
+            else {
+                old[key] = source[key]
+            }
         }
     });
 
@@ -42,6 +58,10 @@ function mergeHash(source, target, old) {
     };
 }
 
+
+// Takes a `target` hash and replace its empty
+// values with the `source` hash ones if they
+// exist
 function replaceEmpty(source, target) {
     var target = target || {};
 
@@ -59,6 +79,8 @@ function replaceEmpty(source, target) {
 
     return target;
 }
+
+
 
 module.exports = {
     hashFromString: hashFromString,
