@@ -57,6 +57,7 @@ gulp.task('i18next', function() {
 });
 ```
 
+- **output**: Where to write the locale files. Defaults to `locales`
 - **functions**: An array of functions names to parse. Defaults to `['t']`
 - **namespace**: Default namespace in i18next. Defaults to `translation`
 - **locales**: An array of the locales in your applications. Defaults to `['en','fr']`
@@ -81,6 +82,25 @@ The transform emit a `json_error` event if the JSON.parse on json files fail. It
 ---
 
 ## Exemples
+
+**Change the output directory (cli and gulp)**
+
+Command line:
+
+`i18next /path/to/file/or/dir -o /output/directory`
+
+Gulp:
+
+`.pipe(i18next({output: 'translations'}))`
+
+It will create the file in the specified folder (in case of gulp it doesn't actually create the files until you call `dest()`):
+
+```
+/output/directory/en/translation.json
+...
+```
+
+
 
 **Change the locales (cli and gulp)**
 
@@ -165,19 +185,6 @@ You must pass the regex as a string. That means that you will have to properly e
 The regex used by default is:
 
 `/[^a-zA-Z0-9](?:(?:t)|(?:i18n\.t))(?:\(|\s)\s*(?:(?:'((?:(?:\\')?[^']+)+[^\\])')|(?:"((?:(?:\\")?[^"]+)+[^\\])"))/g`
-
-
-
-**Change the output directory (cli)**
-
-`i18next /path/to/file/or/dir -o /output/directory`
-
-It will create the file in the specified folder:
-
-```
-/output/directory/en/translation.json
-...
-```
 
 
 
