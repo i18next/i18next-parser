@@ -39,6 +39,8 @@ mocha --reporter nyan test/test.js
 - **-f, --function <list>**: Function names to parse. Defaults to `t`
 - **-p, --parser <string>**: A custom regex for the parser to use.
 - **-n, --namespace <string>**: Default namespace in i18next. Defaults to `translation`
+- **-s, --namespace-separator <string>**: Default namespace-separator in i18next. Defaults to `:`
+- **-k, --key-separator <string>**: Default key-separator in i18next. Defaults to `.`
 - **-l, --locales <list>**: The locales in your applications. Defaults to `en,fr`
 
 ---
