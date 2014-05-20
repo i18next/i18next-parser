@@ -2,8 +2,8 @@
 // turn it into a hash {foo: {bar: ""}}.
 // The generated hash can be attached to an
 // optional `hash`.
-function hashFromString(path, hash, separator) {
-    var parts   = path.split(separator);
+function hashFromString(path, separator, hash) {
+    var parts   = path.split( separator || '.' );
     var tmp_obj = hash || {};
     var obj     = tmp_obj;
 

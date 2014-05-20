@@ -50,6 +50,30 @@ describe('i18next-parser', function () {
         i18nextParser.end(fakeFile);
     });
 
+    it('handles custom namespace and key separators', function (done) {
+        var result;
+        var i18nextParser = Parser({
+            namespaceSeparator: '?',
+            keySeparator: '-'
+        });
+        var fakeFile = new File({
+            base: __dirname,
+            contents: new Buffer("asd t('test3?first') t('test3?second-third')")
+        }); 
+
+        i18nextParser.on('data', function (file) {
+            if ( file.relative === 'en/test3.json' ) {
+                result = JSON.parse( file.contents );
+            }
+        });
+        i18nextParser.once('end', function (file) {
+            assert.deepEqual( result, { first: '', second: { third: '' } } )
+            done();
+        });
+
+        i18nextParser.end(fakeFile);
+    });
+
     it('returns buffers', function (done) {
         var i18nextParser = Parser();
         var fakeFile = new File({

@@ -119,6 +119,13 @@ describe('hashFromString helper function', function () {
         assert.deepEqual(res, { one: { two: { three: '' } } })
         done()
     })
+
+    it('handles a different separator', function (done) {
+        var res = hashFromString('one_two_three', '_')
+
+        assert.deepEqual(res, { one: { two: { three: '' } } })
+        done()
+    })
 })
 
 describe('replaceEmpty helper function', function () {

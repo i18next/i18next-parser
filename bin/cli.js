@@ -16,17 +16,17 @@ var Parser      = require('../index');
 // ==========================
 program
   .version('0.1.8')
-  .option('-r, --recursive'           , 'Parse sub directories')
-  .option('-p, --parser <string>'     , 'A custom regex to use to parse your code')
-  .option('-o, --output <directory>'  , 'The directory to output parsed keys')
-  .option('-f, --functions <list>'    , 'The function names to parse in your code')
-  .option('-n, --namespace <string>'  , 'The default namespace (translation by default)')
-  .option('-s, --namespace-separator <string>'  , 'The default namespace separator(: by default)')
-  .option('-k, --key-separator <string>'  , 'The default key separator(. by default)')
-  .option('-l, --locales <list>'      , 'The locales in your application')
-  .option('--directoryFilter <list>'  , 'Filter directories')
-  .option('--fileFilter <list>'       , 'Filter files')
-  .parse(process.argv);
+  .option( '-r, --recursive'                     , 'Parse sub directories' )
+  .option( '-p, --parser <string>'               , 'A custom regex to use to parse your code' )
+  .option( '-o, --output <directory>'            , 'The directory to output parsed keys' )
+  .option( '-f, --functions <list>'              , 'The function names to parse in your code' )
+  .option( '-n, --namespace <string>'            , 'The default namespace (translation by default)' )
+  .option( '-ns, --namespace-separator <string>' , 'The default namespace separator(: by default)' )
+  .option( '-ks, --key-separator <string>'       , 'The default key separator(. by default)' )
+  .option( '-l, --locales <list>'                , 'The locales in your application' )
+  .option( '--directoryFilter <list>'            , 'Filter directories' )
+  .option( '--fileFilter <list>'                 , 'Filter files' )
+  .parse( process.argv );
 
 
 

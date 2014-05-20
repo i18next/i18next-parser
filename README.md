@@ -40,9 +40,9 @@ mocha --reporter nyan test/test.js
 - **-r, --recursive**: Is --output is a directory, parses files in sub directories.
 - **-f, --function <list>**: Function names to parse. Defaults to `t`
 - **-p, --parser <string>**: A custom regex for the parser to use.
-- **-n, --namespace <string>**: Default namespace in i18next. Defaults to `translation`
-- **-s, --namespace-separator <string>**: Default namespace-separator in i18next. Defaults to `:`
-- **-k, --key-separator <string>**: Default key-separator in i18next. Defaults to `.`
+- **-n, --namespace <string>**: Default namespace used in your i18next config. Defaults to `translation`
+- **-ns, --namespace-separator <string>**: Namespace separator used in your translation keys. Defaults to `:`
+- **-ks, --key-separator <string>**: Key separator used in your translation keys. Defaults to `.`
 - **-l, --locales <list>**: The locales in your applications. Defaults to `en,fr`
 
 ---
@@ -63,7 +63,9 @@ gulp.task('i18next', function() {
 
 - **output**: Where to write the locale files. Defaults to `locales`
 - **functions**: An array of functions names to parse. Defaults to `['t']`
-- **namespace**: Default namespace in i18next. Defaults to `translation`
+- **namespace**: Default namespace used in your i18next config. Defaults to `translation`
+- **namespaceSeparator**: Namespace separator used in your translation keys. Defaults to `:`
+- **keySeparator**: Key separator used in your translation keys. Defaults to `.`
 - **locales**: An array of the locales in your applications. Defaults to `['en','fr']`
 - **regex**: A custom regex for the parser to use.
 
@@ -127,6 +129,25 @@ locales/sp/...
 
 
 **Change the default namespace (cli and gulp)**
+
+Command line: 
+
+`i18next /path/to/file/or/dir -n my_default_namespace`
+
+Gulp:
+
+`.pipe(i18next({namespace: 'my_default_namespace'}))`
+
+This will add all the translation from the default namespace in the following file:
+
+```
+locales/en/my_default_namespace.json
+...
+```
+
+
+
+**Change the namespace and key separators (cli and gulp)**
 
 Command line: 
 

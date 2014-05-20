@@ -11,7 +11,6 @@ var replaceEmpty    = helpers.replaceEmpty
 
 describe('i18next-parser', function () {
     eval(fs.readFileSync(__dirname+'/parser.js')+'')
-    eval(fs.readFileSync(__dirname+'/gulp.js')+'')
     eval(fs.readFileSync(__dirname+'/helpers.js')+'')
 });
 

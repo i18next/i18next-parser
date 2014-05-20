@@ -135,7 +135,7 @@ Parser.prototype._flush = function(done) {
     // ==========================
     for (var index in self.translations) {
         key = self.translations[index];
-        translationsHash = helpers.hashFromString( key, translationsHash, self.keySeparator);
+        translationsHash = helpers.hashFromString( key, self.keySeparator, translationsHash );
     }
 
 
