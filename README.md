@@ -41,8 +41,8 @@ mocha --reporter nyan test/test.js
 - **-f, --function <list>**: Function names to parse. Defaults to `t`
 - **-p, --parser <string>**: A custom regex for the parser to use.
 - **-n, --namespace <string>**: Default namespace used in your i18next config. Defaults to `translation`
-- **-ns, --namespace-separator <string>**: Namespace separator used in your translation keys. Defaults to `:`
-- **-ks, --key-separator <string>**: Key separator used in your translation keys. Defaults to `.`
+- **-s, --namespace-separator <string>**: Namespace separator used in your translation keys. Defaults to `:`
+- **-k, --key-separator <string>**: Key separator used in your translation keys. Defaults to `.`
 - **-l, --locales <list>**: The locales in your applications. Defaults to `en,fr`
 
 ---
@@ -151,16 +151,23 @@ locales/en/my_default_namespace.json
 
 Command line: 
 
-`i18next /path/to/file/or/dir -n my_default_namespace`
+`i18next /path/to/file/or/dir -s '?' -k '_'`
 
 Gulp:
 
-`.pipe(i18next({namespace: 'my_default_namespace'}))`
+`.pipe(i18next({namespaceSeparator: '?', keySeparator: '_'}))`
 
-This will add all the translation from the default namespace in the following file:
+This parse the translation keys as follow:
 
 ```
-locales/en/my_default_namespace.json
+namespace?key_subkey
+
+namespace.json
+{
+    key: {
+        subkey: ''
+    }
+}
 ...
 ```
 
