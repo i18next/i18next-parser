@@ -25,6 +25,8 @@ function Parser(options, transformConfig) {
     this.locales            = options.locales || ['en','fr'];
     this.output             = options.output || 'locales';
     this.regex              = options.parser;
+    this.namespaceSeparator = options.namespaceSeparator || ':'
+    this.keySeparator 	    = options.keySeparator || '.'
     this.translations       = [];
 
     ['functions', 'locales'].forEach(function( attr ) {
@@ -99,11 +101,11 @@ Parser.prototype._transform = function(file, encoding, done) {
     while ( matches = regex.exec( fileContent ) ) {
         match = matches[1] || matches[2];
         
-        if ( match.indexOf( ':' ) == -1 ) {
-            match = self.defaultNamespace + '.' + match
+        if ( match.indexOf( self.namespaceSeparator ) == -1 ) {
+            match = self.defaultNamespace + self.keySeparator + match
         }
         else {
-            match = match.replace( ':', '.' );
+            match = match.replace( self.namespaceSeparator, self.keySeparator );
         }
 
         self.translations.push( match );
@@ -133,7 +135,7 @@ Parser.prototype._flush = function(done) {
     // ==========================
     for (var index in self.translations) {
         key = self.translations[index];
-        translationsHash = helpers.hashFromString( key, translationsHash );
+        translationsHash = helpers.hashFromString( key, translationsHash, self.keySeparator);
     }
 
 
