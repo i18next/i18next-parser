@@ -87,7 +87,7 @@ The transform emit a `json_error` event if the JSON.parse on json files fail. It
 
 ---
 
-## Exemples
+## Examples
 
 **Change the output directory (cli and gulp)**
 
