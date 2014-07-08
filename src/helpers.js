@@ -3,6 +3,10 @@
 // The generated hash can be attached to an
 // optional `hash`.
 function hashFromString(path, separator, hash) {
+    if ( path.charAt( path.length - 1 ) === '.' ) {
+        path = path.substring( 0, path.length - 1 );
+    }
+
     var parts   = path.split( separator || '.' );
     var tmp_obj = hash || {};
     var obj     = tmp_obj;

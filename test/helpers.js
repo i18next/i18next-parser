@@ -113,6 +113,13 @@ describe('hashFromString helper function', function () {
         done();
     });
 
+    it('ignores trailing dot', function (done) {
+        var res = hashFromString('one.');
+
+        assert.deepEqual(res, { one: '' });
+        done();
+    });
+
     it('handles nested paths', function (done) {
         var res = hashFromString('one.two.three');
 
