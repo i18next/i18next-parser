@@ -15,7 +15,7 @@ function hashFromString(path, separator, hash) {
             tmp_obj[parts[x]] = {};
         }
         tmp_obj = tmp_obj[parts[x]];
-    };
+    }
     return obj;
 }
 
@@ -25,18 +25,18 @@ function hashFromString(path, separator, hash) {
 // hash has the corresponding key. If not, the
 // value is added to an `old` hash.
 function mergeHash(source, target, old) {
-    var target = target || {};
-    var old    = old || {};
+    target = target || {};
+    old    = old || {};
 
     Object.keys(source).forEach(function (key) {
         if ( target[key] !== undefined ) {
             if (typeof source[key] === 'object') {
                 var nested = mergeHash( source[key], target[key], old[key] );
-                target[key] = nested['new']
-                old[key] = nested['old']
+                target[key] = nested.new;
+                old[key] = nested.old;
             }
             else {
-                target[key] = source[key]
+                target[key] = source[key];
             }
         }
         else {
@@ -44,16 +44,16 @@ function mergeHash(source, target, old) {
             singularKey = key.replace( /_plural(_\d+)?$/, '' );
 
             if ( pluralMatch && target[singularKey] !== undefined ) {
-                target[key] = source[key]
+                target[key] = source[key];
             }
             else {
-                old[key] = source[key]
+                old[key] = source[key];
             }
         }
     });
 
     return {
-        'new': target, 
+        'new': target,
         'old': old
     };
 }
@@ -63,16 +63,16 @@ function mergeHash(source, target, old) {
 // values with the `source` hash ones if they
 // exist
 function replaceEmpty(source, target) {
-    var target = target || {};
+    target = target || {};
 
     Object.keys(source).forEach(function (key) {
         if ( target[key] !== undefined ) {
             if (typeof source[key] === 'object') {
                 var nested = replaceEmpty( source[key], target[key] );
-                target[key] = nested
+                target[key] = nested;
             }
             else if ( target[key] === '' ) {
-                target[key] = source[key]
+                target[key] = source[key];
             }
         }
     });
@@ -86,4 +86,4 @@ module.exports = {
     hashFromString: hashFromString,
     mergeHash: mergeHash,
     replaceEmpty: replaceEmpty
-}
+};

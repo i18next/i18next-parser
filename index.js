@@ -16,17 +16,18 @@ const PLUGIN_NAME = 'i18next-parser';
 
 function Parser(options, transformConfig) {
 
-    var self            = this;
-    var options         = options || {};
-    var transformConfig = transformConfig || {};
+    var self = this;
+
+    options         = options || {};
+    transformConfig = transformConfig || {};
 
     this.defaultNamespace   = options.namespace || 'translation';
     this.functions          = options.functions || ['t'];
     this.locales            = options.locales || ['en','fr'];
     this.output             = options.output || 'locales';
     this.regex              = options.parser;
-    this.namespaceSeparator = options.namespaceSeparator || ':'
-    this.keySeparator 	    = options.keySeparator || '.'
+    this.namespaceSeparator = options.namespaceSeparator || ':';
+    this.keySeparator 	    = options.keySeparator || '.';
     this.translations       = [];
 
     ['functions', 'locales'].forEach(function( attr ) {
@@ -79,30 +80,31 @@ Parser.prototype._transform = function(file, encoding, done) {
     // =================
     if(file.isBuffer()) {
         data = file.contents;
-    } 
+    }
 
 
 
     // create the regex parser
     // =======================
-    fnPattern = this.functions.join( ')|(?:' ).replace( '.', '\\.' )
-    fnPattern = '(?:' + fnPattern + ')'
-    pattern = '[^a-zA-Z0-9_](?:'+fnPattern+')(?:\\(|\\s)\\s*(?:(?:\'((?:(?:\\\\\')?[^\']+)+[^\\\\])\')|(?:"((?:(?:\\\\")?[^"]+)+[^\\\\])"))'
-    regex = new RegExp( this.regex || pattern, 'g' )
+    fnPattern = this.functions.join( ')|(?:' ).replace( '.', '\\.' );
+    fnPattern = '(?:' + fnPattern + ')';
+    pattern = '[^a-zA-Z0-9_](?:'+fnPattern+')(?:\\(|\\s)\\s*(?:(?:\'((?:(?:\\\\\')?[^\']+)+[^\\\\])\')|(?:"((?:(?:\\\\")?[^"]+)+[^\\\\])"))';
+    regex = new RegExp( this.regex || pattern, 'g' );
 
 
 
     // and we parse...
     // ===============
     var fileContent = data.toString();
+    var matches;
 
     this.emit( 'reading', file.path );
 
-    while ( matches = regex.exec( fileContent ) ) {
+    while (( matches = regex.exec( fileContent ) )) {
         match = matches[1] || matches[2];
-        
+
         if ( match.indexOf( self.namespaceSeparator ) == -1 ) {
-            match = self.defaultNamespace + self.keySeparator + match
+            match = self.defaultNamespace + self.keySeparator + match;
         }
         else {
             match = match.replace( self.namespaceSeparator, self.keySeparator );
@@ -129,12 +131,12 @@ Parser.prototype._flush = function(done) {
     self.translations = _.uniq( self.translations ).sort();
 
 
-    
+
     // turn the array of keys
     // into an associative object
     // ==========================
     for (var index in self.translations) {
-        key = self.translations[index];
+        var key = self.translations[index];
         translationsHash = helpers.hashFromString( key, self.keySeparator, translationsHash );
     }
 
@@ -158,11 +160,11 @@ Parser.prototype._flush = function(done) {
                 }
                 catch (error) {
                     this.emit( 'json_error', error.name, error.message );
-                    currentTranslations = {}
+                    currentTranslations = {};
                 }
             }
             else {
-                currentTranslations = {}
+                currentTranslations = {};
             }
 
             if ( fs.existsSync( namespaceOldPath ) ) {
@@ -171,11 +173,11 @@ Parser.prototype._flush = function(done) {
                 }
                 catch (error) {
                     this.emit( 'json_error', error.name, error.message );
-                    currentTranslations = {}
+                    currentTranslations = {};
                 }
             }
             else {
-                oldTranslations = {}
+                oldTranslations = {};
             }
 
 
@@ -184,10 +186,10 @@ Parser.prototype._flush = function(done) {
             mergedTranslations = helpers.mergeHash( currentTranslations, translationsHash[namespace] );
 
             // restore old translations if the key is empty
-            mergedTranslations['new'] = helpers.replaceEmpty( oldTranslations, mergedTranslations['new'] );
+            mergedTranslations.new = helpers.replaceEmpty( oldTranslations, mergedTranslations.new );
 
             // merges former old translations with the new ones
-            mergedTranslations['old'] = _.extend( oldTranslations, mergedTranslations['old'] );
+            mergedTranslations.old = _.extend( oldTranslations, mergedTranslations.old );
 
 
 
@@ -195,12 +197,12 @@ Parser.prototype._flush = function(done) {
             mergedTranslationsFile = new File({
               path: namespacePath,
               base: base,
-              contents: new Buffer( JSON.stringify( mergedTranslations['new'], null, 2 ) )
+              contents: new Buffer( JSON.stringify( mergedTranslations.new, null, 2 ) )
             });
             mergedOldTranslationsFile = new File({
               path: namespaceOldPath,
               base: base,
-              contents: new Buffer( JSON.stringify( mergedTranslations['old'], null, 2 ) )
+              contents: new Buffer( JSON.stringify( mergedTranslations.old, null, 2 ) )
             });
 
             this.emit( 'writing', namespacePath );

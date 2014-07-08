@@ -12,7 +12,7 @@ describe('i18next-parser', function () {
             }
         });
         i18nextParser.on('end', function (file) {
-            assert.deepEqual( result, { first: '', second: '', third: '', fourth: '' } )
+            assert.deepEqual( result, { first: '', second: '', third: '', fourth: '' } );
             done();
         });
 
@@ -59,7 +59,7 @@ describe('i18next-parser', function () {
         var fakeFile = new File({
             base: __dirname,
             contents: new Buffer("asd t('test3?first') t('test3?second-third')")
-        }); 
+        });
 
         i18nextParser.on('data', function (file) {
             if ( file.relative === 'en/test3.json' ) {
@@ -67,7 +67,7 @@ describe('i18next-parser', function () {
             }
         });
         i18nextParser.once('end', function (file) {
-            assert.deepEqual( result, { first: '', second: { third: '' } } )
+            assert.deepEqual( result, { first: '', second: { third: '' } } );
             done();
         });
 
@@ -78,7 +78,7 @@ describe('i18next-parser', function () {
         var i18nextParser = Parser();
         var fakeFile = new File({
             contents: new Buffer("asd t('first') t('second') \n asd t('third') ad t('fourth')")
-        }); 
+        });
 
         i18nextParser.once('data', function (file) {
             assert(file.isBuffer());
@@ -93,7 +93,7 @@ describe('i18next-parser', function () {
         var fakeFile = new File({
             base: __dirname,
             contents: new Buffer("asd t('test1:first') t('test1:second')")
-        }); 
+        });
 
         i18nextParser.on('data', function (file) {
             if ( file.relative === 'en/test1.json' ) {
@@ -101,7 +101,7 @@ describe('i18next-parser', function () {
             }
         });
         i18nextParser.once('end', function (file) {
-            assert.deepEqual( result, { first: 'first', second: '' } )
+            assert.deepEqual( result, { first: 'first', second: '' } );
             done();
         });
 
@@ -113,15 +113,15 @@ describe('i18next-parser', function () {
         var fakeFile = new File({
             base: __dirname,
             contents: new Buffer("asd t('test2:first') t('test2:second')")
-        }); 
+        });
 
         var expectedResult = {
-            first: 'first', 
+            first: 'first',
             first_plural: 'first plural',
             second: 'second',
             second_plural_0: 'second plural 0',
             second_plural_12: 'second plural 12'
-        }
+        };
 
         i18nextParser.on('data', function (file) {
             if ( file.relative === 'en/test2.json' ) {
@@ -129,7 +129,7 @@ describe('i18next-parser', function () {
             }
         });
         i18nextParser.once('end', function (file) {
-            assert.deepEqual( result, expectedResult )
+            assert.deepEqual( result, expectedResult );
             done();
         });
 

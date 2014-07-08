@@ -33,6 +33,7 @@ program
 // Define the target directory
 // ===========================
 var option = process.argv[2];
+var file;
 
 if ( option && option.charAt(0) !== '-' ) {
     file = path.resolve(process.cwd(), process.argv[2]);
@@ -60,7 +61,7 @@ program.fileFilter = program.fileFilter && program.fileFilter.split(',');
 // Welcome message
 // ===============
 var intro = "\n"+
-"i18next Parser".yellow + "\n" + 
+"i18next Parser".yellow + "\n" +
 "--------------".yellow + "\n" +
 "Input:  ".green + file + "\n" +
 "Output: ".green + program.output + "\n\n";
@@ -71,10 +72,11 @@ console.log(intro);
 
 // Create a stream from the input
 // ==============================
-var stat = fs.statSync(file)
+var stat = fs.statSync(file);
+var stream;
 
 if ( stat.isDirectory() ) {
-    args = { root: file }
+    var args = { root: file };
     if( program.directoryFilter ) {
         args.directoryFilter = program.directoryFilter;
     }
@@ -92,7 +94,7 @@ else {
     stream._read = function() {
         stream.push( new File( { path: file } ) );
         stream.push( null );
-    }
+    };
 }
 
 
@@ -119,7 +121,7 @@ stream
     }))
     .pipe(parser.on('reading', function(path) { console.log("[parse] ".green + path) }))
     .pipe(through( { objectMode: true }, function (file, encoding, done) {
-        
+
         mkdirp.sync( path.dirname(file.path) );
 
         fs.writeFileSync( file.path, file.contents );
