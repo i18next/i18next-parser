@@ -110,7 +110,7 @@ It will create the file in the specified folder (in case of gulp it doesn't actu
 
 **Change the locales (cli and gulp)**
 
-Command line: 
+Command line:
 
 `i18next /path/to/file/or/dir -l en,de,sp`
 
@@ -130,7 +130,7 @@ locales/sp/...
 
 **Change the default namespace (cli and gulp)**
 
-Command line: 
+Command line:
 
 `i18next /path/to/file/or/dir -n my_default_namespace`
 
@@ -149,7 +149,7 @@ locales/en/my_default_namespace.json
 
 **Change the namespace and key separators (cli and gulp)**
 
-Command line: 
+Command line:
 
 `i18next /path/to/file/or/dir -s '?' -k '_'`
 
@@ -206,11 +206,11 @@ Note2: the parser is smart about escaped single or double quotes you may have in
 
 Command line:
 
-`i18next /path/to/file/or/dir -r "(.*)"`
+`i18next /path/to/file/or/dir -p "(.*)"`
 
 Gulp:
 
-`.pipe(i18next({regex: '(.*)'}))`
+`.pipe(i18next({pattern: '(.*)'}))`
 
 You must pass the regex as a string. That means that you will have to properly escape it.
 
