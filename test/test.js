@@ -1,4 +1,5 @@
 var fs              = require('fs');
+var path            = require('path');
 var assert          = require('assert');
 var File            = require('vinyl');
 var through         = require('through2');

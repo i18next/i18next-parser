@@ -39,6 +39,51 @@ describe('i18next-parser', function () {
 
         i18nextParser.end(fakeFile);
     });
+
+
+    it('parses jade templates', function (done) {
+        var result;
+        var i18nextParser = Parser();
+        var fakeFile = new File({
+            contents: fs.readFileSync( path.resolve(__dirname, 'templating/jade.jade') )
+        });
+
+        i18nextParser.on('data', function (file) {
+            if ( file.relative === 'en/translation.json' ) {
+                result = JSON.parse( file.contents );
+            }
+        });
+        i18nextParser.on('end', function (file) {
+            assert.deepEqual( result, { first: '' } );
+            done();
+        });
+
+        i18nextParser.end(fakeFile);
+    });
+
+
+    it('parses handlebars templates', function (done) {
+        var result;
+        var i18nextParser = Parser();
+        var fakeFile = new File({
+            contents: fs.readFileSync( path.resolve(__dirname, 'templating/handlebars.hbs') )
+        });
+
+        i18nextParser.on('data', function (file) {
+            if ( file.relative === 'en/translation.json' ) {
+                result = JSON.parse( file.contents );
+            }
+        });
+        i18nextParser.on('end', function (file) {
+            assert.deepEqual( result, { first: '' } );
+            done();
+        });
+
+        i18nextParser.end(fakeFile);
+    });
+
+
+    it('creates two files per namespace and per locale', function (done) {
         var results = [];
         var i18nextParser = Parser({
             locales: ['en', 'de', 'fr'],
