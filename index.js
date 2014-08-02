@@ -22,7 +22,7 @@ function Parser(options, transformConfig) {
     transformConfig = transformConfig || {};
 
     this.defaultNamespace   = options.namespace || 'translation';
-    this.functions          = options.functions || ['t'];
+    this.functions          = options.functions || ['t', 'data-i18n'];
     this.locales            = options.locales || ['en','fr'];
     this.output             = options.output || 'locales';
     this.regex              = options.parser;
@@ -88,7 +88,7 @@ Parser.prototype._transform = function(file, encoding, done) {
     // =======================
     fnPattern = this.functions.join( ')|(?:' ).replace( '.', '\\.' );
     fnPattern = '(?:' + fnPattern + ')';
-    pattern = '[^a-zA-Z0-9_](?:'+fnPattern+')(?:\\(|\\s)\\s*(?:(?:\'((?:(?:\\\\\')?[^\']+)+[^\\\\])\')|(?:"((?:(?:\\\\")?[^"]+)+[^\\\\])"))';
+    pattern = '[^a-zA-Z0-9_](?:'+fnPattern+')(?:\\(|\\s|=)\\s*(?:(?:\'((?:(?:\\\\\')?[^\']+)+[^\\\\])\')|(?:"((?:(?:\\\\")?[^"]+)+[^\\\\])"))';
     regex = new RegExp( this.regex || pattern, 'g' );
 
 
@@ -102,6 +102,9 @@ Parser.prototype._transform = function(file, encoding, done) {
 
     while (( matches = regex.exec( fileContent ) )) {
         match = matches[1] || matches[2];
+        
+        // Support for data-i18n: remove leading [] in the key
+        match = match.replace( /^\[[a-zA-Z0-9_-]*\]/ , '' );
 
         if ( match.indexOf( self.namespaceSeparator ) == -1 ) {
             match = self.defaultNamespace + self.keySeparator + match;

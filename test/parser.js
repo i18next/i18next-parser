@@ -19,7 +19,26 @@ describe('i18next-parser', function () {
         i18nextParser.end(fakeFile);
     });
 
-    it('should create two files per namespace and per locale', function (done) {
+
+    it('parses data-i18n attributes in html templates', function (done) {
+        var result;
+        var i18nextParser = Parser();
+        var fakeFile = new File({
+            contents: new Buffer('<p data-i18n="first">!first key!</p><p data-i18n="[html]second">!first key!</p>')
+        });
+
+        i18nextParser.on('data', function (file) {
+            if ( file.relative === 'en/translation.json' ) {
+                result = JSON.parse( file.contents );
+            }
+        });
+        i18nextParser.on('end', function (file) {
+            assert.deepEqual( result, { first: '', second: '' } );
+            done();
+        });
+
+        i18nextParser.end(fakeFile);
+    });
         var results = [];
         var i18nextParser = Parser({
             locales: ['en', 'de', 'fr'],
@@ -130,6 +149,27 @@ describe('i18next-parser', function () {
         });
         i18nextParser.once('end', function (file) {
             assert.deepEqual( result, expectedResult );
+            done();
+        });
+
+        i18nextParser.end(fakeFile);
+    });
+
+
+    it('removes any trailing [bla] in the key', function (done) {
+        var result;
+        var i18nextParser = Parser();
+        var fakeFile = new File({
+            contents: new Buffer('<p data-i18n="[html]first">!first key!</p>')
+        });
+
+        i18nextParser.on('data', function (file) {
+            if ( file.relative === 'en/translation.json' ) {
+                result = JSON.parse( file.contents );
+            }
+        });
+        i18nextParser.on('end', function (file) {
+            assert.deepEqual( result, { first: '' } );
             done();
         });
 

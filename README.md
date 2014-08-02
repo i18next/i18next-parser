@@ -7,6 +7,7 @@ The idea is to parse code files to retrieve the translation keys and create a ca
 ## Features
 
 - Parses a single file or a directory (recursively or not)
+- Parses template files (support for jade, html data-i18n attribute)
 - Creates one json file per locale and per namespace.
 - Remove old keys your code doesn't use anymore and place them in a `namespace_old.json` file. It is usefull to avoid losing translations you may want to reuse.
 - Restore keys from the `_old` file if the one in the translation file is empty.
