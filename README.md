@@ -75,7 +75,7 @@ gulp.task('i18next', function() {
 
 The way gulp works, it take a `src()`, applies some transformations to the files matched and then render the transformation using the `dest()` command to a path of your choice. With `i18next-parser`, the `src()` takes the path to the files to parse and the `dest()` takes the path where you want the catalogs of translation keys.
 
-The problem is that the `i18next` transform doesn't know about the path you specify in `dest()`. So it doesn't know where the catalogs are. So it can't merge the result of the parsing with the existing catalogs you may have there.
+The problem is that the `i18next()` transform doesn't know about the path you specify in `dest()`. So it doesn't know where the catalogs are. So it can't merge the result of the parsing with the existing catalogs you may have there.
 
 ```
 gulp.src('app/**')
@@ -85,7 +85,7 @@ gulp.src('app/**')
 
 If you consider the code above, any file that match the `app/**` pattern will have of base set to `app/`. *As per the vinyl-fs [documentation](https://github.com/wearefractal/vinyl-fs#srcglobs-opt) (which powers gulp), the base is the folder relative to the cwd and defaults is where the glob begins.*
 
-Bare with me, the `output` option isn't defined, it defaults to `locales`. So the `i18next()` transform will look for files in the `app/locales` directory (the base plus the output directory). But in reality they are locates in `custom/path`. So for `i18next` to find your catalogs, you need the output option:
+Bare with me, the `output` option isn't defined, it defaults to `locales`. So the `i18next()` transform will look for files in the `app/locales` directory (the base plus the output directory). But in reality they are located in `custom/path`. So for the `i18next-parser` to find your catalogs, you need the `output` option:
 
 ```
 gulp.src('app/**')
