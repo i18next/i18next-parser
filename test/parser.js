@@ -1,4 +1,4 @@
-describe('i18next-parser', function () {
+describe('parser', function () {
     it('parses globally on multiple lines', function (done) {
         var result;
         var i18nextParser = Parser();
@@ -122,11 +122,11 @@ describe('i18next-parser', function () {
         });
         var fakeFile = new File({
             base: __dirname,
-            contents: new Buffer("asd t('test3?first') t('test3?second-third')")
+            contents: new Buffer("asd t('test_separators?first') t('test_separators?second-third')")
         });
 
         i18nextParser.on('data', function (file) {
-            if ( file.relative === 'en/test3.json' ) {
+            if ( file.relative === 'en/test_separators.json' ) {
                 result = JSON.parse( file.contents );
             }
         });
@@ -156,11 +156,11 @@ describe('i18next-parser', function () {
         var i18nextParser = Parser();
         var fakeFile = new File({
             base: __dirname,
-            contents: new Buffer("asd t('test1:first') t('test1:second')")
+            contents: new Buffer("asd t('test_merge:first') t('test_merge:second')")
         });
 
         i18nextParser.on('data', function (file) {
-            if ( file.relative === 'en/test1.json' ) {
+            if ( file.relative === 'en/test_merge.json' ) {
                 result = JSON.parse( file.contents );
             }
         });
@@ -172,11 +172,37 @@ describe('i18next-parser', function () {
         i18nextParser.end(fakeFile);
     });
 
+    it('retrieves context values in existing file', function (done) {
+        var i18nextParser = Parser();
+        var fakeFile = new File({
+            base: __dirname,
+            contents: new Buffer("asd t('test_context:first')")
+        });
+
+        var expectedResult = {
+            first: 'first',
+            first_context1: 'first context1',
+            first_context2: ''
+        };
+
+        i18nextParser.on('data', function (file) {
+            if ( file.relative === 'en/test_context.json' ) {
+                result = JSON.parse( file.contents );
+            }
+        });
+        i18nextParser.once('end', function (file) {
+            assert.deepEqual( result, expectedResult );
+            done();
+        });
+
+        i18nextParser.end(fakeFile);
+    });
+
     it('retrieves plural values in existing file', function (done) {
         var i18nextParser = Parser();
         var fakeFile = new File({
             base: __dirname,
-            contents: new Buffer("asd t('test2:first') t('test2:second')")
+            contents: new Buffer("asd t('test_plural:first') t('test_plural:second')")
         });
 
         var expectedResult = {
@@ -188,7 +214,34 @@ describe('i18next-parser', function () {
         };
 
         i18nextParser.on('data', function (file) {
-            if ( file.relative === 'en/test2.json' ) {
+            if ( file.relative === 'en/test_plural.json' ) {
+                result = JSON.parse( file.contents );
+            }
+        });
+        i18nextParser.once('end', function (file) {
+            assert.deepEqual( result, expectedResult );
+            done();
+        });
+
+        i18nextParser.end(fakeFile);
+    });
+
+
+    it('retrieves plural and context values in existing file', function (done) {
+        var i18nextParser = Parser();
+        var fakeFile = new File({
+            base: __dirname,
+            contents: new Buffer("asd t('test_context_plural:first')")
+        });
+
+        var expectedResult = {
+            first: 'first',
+            first_context1_plural: 'first context1 plural',
+            first_context2_plural_2: 'first context2 plural 2'
+        };
+
+        i18nextParser.on('data', function (file) {
+            if ( file.relative === 'en/test_context_plural.json' ) {
                 result = JSON.parse( file.contents );
             }
         });

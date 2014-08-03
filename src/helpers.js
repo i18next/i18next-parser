@@ -44,10 +44,18 @@ function mergeHash(source, target, old) {
             }
         }
         else {
+            // support for plural in keys
             pluralMatch = /_plural(_\d+)?$/.test( key );
             singularKey = key.replace( /_plural(_\d+)?$/, '' );
 
-            if ( pluralMatch && target[singularKey] !== undefined ) {
+            // support for context in keys
+            contextMatch = /_([^_]+)?$/.test( singularKey );
+            rawKey = singularKey.replace( /_([^_]+)?$/, '' );
+
+            if (
+              ( contextMatch && target[rawKey] !== undefined ) ||
+              ( pluralMatch && target[singularKey] !== undefined )
+            ) {
                 target[key] = source[key];
             }
             else {
