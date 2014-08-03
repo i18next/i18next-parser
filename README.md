@@ -62,7 +62,7 @@ gulp.task('i18next', function() {
 });
 ```
 
-- **output**: Where to write the locale files. Defaults to `locales`
+- **output**: Where to write the locale files (relative to the base). Defaults to `locales`
 - **functions**: An array of functions names to parse. Defaults to `['t']`
 - **namespace**: Default namespace used in your i18next config. Defaults to `translation`
 - **namespaceSeparator**: Namespace separator used in your translation keys. Defaults to `:`
@@ -71,8 +71,32 @@ gulp.task('i18next', function() {
 - **regex**: A custom regex for the parser to use.
 
 
+### Note on paths (why your translations are not saved)
 
-**Events**
+The way gulp works, it take a `src()`, applies some transformations to the files matched and then render the transformation using the `dest()` command to a path of your choice. With `i18next-parser`, the `src()` takes the path to the files to parse and the `dest()` takes the path where you want the catalogs of translation keys.
+
+The problem is that the `i18next` transform doesn't know about the path you specify in `dest()`. So it doesn't know where the catalogs are. So it can't merge the result of the parsing with the existing catalogs you may have there.
+
+```
+gulp.src('app/**')
+    .pipe(i18next())
+    .pipe(gulp.dest('custom/path'));
+```
+
+If you consider the code above, any file that match the `app/**` pattern will have of base set to `app/`. *As per the vinyl-fs [documentation](https://github.com/wearefractal/vinyl-fs#srcglobs-opt) (which powers gulp), the base is the folder relative to the cwd and defaults is where the glob begins.*
+
+Bare with me, the `output` option isn't defined, it defaults to `locales`. So the `i18next()` transform will look for files in the `app/locales` directory (the base plus the output directory). But in reality they are locates in `custom/path`. So for `i18next` to find your catalogs, you need the output option:
+
+```
+gulp.src('app/**')
+    .pipe(i18next({output: '../custom/path'}))
+    .pipe(gulp.dest('custom/path'));
+```
+
+The `output` option is relative to the base. In our case, we have `app/` as a base and we want `custom/path`. So the `output` option must be `../custom/path`.
+
+
+### Events
 
 The transform emit a `reading` event for each file it parses:
 
