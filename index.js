@@ -22,7 +22,7 @@ function Parser(options, transformConfig) {
     transformConfig = transformConfig || {};
 
     this.defaultNamespace   = options.namespace || 'translation';
-    this.functions          = options.functions || ['t', 'data-i18n'];
+    this.functions          = options.functions || ['t'];
     this.locales            = options.locales || ['en','fr'];
     this.output             = options.output || 'locales';
     this.regex              = options.parser;
@@ -84,36 +84,58 @@ Parser.prototype._transform = function(file, encoding, done) {
 
 
 
-    // create the regex parser
-    // =======================
-    fnPattern = this.functions.join( ')|(?:' ).replace( '.', '\\.' );
-    fnPattern = '(?:' + fnPattern + ')';
-    pattern = '[^a-zA-Z0-9_](?:'+fnPattern+')(?:\\(|\\s|=)\\s*(?:(?:\'((?:(?:\\\\\')?[^\']+)+[^\\\\])\')|(?:"((?:(?:\\\\")?[^"]+)+[^\\\\])"))';
-    regex = new RegExp( this.regex || pattern, 'g' );
-
-
-
-    // and we parse...
-    // ===============
+    // create the parser regexes
+    // =========================
     var fileContent = data.toString();
+    var keys = [];
     var matches;
 
     this.emit( 'reading', file.path );
 
-    while (( matches = regex.exec( fileContent ) )) {
-        match = matches[1] || matches[2];
-        
-        // Support for data-i18n: remove leading [] in the key
-        match = match.replace( /^\[[a-zA-Z0-9_-]*\]/ , '' );
 
-        if ( match.indexOf( self.namespaceSeparator ) == -1 ) {
-            match = self.defaultNamespace + self.keySeparator + match;
+    // and we parse for functions...
+    // =============================
+    var fnPattern = '(?:' + this.functions.join( ')|(?:' ).replace( '.', '\\.' ) + ')';
+    var pattern = '[^a-zA-Z0-9_](?:'+fnPattern+')(?:\\(|\\s)\\s*(?:(?:\'((?:(?:\\\\\')?[^\']+)+[^\\\\])\')|(?:"((?:(?:\\\\")?[^"]+)+[^\\\\])"))';
+    var functionRegex = new RegExp( this.regex || pattern, 'g' );
+
+    while (( matches = functionRegex.exec( fileContent ) )) {
+        keys.push( matches[1] || matches[2] );
+    }
+
+
+    // and we parse for data-i18n attributes in html
+    // =============================================
+    var attributeWithValueRegex = new RegExp( '(?:\\s+data-i18n=")([^"]*)(?:")', 'gi' );
+    var attributeWithoutValueRegex = new RegExp( '<([A-Z][A-Z0-9]*)(?:(?:\\s+[A-Z0-9-]+)(?:(?:=")(?:[^"]*)(?:"))?)*(?:(?:\\s+data-i18n))(?:(?:\\s+[A-Z0-9-]+)(?:(?:=")(?:[^"]*)(?:"))?)*\\s*(?:>(.*?)<\\/\\1>)', 'gi' );
+    
+    while (( matches = attributeWithValueRegex.exec( fileContent ) )) {
+        matchKeys = matches[1].split(';');
+
+        for (var i in matchKeys) {
+            // remove any leading [] in the key
+            keys.push( matchKeys[i].replace( /^\[[a-zA-Z0-9_-]*\]/ , '' ) );
+        }
+    }
+
+    while (( matches = attributeWithoutValueRegex.exec( fileContent ) )) {
+        keys.push( matches[2] );
+    }
+
+
+    // finally we add the parsed keys to the catalog
+    // =============================================
+    for (var j in keys) {
+        var key = keys[j];
+
+        if ( key.indexOf( self.namespaceSeparator ) == -1 ) {
+            key = self.defaultNamespace + self.keySeparator + key;
         }
         else {
-            match = match.replace( self.namespaceSeparator, self.keySeparator );
+            key = key.replace( self.namespaceSeparator, self.keySeparator );
         }
 
-        self.translations.push( match );
+        self.translations.push( key );
     }
 
     done();

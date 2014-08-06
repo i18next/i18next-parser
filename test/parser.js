@@ -24,7 +24,7 @@ describe('parser', function () {
         var result;
         var i18nextParser = Parser();
         var fakeFile = new File({
-            contents: new Buffer('<p data-i18n="first">!first key!</p><p data-i18n="[html]second">!first key!</p>')
+            contents: new Buffer('<p data-i18n>first</p><p data-i18n="second">Second</p><p data-i18n="[html]third">Third</p><p data-i18n="[title]fourth;fifth">Fifth</p>')
         });
 
         i18nextParser.on('data', function (file) {
@@ -33,7 +33,27 @@ describe('parser', function () {
             }
         });
         i18nextParser.on('end', function (file) {
-            assert.deepEqual( result, { first: '', second: '' } );
+            assert.deepEqual( result, { first: '', second: '', third: '', fourth: '', fifth: '' } );
+            done();
+        });
+
+        i18nextParser.end(fakeFile);
+    });
+
+    it('parses html templates', function (done) {
+        var result;
+        var i18nextParser = Parser();
+        var fakeFile = new File({
+            contents: fs.readFileSync( path.resolve(__dirname, 'templating/html.html') )
+        });
+
+        i18nextParser.on('data', function (file) {
+            if ( file.relative === 'en/translation.json' ) {
+                result = JSON.parse( file.contents );
+            }
+        });
+        i18nextParser.on('end', function (file) {
+            assert.deepEqual( result, { first: '', second: '', third: '', fourth: '', fifth: '' } );
             done();
         });
 
