@@ -69,7 +69,7 @@ gulp.task('i18next', function() {
 - **namespaceSeparator**: Namespace separator used in your translation keys. Defaults to `:`
 - **keySeparator**: Key separator used in your translation keys. Defaults to `.`
 - **locales**: An array of the locales in your applications. Defaults to `['en','fr']`
-- **regex**: A custom regex for the parser to use.
+- **parser**: A custom regex for the parser to use.
 
 
 ### Note on paths (why your translations are not saved)
@@ -236,13 +236,13 @@ Command line:
 
 Gulp:
 
-`.pipe(i18next({pattern: '(.*)'}))`
+`.pipe(i18next({parser: '(.*)'}))`
 
 You must pass the regex as a string. That means that you will have to properly escape it.
 
 The regex used by default is:
 
-`/[^a-zA-Z0-9](?:(?:t)|(?:i18n\.t))(?:\(|\s)\s*(?:(?:'((?:(?:\\')?[^']+)+[^\\])')|(?:"((?:(?:\\")?[^"]+)+[^\\])"))/g`
+`[^a-zA-Z0-9_](?:t)(?:\\(|\\s)\\s*(?:(?:\'((?:(?:\\\\\')?[^\']+)+[^\\\\])\')|(?:"((?:(?:\\\\")?[^"]+)+[^\\\\])"))/g`
 
 
 
