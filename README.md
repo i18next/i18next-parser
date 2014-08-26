@@ -236,13 +236,13 @@ Command line:
 
 Gulp:
 
-`.pipe(i18next({pattern: '(.*)'}))`
+`.pipe(i18next({parser: '(.*)'}))`
 
 You must pass the regex as a string. That means that you will have to properly escape it.
 
 The regex used by default is:
 
-`/[^a-zA-Z0-9](?:(?:t)|(?:i18n\.t))(?:\(|\s)\s*(?:(?:'((?:(?:\\')?[^']+)+[^\\])')|(?:"((?:(?:\\")?[^"]+)+[^\\])"))/g`
+`/[^a-zA-Z0-9_](?:(?:t)|(?:i18n\.t))(?:\\(|\\s)\\s*(?:(?:\'((?:(?:\\\\\')?[^\']+)+[^\\\\])\')|(?:"((?:(?:\\\\")?[^"]+)+[^\\\\])"))'/g`
 
 
 
