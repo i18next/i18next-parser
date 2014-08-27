@@ -100,7 +100,9 @@ Parser.prototype._transform = function(file, encoding, done) {
     var functionRegex = new RegExp( this.regex || pattern, 'g' );
 
     while (( matches = functionRegex.exec( fileContent ) )) {
-        keys.push( matches[1] || matches[2] );
+        if (typeof matches[1] != 'undefined' || typeof matches[2] != 'undefined') {
+            keys.push( matches[1] || matches[2] );
+        }
     }
 
 
