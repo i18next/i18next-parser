@@ -100,7 +100,14 @@ Parser.prototype._transform = function(file, encoding, done) {
     var functionRegex = new RegExp( this.regex || pattern, 'g' );
 
     while (( matches = functionRegex.exec( fileContent ) )) {
-        keys.push( matches[1] || matches[2] );
+
+        // the key should be the first truthy match
+        for (var i in matches) {
+            if (i > 0 && matches[i]) {
+                keys.push( matches[i] );
+                break;
+            }
+        }
     }
 
 
@@ -108,7 +115,7 @@ Parser.prototype._transform = function(file, encoding, done) {
     // =============================================
     var attributeWithValueRegex = new RegExp( '(?:\\s+data-i18n=")([^"]*)(?:")', 'gi' );
     var attributeWithoutValueRegex = new RegExp( '<([A-Z][A-Z0-9]*)(?:(?:\\s+[A-Z0-9-]+)(?:(?:=")(?:[^"]*)(?:"))?)*(?:(?:\\s+data-i18n))(?:(?:\\s+[A-Z0-9-]+)(?:(?:=")(?:[^"]*)(?:"))?)*\\s*(?:>(.*?)<\\/\\1>)', 'gi' );
-    
+
     while (( matches = attributeWithValueRegex.exec( fileContent ) )) {
         matchKeys = matches[1].split(';');
 

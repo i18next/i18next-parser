@@ -238,7 +238,9 @@ Gulp:
 
 `.pipe(i18next({parser: '(.*)'}))`
 
-You must pass the regex as a string. That means that you will have to properly escape it.
+If you use a custom regex, the `functions` option will be ignored. You need to write you regex to parse the functions you want parsed.
+
+You must pass the regex as a string. That means that you will have to properly escape it. Also, the parser will consider the translation key to be the first truthy match of the regex; it means that you must use non capturing blocks `(?:)` for anything that is not the translation key.
 
 The regex used by default is:
 
