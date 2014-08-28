@@ -1,7 +1,12 @@
 # Changelog
 
 
-## 0.3.1 - latest
+## 0.3.2 - latest
+
+- The translation key should be the first truthy match of the regex (fix #18)
+
+
+## 0.3.1
 
 - Improve support for `data-i18n` attributes in html
 
