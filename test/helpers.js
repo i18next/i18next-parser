@@ -113,8 +113,8 @@ describe('hashFromString helper function', function () {
         done();
     });
 
-    it('ignores trailing dot', function (done) {
-        var res = hashFromString('one.');
+    it('ignores trailing separator', function (done) {
+        var res = hashFromString('one..', '..');
 
         assert.deepEqual(res, { one: '' });
         done();
@@ -128,9 +128,9 @@ describe('hashFromString helper function', function () {
     });
 
     it('handles a different separator', function (done) {
-        var res = hashFromString('one_two_three', '_');
+        var res = hashFromString('one_two_three.', '_');
 
-        assert.deepEqual(res, { one: { two: { three: '' } } });
+        assert.deepEqual(res, { one: { two: { 'three.': '' } } });
         done();
     });
 });
