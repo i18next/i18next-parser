@@ -5,7 +5,7 @@
 function hashFromString(path, separator, hash) {
     separator = separator || '.';
 
-    if ( path.endsWith(separator) ) {
+    if ( path.indexOf( separator, path.length - separator.length ) >= 0 ) {
         path = path.slice( 0, -separator.length );
     }
 
