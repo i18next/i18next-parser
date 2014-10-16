@@ -1,7 +1,12 @@
 # Changelog
 
 
-## 0.3.2 - latest
+## 0.3.3 - latest
+
+- Trailing separator in translation keys wasn't handled properly (fix #20)
+
+
+## 0.3.2
 
 - The translation key should be the first truthy match of the regex (fix #18)
 
