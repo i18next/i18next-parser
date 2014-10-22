@@ -1,7 +1,10 @@
 # Changelog
 
+## 0.3.4 - latest
 
-## 0.3.3 - latest
+- Handle escaped quotes in translation keys (fix #21)
+
+## 0.3.3
 
 - Trailing separator in translation keys wasn't handled properly (fix #20)
 
