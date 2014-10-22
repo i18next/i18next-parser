@@ -158,6 +158,29 @@ describe('parser', function () {
         i18nextParser.end(fakeFile);
     });
 
+    it('handles escaped single and double quotes', function (done) {
+        var result;
+        var i18nextParser = Parser();
+        var fakeFile = new File({
+            base: __dirname,
+            contents: new Buffer("asd t('escaped \\'single quotes\\'') t(\"escaped \\\"double quotes\\\"\")")
+        });
+
+        i18nextParser.on('data', function (file) {
+            if ( file.relative === 'en/translation.json' ) {
+                result = JSON.parse( file.contents );
+            }
+        });
+        i18nextParser.once('end', function (file) {
+            var keys = Object.keys(result);
+            assert.equal( keys[0], 'escaped "double quotes"' );
+            assert.equal( keys[1], "escaped 'single quotes'" );
+            done();
+        });
+
+        i18nextParser.end(fakeFile);
+    });
+
     it('returns buffers', function (done) {
         var i18nextParser = Parser();
         var fakeFile = new File({
