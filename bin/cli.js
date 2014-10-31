@@ -52,7 +52,7 @@ if ( ! fs.existsSync(file) ) {
 // ===================
 program.locales = program.locales && program.locales.split(',');
 program.functions = program.functions && program.functions.split(',');
-program.output = program.output && path.resolve(process.cwd(), program.output) || path.resolve(process.cwd(), 'locales');
+program.output = program.output && path.resolve(process.cwd(), program.output) || path.resolve(process.cwd(), process.argv[2], 'locales');
 program.directoryFilter = program.directoryFilter && program.directoryFilter.split(',');
 program.fileFilter = program.fileFilter && program.fileFilter.split(',');
 
