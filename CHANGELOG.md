@@ -1,6 +1,10 @@
 # Changelog
 
-## 0.3.4 - latest
+## 0.3.5 - latest
+
+- Fix the output path when using the cli (fix #22)
+
+## 0.3.4
 
 - Handle escaped quotes in translation keys (fix #21)
 
