@@ -1,6 +1,10 @@
 # Changelog
 
-## 0.3.5 - latest
+## 0.3.6 - latest
+
+- Transfer repository to i18next organization (fix #15)
+
+## 0.3.5
 
 - Fix the output path when using the cli (fix #22)
 
