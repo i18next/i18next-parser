@@ -1,6 +1,10 @@
 # Changelog
 
-## 0.3.6 - latest
+## 0.3.7
+
+- Fix the cli (fix #24)
+
+## 0.3.6
 
 - Transfer repository to i18next organization (fix #15)
 
