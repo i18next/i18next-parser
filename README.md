@@ -258,6 +258,6 @@ The regex used by default is:
 
 **Filter files and folders (cli)**
 
-`i18next /path/to/file/or/dir --fileFilter *.hbs,*.js --directoryFilter !.git`
+`i18next /path/to/file/or/dir --fileFilter '*.hbs,*.js' --directoryFilter '!.git'`
 
 In recursive mode, it will parse `*.hbs` and `*.js` files and skip `.git` folder. This options is passed to readdirp. To learn more, read [their documentation](https://github.com/thlorenz/readdirp#filters).
