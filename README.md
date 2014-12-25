@@ -46,6 +46,8 @@ mocha --reporter nyan test/test.js
 - **-s, --namespace-separator <string>**: Namespace separator used in your translation keys. Defaults to `:`
 - **-k, --key-separator <string>**: Key separator used in your translation keys. Defaults to `.`
 - **-l, --locales <list>**: The locales in your applications. Defaults to `en,fr`
+- **--directoryFilter**: Globs of folders to filter
+- **--fileFilter**: Globs of files to filter
 
 ---
 
@@ -58,12 +60,16 @@ var i18next = require('i18next-parser');
 
 gulp.task('i18next', function() {
     gulp.src('app/**')
-        .pipe(i18next({locales: ['en', 'de'], functions: ['__', '_e']}))
+        .pipe(i18next({
+            locales: ['en', 'de'],
+            functions: ['__', '_e'],
+            output: '../locales'
+        }))
         .pipe(gulp.dest('locales'));
 });
 ```
 
-- **output**: Where to write the locale files (relative to the base). Defaults to `locales`
+- **output**: Where to write the locale files relative to the base (here `app/`). Defaults to `locales`
 - **functions**: An array of functions names to parse. Defaults to `['t']`
 - **namespace**: Default namespace used in your i18next config. Defaults to `translation`
 - **namespaceSeparator**: Namespace separator used in your translation keys. Defaults to `:`
@@ -117,9 +123,11 @@ The transform emit a `json_error` event if the JSON.parse on json files fail. It
 
 **Change the output directory (cli and gulp)**
 
-Command line:
+Command line (the options are identical):
 
 `i18next /path/to/file/or/dir -o /output/directory`
+
+`i18next /path/to/file/or/dir:/output/directory`
 
 Gulp:
 
@@ -250,6 +258,6 @@ The regex used by default is:
 
 **Filter files and folders (cli)**
 
-`i18next /path/to/file/or/dir -filterFolder *.hbs,*.js -filterFolder !.git`
+`i18next /path/to/file/or/dir --filterFolder *.hbs,*.js --directoryFilter !.git`
 
 In recursive mode, it will parse `*.hbs` and `*.js` files and skip `.git` folder. This options is passed to readdirp. To learn more, read [their documentation](https://github.com/thlorenz/readdirp#filters).

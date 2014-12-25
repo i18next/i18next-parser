@@ -32,29 +32,41 @@ program
 
 // Define the target directory
 // ===========================
-var option = process.argv[2];
-var file;
+var firstArgument = process.argv[2];
+var input;
+var output;
 
-if ( option && option.charAt(0) !== '-' ) {
-    file = path.resolve(process.cwd(), process.argv[2]);
+if ( firstArgument && firstArgument.charAt(0) !== '-' ) {
+  var parts = firstArgument.split(':');
+  
+  if ( parts.length > 1 ) {
+    input = path.resolve(process.cwd(), parts[0]);
+    output = path.resolve(process.cwd(), parts[1]);
+  }
+  else {
+    input = path.resolve(process.cwd(), firstArgument);
+  }
 }
 else {
-    file = process.cwd();
+  input = process.cwd();
 }
 
-if ( ! fs.existsSync(file) ) {
-    console.log( "\n" + "Error: ".red + file + " is not a file or directory\n" );
-    process.exit( 1 );
+output = output || program.output || 'locales';
+
+if ( ! fs.existsSync(input) ) {
+  console.log( "\n" + "Error: ".red + input + " is not a file or directory\n" );
+  process.exit( 1 );
 }
+
 
 
 // Parse passed values
 // ===================
 program.locales = program.locales && program.locales.split(',');
 program.functions = program.functions && program.functions.split(',');
-program.output = program.output && path.resolve(process.cwd(), program.output) || path.resolve(process.cwd(), process.argv[2], 'locales');
 program.directoryFilter = program.directoryFilter && program.directoryFilter.split(',');
 program.fileFilter = program.fileFilter && program.fileFilter.split(',');
+program.output = path.resolve(process.cwd(), output);
 
 
 
@@ -63,7 +75,7 @@ program.fileFilter = program.fileFilter && program.fileFilter.split(',');
 var intro = "\n"+
 "i18next Parser".yellow + "\n" +
 "--------------".yellow + "\n" +
-"Input:  ".green + file + "\n" +
+"Input:  ".green + input + "\n" +
 "Output: ".green + program.output + "\n\n";
 
 console.log(intro);
@@ -72,29 +84,33 @@ console.log(intro);
 
 // Create a stream from the input
 // ==============================
-var stat = fs.statSync(file);
+var stat = fs.statSync(input);
 var stream;
 
 if ( stat.isDirectory() ) {
-    var args = { root: file };
-    if( program.directoryFilter ) {
-        args.directoryFilter = program.directoryFilter;
-    }
-    if( program.fileFilter ) {
-        args.fileFilter = program.fileFilter;
-    }
-    if ( ! program.recursive) {
-        args.depth = 0;
-    }
+  var args = { root: input };
+  if( program.directoryFilter ) {
+    args.directoryFilter = program.directoryFilter;
+  }
+  if( program.fileFilter ) {
+    args.fileFilter = program.fileFilter;
+  }
+  if ( ! program.recursive) {
+    args.depth = 0;
+  }
 
-    stream = readdirp( args );
+  stream = readdirp( args );
 }
 else {
-    stream = new Readable( { objectMode: true } );
-    stream._read = function() {
-        stream.push( new File( { path: file } ) );
-        stream.push( null );
-    };
+  stream = new Readable( { objectMode: true } );
+  var file = new File({
+    path: input,
+    stat: stat
+  });
+  stream._read = function() {
+    stream.push( file );
+    stream.push( null );
+  };
 }
 
 
@@ -104,29 +120,29 @@ else {
 var parser = Parser(program);
 
 stream
-    .pipe(through( { objectMode: true }, function (data, encoding, done) {
+  .pipe(through( { objectMode: true }, function (data, encoding, done) {
 
-        if ( data instanceof File ) {
-            this.push( data );
-        }
-        else if ( data.fullPath ) {
-            file = new File({
-                path: data.fullPath,
-                stat: data.stat
-            });
-            this.push( file );
-        }
+    if ( data instanceof File ) {
+      this.push( data );
+    }
+    else if ( data.fullPath ) {
+      var file = new File({
+        path: data.fullPath,
+        stat: data.stat
+      });
+      this.push( file );
+    }
 
-        done();
-    }))
-    .pipe(parser.on('reading', function(path) { console.log("[parse] ".green + path) }))
-    .pipe(through( { objectMode: true }, function (file, encoding, done) {
+    done();
+  }))
+  .pipe(parser.on('reading', function(path) { console.log("[parse] ".green + path) }))
+  .pipe(through( { objectMode: true }, function (file, encoding, done) {
 
-        mkdirp.sync( path.dirname(file.path) );
+    mkdirp.sync( path.dirname(file.path) );
 
-        fs.writeFileSync( file.path, file.contents );
+    fs.writeFileSync( file.path, file.contents );
 
-        this.push( file );
+    this.push( file );
 
-        done();
-    }));
+    done();
+  }));
