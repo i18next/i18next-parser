@@ -11,14 +11,14 @@ The idea is to parse code files to retrieve the translation keys and create a ca
 - Creates one json file per locale and per namespace.
 - Remove old keys your code doesn't use anymore and place them in a `namespace_old.json` file. It is usefull to avoid losing translations you may want to reuse.
 - Restore keys from the `_old` file if the one in the translation file is empty.
-- Handles context keys of the form `key_context`
-- Handles plural keys of the form `key_plural` and `key_plural_0`
+- Support most i18next features:
+    - Handles context keys of the form `key_context`
+    - Handles plural keys of the form `key_plural` and `key_plural_0`
+    - Handles multiline array in catalog
 - Is a stream transform (so it works with gulp)
 
 
 ---
-
-
 
 ## Installation
 

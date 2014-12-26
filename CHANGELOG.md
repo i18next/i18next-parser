@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.8 - latest
+
+- Add support for multiline array in catalog (fix #26)
+
 ## 0.3.7
 
 - Fix the cli (fix #24)
