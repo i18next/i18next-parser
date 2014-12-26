@@ -102,6 +102,15 @@ describe('mergeHash helper function', function () {
         assert.deepEqual(res.old, expected_old);
         done();
     });
+
+    it('leaves arrays of values (multiline) untouched', function (done) {
+        var source = { key1: ['Line one.', 'Line two.'] };
+        var target = { key1: '' };
+        var res    = mergeHash(source, target);
+
+        assert.deepEqual(res.new, { key1: ['Line one.', 'Line two.'] });
+        done();
+    });
 });
 
 
