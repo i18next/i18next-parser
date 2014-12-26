@@ -36,7 +36,7 @@ function mergeHash(source, target, old) {
 
     Object.keys(source).forEach(function (key) {
         if ( target[key] !== undefined ) {
-            if (typeof source[key] === 'object') {
+            if (typeof source[key] === 'object' && source[key].constructor !== Array) {
                 var nested = mergeHash( source[key], target[key], old[key] );
                 target[key] = nested.new;
                 old[key] = nested.old;
