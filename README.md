@@ -54,7 +54,7 @@ Thanks a lot to all the previous [contributors](https://github.com/i18next/i18ne
 
 - **-o, --output <directory>**: Where to write the locale files.
 - **-r, --recursive**: Is --output is a directory, parses files in sub directories.
-- **-f, --function <list>**: Function names to parse. Defaults to `t`
+- **-f, --functions <list>**: Function names to parse. Defaults to `t`
 - **-p, --parser <string>**: A custom regex for the parser to use.
 - **-n, --namespace <string>**: Default namespace used in your i18next config. Defaults to `translation`
 - **-s, --namespace-separator <string>**: Namespace separator used in your translation keys. Defaults to `:`
