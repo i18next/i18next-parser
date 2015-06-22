@@ -104,14 +104,20 @@ Parser.prototype._transform = function(file, encoding, done) {
 
         // the key should be the first truthy match
         for (var i in matches) {
+            if (i > 0 && matches[i]) {
+                self.keysAndDefaultValues[matches[i]] = matches[i];
+                keys.push( matches[i]);
+                break;
+            }
+        }
+        // update object for default translate
+        for (var i in matches) {
             if (i > 0 && matches[i] && matches[i - 1]) {
                 self.keysAndDefaultValues[matches[i - 1]] = matches[i];
-                keys.push( matches[i - 1]);
                 break;
             }
         }
     }
-
 
     // and we parse for data-i18n attributes in html
     // =============================================
