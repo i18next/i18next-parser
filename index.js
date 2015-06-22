@@ -88,6 +88,7 @@ Parser.prototype._transform = function(file, encoding, done) {
     // =========================
     var fileContent = data.toString();
     var keys = [];
+    self.keysAndDefaultValues = [];
     var matches;
 
     this.emit( 'reading', file.path );
@@ -103,8 +104,9 @@ Parser.prototype._transform = function(file, encoding, done) {
 
         // the key should be the first truthy match
         for (var i in matches) {
-            if (i > 0 && matches[i]) {
-                keys.push( matches[i] );
+            if (i > 0 && matches[i] && matches[i - 1]) {
+                self.keysAndDefaultValues[matches[i - 1]] = matches[i];
+                keys.push( matches[i - 1]);
                 break;
             }
         }
@@ -174,7 +176,6 @@ Parser.prototype._flush = function(done) {
     }
 
 
-
     // process each locale and namespace
     // =================================
     for (var i in self.locales) {
@@ -213,8 +214,6 @@ Parser.prototype._flush = function(done) {
                 oldTranslations = {};
             }
 
-
-
             // merges existing translations with the new ones
             mergedTranslations = helpers.mergeHash( currentTranslations, translationsHash[namespace] );
 
@@ -224,7 +223,12 @@ Parser.prototype._flush = function(done) {
             // merges former old translations with the new ones
             mergedTranslations.old = _.extend( oldTranslations, mergedTranslations.old );
 
-
+            for (var k in mergedTranslations.new) {
+                if (mergedTranslations.new.hasOwnProperty(k) && mergedTranslations.new[k] == '') {
+                    mergedTranslations.new[k] = self.keysAndDefaultValues.hasOwnProperty(k) ? self.keysAndDefaultValues[k] : '';
+                }
+            }
+            console.log(mergedTranslations.new);
 
             // push files back to the stream
             mergedTranslationsFile = new File({
