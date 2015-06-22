@@ -207,7 +207,7 @@ Parser.prototype._flush = function(done) {
                 }
                 catch (error) {
                     this.emit( 'json_error', error.name, error.message );
-                    currentTranslations = {};
+                    oldTranslations = {};
                 }
             }
             else {
