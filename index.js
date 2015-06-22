@@ -228,7 +228,6 @@ Parser.prototype._flush = function(done) {
                     mergedTranslations.new[k] = self.keysAndDefaultValues.hasOwnProperty(k) ? self.keysAndDefaultValues[k] : '';
                 }
             }
-            console.log(mergedTranslations.new);
 
             // push files back to the stream
             mergedTranslationsFile = new File({
