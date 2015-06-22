@@ -29,6 +29,7 @@ function Parser(options, transformConfig) {
     this.namespaceSeparator = options.namespaceSeparator || ':';
     this.keySeparator 	    = options.keySeparator || '.';
     this.translations       = [];
+    this.keysAndDefaultValues = [];
 
     ['functions', 'locales'].forEach(function( attr ) {
         if ( (typeof self[ attr ] !== 'object') || ! self[ attr ].length ) {
@@ -88,7 +89,6 @@ Parser.prototype._transform = function(file, encoding, done) {
     // =========================
     var fileContent = data.toString();
     var keys = [];
-    self.keysAndDefaultValues = [];
     var matches;
 
     this.emit( 'reading', file.path );
