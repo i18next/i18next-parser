@@ -12,7 +12,13 @@ var _           = require('lodash');
 
 const PLUGIN_NAME = 'i18next-parser';
 
-
+if(typeof(String.prototype.trim) === "undefined")
+{
+    String.prototype.trim = function()
+    {
+        return String(this).replace(/^\s+|\s+$/g, '');
+    };
+}
 
 function Parser(options, transformConfig) {
 
@@ -181,7 +187,6 @@ Parser.prototype._flush = function(done) {
         translationsHash = helpers.hashFromString( key, self.keySeparator, translationsHash );
     }
 
-
     // process each locale and namespace
     // =================================
     for (var i in self.locales) {
@@ -231,7 +236,8 @@ Parser.prototype._flush = function(done) {
 
             for (var k in mergedTranslations.new) {
                 if (mergedTranslations.new.hasOwnProperty(k) && mergedTranslations.new[k] == '') {
-                    mergedTranslations.new[k] = self.keysAndDefaultValues.hasOwnProperty(k) ? self.keysAndDefaultValues[k] : '';
+                    mergedTranslations.new[k] = self.keysAndDefaultValues.hasOwnProperty(k) ?
+                        self.keysAndDefaultValues[k].trim() : '';
                 }
             }
 
