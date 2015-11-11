@@ -12,7 +12,7 @@ var _           = require('lodash');
 
 const PLUGIN_NAME = 'i18next-parser';
 
-if(typeof(String.prototype.trim) === "undefined")
+if (typeof(String.prototype.trim) === 'undefined')
 {
     String.prototype.trim = function()
     {
@@ -125,6 +125,7 @@ Parser.prototype._transform = function(file, encoding, done) {
         }
     }
 
+
     // and we parse for data-i18n attributes in html
     // =============================================
     var attributeWithValueRegex = new RegExp( '(?:\\s+data-i18n=")([^"]*)(?:")', 'gi' );
@@ -187,6 +188,8 @@ Parser.prototype._flush = function(done) {
         translationsHash = helpers.hashFromString( key, self.keySeparator, translationsHash );
     }
 
+
+
     // process each locale and namespace
     // =================================
     for (var i in self.locales) {
@@ -224,6 +227,8 @@ Parser.prototype._flush = function(done) {
             else {
                 oldTranslations = {};
             }
+
+
 
             // merges existing translations with the new ones
             mergedTranslations = helpers.mergeHash( currentTranslations, translationsHash[namespace] );
