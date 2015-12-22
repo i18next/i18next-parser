@@ -29,6 +29,9 @@ function Parser(options, transformConfig) {
     this.namespaceSeparator = options.namespaceSeparator || ':';
     this.keySeparator 	    = options.keySeparator || '.';
     this.translations       = [];
+    this.suffix             = options.suffix || '';
+    this.prefix             = options.prefix || '';
+    this.writeOld           = options.writeOld || true;
 
     ['functions', 'locales'].forEach(function( attr ) {
         if ( (typeof self[ attr ] !== 'object') || ! self[ attr ].length ) {
@@ -184,8 +187,8 @@ Parser.prototype._flush = function(done) {
         for (var namespace in translationsHash) {
 
             // get previous version of the files
-            var namespacePath    = path.resolve( localeBase, namespace + '.json' );
-            var namespaceOldPath = path.resolve( localeBase, namespace + '_old.json' );
+            var namespacePath    = path.resolve( localeBase, this.prefix + namespace + this.suffix + '.json' );
+            var namespaceOldPath = path.resolve( localeBase, this.prefix + namespace + this.suffix + '_old.json' );
 
             if ( fs.existsSync( namespacePath ) ) {
                 try {
@@ -232,17 +235,20 @@ Parser.prototype._flush = function(done) {
               base: base,
               contents: new Buffer( JSON.stringify( mergedTranslations.new, null, 2 ) )
             });
-            mergedOldTranslationsFile = new File({
-              path: namespaceOldPath,
-              base: base,
-              contents: new Buffer( JSON.stringify( mergedTranslations.old, null, 2 ) )
-            });
-
             this.emit( 'writing', namespacePath );
-            this.emit( 'writing', namespaceOldPath );
-
             self.push( mergedTranslationsFile );
-            self.push( mergedOldTranslationsFile );
+
+            if ( !this.writeOld) {
+                mergedOldTranslationsFile = new File({
+                    path: namespaceOldPath,
+                    base: base,
+                    contents: new Buffer(JSON.stringify(mergedTranslations.old, null, 2))
+                });
+                this.emit( 'writing', namespaceOldPath );
+                self.push( mergedOldTranslationsFile );
+            }
+
+
         }
     }
 
