@@ -188,8 +188,19 @@ Parser.prototype._flush = function(done) {
         for (var namespace in translationsHash) {
 
             // get previous version of the files
-            var namespacePath    = path.resolve( localeBase, this.prefix + namespace + this.suffix + this.extension );
-            var namespaceOldPath = path.resolve( localeBase, this.prefix + namespace + this.suffix + '_old' + this.extension );
+            var prefix = self.prefix;
+            var suffix = self.suffix;
+            var extension = self.extension;
+
+            if ( prefix.split('$LOCALE').length > 1 )
+                prefix = prefix.replace('$LOCALE', locale);
+            if ( suffix.split('$LOCALE').length > 1 )
+                suffix = suffix.replace('$LOCALE', locale);
+            if ( extension.split('$LOCALE').length > 1 )
+                extension = extension.replace('$LOCALE', locale);
+
+            var namespacePath    = path.resolve( localeBase, prefix + namespace + suffix + extension );
+            var namespaceOldPath = path.resolve( localeBase, prefix + namespace + suffix + '_old' + extension );
 
             if ( fs.existsSync( namespacePath ) ) {
                 try {
