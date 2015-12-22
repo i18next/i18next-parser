@@ -29,9 +29,10 @@ function Parser(options, transformConfig) {
     this.namespaceSeparator = options.namespaceSeparator || ':';
     this.keySeparator 	    = options.keySeparator || '.';
     this.translations       = [];
+    this.extension         = options.extension || '.json';
     this.suffix             = options.suffix || '';
     this.prefix             = options.prefix || '';
-    this.writeOld           = options.writeOld || true;
+    this.writeOld           = options.writeOld !== false;
 
     ['functions', 'locales'].forEach(function( attr ) {
         if ( (typeof self[ attr ] !== 'object') || ! self[ attr ].length ) {
@@ -187,8 +188,8 @@ Parser.prototype._flush = function(done) {
         for (var namespace in translationsHash) {
 
             // get previous version of the files
-            var namespacePath    = path.resolve( localeBase, this.prefix + namespace + this.suffix + '.json' );
-            var namespaceOldPath = path.resolve( localeBase, this.prefix + namespace + this.suffix + '_old.json' );
+            var namespacePath    = path.resolve( localeBase, this.prefix + namespace + this.suffix + this.extension );
+            var namespaceOldPath = path.resolve( localeBase, this.prefix + namespace + this.suffix + '_old' + this.extension );
 
             if ( fs.existsSync( namespacePath ) ) {
                 try {
@@ -238,7 +239,7 @@ Parser.prototype._flush = function(done) {
             this.emit( 'writing', namespacePath );
             self.push( mergedTranslationsFile );
 
-            if ( !this.writeOld) {
+            if ( self.writeOld) {
                 mergedOldTranslationsFile = new File({
                     path: namespaceOldPath,
                     base: base,
