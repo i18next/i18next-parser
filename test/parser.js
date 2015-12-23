@@ -134,6 +134,70 @@ describe('parser', function () {
         i18nextParser.end(fakeFile);
     });
 
+    it('creates only one file per namespace and per locale with writeOld: false', function (done) {
+        var results = [];
+        var i18nextParser = Parser({
+            locales: ['en', 'de', 'fr'],
+            namespace: 'default',
+            writeOld: false
+        });
+        var fakeFile = new File({
+            contents: new Buffer("asd t('ns1:first') t('second') \n asd t('ns2:third') ad t('fourth')")
+        });
+
+        i18nextParser.on('data', function (file) {
+            results.push(file.relative);
+        });
+        i18nextParser.on('end', function (file) {
+
+            var expectedFiles = [
+                'en/default.json', 'en/ns1.json', 'en/ns2.json',
+                'de/default.json', 'de/ns1.json', 'de/ns2.json',
+                'fr/default.json', 'fr/ns1.json', 'fr/ns2.json'
+            ];
+            var length = expectedFiles.length;
+
+            expectedFiles.forEach(function (filename) {
+                assert( results.indexOf( filename ) !== -1 );
+                if( ! --length ) done();
+            });
+        });
+
+        i18nextParser.end(fakeFile);
+    });
+
+    it('Handle prefix, suffix and extension with the current locale tag in each', function (done) {
+        var results = [];
+        var i18nextParser = Parser({
+            locales: ['en'],
+            namespace: 'default',
+            prefix: 'p-$LOCALE-',
+            suffix: '-s-$LOCALE',
+            extension: '.$LOCALE.i18n'
+        });
+        var fakeFile = new File({
+            contents: new Buffer("asd t('fourth')")
+        });
+
+        i18nextParser.on('data', function (file) {
+            results.push(file.relative);
+        });
+        i18nextParser.on('end', function (file) {
+
+            var expectedFiles = [
+                'en/p-en-default-s-en.en.i18n', 'en/p-en-default-s-en_old.en.i18n'
+            ];
+            var length = expectedFiles.length;
+
+            expectedFiles.forEach(function (filename) {
+                assert( results.indexOf( filename ) !== -1 );
+                if( ! --length ) done();
+            });
+        });
+
+        i18nextParser.end(fakeFile);
+    });
+
     it('handles custom namespace and key separators', function (done) {
         var result;
         var i18nextParser = Parser({
