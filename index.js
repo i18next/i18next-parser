@@ -29,7 +29,7 @@ function Parser(options, transformConfig) {
     this.namespaceSeparator = options.namespaceSeparator || ':';
     this.keySeparator 	    = options.keySeparator || '.';
     this.translations       = [];
-    this.extension         = options.extension || '.json';
+    this.extension          = options.extension || '.json';
     this.suffix             = options.suffix || '';
     this.prefix             = options.prefix || '';
     this.writeOld           = options.writeOld !== false;
@@ -188,19 +188,18 @@ Parser.prototype._flush = function(done) {
         for (var namespace in translationsHash) {
 
             // get previous version of the files
-            var prefix = self.prefix;
-            var suffix = self.suffix;
-            var extension = self.extension;
+            var prefix = self.prefix.replace( '$LOCALE', locale );
+            var suffix = self.suffix.replace( '$LOCALE', locale );
+            var extension = self.extension.replace( '$LOCALE', locale );
 
-            if ( prefix.split('$LOCALE').length > 1 )
-                prefix = prefix.replace('$LOCALE', locale);
-            if ( suffix.split('$LOCALE').length > 1 )
-                suffix = suffix.replace('$LOCALE', locale);
-            if ( extension.split('$LOCALE').length > 1 )
-                extension = extension.replace('$LOCALE', locale);
-
-            var namespacePath    = path.resolve( localeBase, prefix + namespace + suffix + extension );
-            var namespaceOldPath = path.resolve( localeBase, prefix + namespace + suffix + '_old' + extension );
+            var namespacePath = path.resolve(
+                localeBase,
+                prefix + namespace + suffix + extension
+            );
+            var namespaceOldPath = path.resolve(
+                localeBase,
+                prefix + namespace + suffix + '_old' + extension
+            );
 
             if ( fs.existsSync( namespacePath ) ) {
                 try {
@@ -250,7 +249,7 @@ Parser.prototype._flush = function(done) {
             this.emit( 'writing', namespacePath );
             self.push( mergedTranslationsFile );
 
-            if ( self.writeOld) {
+            if ( self.writeOld ) {
                 mergedOldTranslationsFile = new File({
                     path: namespaceOldPath,
                     base: base,
