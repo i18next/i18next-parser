@@ -90,7 +90,12 @@ gulp.task('i18next', function() {
 - **keySeparator**: Key separator used in your translation keys. Defaults to `.`
 - **locales**: An array of the locales in your applications. Defaults to `['en','fr']`
 - **parser**: A custom regex for the parser to use.
+- **writeOld**: Save the \_old files. Default to `true`
+- **prefix**: Add a custom prefix in front of the file name.
+- **suffix**: Add a custom suffix at the end of the file name.
+- **extension**: Edit the extension of the files. Defaults to `.json`
 
+You can inject the locale tag in either the prefix, suffix or extension using the `$LOCALE` variable.
 
 ### Note on paths (why your translations are not saved)
 
@@ -275,3 +280,19 @@ The regex used by default is:
 `i18next /path/to/file/or/dir --fileFilter '*.hbs,*.js' --directoryFilter '!.git'`
 
 In recursive mode, it will parse `*.hbs` and `*.js` files and skip `.git` folder. This options is passed to readdirp. To learn more, read [their documentation](https://github.com/thlorenz/readdirp#filters).
+
+
+
+**Work with Meteor TAP-i18N (gulp)**
+
+`.pipe(i18next({
+    output: "i18n",
+    locales: ['en', 'de', 'fr', 'es'],
+    functions: ['_'],
+    namespace: 'client',
+    suffix: '.$LOCALE',
+    extension: ".i18n.json",
+    writeOld: false
+}))`
+
+This will output your files in the format `$LOCALE/client.$LOCALE.i18n.json` in a `i18n/` directory.
