@@ -183,7 +183,6 @@ describe('parser', function () {
             results.push(file.relative);
         });
         i18nextParser.on('end', function (file) {
-
             var expectedFiles = [
                 'en/p-en-default-s-en.en.i18n', 'en/p-en-default-s-en_old.en.i18n'
             ];
