@@ -1,6 +1,11 @@
 # Changelog
 
-## 0.3.8 - latest
+## 0.4.0 - latest
+
+- Add prefix, suffix and extension options (closes #31)
+- Add writeOld option
+
+## 0.3.8
 
 - Add support for multiline array in catalog (fix #26)
 

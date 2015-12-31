@@ -15,7 +15,7 @@ var Parser      = require('../index');
 // Configure the command line
 // ==========================
 program
-  .version('0.3.8')
+  .version('0.4.0')
   .option( '-r, --recursive'                     , 'Parse sub directories' )
   .option( '-p, --parser <string>'               , 'A custom regex to use to parse your code' )
   .option( '-o, --output <directory>'            , 'The directory to output parsed keys' )
@@ -38,7 +38,7 @@ var output;
 
 if ( firstArgument && firstArgument.charAt(0) !== '-' ) {
   var parts = firstArgument.split(':');
-  
+
   if ( parts.length > 1 ) {
     input = path.resolve(process.cwd(), parts[0]);
     output = path.resolve(process.cwd(), parts[1]);
