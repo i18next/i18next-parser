@@ -41,8 +41,9 @@ Any contribution is welcome. Just follow those quick guidelines:
 1. Fork and clone the project
 2. Create a branch `git checkout -b feature/my-feature` (use feature/ or hotfix/ branch prefixes accordingly)
 3. Push to your fork
-4. Make a pull request from your repository `feature/my-feature` branch to this repository `master`. Do not create both an issue ticket and a Pull Request.
-5. Wait, I am usually pretty fast to merge PRs :)
+4. Write tests and documentation (I won't merge a PR without it)
+5. Make a pull request from your repository `feature/my-feature` branch to this repository `master`. Do not create both an issue ticket and a Pull Request.
+6. Wait, I am usually pretty fast to merge PRs :)
 
 Thanks a lot to all the previous [contributors](https://github.com/i18next/i18next-parser/graphs/contributors).
 
