@@ -100,7 +100,7 @@ Parser.prototype._transform = function(file, encoding, done) {
     // and we parse for functions...
     // =============================
     var fnPattern = '(?:' + this.functions.join( ')|(?:' ).replace( '.', '\\.' ) + ')';
-    var pattern = '[^a-zA-Z0-9_](?:'+fnPattern+')(?:\\(|\\s)\\s*(?:(?:\'((?:(?:\\\\\')?[^\']*)+[^\\\\])\')|(?:"((?:(?:\\\\")?[^"]*)+[^\\\\])"))';
+    pattern = '[^a-zA-Z0-9_](?:'+fnPattern+')(?:\\(|\\s)\\s*(?:\'((?:(?:\\\\\')?[^\']*)+[^\\\\])\'|"((?:(?:\\\\")?[^"]*)+[^\\\\])"|`((?:(?:\\\\`)?[^`]*)+[^\\\\])`)'
     var functionRegex = new RegExp( this.regex || pattern, 'g' );
 
     while (( matches = functionRegex.exec( fileContent ) )) {
@@ -138,7 +138,7 @@ Parser.prototype._transform = function(file, encoding, done) {
     // =============================================
     for (var j in keys) {
         // remove the backslash from escaped quotes
-        var key = keys[j].replace(/\\('|")/g, '$1');
+        var key = keys[j].replace(/\\('|"|`)/g, '$1');
 
         if ( key.indexOf( self.namespaceSeparator ) == -1 ) {
             key = self.defaultNamespace + self.keySeparator + key;
@@ -174,6 +174,12 @@ Parser.prototype._flush = function(done) {
     // ==========================
     for (var index in self.translations) {
         var key = self.translations[index];
+
+        // simplify ${dot.separated.variables} into just their tails (${variables})
+        key = key.replace(/\$\{([^}]+)\}/g, function(m, expr) {
+          return '${' + expr.replace(/^([^.]+\.)*/g, '') + '}';
+        })
+
         translationsHash = helpers.hashFromString( key, self.keySeparator, translationsHash );
     }
 
