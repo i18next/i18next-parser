@@ -173,13 +173,8 @@ Parser.prototype._flush = function(done) {
     // into an associative object
     // ==========================
     for (var index in self.translations) {
-        var key = self.translations[index];
-
         // simplify ${dot.separated.variables} into just their tails (${variables})
-        key = key.replace(/\$\{([^}]+)\}/g, function(m, expr) {
-          return '${' + expr.replace(/^([^.]+\.)*/g, '') + '}';
-        })
-
+        var key = self.translations[index].replace( /\$\{(?:[^.}]+\.)*([^}]+)\}/g, '\${$1}' );
         translationsHash = helpers.hashFromString( key, self.keySeparator, translationsHash );
     }
 
