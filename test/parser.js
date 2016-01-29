@@ -244,6 +244,33 @@ describe('parser', function () {
         i18nextParser.end(fakeFile);
     });
 
+    it('handles es6 template strings with expressions', function (done) {
+        var result;
+        var i18nextParser = Parser();
+        var fakeFile = new File({
+            base: __dirname,
+            contents: new Buffer("asd t(`root.plain`) t(`root.${expr}`) t(`root.${dotted.path}`)")
+        });
+
+        i18nextParser.on('data', function (file) {
+            if ( file.relative === 'en/translation.json' ) {
+                result = JSON.parse( file.contents );
+            }
+        });
+        i18nextParser.once('end', function (file) {
+            var keys = Object.keys(result);
+            assert.deepEqual(Object.keys(result), ['root']);
+            assert.deepEqual(Object.keys(result.root), [
+              '${path}',
+              '${expr}',
+              'plain'
+            ]);
+            done();
+        });
+
+        i18nextParser.end(fakeFile);
+    });
+
     it('returns buffers', function (done) {
         var i18nextParser = Parser();
         var fakeFile = new File({
