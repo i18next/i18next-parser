@@ -1,6 +1,10 @@
 # Changelog
 
-## 0.4.0 - latest
+## 0.5.0 - latest
+
+- Add support for ES6 template strings: ` ` (closes #32)
+
+## 0.4.0
 
 - Add prefix, suffix and extension options (closes #31)
 - Add writeOld option

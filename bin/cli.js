@@ -15,7 +15,7 @@ var Parser      = require('../index');
 // Configure the command line
 // ==========================
 program
-  .version('0.4.0')
+  .version('0.5.0')
   .option( '-r, --recursive'                     , 'Parse sub directories' )
   .option( '-p, --parser <string>'               , 'A custom regex to use to parse your code' )
   .option( '-o, --output <directory>'            , 'The directory to output parsed keys' )
