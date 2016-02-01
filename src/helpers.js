@@ -28,16 +28,16 @@ function hashFromString(path, separator, hash) {
 
 // Takes a `source` hash and make sure its value
 // are pasted in the `target` hash, if the target
-// hash has the corresponding key. If not, the
-// value is added to an `old` hash.
-function mergeHash(source, target, old) {
+// hash has the corresponding key (or if keepRemoved is true).
+// If not, the value is added to an `old` hash.
+function mergeHash(source, target, old, keepRemoved) {
     target = target || {};
     old    = old || {};
 
     Object.keys(source).forEach(function (key) {
         if ( target[key] !== undefined ) {
             if (typeof source[key] === 'object' && source[key].constructor !== Array) {
-                var nested = mergeHash( source[key], target[key], old[key] );
+                var nested = mergeHash( source[key], target[key], old[key], keepRemoved );
                 target[key] = nested.new;
                 old[key] = nested.old;
             }
@@ -61,6 +61,9 @@ function mergeHash(source, target, old) {
                 target[key] = source[key];
             }
             else {
+                if (keepRemoved) {
+                  target[key] = source[key];
+                }
                 old[key] = source[key];
             }
         }

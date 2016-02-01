@@ -64,6 +64,8 @@ Thanks a lot to all the previous [contributors](https://github.com/i18next/i18ne
 - **-l, --locales <list>**: The locales in your applications. Defaults to `en,fr`
 - **--directoryFilter**: Globs of folders to filter
 - **--fileFilter**: Globs of files to filter
+- **--keep-removed**: Prevent keys no longer found from being removed
+- **--write-old false**: Avoid saving the \_old files
 
 ---
 
@@ -96,6 +98,7 @@ gulp.task('i18next', function() {
 - **prefix**: Add a custom prefix in front of the file name.
 - **suffix**: Add a custom suffix at the end of the file name.
 - **extension**: Edit the extension of the files. Defaults to `.json`
+- **keepRemoved**: Prevent keys no longer found from being removed
 
 You can inject the locale tag in either the prefix, suffix or extension using the `$LOCALE` variable.
 

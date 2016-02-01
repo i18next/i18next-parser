@@ -26,6 +26,8 @@ program
   .option( '-l, --locales <list>'                , 'The locales in your application' )
   .option( '--directoryFilter <list>'            , 'Filter directories' )
   .option( '--fileFilter <list>'                 , 'Filter files' )
+  .option( '--keep-removed'                      , 'Prevent keys no longer found from being removed' )
+  .option( '--write-old <string>'                , 'Save (or don\'t if false) _old files' )
   .parse( process.argv );
 
 
@@ -64,6 +66,7 @@ if ( ! fs.existsSync(input) ) {
 // ===================
 program.locales = program.locales && program.locales.split(',');
 program.functions = program.functions && program.functions.split(',');
+program.writeOld = program.writeOld !== 'false';
 program.directoryFilter = program.directoryFilter && program.directoryFilter.split(',');
 program.fileFilter = program.fileFilter && program.fileFilter.split(',');
 program.output = path.resolve(process.cwd(), output);
