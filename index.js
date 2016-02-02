@@ -33,6 +33,7 @@ function Parser(options, transformConfig) {
     this.suffix             = options.suffix || '';
     this.prefix             = options.prefix || '';
     this.writeOld           = options.writeOld !== false;
+    this.keepRemoved        = options.keepRemoved;
 
     ['functions', 'locales'].forEach(function( attr ) {
         if ( (typeof self[ attr ] !== 'object') || ! self[ attr ].length ) {
@@ -231,7 +232,7 @@ Parser.prototype._flush = function(done) {
 
 
             // merges existing translations with the new ones
-            mergedTranslations = helpers.mergeHash( currentTranslations, translationsHash[namespace] );
+            mergedTranslations = helpers.mergeHash( currentTranslations, translationsHash[namespace], null, this.keepRemoved );
 
             // restore old translations if the key is empty
             mergedTranslations.new = helpers.replaceEmpty( oldTranslations, mergedTranslations.new );

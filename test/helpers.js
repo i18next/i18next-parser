@@ -29,6 +29,16 @@ describe('mergeHash helper function', function () {
         done();
     });
 
+    it('copies `source` keys to `target` regardless of presence when keepRemoved is enabled', function (done) {
+        var source = { key1: 'value1', key2: 'value2' };
+        var target = { key1: '', key3: '' };
+        var res    = mergeHash(source, target, null, true);
+
+        assert.deepEqual(res.new, { key1: 'value1', key2: 'value2', key3: '' });
+        assert.deepEqual(res.old, { key2: 'value2' });
+        done();
+    });
+
     it('restores plural keys when the singular one exists', function (done) {
         var source = { key1: '', key1_plural: 'value1' };
         var target = { key1: '' };
