@@ -1,6 +1,11 @@
 # Changelog
 
-## 0.5.0 - latest
+## 0.6.0 - latest
+
+- Add --keep-removed option (cli & gulp)
+- Allow writeOld to be disable (cli)
+
+## 0.5.0
 
 - Add support for ES6 template strings: ` ` (closes #32)
 
