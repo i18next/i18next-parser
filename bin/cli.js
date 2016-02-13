@@ -18,6 +18,7 @@ program
   .version('0.6.0')
   .option( '-r, --recursive'                     , 'Parse sub directories' )
   .option( '-p, --parser <string>'               , 'A custom regex to use to parse your code' )
+  .option( '-a, --attributes <list>'             , 'The html attributes to parse' )
   .option( '-o, --output <directory>'            , 'The directory to output parsed keys' )
   .option( '-f, --functions <list>'              , 'The function names to parse in your code' )
   .option( '-n, --namespace <string>'            , 'The default namespace (translation by default)' )
@@ -65,6 +66,7 @@ if ( ! fs.existsSync(input) ) {
 // Parse passed values
 // ===================
 program.locales = program.locales && program.locales.split(',');
+program.attributes = program.attributes && program.attributes.split(',');
 program.functions = program.functions && program.functions.split(',');
 program.writeOld = program.writeOld !== 'false';
 program.directoryFilter = program.directoryFilter && program.directoryFilter.split(',');
