@@ -20,11 +20,13 @@ describe('parser', function () {
     });
 
 
-    it('parses data-i18n attributes in html templates', function (done) {
+    it('parses attributes in html templates', function (done) {
         var result;
-        var i18nextParser = Parser();
+        var i18nextParser = Parser({
+          attributes: ['data-i18n', 'translate', 't']
+        });
         var fakeFile = new File({
-            contents: new Buffer('<p data-i18n>first</p><p data-i18n="second">Second</p><p data-i18n="[html]third">Third</p><p data-i18n="[title]fourth;fifth">Fifth</p>')
+            contents: new Buffer('<p data-i18n>first</p><p translate="second">Second</p><p t="[html]third">Third</p><p data-i18n="[title]fourth;fifth">Fifth</p>')
         });
 
         i18nextParser.on('data', function (file) {

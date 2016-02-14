@@ -52,11 +52,12 @@ Thanks a lot to all the previous [contributors](https://github.com/i18next/i18ne
 
 ## CLI Usage
 
-`i18next /path/to/file/or/dir [-orpfnl]`
+`i18next /path/to/file/or/dir [-orapfnl]`
 
 - **-o, --output <directory>**: Where to write the locale files.
 - **-r, --recursive**: Is --output is a directory, parses files in sub directories.
 - **-f, --functions <list>**: Function names to parse. Defaults to `t`
+- **-a, --attributes <list>**: HTML attributes to parse. Defaults to `data-i18n`
 - **-p, --parser <string>**: A custom regex for the parser to use.
 - **-n, --namespace <string>**: Default namespace used in your i18next config. Defaults to `translation`
 - **-s, --namespace-separator <string>**: Namespace separator used in your translation keys. Defaults to `:`
@@ -89,6 +90,7 @@ gulp.task('i18next', function() {
 
 - **output**: Where to write the locale files relative to the base (here `app/`). Defaults to `locales`
 - **functions**: An array of functions names to parse. Defaults to `['t']`
+- **attributes**: An array of html attributes to parse. Defaults to `['data-i18n']`
 - **namespace**: Default namespace used in your i18next config. Defaults to `translation`
 - **namespaceSeparator**: Namespace separator used in your translation keys. Defaults to `:`
 - **keySeparator**: Key separator used in your translation keys. Defaults to `.`

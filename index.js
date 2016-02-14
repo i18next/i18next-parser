@@ -26,6 +26,7 @@ function Parser(options, transformConfig) {
     this.locales            = options.locales || ['en','fr'];
     this.output             = options.output || 'locales';
     this.regex              = options.parser;
+    this.attributes         = options.attributes || ['data-i18n'];
     this.namespaceSeparator = options.namespaceSeparator || ':';
     this.keySeparator 	    = options.keySeparator || '.';
     this.translations       = [];
@@ -116,10 +117,11 @@ Parser.prototype._transform = function(file, encoding, done) {
     }
 
 
-    // and we parse for data-i18n attributes in html
+    // and we parse for attributes in html
     // =============================================
-    var attributeWithValueRegex = new RegExp( '(?:\\s+data-i18n=")([^"]*)(?:")', 'gi' );
-    var attributeWithoutValueRegex = new RegExp( '<([A-Z][A-Z0-9]*)(?:(?:\\s+[A-Z0-9-]+)(?:(?:=")(?:[^"]*)(?:"))?)*(?:(?:\\s+data-i18n))(?:(?:\\s+[A-Z0-9-]+)(?:(?:=")(?:[^"]*)(?:"))?)*\\s*(?:>(.*?)<\\/\\1>)', 'gi' );
+    const attributes = '(?:' + this.attributes.join('|') + ')';
+    var attributeWithValueRegex = new RegExp( '(?:\\s+' + attributes + '=")([^"]*)(?:")', 'gi' );
+    var attributeWithoutValueRegex = new RegExp( '<([A-Z][A-Z0-9]*)(?:(?:\\s+[A-Z0-9-]+)(?:(?:=")(?:[^"]*)(?:"))?)*(?:(?:\\s+' + attributes + '))(?:(?:\\s+[A-Z0-9-]+)(?:(?:=")(?:[^"]*)(?:"))?)*\\s*(?:>(.*?)<\\/\\1>)', 'gi' );
 
     while (( matches = attributeWithValueRegex.exec( fileContent ) )) {
         matchKeys = matches[1].split(';');
