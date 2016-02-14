@@ -1,6 +1,10 @@
 # Changelog
 
-## 0.6.0 - latest
+## 0.7.0 - latest
+
+- Add --attributes option (cli & gulp)
+
+## 0.6.0
 
 - Add --keep-removed option (cli & gulp)
 - Allow writeOld to be disable (cli)
