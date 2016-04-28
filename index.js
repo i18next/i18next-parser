@@ -27,7 +27,9 @@ function Parser(options, transformConfig) {
     this.output             = options.output || 'locales';
     this.regex              = options.parser;
     this.attributes         = options.attributes || ['data-i18n'];
-    this.namespaceSeparator = options.namespaceSeparator || ':';
+    if (options.namespaceSeparator !== false) {
+        this.namespaceSeparator = options.namespaceSeparator || ':';
+    }
     this.keySeparator 	    = options.keySeparator || '.';
     this.translations       = [];
     this.extension          = options.extension || '.json';
@@ -143,11 +145,13 @@ Parser.prototype._transform = function(file, encoding, done) {
         // remove the backslash from escaped quotes
         var key = keys[j].replace(/\\('|"|`)/g, '$1');
 
-        if ( key.indexOf( self.namespaceSeparator ) == -1 ) {
-            key = self.defaultNamespace + self.keySeparator + key;
-        }
-        else {
-            key = key.replace( self.namespaceSeparator, self.keySeparator );
+        if (self.namespaceSeparator !== false) {
+            if ( key.indexOf( self.namespaceSeparator ) == -1 ) {
+                key = self.defaultNamespace + self.keySeparator + key;
+            }
+            else {
+                key = key.replace( self.namespaceSeparator, self.keySeparator );
+            }
         }
 
         self.translations.push( key );
