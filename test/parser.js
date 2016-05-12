@@ -408,4 +408,20 @@ describe('parser', function () {
 
         i18nextParser.end(fakeFile);
     });
+
+
+    it('fails to parse translation function with a variable', function (done) {
+        var i18nextParser = Parser();
+        var fakeFile = new File({
+            contents: new Buffer("asd t(firstVar)\n")
+        });
+
+        i18nextParser.on('error', function (message, region) {
+            assert.equal( message, 'i18next-parser does not support variables in translation functions, use a string literal' );
+            assert.equal( region, 't(firstVar)' );
+            done();
+        });
+
+        i18nextParser.end(fakeFile);
+    });
 });
