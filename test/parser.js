@@ -408,4 +408,20 @@ describe('parser', function () {
 
         i18nextParser.end(fakeFile);
     });
+
+
+    it('fails to parse first parameter not string literal', function (done) {
+        var i18nextParser = Parser();
+        var fakeFile = new File({
+            contents: new Buffer("asd t(firstVar)\n")
+        });
+
+        i18nextParser.on('error', function (message, region) {
+            assert.equal( message, "first argument to function needs to be a string literal" );
+            assert.equal( region, "asd t(firstVar)" )
+            done();
+        });
+
+        i18nextParser.end(fakeFile);
+    });
 });

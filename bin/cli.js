@@ -123,6 +123,10 @@ else {
 // Parse the stream
 // ================
 var parser = Parser(program);
+parser.on('error', function(message, region) {
+  console.log("[error] ".red + message + ": " + region.trim());
+  process.exit(1)
+});
 
 stream
   .pipe(through( { objectMode: true }, function (data, encoding, done) {

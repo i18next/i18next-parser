@@ -117,6 +117,14 @@ Parser.prototype._transform = function(file, encoding, done) {
     }
 
 
+    // and we parse for functions with variables instead of string literals
+    // ====================================
+    noStringLiteralPattern = '.*[^a-zA-Z0-9_](?:'+fnPattern+')(?:\\(|\\s)\\s*(?:[^\'"`\)]+\\)).*'
+    if ( matches = new RegExp( noStringLiteralPattern, 'g' ).exec( fileContent )) {
+        this.emit( 'error', 'first argument to function needs to be a string literal', matches[0] )
+    }
+
+
     // and we parse for attributes in html
     // =============================================
     const attributes = '(?:' + this.attributes.join('|') + ')';
