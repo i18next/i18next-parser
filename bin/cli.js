@@ -57,7 +57,7 @@ else {
 output = output || program.output || 'locales';
 
 if ( ! fs.existsSync(input) ) {
-  console.log( "\n" + "Error: ".red + input + " is not a file or directory\n" );
+  console.log( '\n' + 'Error: '.red + input + ' is not a file or directory\n' );
   process.exit( 1 );
 }
 
@@ -77,11 +77,11 @@ program.output = path.resolve(process.cwd(), output);
 
 // Welcome message
 // ===============
-var intro = "\n"+
-"i18next Parser".yellow + "\n" +
-"--------------".yellow + "\n" +
-"Input:  ".green + input + "\n" +
-"Output: ".green + program.output + "\n\n";
+var intro = '\n'+
+'i18next Parser'.yellow + '\n' +
+'--------------'.yellow + '\n' +
+'Input:  '.green + input + '\n' +
+'Output: '.green + program.output + '\n\n';
 
 console.log(intro);
 
@@ -123,6 +123,9 @@ else {
 // Parse the stream
 // ================
 var parser = Parser(program);
+parser.on('error', function (message, region) {
+  console.log('[error] '.red + message + ': ' + region.trim());
+});
 
 stream
   .pipe(through( { objectMode: true }, function (data, encoding, done) {
@@ -140,7 +143,7 @@ stream
 
     done();
   }))
-  .pipe(parser.on('reading', function(path) { console.log("[parse] ".green + path) }))
+  .pipe(parser.on('reading', function(path) { console.log('[parse] '.green + path) }))
   .pipe(through( { objectMode: true }, function (file, encoding, done) {
 
     mkdirp.sync( path.dirname(file.path) );

@@ -143,6 +143,10 @@ The transform emit a `json_error` event if the JSON.parse on json files fail. It
 
 `.pipe( i18next().on('reading', function(name, message) {  }) )`
 
+### Errors
+
+- `i18next-parser does not support variables in translation functions, use a string literal`: i18next-parser can't parse keys if you use variables like `t(variable)`, you need to use strings like `t('string')`.
+
 ---
 
 ## Examples

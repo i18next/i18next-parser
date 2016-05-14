@@ -117,8 +117,21 @@ Parser.prototype._transform = function(file, encoding, done) {
     }
 
 
+    // and we parse for functions with variables instead of string literals
+    // ====================================================================
+    var noStringLiteralPattern = '[^a-zA-Z0-9_]((?:'+fnPattern+')(?:\\(|\\s)\\s*(?:[^\'"`\)]+\\)))';
+    var matches = new RegExp( noStringLiteralPattern, 'g' ).exec( fileContent );
+    if (matches && matches.length) {
+        this.emit(
+          'error',
+          'i18next-parser does not support variables in translation functions, use a string literal',
+          matches[1]
+        );
+    }
+
+
     // and we parse for attributes in html
-    // =============================================
+    // ===================================
     const attributes = '(?:' + this.attributes.join('|') + ')';
     var attributeWithValueRegex = new RegExp( '(?:\\s+' + attributes + '=")([^"]*)(?:")', 'gi' );
     var attributeWithoutValueRegex = new RegExp( '<([A-Z][A-Z0-9]*)(?:(?:\\s+[A-Z0-9-]+)(?:(?:=")(?:[^"]*)(?:"))?)*(?:(?:\\s+' + attributes + '))(?:(?:\\s+[A-Z0-9-]+)(?:(?:=")(?:[^"]*)(?:"))?)*\\s*(?:>(.*?)<\\/\\1>)', 'gi' );
