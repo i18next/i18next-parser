@@ -1,6 +1,10 @@
 # Changelog
 
-## 0.7.0 - latest
+## 0.8.0 - latest
+
+- Throw an error when the translation function use a variable instead of a string
+
+## 0.7.0
 
 - Add --attributes option (cli & gulp)
 
