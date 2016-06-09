@@ -1,6 +1,10 @@
 # Changelog
 
-## 0.8.0 - latest
+## 0.8.1 - latest
+
+- Fix the regex introduced in 0.8.1 that was throwing unexpected errors
+
+## 0.8.0
 
 - Throw an error when the translation function use a variable instead of a string
 

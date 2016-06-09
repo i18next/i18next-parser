@@ -38,7 +38,6 @@ describe('parser', function () {
             assert.deepEqual( result, { first: '', second: '', third: '', fourth: '', fifth: '' } );
             done();
         });
-
         i18nextParser.end(fakeFile);
     });
 
@@ -58,7 +57,6 @@ describe('parser', function () {
             assert.deepEqual( result, { first: '', second: '', third: '', fourth: '', fifth: '' } );
             done();
         });
-
         i18nextParser.end(fakeFile);
     });
 
@@ -361,7 +359,6 @@ describe('parser', function () {
         i18nextParser.end(fakeFile);
     });
 
-
     it('retrieves plural and context values in existing file', function (done) {
         var i18nextParser = Parser();
         var fakeFile = new File({
@@ -388,7 +385,6 @@ describe('parser', function () {
         i18nextParser.end(fakeFile);
     });
 
-
     it('removes any trailing [bla] in the key', function (done) {
         var result;
         var i18nextParser = Parser();
@@ -409,7 +405,6 @@ describe('parser', function () {
         i18nextParser.end(fakeFile);
     });
 
-
     it('fails to parse translation function with a variable', function (done) {
         var i18nextParser = Parser();
         var fakeFile = new File({
@@ -422,6 +417,24 @@ describe('parser', function () {
             done();
         });
 
+        i18nextParser.end(fakeFile);
+    });
+
+    it('does not parse text with `doesn\'t` or isolated `t` in it', function (done) {
+        var result;
+        var i18nextParser = Parser();
+        var fakeFile = new File({
+            contents: new Buffer("// FIX this doesn't work and this t is all alone\nt('first')")
+        });
+        i18nextParser.on('data', function (file) {
+            if ( file.relative === 'en/translation.json' ) {
+                result = JSON.parse( file.contents );
+            }
+        });
+        i18nextParser.on('end', function (file) {
+            assert.deepEqual( result, {first: ''} );
+            done();
+        });
         i18nextParser.end(fakeFile);
     });
 });
