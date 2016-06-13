@@ -1,6 +1,10 @@
 # Changelog
 
-## 0.8.1 - latest
+## 0.8.2 - latest
+
+- Fix the regex introduced in 0.8.1 that was throwing unexpected errors (for good)
+
+## 0.8.1
 
 - Fix the regex introduced in 0.8.1 that was throwing unexpected errors
 

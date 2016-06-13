@@ -424,7 +424,7 @@ describe('parser', function () {
         var result;
         var i18nextParser = Parser();
         var fakeFile = new File({
-            contents: new Buffer("// FIX this doesn't work and this t is all alone\nt('first')")
+            contents: new Buffer("// FIX this doesn't work and this t is all alone\nt('first')\nt = function() {}")
         });
         i18nextParser.on('data', function (file) {
             if ( file.relative === 'en/translation.json' ) {

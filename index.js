@@ -119,7 +119,7 @@ Parser.prototype._transform = function(file, encoding, done) {
 
     // and we parse for functions with variables instead of string literals
     // ====================================================================
-    var noStringLiteralPattern = '[^a-zA-Z0-9_\'"`]((?:'+fnPattern+')(?:\\(|\\s)\\s*(?:[^\'"`\)]+\\)))';
+    var noStringLiteralPattern = '[^a-zA-Z0-9_\'"`]((?:'+fnPattern+')(?:\\()\\s*(?:[^\'"`\)]+\\)))';
     var matches = new RegExp( noStringLiteralPattern, 'g' ).exec( fileContent );
     if (matches && matches.length) {
         this.emit(
