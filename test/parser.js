@@ -244,6 +244,28 @@ describe('parser', function () {
         i18nextParser.end(fakeFile);
     });
 
+    it('handles escaped characters', function (done) {
+        var result;
+        var i18nextParser = Parser();
+        var fakeFile = new File({
+            base: __dirname,
+            contents: new Buffer("asd t('escaped backslash\\\\ newline\\n\\r tab\\t')")
+        });
+
+        i18nextParser.on('data', function (file) {
+            if ( file.relative === 'en/translation.json' ) {
+                result = JSON.parse( file.contents );
+            }
+        });
+        i18nextParser.once('end', function (file) {
+            var keys = Object.keys(result);
+            assert.equal( keys[0], 'escaped backslash\\ newline\n\r tab\t' );
+            done();
+        });
+
+        i18nextParser.end(fakeFile);
+    });
+
     it('handles es6 template strings with expressions', function (done) {
         var result;
         var i18nextParser = Parser();
