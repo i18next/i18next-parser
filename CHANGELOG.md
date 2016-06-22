@@ -1,6 +1,10 @@
 # Changelog
 
-## 0.8.2 - latest
+## 0.9.0 - latest
+
+- Handle strings with newlines, tabs and backslashes in them (PR #42)
+
+## 0.8.2
 
 - Fix the regex introduced in 0.8.1 that was throwing unexpected errors (for good)
 

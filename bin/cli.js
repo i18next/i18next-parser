@@ -15,7 +15,7 @@ var Parser      = require('../index');
 // Configure the command line
 // ==========================
 program
-  .version('0.8.2')
+  .version('0.9.0')
   .option( '-r, --recursive'                     , 'Parse sub directories' )
   .option( '-p, --parser <string>'               , 'A custom regex to use to parse your code' )
   .option( '-a, --attributes <list>'             , 'The html attributes to parse' )
