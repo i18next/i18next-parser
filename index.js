@@ -153,8 +153,13 @@ Parser.prototype._transform = function(file, encoding, done) {
     // finally we add the parsed keys to the catalog
     // =============================================
     for (var j in keys) {
+        var key = keys[j];
         // remove the backslash from escaped quotes
-        var key = keys[j].replace(/\\('|"|`)/g, '$1');
+        key = key.replace(/\\('|"|`)/g, '$1')
+        key = key.replace(/\\n/g, '\n');
+        key = key.replace(/\\r/g, '\r');
+        key = key.replace(/\\t/g, '\t');
+        key = key.replace(/\\\\/g, '\\');
 
         if ( key.indexOf( self.namespaceSeparator ) == -1 ) {
             key = self.defaultNamespace + self.keySeparator + key;
