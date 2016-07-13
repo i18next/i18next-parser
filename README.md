@@ -67,6 +67,7 @@ Thanks a lot to all the previous [contributors](https://github.com/i18next/i18ne
 - **--fileFilter**: Globs of files to filter
 - **--keep-removed**: Prevent keys no longer found from being removed
 - **--write-old false**: Avoid saving the \_old files
+- **--ignore-variable**: Don't fail when a variable in i18n.t() is found
 
 ---
 
