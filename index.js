@@ -29,6 +29,7 @@ function Parser(options, transformConfig) {
     this.attributes         = options.attributes || ['data-i18n'];
     this.namespaceSeparator = options.namespaceSeparator || ':';
     this.keySeparator 	    = options.keySeparator || '.';
+    this.contextSeparator   = options.contextSeparator || '_';
     this.translations       = [];
     this.extension          = options.extension || '.json';
     this.suffix             = options.suffix || '';
@@ -101,18 +102,18 @@ Parser.prototype._transform = function(file, encoding, done) {
 
     // and we parse for functions...
     // =============================
-    var fnPattern = '(?:' + this.functions.join( ')|(?:' ).replace( '.', '\\.' ) + ')';
-    pattern = '[^a-zA-Z0-9_\'"`](?:'+fnPattern+')(?:\\(|\\s)\\s*(?:\'((?:(?:\\\\\')?[^\']*)+[^\\\\])\'|"((?:(?:\\\\")?[^"]*)+[^\\\\])"|`((?:(?:\\\\`)?[^`]*)+[^\\\\])`)'
+    var fnPattern = this.functions.join( '|' ).replace( '.', '\\.' );
+    // get string with `string` or 'string' or "string"
+    var stringPattern = '(\'([^\'].*?[^\\\\])?\'|"([^\"].*?[^\\\\])?"|`([^\`].*?[^\\\\])?`)';
+    pattern = '.*?\\.(' + fnPattern + ')\\(\\s*' + stringPattern + '(([^).]*?)\\{(.*?)((context|\'context\'|"context")\\s*:\\s*' + stringPattern + '\\s*\\}))?';
     var functionRegex = new RegExp( this.regex || pattern, 'g' );
-
     while (( matches = functionRegex.exec( fileContent ) )) {
-
-        // the key should be the first truthy match
-        for (var i in matches) {
-            if (i > 0 && matches[i]) {
-                keys.push( matches[i] );
-                break;
+        if (matches[3]) {
+            var key = matches[3];
+            if (matches[12]) {
+                key += this.contextSeparator + matches[12];
             }
+            keys.push(key);
         }
     }
 
