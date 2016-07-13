@@ -29,6 +29,7 @@ function Parser(options, transformConfig) {
     this.attributes         = options.attributes || ['data-i18n'];
     this.namespaceSeparator = options.namespaceSeparator || ':';
     this.keySeparator 	    = options.keySeparator || '.';
+    this.contextSeparator   = options.contextSeparator || '_';
     this.translations       = [];
     this.extension          = options.extension || '.json';
     this.suffix             = options.suffix || '';
@@ -101,21 +102,23 @@ Parser.prototype._transform = function(file, encoding, done) {
 
     // and we parse for functions...
     // =============================
-    var fnPattern = '(?:' + this.functions.join( ')|(?:' ).replace( '.', '\\.' ) + ')';
-    pattern = '[^a-zA-Z0-9_\'"`](?:'+fnPattern+')(?:\\(|\\s)\\s*(?:\'((?:(?:\\\\\')?[^\']*)+[^\\\\])\'|"((?:(?:\\\\")?[^"]*)+[^\\\\])"|`((?:(?:\\\\`)?[^`]*)+[^\\\\])`)'
+    var fnPattern = this.functions.join( '|' ).replace( '.', '\\.' );
+    // get string with `string` or 'string' or "string"
+    // Check the string doen't begin with "
+    // Get the smallest chunk before a " appears if the chunk hasn't \ as last char
+    var stringPattern = '(?:\'([^\'].*?[^\\\\])?\'|"([^\"].*?[^\\\\])?"|`([^\`].*?[^\\\\])?`)';
+    pattern = '.*?(?:' + fnPattern + ')\\s*\\(?\\s*' + stringPattern + '(?:(?:[^).]*?)\\{(?:.*?)(?:(?:context|\'context\'|"context")\\s*:\\s*' + stringPattern + '\\s*\\}))?';
     var functionRegex = new RegExp( this.regex || pattern, 'g' );
-
     while (( matches = functionRegex.exec( fileContent ) )) {
-
-        // the key should be the first truthy match
-        for (var i in matches) {
-            if (i > 0 && matches[i]) {
-                keys.push( matches[i] );
-                break;
+        var key = matches[1] || matches[2] || matches[3];
+        if (key) {
+            var context = matches[4] || matches[5] || matches[6];
+            if (context) {
+                key += this.contextSeparator + context;
             }
+            keys.push(key);
         }
     }
-
 
     // and we parse for functions with variables instead of string literals
     // ====================================================================
@@ -128,7 +131,6 @@ Parser.prototype._transform = function(file, encoding, done) {
           matches[1]
         );
     }
-
 
     // and we parse for attributes in html
     // ===================================

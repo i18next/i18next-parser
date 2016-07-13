@@ -24,6 +24,7 @@ program
   .option( '-n, --namespace <string>'            , 'The default namespace (translation by default)' )
   .option( '-s, --namespace-separator <string>'  , 'The default namespace separator(: by default)' )
   .option( '-k, --key-separator <string>'        , 'The default key separator(. by default)' )
+  .option( '-c, --context-separator <string>'    , 'The default context separator(_ by default)' )
   .option( '-l, --locales <list>'                , 'The locales in your application' )
   .option( '--directoryFilter <list>'            , 'Filter directories' )
   .option( '--fileFilter <list>'                 , 'Filter files' )
