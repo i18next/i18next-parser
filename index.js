@@ -116,7 +116,7 @@ Parser.prototype._transform = function(file, encoding, done) {
             if (context) {
                 key += this.contextSeparator + context;
             }
-            keys.push(key);
+            keys.push( key );
         }
     }
 
