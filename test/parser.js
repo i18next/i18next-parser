@@ -459,4 +459,23 @@ describe('parser', function () {
         });
         i18nextParser.end(fakeFile);
     });
+
+    it('parses context passed as object', function (done) {
+        var result;
+        var i18nextParser = Parser();
+        var fakeFile = new File({
+            contents: new Buffer('t("first", {context: \'date\'}) t("second", { "context": \'form2\'}) t(`third`, { \'context\' : `context` }) t("fourth", { "context" : "pipo"})')
+        });
+
+        i18nextParser.on('data', function (file) {
+            if ( file.relative === 'en/translation.json' ) {
+                result = JSON.parse( file.contents );
+            }
+        });
+        i18nextParser.on('end', function (file) {
+            assert.deepEqual( result, { first_date: '', second_form2: '', third_context: '', fourth_pipo: '' } );
+            done();
+        });
+        i18nextParser.end(fakeFile);
+    });
 });
