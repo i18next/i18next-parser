@@ -462,9 +462,7 @@ describe('parser', function () {
 
     it('parses context passed as object', function (done) {
         var result;
-        var i18nextParser = Parser({
-          attributes: ['data-i18n', 'translate', 't']
-        });
+        var i18nextParser = Parser();
         var fakeFile = new File({
             contents: new Buffer('t("first", {context: \'date\'}) t("second", { "context": \'form2\'}) t(`third`, { \'context\' : `context` }) t("fourth", { "context" : "pipo"})')
         });
