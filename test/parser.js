@@ -464,7 +464,7 @@ describe('parser', function () {
         var result;
         var i18nextParser = Parser();
         var fakeFile = new File({
-            contents: new Buffer('t("first", {context: \'date\'}) t("second", { "context": \'form2\'}) t(`third`, { \'context\' : `context` }) t("fourth", { "context" : "pipo"})')
+            contents: new Buffer('t("first", {context: \'date\'}) t("second", { "hello": "world", "context": \'form2\', "foo": "bar"}) t(`third`, { \'context\' : `context` }) t("fourth", { "context" : "pipo"})')
         });
 
         i18nextParser.on('data', function (file) {

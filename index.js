@@ -103,11 +103,12 @@ Parser.prototype._transform = function(file, encoding, done) {
     // and we parse for functions...
     // =============================
     var fnPattern = this.functions.join( '|' ).replace( '.', '\\.' );
-    // get string with `string` or 'string' or "string"
-    // Check the string doen't begin with "
-    // Get the smallest chunk before a " appears if the chunk hasn't \ as last char
-    var stringPattern = '(?:\'([^\'].*?[^\\\\])?\'|"([^\"].*?[^\\\\])?"|`([^\`].*?[^\\\\])?`)';
-    pattern = '.*?(?:' + fnPattern + ')\\s*\\(?\\s*' + stringPattern + '(?:(?:[^).]*?)\\{(?:.*?)(?:(?:context|\'context\'|"context")\\s*:\\s*' + stringPattern + '\\s*\\}))?';
+    var singleQuotePattern = "'([^\'].*?[^\\\\])?'";
+    var doubleQuotePattern = '"([^\"].*?[^\\\\])?"';
+    var backQuotePattern   = '`([^\`].*?[^\\\\])?`';
+    var stringPattern = '(?:' + singleQuotePattern + '|' + doubleQuotePattern + '|' + backQuotePattern + ')';
+    var pattern = '.*?(?:' + fnPattern + ')\\s*\\(?\\s*' + stringPattern + '(?:(?:[^).]*?)\\{(?:.*?)(?:(?:context|\'context\'|"context")\\s*:\\s*' + stringPattern + '(?:.*?)\\}))?';
+
     var functionRegex = new RegExp( this.regex || pattern, 'g' );
     while (( matches = functionRegex.exec( fileContent ) )) {
         var key = matches[1] || matches[2] || matches[3];
