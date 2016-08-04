@@ -36,7 +36,7 @@ function Parser(options, transformConfig) {
     this.prefix             = options.prefix || '';
     this.writeOld           = options.writeOld !== false;
     this.keepRemoved        = options.keepRemoved;
-    this.ignoreVariable     = options.ignoreVariable || false;
+    this.ignoreVariables    = options.ignoreVariables || false;
 
     ['functions', 'locales'].forEach(function( attr ) {
         if ( (typeof self[ attr ] !== 'object') || ! self[ attr ].length ) {
@@ -127,7 +127,7 @@ Parser.prototype._transform = function(file, encoding, done) {
     var noStringLiteralPattern = '[^a-zA-Z0-9_\'"`]((?:'+fnPattern+')(?:\\()\\s*(?:[^\'"`\)]+\\)))';
     var matches = new RegExp( noStringLiteralPattern, 'g' ).exec( fileContent );
     if (matches && matches.length) {
-        if (!this.ignoreVariable) {
+        if (!this.ignoreVariables) {
             this.emit(
                 'error',
                 'i18next-parser does not support variables in translation functions, use a string literal',

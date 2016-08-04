@@ -1,6 +1,11 @@
 # Changelog
 
-## 0.9.0 - latest
+## 0.10.0
+
+- Add option to silence the variable errors (PR #47)
+- Support for passing a context via an object (PR #49)
+
+## 0.9.0
 
 - Handle strings with newlines, tabs and backslashes in them (PR #42)
 

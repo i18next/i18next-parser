@@ -15,7 +15,7 @@ var Parser      = require('../index');
 // Configure the command line
 // ==========================
 program
-  .version('0.9.0')
+  .version('0.10.0')
   .option( '-r, --recursive'                     , 'Parse sub directories' )
   .option( '-p, --parser <string>'               , 'A custom regex to use to parse your code' )
   .option( '-a, --attributes <list>'             , 'The html attributes to parse' )
@@ -30,7 +30,7 @@ program
   .option( '--fileFilter <list>'                 , 'Filter files' )
   .option( '--keep-removed'                      , 'Prevent keys no longer found from being removed' )
   .option( '--write-old <string>'                , 'Save (or don\'t if false) _old files' )
-  .option( '--ignore-variable'                    , 'Don\'t fail when a variable in i18n.t() is found' )
+  .option( '--ignore-variables'                  , 'Don\'t fail when a variable is found' )
   .parse( process.argv );
 
 
