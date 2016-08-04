@@ -62,6 +62,7 @@ Thanks a lot to all the previous [contributors](https://github.com/i18next/i18ne
 - **-n, --namespace <string>**: Default namespace used in your i18next config. Defaults to `translation`
 - **-s, --namespace-separator <string>**: Namespace separator used in your translation keys. Defaults to `:`
 - **-k, --key-separator <string>**: Key separator used in your translation keys. Defaults to `.`
+- **-c, --context-separator <string>**: Context separator used in your translation keys. Defaults to `_`
 - **-l, --locales <list>**: The locales in your applications. Defaults to `en,fr`
 - **--directoryFilter**: Globs of folders to filter
 - **--fileFilter**: Globs of files to filter
