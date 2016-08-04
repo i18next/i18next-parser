@@ -30,6 +30,7 @@ program
   .option( '--fileFilter <list>'                 , 'Filter files' )
   .option( '--keep-removed'                      , 'Prevent keys no longer found from being removed' )
   .option( '--write-old <string>'                , 'Save (or don\'t if false) _old files' )
+  .option( '--ignore-variable'                    , 'Don\'t fail when a variable in i18n.t() is found' )
   .parse( process.argv );
 
 
