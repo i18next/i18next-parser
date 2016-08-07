@@ -21,23 +21,29 @@ function Parser(options, transformConfig) {
     options = options || {};
     transformConfig = transformConfig || {};
 
-    this.defaultNamespace = options.namespace || 'translation';
-    this.functions = options.functions || ['t'];
-    this.locales = options.locales || ['en', 'fr'];
-    this.output = options.output || 'locales';
-    this.regex = options.parser;
-    this.attributes = options.attributes || ['data-i18n'];
-    this.namespaceSeparator = options.namespaceSeparator || ':';
-    this.keySeparator = options.keySeparator || '.';
-    this.contextSeparator = options.contextSeparator || '_';
-    this.translations = [];
-    this.extension = options.extension || '.json';
-    this.suffix = options.suffix || '';
-    this.prefix = options.prefix || '';
-    this.writeOld = options.writeOld !== false;
-    this.keepRemoved = options.keepRemoved;
-    this.ignoreVariables = options.ignoreVariables || false;
-    this.includeSingleQuoted = options.includeSingleQuoted || false;
+    this.defaultNamespace       = options.namespace || 'translation';
+    this.functions              = options.functions || ['t'];
+    this.locales                = options.locales || ['en','fr'];
+    this.output                 = options.output || 'locales';
+    this.regex                  = options.parser;
+    this.attributes             = options.attributes || ['data-i18n'];
+    this.defaultNamespace       = options.namespace || 'translation';
+    this.functions              = options.functions || ['t'];
+    this.locales                = options.locales || ['en', 'fr'];
+    this.output                 = options.output || 'locales';
+    this.regex                  = options.parser;
+    this.attributes             = options.attributes || ['data-i18n'];
+    this.namespaceSeparator     = options.namespaceSeparator || ':';
+    this.keySeparator           = options.keySeparator || '.';
+    this.contextSeparator       = options.contextSeparator || '_';
+    this.translations           = [];
+    this.extension              = options.extension || '.json';
+    this.suffix                 = options.suffix || '';
+    this.prefix                 = options.prefix || '';
+    this.writeOld               = options.writeOld !== false;
+    this.keepRemoved            = options.keepRemoved;
+    this.ignoreVariables        = options.ignoreVariables || false;
+    this.includeSingleQuoted    = options.includeSingleQuoted || false;
 
     ['functions', 'locales'].forEach(function (attr) {
         if ((typeof self[attr] !== 'object') || !self[attr].length) {

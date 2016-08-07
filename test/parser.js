@@ -11,12 +11,12 @@ var replaceEmpty    = helpers.replaceEmpty
 
 describe('parser', function () {
 
-    function isFilenameMatch(firstFile,secondFile){
+    function isFilenameMatch(firstFile,secondFile) {
         return (firstFile === secondFile) || firstFile.replace('\\','/') === secondFile.replace('\\','/');
     }
 
-    function isFilenameInArray(filename,filenameArray){
-        return (filenameArray.indexOf(filename)>-1) || filenameArray.map(function(fn){return fn.replace('\\','/')}).indexOf(filename.replace('\\','/'))>-1;
+    function isFilenameInArray(filename,filenameArray) {
+        return (filenameArray.indexOf(filename)>-1) || filenameArray.map(function(fn) {return fn.replace('\\','/')}).indexOf(filename.replace('\\','/'))>-1;
     }
 
 
@@ -28,7 +28,7 @@ describe('parser', function () {
         });
 
         i18nextParser.on('data', function (file) {
-            if (isFilenameMatch(file.relative,'en/translation.json')){
+            if (isFilenameMatch(file.relative,'en/translation.json')) {
             //if ( file.relative === 'en/translation.json' ) {
                 result = JSON.parse( file.contents );
             }
@@ -52,7 +52,7 @@ describe('parser', function () {
         });
 
         i18nextParser.on('data', function (file) {
-            if (isFilenameMatch(file.relative,'en/translation.json')){
+            if (isFilenameMatch(file.relative,'en/translation.json')) {
             //if ( file.relative === 'en/translation.json' ) {
                 result = JSON.parse( file.contents );
             }
@@ -72,7 +72,7 @@ describe('parser', function () {
         });
 
         i18nextParser.on('data', function (file) {
-            if (isFilenameMatch(file.relative,'en/translation.json')){
+            if (isFilenameMatch(file.relative,'en/translation.json')) {
             //if ( file.relative === 'en/translation.json' ) {
                 result = JSON.parse( file.contents );
             }
@@ -93,7 +93,7 @@ describe('parser', function () {
         });
 
         i18nextParser.on('data', function (file) {
-            if (isFilenameMatch(file.relative,'en/translation.json')){
+            if (isFilenameMatch(file.relative,'en/translation.json')) {
             //if ( file.relative === 'en/translation.json' ) {
                 result = JSON.parse( file.contents );
             }
@@ -117,7 +117,7 @@ describe('parser', function () {
         });
 
         i18nextParser.on('data', function (file) {
-            if (isFilenameMatch(file.relative,'en/translation.json')){
+            if (isFilenameMatch(file.relative,'en/translation.json')) {
             //if ( file.relative === 'en/translation.json' ) {
                 result = JSON.parse( file.contents );
             }
@@ -142,7 +142,7 @@ describe('parser', function () {
         });
 
         i18nextParser.on('data', function (file) {
-            if (isFilenameMatch(file.relative,'en/translation.json')){
+            if (isFilenameMatch(file.relative,'en/translation.json')) {
             //if ( file.relative === 'en/translation.json' ) {
                 result = JSON.parse( file.contents );
             }
@@ -164,7 +164,7 @@ describe('parser', function () {
         });
 
         i18nextParser.on('data', function (file) {
-            if (isFilenameMatch(file.relative,'en/translation.json')){
+            if (isFilenameMatch(file.relative,'en/translation.json')) {
             //if ( file.relative === 'en/translation.json' ) {
                 result = JSON.parse( file.contents );
             }
@@ -287,7 +287,7 @@ describe('parser', function () {
         });
 
         i18nextParser.on('data', function (file) {
-            if (isFilenameMatch(file.relative,'en/test_separators.json')){
+            if (isFilenameMatch(file.relative,'en/test_separators.json')) {
             //if ( file.relative === 'en/test_separators.json' ) {
                 result = JSON.parse( file.contents );
             }
@@ -309,7 +309,7 @@ describe('parser', function () {
         });
 
         i18nextParser.on('data', function (file) {
-            if (isFilenameMatch(file.relative,'en/translation.json')){
+            if (isFilenameMatch(file.relative,'en/translation.json')) {
             //if ( file.relative === 'en/translation.json' ) {
                 result = JSON.parse( file.contents );
             }
@@ -333,7 +333,7 @@ describe('parser', function () {
         });
 
         i18nextParser.on('data', function (file) {
-            if (isFilenameMatch(file.relative,'en/translation.json')){
+            if (isFilenameMatch(file.relative,'en/translation.json')) {
             //if ( file.relative === 'en/translation.json' ) {
                 result = JSON.parse( file.contents );
             }
@@ -356,7 +356,7 @@ describe('parser', function () {
         });
 
         i18nextParser.on('data', function (file) {
-            if (isFilenameMatch(file.relative,'en/translation.json')){
+            if (isFilenameMatch(file.relative,'en/translation.json')) {
             //if ( file.relative === 'en/translation.json' ) {
                 result = JSON.parse( file.contents );
             }
@@ -397,7 +397,7 @@ describe('parser', function () {
         });
 
         i18nextParser.on('data', function (file) {
-            if (isFilenameMatch(file.relative,'en/test_merge.json')){
+            if (isFilenameMatch(file.relative,'en/test_merge.json')) {
             //if ( file.relative === 'en/test_merge.json' ) {
                 result = JSON.parse( file.contents );
             }
@@ -424,7 +424,7 @@ describe('parser', function () {
         };
 
         i18nextParser.on('data', function (file) {
-            if (isFilenameMatch(file.relative,'en/test_context.json')){
+            if (isFilenameMatch(file.relative,'en/test_context.json')) {
             //if ( file.relative === 'en/test_context.json' ) {
                 result = JSON.parse( file.contents );
             }
@@ -453,7 +453,7 @@ describe('parser', function () {
         };
 
         i18nextParser.on('data', function (file) {
-            if (isFilenameMatch(file.relative,'en/test_plural.json')){
+            if (isFilenameMatch(file.relative,'en/test_plural.json')) {
             //if ( file.relative === 'en/test_plural.json' ) {
                 result = JSON.parse( file.contents );
             }
@@ -480,7 +480,7 @@ describe('parser', function () {
         };
 
         i18nextParser.on('data', function (file) {
-            if (isFilenameMatch(file.relative,'en/test_context_plural.json')){
+            if (isFilenameMatch(file.relative,'en/test_context_plural.json')) {
             //if ( file.relative === 'en/test_context_plural.json' ) {
                 result = JSON.parse( file.contents );
             }
@@ -501,7 +501,7 @@ describe('parser', function () {
         });
 
         i18nextParser.on('data', function (file) {
-            if (isFilenameMatch(file.relative,'en/translation.json')){
+            if (isFilenameMatch(file.relative,'en/translation.json')) {
             //if ( file.relative === 'en/translation.json' ) {
                 result = JSON.parse( file.contents );
             }
@@ -536,7 +536,7 @@ describe('parser', function () {
             contents: new Buffer("// FIX this doesn't work and this t is all alone\nt('first')\nt = function() {}")
         });
         i18nextParser.on('data', function (file) {
-            if (isFilenameMatch(file.relative,'en/translation.json')){
+            if (isFilenameMatch(file.relative,'en/translation.json')) {
             //if ( file.relative === 'en/translation.json' ) {
                 result = JSON.parse( file.contents );
             }
@@ -556,7 +556,7 @@ describe('parser', function () {
         });
 
         i18nextParser.on('data', function (file) {
-            if (isFilenameMatch(file.relative,'en/translation.json')){
+            if (isFilenameMatch(file.relative,'en/translation.json')) {
             //if ( file.relative === 'en/translation.json' ) {
                 result = JSON.parse( file.contents );
             }
