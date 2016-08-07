@@ -133,7 +133,8 @@ describe('parser', function () {
     it('parses jade attributes with single quotes', function (done) {
         var result;
         var i18nextParser = Parser({
-            attributes:['t']
+            attributes:['t'],
+            includeSingleQuoted : false
         });
 
         var fakeFile = new File({
