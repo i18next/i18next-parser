@@ -141,7 +141,7 @@ Parser.prototype._transform = function(file, encoding, done) {
     // and we parse for attributes in html
     // ===================================
     const attributes = '(?:' + this.attributes.join('|') + ')';
-    var attributeWithValueRegex = new RegExp( '(?:\\s+' + attributes + '=")([^"]*)(?:")', 'gi' );
+    var attributeWithValueRegex = new RegExp( '(?:\\W+' + attributes + '=")([^"]*)(?:")', 'gi' );
     var attributeWithoutValueRegex = new RegExp( '<([A-Z][A-Z0-9]*)(?:(?:\\s+[A-Z0-9-]+)(?:(?:=")(?:[^"]*)(?:"))?)*(?:(?:\\s+' + attributes + '))(?:(?:\\s+[A-Z0-9-]+)(?:(?:=")(?:[^"]*)(?:"))?)*\\s*(?:>(.*?)<\\/\\1>)', 'gi' );
 
     while (( matches = attributeWithValueRegex.exec( fileContent ) )) {
