@@ -134,7 +134,7 @@ describe('parser', function () {
         var result;
         var i18nextParser = Parser({
             attributes:['t'],
-            includeSingleQuoted : false
+            includeSingleQuoted : true
         });
 
         var fakeFile = new File({

@@ -18,18 +18,12 @@ function Parser(options, transformConfig) {
 
     var self = this;
 
-    options = options || {};
+    options         = options || {};
     transformConfig = transformConfig || {};
 
     this.defaultNamespace       = options.namespace || 'translation';
     this.functions              = options.functions || ['t'];
     this.locales                = options.locales || ['en','fr'];
-    this.output                 = options.output || 'locales';
-    this.regex                  = options.parser;
-    this.attributes             = options.attributes || ['data-i18n'];
-    this.defaultNamespace       = options.namespace || 'translation';
-    this.functions              = options.functions || ['t'];
-    this.locales                = options.locales || ['en', 'fr'];
     this.output                 = options.output || 'locales';
     this.regex                  = options.parser;
     this.attributes             = options.attributes || ['data-i18n'];
@@ -45,9 +39,9 @@ function Parser(options, transformConfig) {
     this.ignoreVariables        = options.ignoreVariables || false;
     this.includeSingleQuoted    = options.includeSingleQuoted || false;
 
-    ['functions', 'locales'].forEach(function (attr) {
-        if ((typeof self[attr] !== 'object') || !self[attr].length) {
-            throw new PluginError(PLUGIN_NAME, '`' + attr + '` must be an array');
+    ['functions', 'locales'].forEach(function( attr ) {
+        if ( (typeof self[ attr ] !== 'object') || ! self[ attr ].length ) {
+            throw new PluginError(PLUGIN_NAME, '`'+attr+'` must be an array');
         }
     });
 
@@ -58,17 +52,17 @@ util.inherits(Parser, Transform);
 
 
 
-Parser.prototype._transform = function (file, encoding, done) {
+Parser.prototype._transform = function(file, encoding, done) {
 
-    var self = this;
-    this.base = this.base || file.base;
+    var self        = this;
+    this.base       = this.base || file.base;
 
 
 
     // we do not handle streams
     // ========================
     if (file.isStream()) {
-        this.emit('error', new PluginError(PLUGIN_NAME, 'Streams not supported'));
+        this.emit( 'error', new PluginError( PLUGIN_NAME, 'Streams not supported' ) );
         return done();
     }
 
@@ -76,15 +70,15 @@ Parser.prototype._transform = function (file, encoding, done) {
 
     // get the file from file path
     // ===========================
-    if (file.isNull()) {
-        if (file.stat.isDirectory()) {
+    if(file.isNull()) {
+        if ( file.stat.isDirectory() ) {
             return done();
         }
-        else if (file.path && fs.existsSync(file.path)) {
-            data = fs.readFileSync(file.path);
+        else if ( file.path && fs.existsSync( file.path ) ) {
+            data = fs.readFileSync( file.path );
         }
         else {
-            this.emit('error', new PluginError(PLUGIN_NAME, 'File has no content and is not readable'));
+            this.emit( 'error', new PluginError( PLUGIN_NAME, 'File has no content and is not readable' ) );
             return done();
         }
     }
@@ -93,7 +87,7 @@ Parser.prototype._transform = function (file, encoding, done) {
 
     // we handle buffers
     // =================
-    if (file.isBuffer()) {
+    if(file.isBuffer()) {
         data = file.contents;
     }
 
@@ -105,34 +99,34 @@ Parser.prototype._transform = function (file, encoding, done) {
     var keys = [];
     var matches;
 
-    this.emit('reading', file.path);
+    this.emit( 'reading', file.path );
 
 
     // and we parse for functions...
     // =============================
-    var fnPattern = this.functions.join('|').replace('.', '\\.');
+    var fnPattern = this.functions.join( '|' ).replace( '.', '\\.' );
     var singleQuotePattern = "'([^\'].*?[^\\\\])?'";
     var doubleQuotePattern = '"([^\"].*?[^\\\\])?"';
-    var backQuotePattern = '`([^\`].*?[^\\\\])?`';
+    var backQuotePattern   = '`([^\`].*?[^\\\\])?`';
     var stringPattern = '(?:' + singleQuotePattern + '|' + doubleQuotePattern + '|' + backQuotePattern + ')';
     var pattern = '.*?(?:' + fnPattern + ')\\s*\\(?\\s*' + stringPattern + '(?:(?:[^).]*?)\\{(?:.*?)(?:(?:context|\'context\'|"context")\\s*:\\s*' + stringPattern + '(?:.*?)\\}))?';
 
-    var functionRegex = new RegExp(this.regex || pattern, 'g');
-    while ((matches = functionRegex.exec(fileContent))) {
+    var functionRegex = new RegExp( this.regex || pattern, 'g' );
+    while (( matches = functionRegex.exec( fileContent ) )) {
         var key = matches[1] || matches[2] || matches[3];
         if (key) {
             var context = matches[4] || matches[5] || matches[6];
             if (context) {
                 key += this.contextSeparator + context;
             }
-            keys.push(key);
+            keys.push( key );
         }
     }
 
     // and we parse for functions with variables instead of string literals
     // ====================================================================
-    var noStringLiteralPattern = '[^a-zA-Z0-9_\'"`]((?:' + fnPattern + ')(?:\\()\\s*(?:[^\'"`\)]+\\)))';
-    var matches = new RegExp(noStringLiteralPattern, 'g').exec(fileContent);
+    var noStringLiteralPattern = '[^a-zA-Z0-9_\'"`]((?:'+fnPattern+')(?:\\()\\s*(?:[^\'"`\)]+\\)))';
+    var matches = new RegExp( noStringLiteralPattern, 'g' ).exec( fileContent );
     if (matches && matches.length) {
         if (!this.ignoreVariables) {
             this.emit(
@@ -148,21 +142,22 @@ Parser.prototype._transform = function (file, encoding, done) {
     // and we parse for attributes in html
     // ===================================
     const attributes = '(?:' + this.attributes.join('|') + ')';
-    var attributeWithValueRegex = new RegExp('(?:\\W+' + attributes + '=")([^"]*)(?:")', 'gi');
+    var attributeWithValueRegex = new RegExp( '(?:\\W+' + attributes + '=")([^"]*)(?:")', 'gi' );
     var attributeWithValueRegexSingleQuotes = new RegExp("(?:\\W+" + attributes + "=')([^']*)(?:')", 'gi');
-    var attributeWithoutValueRegex = new RegExp('<([A-Z][A-Z0-9]*)(?:(?:\\s+[A-Z0-9-]+)(?:(?:=")(?:[^"]*)(?:"))?)*(?:(?:\\s+' + attributes + '))(?:(?:\\s+[A-Z0-9-]+)(?:(?:=")(?:[^"]*)(?:"))?)*\\s*(?:>(.*?)<\\/\\1>)', 'gi');
+    var attributeWithoutValueRegex = new RegExp( '<([A-Z][A-Z0-9]*)(?:(?:\\s+[A-Z0-9-]+)(?:(?:=")(?:[^"]*)(?:"))?)*(?:(?:\\s+' + attributes + '))(?:(?:\\s+[A-Z0-9-]+)(?:(?:=")(?:[^"]*)(?:"))?)*\\s*(?:>(.*?)<\\/\\1>)', 'gi' );
 
-    while ((matches = attributeWithValueRegex.exec(fileContent))) {
+    while (( matches = attributeWithValueRegex.exec( fileContent ) )) {
         matchKeys = matches[1].split(';');
 
         for (var i in matchKeys) {
             // remove any leading [] in the key
-            keys.push(matchKeys[i].replace(/^\[[a-zA-Z0-9_-]*\]/, ''));
+            keys.push( matchKeys[i].replace( /^\[[a-zA-Z0-9_-]*\]/ , '' ) );
         }
     }
-    //and is specifies in options (includeSingleQuoted) also for single-quoted attributes 
+
+    //and if specified in options (includeSingleQuoted) also for single-quoted attributes 
     if (this.includeSingleQuoted) {
-        while ((matches = attributeWithValueRegexSingleQuotes.exec(fileContent))) {
+        while (( matches = attributeWithValueRegexSingleQuotes.exec( fileContent ) )) {
             matchKeys = matches[1].split(';');
 
             for (var i in matchKeys) {
@@ -172,8 +167,8 @@ Parser.prototype._transform = function (file, encoding, done) {
         }
     }
 
-    while ((matches = attributeWithoutValueRegex.exec(fileContent))) {
-        keys.push(matches[2]);
+    while (( matches = attributeWithoutValueRegex.exec( fileContent ) )) {
+        keys.push( matches[2] );
     }
 
 
@@ -188,14 +183,14 @@ Parser.prototype._transform = function (file, encoding, done) {
         key = key.replace(/\\t/g, '\t');
         key = key.replace(/\\\\/g, '\\');
 
-        if (key.indexOf(self.namespaceSeparator) == -1) {
+        if ( key.indexOf( self.namespaceSeparator ) == -1 ) {
             key = self.defaultNamespace + self.keySeparator + key;
         }
         else {
-            key = key.replace(self.namespaceSeparator, self.keySeparator);
+            key = key.replace( self.namespaceSeparator, self.keySeparator );
         }
 
-        self.translations.push(key);
+        self.translations.push( key );
     }
 
     done();
@@ -203,17 +198,17 @@ Parser.prototype._transform = function (file, encoding, done) {
 
 
 
-Parser.prototype._flush = function (done) {
+Parser.prototype._flush = function(done) {
 
     var self = this;
-    var base = path.resolve(self.base, self.output);
+    var base = path.resolve( self.base, self.output );
     var translationsHash = {};
 
 
 
     // remove duplicate keys
     // =====================
-    self.translations = _.uniq(self.translations).sort();
+    self.translations = _.uniq( self.translations ).sort();
 
 
 
@@ -222,8 +217,8 @@ Parser.prototype._flush = function (done) {
     // ==========================
     for (var index in self.translations) {
         // simplify ${dot.separated.variables} into just their tails (${variables})
-        var key = self.translations[index].replace(/\$\{(?:[^.}]+\.)*([^}]+)\}/g, '\${$1}');
-        translationsHash = helpers.hashFromString(key, self.keySeparator, translationsHash);
+        var key = self.translations[index].replace( /\$\{(?:[^.}]+\.)*([^}]+)\}/g, '\${$1}' );
+        translationsHash = helpers.hashFromString( key, self.keySeparator, translationsHash );
     }
 
 
@@ -231,15 +226,15 @@ Parser.prototype._flush = function (done) {
     // process each locale and namespace
     // =================================
     for (var i in self.locales) {
-        var locale = self.locales[i];
-        var localeBase = path.resolve(self.base, self.output, locale);
+        var locale     = self.locales[i];
+        var localeBase = path.resolve( self.base, self.output, locale );
 
         for (var namespace in translationsHash) {
 
             // get previous version of the files
-            var prefix = self.prefix.replace('$LOCALE', locale);
-            var suffix = self.suffix.replace('$LOCALE', locale);
-            var extension = self.extension.replace('$LOCALE', locale);
+            var prefix = self.prefix.replace( '$LOCALE', locale );
+            var suffix = self.suffix.replace( '$LOCALE', locale );
+            var extension = self.extension.replace( '$LOCALE', locale );
 
             var namespacePath = path.resolve(
                 localeBase,
@@ -250,12 +245,12 @@ Parser.prototype._flush = function (done) {
                 prefix + namespace + suffix + '_old' + extension
             );
 
-            if (fs.existsSync(namespacePath)) {
+            if ( fs.existsSync( namespacePath ) ) {
                 try {
-                    currentTranslations = JSON.parse(fs.readFileSync(namespacePath));
+                    currentTranslations = JSON.parse( fs.readFileSync( namespacePath ) );
                 }
                 catch (error) {
-                    this.emit('json_error', error.name, error.message);
+                    this.emit( 'json_error', error.name, error.message );
                     currentTranslations = {};
                 }
             }
@@ -263,12 +258,12 @@ Parser.prototype._flush = function (done) {
                 currentTranslations = {};
             }
 
-            if (fs.existsSync(namespaceOldPath)) {
+            if ( fs.existsSync( namespaceOldPath ) ) {
                 try {
-                    oldTranslations = JSON.parse(fs.readFileSync(namespaceOldPath));
+                    oldTranslations = JSON.parse( fs.readFileSync( namespaceOldPath ) );
                 }
                 catch (error) {
-                    this.emit('json_error', error.name, error.message);
+                    this.emit( 'json_error', error.name, error.message );
                     currentTranslations = {};
                 }
             }
@@ -279,33 +274,33 @@ Parser.prototype._flush = function (done) {
 
 
             // merges existing translations with the new ones
-            mergedTranslations = helpers.mergeHash(currentTranslations, translationsHash[namespace], null, this.keepRemoved);
+            mergedTranslations = helpers.mergeHash( currentTranslations, translationsHash[namespace], null, this.keepRemoved );
 
             // restore old translations if the key is empty
-            mergedTranslations.new = helpers.replaceEmpty(oldTranslations, mergedTranslations.new);
+            mergedTranslations.new = helpers.replaceEmpty( oldTranslations, mergedTranslations.new );
 
             // merges former old translations with the new ones
-            mergedTranslations.old = _.extend(oldTranslations, mergedTranslations.old);
+            mergedTranslations.old = _.extend( oldTranslations, mergedTranslations.old );
 
 
 
             // push files back to the stream
             mergedTranslationsFile = new File({
-                path: namespacePath,
-                base: base,
-                contents: new Buffer(JSON.stringify(mergedTranslations.new, null, 2))
+              path: namespacePath,
+              base: base,
+              contents: new Buffer( JSON.stringify( mergedTranslations.new, null, 2 ) )
             });
-            this.emit('writing', namespacePath);
-            self.push(mergedTranslationsFile);
+            this.emit( 'writing', namespacePath );
+            self.push( mergedTranslationsFile );
 
-            if (self.writeOld) {
+            if ( self.writeOld ) {
                 mergedOldTranslationsFile = new File({
                     path: namespaceOldPath,
                     base: base,
                     contents: new Buffer(JSON.stringify(mergedTranslations.old, null, 2))
                 });
-                this.emit('writing', namespaceOldPath);
-                self.push(mergedOldTranslationsFile);
+                this.emit( 'writing', namespaceOldPath );
+                self.push( mergedOldTranslationsFile );
             }
 
 
@@ -317,6 +312,6 @@ Parser.prototype._flush = function (done) {
 
 
 
-module.exports = function (options, transformConfig) {
+module.exports = function(options, transformConfig) {
     return new Parser(options, transformConfig);
 };
