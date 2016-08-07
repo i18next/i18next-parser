@@ -1,12 +1,12 @@
-var gutil = require('gulp-util');
+var gutil       = require('gulp-util');
 var PluginError = gutil.PluginError;
-var Transform = require('stream').Transform;
-var util = require('util');
-var helpers = require('./src/helpers');
-var fs = require('fs');
-var File = require('vinyl');
-var path = require('path');
-var _ = require('lodash');
+var Transform   = require('stream').Transform;
+var util        = require('util');
+var helpers     = require('./src/helpers');
+var fs          = require('fs');
+var File        = require('vinyl');
+var path        = require('path');
+var _           = require('lodash');
 
 
 
