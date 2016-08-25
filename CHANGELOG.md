@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.10.1 - latest
+
+- Does not parse values from function that ends with a t (PR #52)
+
 ## 0.10.0
 
 - Add option to silence the variable errors (PR #47)

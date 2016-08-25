@@ -479,7 +479,7 @@ describe('parser', function () {
         i18nextParser.end(fakeFile);
     });
 
-    it('ignore other string with a t', function (done) {
+    it('ignores functions that ends with a t', function (done) {
         var result;
         var i18nextParser = Parser();
         var fakeFile = new File({
