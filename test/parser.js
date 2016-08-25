@@ -478,4 +478,23 @@ describe('parser', function () {
         });
         i18nextParser.end(fakeFile);
     });
+
+    it('ignore other string with a t', function (done) {
+        var result;
+        var i18nextParser = Parser();
+        var fakeFile = new File({
+            contents: new Buffer('import \'./yolo.js\'; t(\'first\');')
+        });
+
+        i18nextParser.on('data', function (file) {
+            if ( file.relative === 'en/translation.json' ) {
+                result = JSON.parse( file.contents );
+            }
+        });
+        i18nextParser.on('end', function (file) {
+            assert.deepEqual( result, { first: '' });
+            done();
+        });
+        i18nextParser.end(fakeFile);
+    });
 });
