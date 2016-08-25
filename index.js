@@ -108,7 +108,7 @@ Parser.prototype._transform = function(file, encoding, done) {
     var doubleQuotePattern = '"([^\"].*?[^\\\\])?"';
     var backQuotePattern   = '`([^\`].*?[^\\\\])?`';
     var stringPattern = '(?:' + singleQuotePattern + '|' + doubleQuotePattern + '|' + backQuotePattern + ')';
-    var pattern = '.*?(?:' + fnPattern + ')\\s*\\(?\\s*' + stringPattern + '(?:(?:[^).]*?)\\{(?:.*?)(?:(?:context|\'context\'|"context")\\s*:\\s*' + stringPattern + '(?:.*?)\\}))?';
+    var pattern = '(?:\\W|^)(?:' + fnPattern + ')\\s*\\(?\\s*' + stringPattern + '(?:(?:[^).]*?)\\{(?:.*?)(?:(?:context|\'context\'|"context")\\s*:\\s*' + stringPattern + '(?:.*?)\\}))?';
 
     var functionRegex = new RegExp( this.regex || pattern, 'g' );
     while (( matches = functionRegex.exec( fileContent ) )) {
