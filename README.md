@@ -103,6 +103,7 @@ gulp.task('i18next', function() {
 - **suffix**: Add a custom suffix at the end of the file name.
 - **extension**: Edit the extension of the files. Defaults to `.json`
 - **keepRemoved**: Prevent keys no longer found from being removed
+- **ignoreVariables**: Don't fail when a variable is found
 
 You can inject the locale tag in either the prefix, suffix or extension using the `$LOCALE` variable.
 
