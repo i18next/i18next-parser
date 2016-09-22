@@ -6,6 +6,9 @@
   "bin": {
     "i18next": "./bin/cli.js"
   },
+  "scripts": {
+    "test": "mocha --reporter nyan test/test.js"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/i18next/i18next-parser"

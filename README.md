@@ -30,7 +30,12 @@ npm install i18next-parser -g
 ## Tests
 
 ```
+npm install -g mocha
 mocha --reporter nyan test/test.js
+```
+or
+```
+npm test
 ```
 
 ---
