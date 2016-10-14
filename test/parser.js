@@ -19,7 +19,6 @@ describe('parser', function () {
         i18nextParser.end(fakeFile);
     });
 
-
     it('parses attributes in html templates', function (done) {
         var result;
         var i18nextParser = Parser({
@@ -57,6 +56,7 @@ describe('parser', function () {
             assert.deepEqual( result, { first: '', second: '', third: '', fourth: '', fifth: '' } );
             done();
         });
+
         i18nextParser.end(fakeFile);
     });
 
@@ -214,6 +214,7 @@ describe('parser', function () {
             }
         });
         i18nextParser.once('end', function (file) {
+
             assert.deepEqual( result, { first: '', second: { third: '' } } );
             done();
         });
@@ -235,9 +236,11 @@ describe('parser', function () {
             }
         });
         i18nextParser.once('end', function (file) {
-            var keys = Object.keys(result);
-            assert.equal( keys[0], 'escaped "double quotes"' );
-            assert.equal( keys[1], "escaped 'single quotes'" );
+            var expectedResult = {
+                "escaped 'single quotes'": '',
+                'escaped "double quotes"': ''
+            };
+            assert.deepEqual( result, expectedResult );
             done();
         });
 
@@ -308,6 +311,7 @@ describe('parser', function () {
     });
 
     it('retrieves values in existing file', function (done) {
+        var result;
         var i18nextParser = Parser();
         var fakeFile = new File({
             base: __dirname,
@@ -328,6 +332,7 @@ describe('parser', function () {
     });
 
     it('retrieves context values in existing file', function (done) {
+        var result;
         var i18nextParser = Parser();
         var fakeFile = new File({
             base: __dirname,
@@ -354,6 +359,7 @@ describe('parser', function () {
     });
 
     it('retrieves plural values in existing file', function (done) {
+        var result;
         var i18nextParser = Parser();
         var fakeFile = new File({
             base: __dirname,
@@ -382,6 +388,7 @@ describe('parser', function () {
     });
 
     it('retrieves plural and context values in existing file', function (done) {
+        var result;
         var i18nextParser = Parser();
         var fakeFile = new File({
             base: __dirname,
@@ -448,6 +455,7 @@ describe('parser', function () {
         var fakeFile = new File({
             contents: new Buffer("// FIX this doesn't work and this t is all alone\nt('first')\nt = function() {}")
         });
+
         i18nextParser.on('data', function (file) {
             if ( file.relative === 'en/translation.json' ) {
                 result = JSON.parse( file.contents );
@@ -457,6 +465,7 @@ describe('parser', function () {
             assert.deepEqual( result, {first: ''} );
             done();
         });
+
         i18nextParser.end(fakeFile);
     });
 
@@ -479,7 +488,7 @@ describe('parser', function () {
         i18nextParser.end(fakeFile);
     });
 
-    it('ignores functions that ends with a t', function (done) {
+    it('ignores functions that end with a t', function (done) {
         var result;
         var i18nextParser = Parser();
         var fakeFile = new File({
@@ -495,6 +504,7 @@ describe('parser', function () {
             assert.deepEqual( result, { first: '' });
             done();
         });
+
         i18nextParser.end(fakeFile);
     });
 });
