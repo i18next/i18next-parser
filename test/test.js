@@ -9,6 +9,15 @@ var hashFromString  = helpers.hashFromString;
 var mergeHash       = helpers.mergeHash;
 var replaceEmpty    = helpers.replaceEmpty;
 
+var emptyTranslationWithPaths = {
+    'msgstr': '',
+    'paths': ['']
+};
+
+// use with emptyTranslationWithPaths to prevent mutating the original
+function simpleDeepCopy(obj) {
+    return JSON.parse(JSON.stringify(obj));
+}
 
 describe('i18next-parser', function () {
     /* jshint evil:true */
