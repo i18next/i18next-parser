@@ -2,7 +2,7 @@
 // turn it into a hash {foo: {bar: ""}}.
 // The generated hash can be attached to an
 // optional `hash`.
-function hashFromString(path, separator, hash) {
+function hashFromString(path, separator, hash, filePaths) {
     separator = separator || '.';
 
     if ( path.indexOf( separator, path.length - separator.length ) >= 0 ) {
@@ -14,11 +14,30 @@ function hashFromString(path, separator, hash) {
     var obj     = tmp_obj;
 
     for( var x = 0; x < parts.length; x++ ) {
-        if ( x == parts.length - 1 ) {
-            tmp_obj[parts[x]] = '';
+        if ( x === parts.length - 1 ) {
+            if (typeof filePaths !== 'undefined') {
+                tmp_obj[parts[x]] = {
+                    'msgstr': '',
+                    'paths': filePaths
+                };
+            } else {
+                tmp_obj[parts[x]] = '';
+            }
         }
         else if ( ! tmp_obj[parts[x]] ) {
-            tmp_obj[parts[x]] = {};
+            // prevent adding 'msgstr' and 'paths' to root
+            if (x === 0) {
+                tmp_obj[parts[x]] = {};
+            } else {
+                if (typeof filePaths !== 'undefined') {
+                    tmp_obj[parts[x]] = {
+                        'msgstr': '',
+                        'paths': filePaths
+                    };
+                } else {
+                    tmp_obj[parts[x]] = {};
+                }
+            }
         }
         tmp_obj = tmp_obj[parts[x]];
     }
@@ -36,13 +55,27 @@ function mergeHash(source, target, old, keepRemoved) {
 
     Object.keys(source).forEach(function (key) {
         if ( target[key] !== undefined ) {
-            if (typeof source[key] === 'object' && source[key].constructor !== Array) {
-                var nested = mergeHash( source[key], target[key], old[key], keepRemoved );
-                target[key] = nested.new;
-                old[key] = nested.old;
-            }
-            else {
-                target[key] = source[key];
+            if (typeof target[key] === 'object' && typeof target[key].msgstr !== 'undefined') {
+                if (typeof source[key] === 'object' && typeof source[key].msgstr !== 'undefined') {
+                    target[key].msgstr = source[key].msgstr;
+                } else {
+                    target[key].msgstr = source[key];
+                }
+
+                if (typeof source[key] === 'object' && source[key].constructor !== Array) {
+                    var nested = mergeHash( source[key], target[key], old[key], keepRemoved );
+                    target[key] = nested.new;
+                    old[key] = nested.old;
+                }
+            } else {
+                if (typeof source[key] === 'object' && source[key].constructor !== Array) {
+                    var nested = mergeHash( source[key], target[key], old[key], keepRemoved );
+                    target[key] = nested.new;
+                    old[key] = nested.old;
+                }
+                else {
+                    target[key] = source[key];
+                }
             }
         }
         else {
