@@ -220,8 +220,6 @@ Parser.prototype._flush = function(done) {
 
         // keep file paths in predictable order
         tempHash[translation.key].sort();
-
-        return _;
     });
 
     // remove duplicate keys
@@ -246,8 +244,8 @@ Parser.prototype._flush = function(done) {
     // ==================================================================================
     for (var index in self.translations) {
         // simplify ${dot.separated.variables} into just their tails (${variables})
-        var key = self.translations[index].key.replace( /\$\{(?:[^.}]+\.)*([^}]+)\}/g, '\${$1}' ),
-            paths = self.translations[index].paths;
+        var key = self.translations[index].key.replace( /\$\{(?:[^.}]+\.)*([^}]+)\}/g, '\${$1}' );
+        var paths = self.translations[index].paths;
 
         if (self.trackPaths) {
             translationsHashCommented = helpers.hashFromString( key, self.keySeparator, translationsHashCommented, paths );
