@@ -3,6 +3,7 @@ describe('parser', function () {
         var result;
         var i18nextParser = Parser();
         var fakeFile = new File({
+            path: __dirname,
             contents: new Buffer("asd t('first') t('second') \n asd t('third') ad t('fourth')")
         });
 
@@ -25,6 +26,7 @@ describe('parser', function () {
           attributes: ['data-i18n', 'translate', 't']
         });
         var fakeFile = new File({
+            path: __dirname,
             contents: new Buffer('<p data-i18n>first</p><p translate="second">Second</p><p t="[html]third">Third</p><p data-i18n="[title]fourth;fifth">Fifth</p>')
         });
 
@@ -43,11 +45,14 @@ describe('parser', function () {
 
     it('parses attributes in html templates and tracks paths', function (done) {
         var result;
+        var translationWithPaths = simpleDeepCopy( emptyTranslationWithPaths );
+        translationWithPaths.paths = ['test/fake.html'];
         var i18nextParser = Parser({
           attributes: ['data-i18n', 'translate', 't'],
           trackPaths: true
         });
         var fakeFile = new File({
+            path: path.resolve(__dirname, './fake.html'),
             contents: new Buffer('<p data-i18n>first</p><p translate="second">Second</p><p t="[html]third">Third</p><p data-i18n="[title]fourth;fifth">Fifth</p>')
         });
 
@@ -58,11 +63,11 @@ describe('parser', function () {
         });
         i18nextParser.on('end', function (file) {
             assert.deepEqual( result, {
-                first: emptyTranslationWithPaths,
-                second: emptyTranslationWithPaths,
-                third: emptyTranslationWithPaths,
-                fourth: emptyTranslationWithPaths,
-                fifth: emptyTranslationWithPaths
+                first: translationWithPaths,
+                second: translationWithPaths,
+                third: translationWithPaths,
+                fourth: translationWithPaths,
+                fifth: translationWithPaths
             });
             done();
         });
@@ -74,6 +79,7 @@ describe('parser', function () {
         var result;
         var i18nextParser = Parser();
         var fakeFile = new File({
+            path: __dirname,
             contents: fs.readFileSync( path.resolve(__dirname, 'templating/html.html') )
         });
 
@@ -96,7 +102,7 @@ describe('parser', function () {
             trackPaths: true
         });
         var fakeFile = new File({
-            base: path.resolve(__dirname, 'templating/html.html'),
+            path: path.resolve(__dirname, 'templating/html.html'),
             contents: fs.readFileSync( path.resolve(__dirname, 'templating/html.html') )
         });
 
@@ -128,6 +134,7 @@ describe('parser', function () {
         var result;
         var i18nextParser = Parser();
         var fakeFile = new File({
+            path: __dirname,
             contents: fs.readFileSync( path.resolve(__dirname, 'templating/jade.jade') )
         });
 
@@ -150,7 +157,7 @@ describe('parser', function () {
             trackPaths: true
         });
         var fakeFile = new File({
-            base: path.resolve(__dirname, 'templating/jade.jade'),
+            path: path.resolve(__dirname, 'templating/jade.jade'),
             contents: fs.readFileSync( path.resolve(__dirname, 'templating/jade.jade') )
         });
 
@@ -175,6 +182,7 @@ describe('parser', function () {
         var result;
         var i18nextParser = Parser();
         var fakeFile = new File({
+            path: path.resolve(__dirname, 'templating/handlebars.hbs'),
             contents: fs.readFileSync( path.resolve(__dirname, 'templating/handlebars.hbs') )
         });
 
@@ -197,7 +205,7 @@ describe('parser', function () {
             trackPaths: true
         });
         var fakeFile = new File({
-            base: path.resolve(__dirname, 'templating/handlebars.hbs'),
+            path: path.resolve(__dirname, 'templating/handlebars.hbs'),
             contents: fs.readFileSync( path.resolve(__dirname, 'templating/handlebars.hbs') )
         });
 
@@ -225,6 +233,7 @@ describe('parser', function () {
             namespace: 'default'
         });
         var fakeFile = new File({
+            path: __dirname,
             contents: new Buffer("asd t('ns1:first') t('second') \n asd t('ns2:third') ad t('fourth')")
         });
 
@@ -252,12 +261,15 @@ describe('parser', function () {
     it('creates three files per namespace and per locale while tracking paths', function (done) {
         var results = [];
         var resultContents = [];
+        var translationWithPaths = simpleDeepCopy( emptyTranslationWithPaths );
+        translationWithPaths.paths = ['test/fake.js'];
         var i18nextParser = Parser({
             locales: ['en', 'de', 'fr'],
             namespace: 'default',
             trackPaths: true
         });
         var fakeFile = new File({
+            path: path.resolve(__dirname, './fake.js'),
             contents: new Buffer("asd t('ns1:first') t('second') \n asd t('ns2:third') ad t('fourth')")
         });
 
@@ -288,18 +300,18 @@ describe('parser', function () {
             });
 
             var expectedContents = [
-                { fourth: emptyTranslationWithPaths,
-                  second: emptyTranslationWithPaths },
-                { first: emptyTranslationWithPaths },
-                { third: emptyTranslationWithPaths },
-                { fourth: emptyTranslationWithPaths,
-                  second: emptyTranslationWithPaths },
-                { first: emptyTranslationWithPaths },
-                { third: emptyTranslationWithPaths },
-                { fourth: emptyTranslationWithPaths,
-                  second: emptyTranslationWithPaths },
-                { first: emptyTranslationWithPaths },
-                { third: emptyTranslationWithPaths }
+                { fourth: translationWithPaths,
+                  second: translationWithPaths },
+                { first: translationWithPaths },
+                { third: translationWithPaths },
+                { fourth: translationWithPaths,
+                  second: translationWithPaths },
+                { first: translationWithPaths },
+                { third: translationWithPaths },
+                { fourth: translationWithPaths,
+                  second: translationWithPaths },
+                { first: translationWithPaths },
+                { third: translationWithPaths }
             ];
 
             assert.deepEqual(resultContents, expectedContents);
@@ -317,6 +329,7 @@ describe('parser', function () {
             writeOld: false
         });
         var fakeFile = new File({
+            path: __dirname,
             contents: new Buffer("asd t('ns1:first') t('second') \n asd t('ns2:third') ad t('fourth')")
         });
 
@@ -351,6 +364,7 @@ describe('parser', function () {
             extension: '.$LOCALE.i18n'
         });
         var fakeFile = new File({
+            path: __dirname,
             contents: new Buffer("asd t('fourth')")
         });
 
@@ -379,6 +393,7 @@ describe('parser', function () {
             keySeparator: '-'
         });
         var fakeFile = new File({
+            path: __dirname,
             base: __dirname,
             contents: new Buffer("asd t('test_separators?first') t('test_separators?second-third')")
         });
@@ -401,6 +416,7 @@ describe('parser', function () {
         var result;
         var i18nextParser = Parser();
         var fakeFile = new File({
+            path: __dirname,
             base: __dirname,
             contents: new Buffer("asd t('escaped \\'single quotes\\'') t(\"escaped \\\"double quotes\\\"\")")
         });
@@ -426,6 +442,7 @@ describe('parser', function () {
         var result;
         var i18nextParser = Parser();
         var fakeFile = new File({
+            path: __dirname,
             base: __dirname,
             contents: new Buffer("asd t('escaped backslash\\\\ newline\\n\\r tab\\t')")
         });
@@ -448,6 +465,7 @@ describe('parser', function () {
         var result;
         var i18nextParser = Parser();
         var fakeFile = new File({
+            path: __dirname,
             base: __dirname,
             contents: new Buffer("asd t(`root.plain`) t(`root.${expr}`) t(`root.${dotted.path}`)")
         });
@@ -474,6 +492,7 @@ describe('parser', function () {
     it('returns buffers', function (done) {
         var i18nextParser = Parser();
         var fakeFile = new File({
+            path: __dirname,
             contents: new Buffer("asd t('first') t('second') \n asd t('third') ad t('fourth')")
         });
 
@@ -489,6 +508,7 @@ describe('parser', function () {
         var result;
         var i18nextParser = Parser();
         var fakeFile = new File({
+            path: __dirname,
             base: __dirname,
             contents: new Buffer("asd t('test_merge:first') t('test_merge:second')")
         });
@@ -512,6 +532,7 @@ describe('parser', function () {
             trackPaths: true
         });
         var fakeFile = new File({
+            path: __dirname,
             base: __dirname,
             contents: new Buffer("asd t('test_merge:first') t('test_merge:second')")
         });
@@ -542,6 +563,7 @@ describe('parser', function () {
         var result;
         var i18nextParser = Parser();
         var fakeFile = new File({
+            path: __dirname,
             base: __dirname,
             contents: new Buffer("asd t('test_context:first')")
         });
@@ -571,6 +593,7 @@ describe('parser', function () {
             trackPaths: true
         });
         var fakeFile = new File({
+            path: __dirname,
             base: __dirname,
             contents: new Buffer("asd t('test_context:first')")
         });
@@ -602,6 +625,7 @@ describe('parser', function () {
         var result;
         var i18nextParser = Parser();
         var fakeFile = new File({
+            path: __dirname,
             base: __dirname,
             contents: new Buffer("asd t('test_plural:first') t('test_plural:second')")
         });
@@ -633,6 +657,7 @@ describe('parser', function () {
             trackPaths: true
         });
         var fakeFile = new File({
+            path: __dirname,
             base: __dirname,
             contents: new Buffer("asd t('test_plural:first') t('test_plural:second')")
         });
@@ -670,6 +695,7 @@ describe('parser', function () {
         var result;
         var i18nextParser = Parser();
         var fakeFile = new File({
+            path: __dirname,
             base: __dirname,
             contents: new Buffer("asd t('test_context_plural:first')")
         });
@@ -699,6 +725,7 @@ describe('parser', function () {
             trackPaths: true
         });
         var fakeFile = new File({
+            path: __dirname,
             base: __dirname,
             contents: new Buffer("asd t('test_context_plural:first')")
         });
@@ -730,6 +757,7 @@ describe('parser', function () {
         var result;
         var i18nextParser = Parser();
         var fakeFile = new File({
+            path: __dirname,
             contents: new Buffer('<p data-i18n="[html]first">!first key!</p>')
         });
 
@@ -748,10 +776,13 @@ describe('parser', function () {
 
     it('removes any trailing [bla] in the key and tracks file paths', function (done) {
         var result;
+        var translationWithPaths = simpleDeepCopy( emptyTranslationWithPaths );
+        translationWithPaths.paths = ['test/fake.html'];
         var i18nextParser = Parser({
             trackPaths: true
         });
         var fakeFile = new File({
+            path: path.resolve(__dirname, 'fake.html'),
             contents: new Buffer('<p data-i18n="[html]first">!first key!</p>')
         });
 
@@ -761,7 +792,7 @@ describe('parser', function () {
             }
         });
         i18nextParser.on('end', function (file) {
-            assert.deepEqual( result, { first: emptyTranslationWithPaths } );
+            assert.deepEqual( result, { first: translationWithPaths } );
             done();
         });
 
@@ -771,6 +802,7 @@ describe('parser', function () {
     it('fails to parse translation function with a variable', function (done) {
         var i18nextParser = Parser();
         var fakeFile = new File({
+            path: __dirname,
             contents: new Buffer("asd t(firstVar)\n")
         });
 
@@ -787,6 +819,7 @@ describe('parser', function () {
         var result;
         var i18nextParser = Parser();
         var fakeFile = new File({
+            path: __dirname,
             contents: new Buffer("// FIX this doesn't work and this t is all alone\nt('first')\nt = function() {}")
         });
 
@@ -807,6 +840,7 @@ describe('parser', function () {
         var result;
         var i18nextParser = Parser();
         var fakeFile = new File({
+            path: __dirname,
             contents: new Buffer('t("first", {context: \'date\'}) t("second", { "hello": "world", "context": \'form2\', "foo": "bar"}) t(`third`, { \'context\' : `context` }) t("fourth", { "context" : "pipo"})')
         });
 
@@ -825,10 +859,13 @@ describe('parser', function () {
 
     it('parses context passed as object and tracks file paths', function (done) {
         var result;
+        var translationWithPaths = simpleDeepCopy( emptyTranslationWithPaths );
+        translationWithPaths.paths = ['test/fake.js'];
         var i18nextParser = Parser({
             trackPaths: true
         });
         var fakeFile = new File({
+            path: path.resolve(__dirname, 'fake.js'),
             contents: new Buffer('t("first", {context: \'date\'}) t("second", { "hello": "world", "context": \'form2\', "foo": "bar"}) t(`third`, { \'context\' : `context` }) t("fourth", { "context" : "pipo"})')
         });
 
@@ -839,10 +876,10 @@ describe('parser', function () {
         });
         i18nextParser.on('end', function (file) {
             assert.deepEqual( result, {
-                first_date: emptyTranslationWithPaths,
-                second_form2: emptyTranslationWithPaths,
-                third_context: emptyTranslationWithPaths,
-                fourth_pipo: emptyTranslationWithPaths
+                first_date: translationWithPaths,
+                second_form2: translationWithPaths,
+                third_context: translationWithPaths,
+                fourth_pipo: translationWithPaths
             });
             done();
         });
@@ -854,6 +891,7 @@ describe('parser', function () {
         var result;
         var i18nextParser = Parser();
         var fakeFile = new File({
+            path: __dirname,
             contents: new Buffer('import \'./yolo.js\'; t(\'first\');')
         });
 

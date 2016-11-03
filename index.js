@@ -95,10 +95,7 @@ Parser.prototype._transform = function(file, encoding, done) {
 
     // we find the relative path
     // =========================
-    var relativeFilePath = path.relative(__dirname, this.base);
-    if (file.path) {
-        relativeFilePath = path.relative(process.cwd(), file.path);
-    }
+    var relativeFilePath = path.relative(process.cwd(), file.path);
 
 
 
