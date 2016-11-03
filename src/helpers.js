@@ -45,9 +45,64 @@ function hashFromString(path, separator, hash, filePaths) {
 }
 
 
-// Takes a `source` hash and make sure its value
-// are pasted in the `target` hash, if the target
-// hash has the corresponding key (or if keepRemoved is true).
+
+// Takes a `translationObj` and if it's an
+// object containing 'msgstr' and 'paths', then
+// return true. Otherwise return false.
+function isPathObject(translationObj) {
+    if (typeof translationObj === 'object' &&
+        typeof translationObj.msgstr !== 'undefined' &&
+        typeof translationObj.paths !== 'undefined') {
+        return true;
+    }
+    return false;
+}
+
+
+
+// Takes a `translationObj` and if it's an object
+// whose constructor is not an Array, then return true.
+// Otherwise return false.
+function isNestedTranslation(translationObj) {
+    if (typeof translationObj === 'object' && translationObj.constructor !== Array) {
+        return true;
+    }
+    return false;
+}
+
+
+
+// Takes a `key` and checks if `source[key]` is in the
+// path-tracking format to determine how to set the target.
+// Handles nested translations if they exist, and returns
+// a hash of `target` and `old`.
+function mergeHashWithPaths(key, source, target, old, keepRemoved) {
+    if ( isPathObject(source[key]) ) {
+        target[key].msgstr = source[key].msgstr;
+    }
+    else {
+        target[key].msgstr = source[key];
+    }
+
+    // handle nested translations if they exist
+    if ( isNestedTranslation(source[key]) ) {
+        var nested = mergeHash( source[key], target[key], old[key], keepRemoved );
+        target[key] = nested.new;
+        old[key] = nested.old;
+    }
+
+    return {
+        target,
+        old
+    }
+}
+
+
+
+// Takes a `source` hash and make sure its values
+// are pasted in the `target` hash if the target hash
+// has the corresponding key (or if keepRemoved is true),
+// using the correct format per key if tracking paths.
 // If not, the value is added to an `old` hash.
 function mergeHash(source, target, old, keepRemoved) {
     target = target || {};
@@ -55,20 +110,15 @@ function mergeHash(source, target, old, keepRemoved) {
 
     Object.keys(source).forEach(function (key) {
         if ( target[key] !== undefined ) {
-            if (typeof target[key] === 'object' && typeof target[key].msgstr !== 'undefined') {
-                if (typeof source[key] === 'object' && typeof source[key].msgstr !== 'undefined') {
-                    target[key].msgstr = source[key].msgstr;
-                } else {
-                    target[key].msgstr = source[key];
-                }
-
-                if (typeof source[key] === 'object' && source[key].constructor !== Array) {
-                    var nested = mergeHash( source[key], target[key], old[key], keepRemoved );
-                    target[key] = nested.new;
-                    old[key] = nested.old;
-                }
-            } else {
-                if (typeof source[key] === 'object' && source[key].constructor !== Array) {
+            if ( isPathObject(target[key]) ) {
+                // tracking paths
+                var hashWithPaths = mergeHashWithPaths( key, source, target, old, keepRemoved );
+                target = hashWithPaths.target;
+                old = hashWithPaths.old;
+            }
+            else {
+                // not tracking paths
+                if ( isNestedTranslation(source[key]) ) {
                     var nested = mergeHash( source[key], target[key], old[key], keepRemoved );
                     target[key] = nested.new;
                     old[key] = nested.old;
