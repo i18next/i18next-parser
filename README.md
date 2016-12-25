@@ -1,4 +1,6 @@
-# i18next Parser
+# i18next Parser [![Build Status](https://travis-ci.org/i18next/i18next-parser.svg?branch=master)](https://travis-ci.org/i18next/i18next-parser)
+
+[![NPM](https://nodei.co/npm/i18next-parser.png?downloads=true&stars=true)](https://www.npmjs.com/package/i18next-parser)
 
 A simple command line and gulp plugin that lets you parse your code and extract the translations keys in it.
 

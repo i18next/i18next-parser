@@ -6,6 +6,9 @@
   "bin": {
     "i18next": "./bin/cli.js"
   },
+  "scripts": {
+    "test": "mocha --reporter nyan test/test.js"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/i18next/i18next-parser"
@@ -25,8 +28,8 @@
     "node": ">=0.10.22"
   },
   "devDependencies": {
-    "mocha": "~2.1.0",
-    "assert": "~1.1.1"
+    "mocha": "~3.2.0",
+    "assert": "~1.4.1"
   },
   "keywords": [
     "gulpplugin",
