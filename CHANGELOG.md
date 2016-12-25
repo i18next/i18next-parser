@@ -1,6 +1,10 @@
 # Changelog
 
-## 0.10.1 - latest
+## 0.11.0 - latest
+
+- Update dependencies
+
+## 0.10.1
 
 - Does not parse values from function that ends with a t (PR #52)
 
