@@ -15,7 +15,7 @@ var Parser      = require('../index');
 // Configure the command line
 // ==========================
 program
-  .version('0.11.0')
+  .version('0.11.1')
   .option( '-r, --recursive'                     , 'Parse sub directories' )
   .option( '-p, --parser <string>'               , 'A custom regex to use to parse your code' )
   .option( '-a, --attributes <list>'             , 'The html attributes to parse' )
@@ -150,7 +150,7 @@ stream
 
     mkdirp.sync( path.dirname(file.path) );
 
-    fs.writeFileSync( file.path, file.contents );
+    fs.writeFileSync( file.path, file.contents + "\n" );
 
     this.push( file );
 
