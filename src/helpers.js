@@ -2,7 +2,36 @@
 // turn it into a hash {foo: {bar: ""}}.
 // The generated hash can be attached to an
 // optional `hash`.
-function hashFromString(path, separator, hash, filePaths) {
+function hashFromString(path, separator, hash) {
+    separator = separator || '.';
+
+    if ( path.indexOf( separator, path.length - separator.length ) >= 0 ) {
+        path = path.slice( 0, -separator.length );
+    }
+
+    var parts   = path.split( separator );
+    var tmp_obj = hash || {};
+    var obj     = tmp_obj;
+
+    for( var x = 0; x < parts.length; x++ ) {
+        if ( x === parts.length - 1 ) {
+            tmp_obj[parts[x]] = '';
+        }
+        else if ( !tmp_obj[parts[x]] ) {
+            tmp_obj[parts[x]] = {};
+        }
+        tmp_obj = tmp_obj[parts[x]];
+    }
+    return obj;
+}
+
+
+// Takes a `path` of the form 'foo.bar'
+// with a `filePaths` of ['foo/boo/bar.html']
+// and turns it into the following hash:
+// {foo: {bar: {msgstr: '', paths: ['foo/boo/bar.html']} } }
+// The generated hash can be attached to an optional `hash`.
+function hashFromStringWithPaths(path, separator, hash, filePaths) {
     separator = separator || '.';
 
     if ( path.indexOf( separator, path.length - separator.length ) >= 0 ) {
@@ -185,6 +214,8 @@ function replaceEmpty(source, target) {
 
 module.exports = {
     hashFromString: hashFromString,
+    hashFromStringWithPaths: hashFromStringWithPaths,
     mergeHash: mergeHash,
+    mergeHashWithPaths: mergeHashWithPaths,
     replaceEmpty: replaceEmpty
 };

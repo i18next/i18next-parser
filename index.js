@@ -245,7 +245,7 @@ Parser.prototype._flush = function(done) {
         var paths = self.translations[index].paths;
 
         if (self.trackPaths) {
-            translationsHashCommented = helpers.hashFromString( key, self.keySeparator, translationsHashCommented, paths );
+            translationsHashCommented = helpers.hashFromStringWithPaths( key, self.keySeparator, translationsHashCommented, paths );
         }
 
         translationsHash = helpers.hashFromString( key, self.keySeparator, translationsHash );
