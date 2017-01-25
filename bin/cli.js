@@ -26,6 +26,7 @@ program
   .option( '-k, --key-separator <string>'        , 'The default key separator (. by default)' )
   .option( '-c, --context-separator <string>'    , 'The default context separator (_ by default)' )
   .option( '-l, --locales <list>'                , 'The locales in your application' )
+  .option( '-t, --track-paths <boolean>'         , 'Output an additional file with file paths for each key' )
   .option( '--directoryFilter <list>'            , 'Filter directories' )
   .option( '--fileFilter <list>'                 , 'Filter files' )
   .option( '--keep-removed'                      , 'Prevent keys no longer found from being removed' )
@@ -74,6 +75,7 @@ program.writeOld = program.writeOld !== 'false';
 program.directoryFilter = program.directoryFilter && program.directoryFilter.split(',');
 program.fileFilter = program.fileFilter && program.fileFilter.split(',');
 program.output = path.resolve(process.cwd(), output);
+program.trackPaths = program.trackPaths === 'true' || program.trackPaths;
 
 
 

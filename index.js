@@ -37,6 +37,7 @@ function Parser(options, transformConfig) {
     this.writeOld           = options.writeOld !== false;
     this.keepRemoved        = options.keepRemoved;
     this.ignoreVariables    = options.ignoreVariables || false;
+    this.trackPaths         = options.trackPaths || false;
 
     ['functions', 'locales'].forEach(function( attr ) {
         if ( (typeof self[ attr ] !== 'object') || ! self[ attr ].length ) {
@@ -89,6 +90,12 @@ Parser.prototype._transform = function(file, encoding, done) {
     if(file.isBuffer()) {
         data = file.contents;
     }
+
+
+
+    // we find the relative path
+    // =========================
+    var relativeFilePath = path.relative(process.cwd(), file.path);
 
 
 
@@ -176,7 +183,10 @@ Parser.prototype._transform = function(file, encoding, done) {
             key = key.replace( self.namespaceSeparator, self.keySeparator );
         }
 
-        self.translations.push( key );
+        self.translations.push({
+            'key': key,
+            'paths': [relativeFilePath]
+        });
     }
 
     done();
@@ -189,21 +199,55 @@ Parser.prototype._flush = function(done) {
     var self = this;
     var base = path.resolve( self.base, self.output );
     var translationsHash = {};
+    var translationsHashCommented = {};
 
 
+
+    // merge file paths
+    // ================
+    var tempHash = {};
+    _.map(self.translations, (_, index) => {
+        var translation = self.translations[index];
+
+        if (tempHash.hasOwnProperty(translation.key)) {
+            tempHash[translation.key] = tempHash[translation.key].concat(translation.paths);
+        } else {
+            tempHash[translation.key] = translation.paths;
+        }
+
+        // keep file paths in predictable order
+        tempHash[translation.key].sort();
+    });
 
     // remove duplicate keys
     // =====================
-    self.translations = _.uniq( self.translations ).sort();
+    self.translations = _.map(tempHash, (paths, key) => {
+        return { key: key, paths: paths};
+    });
+
+    // sort by key
+    // ===========
+    self.translations = _.sortBy(self.translations, 'key' );
 
 
 
-    // turn the array of keys
+    // turn the array of objects
     // into an associative object
     // ==========================
+    // from
+    // [{ keyOne: '', paths: ['', '']}, { keyTwo: '', paths: ['']}]
+    // to
+    // { 'keyOne': { msgstr: '', paths: ['', ''] }, keyTwo: { msgstr: '', paths: [''] } }
+    // ==================================================================================
     for (var index in self.translations) {
         // simplify ${dot.separated.variables} into just their tails (${variables})
-        var key = self.translations[index].replace( /\$\{(?:[^.}]+\.)*([^}]+)\}/g, '\${$1}' );
+        var key = self.translations[index].key.replace( /\$\{(?:[^.}]+\.)*([^}]+)\}/g, '\${$1}' );
+        var paths = self.translations[index].paths;
+
+        if (self.trackPaths) {
+            translationsHashCommented = helpers.hashFromStringWithPaths( key, self.keySeparator, translationsHashCommented, paths );
+        }
+
         translationsHash = helpers.hashFromString( key, self.keySeparator, translationsHash );
     }
 
@@ -250,7 +294,7 @@ Parser.prototype._flush = function(done) {
                 }
                 catch (error) {
                     this.emit( 'json_error', error.name, error.message );
-                    currentTranslations = {};
+                    oldTranslations = {};
                 }
             }
             else {
@@ -289,7 +333,26 @@ Parser.prototype._flush = function(done) {
                 self.push( mergedOldTranslationsFile );
             }
 
+            if ( self.trackPaths ) {
+                var namespacePathCommented = path.resolve(
+                    localeBase,
+                    prefix + namespace + suffix + '.po' + extension
+                );
 
+                // merges existing translations with the new commented ones
+                mergedTranslationsCommented = helpers.mergeHash( currentTranslations, translationsHashCommented[namespace], null, this.keepRemoved );
+
+                // restore old translations if the key is empty
+                mergedTranslationsCommented.new = helpers.replaceEmpty( oldTranslations, mergedTranslationsCommented.new );
+
+                mergedTranslationsFileCommented = new File({
+                  path: namespacePathCommented,
+                  base: base,
+                  contents: new Buffer( JSON.stringify( mergedTranslationsCommented.new, null, 2 ) )
+                });
+                this.emit( 'writing', namespacePathCommented );
+                self.push( mergedTranslationsFileCommented );
+            }
         }
     }
 
