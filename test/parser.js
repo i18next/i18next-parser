@@ -19,6 +19,26 @@ describe('parser', function () {
         i18nextParser.end(fakeFile);
     });
 
+    it('parses multiline function calls', function (done) {
+      var result;
+      var i18nextParser = Parser();
+      var fakeFile = new File({
+          contents: new Buffer("asd t(\n  'first'\n) t('second') \n asd t(\n\n'third')")
+      });
+
+      i18nextParser.on('data', function (file) {
+          if ( file.relative === 'en/translation.json' ) {
+              result = JSON.parse( file.contents );
+          }
+      });
+      i18nextParser.on('end', function (file) {
+          assert.deepEqual( result, { first: '', second: '', third: '' } );
+          done();
+      });
+
+      i18nextParser.end(fakeFile);
+    });
+
 
     it('parses attributes in html templates', function (done) {
         var result;
