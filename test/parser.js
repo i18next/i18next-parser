@@ -95,7 +95,7 @@ describe('parser', function () {
             }
         });
         i18nextParser.on('end', function (file) {
-            assert.deepEqual( result, { first: '' } );
+            assert.deepEqual( result, { first: '', second: '' } );
             done();
         });
 
