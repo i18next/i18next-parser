@@ -21,22 +21,23 @@ function Parser(options, transformConfig) {
     options         = options || {};
     transformConfig = transformConfig || {};
 
-    this.defaultNamespace   = options.namespace || 'translation';
-    this.functions          = options.functions || ['t'];
-    this.locales            = options.locales || ['en','fr'];
-    this.output             = options.output || 'locales';
-    this.regex              = options.parser;
-    this.attributes         = options.attributes || ['data-i18n'];
-    this.namespaceSeparator = options.namespaceSeparator || ':';
-    this.keySeparator       = options.keySeparator || '.';
-    this.contextSeparator   = options.contextSeparator || '_';
-    this.translations       = [];
-    this.extension          = options.extension || '.json';
-    this.suffix             = options.suffix || '';
-    this.prefix             = options.prefix || '';
-    this.writeOld           = options.writeOld !== false;
-    this.keepRemoved        = options.keepRemoved;
-    this.ignoreVariables    = options.ignoreVariables || false;
+    this.defaultNamespace       = options.namespace || 'translation';
+    this.functions              = options.functions || ['t'];
+    this.locales                = options.locales || ['en','fr'];
+    this.output                 = options.output || 'locales';
+    this.regex                  = options.parser;
+    this.attributes             = options.attributes || ['data-i18n'];
+    this.namespaceSeparator     = options.namespaceSeparator || ':';
+    this.keySeparator           = options.keySeparator || '.';
+    this.contextSeparator       = options.contextSeparator || '_';
+    this.translations           = [];
+    this.extension              = options.extension || '.json';
+    this.suffix                 = options.suffix || '';
+    this.prefix                 = options.prefix || '';
+    this.writeOld               = options.writeOld !== false;
+    this.keepRemoved            = options.keepRemoved;
+    this.ignoreVariables        = options.ignoreVariables || false;
+    this.includeSingleQuoted    = options.includeSingleQuoted || false;
 
     ['functions', 'locales'].forEach(function( attr ) {
         if ( (typeof self[ attr ] !== 'object') || ! self[ attr ].length ) {
@@ -141,7 +142,8 @@ Parser.prototype._transform = function(file, encoding, done) {
     // and we parse for attributes in html
     // ===================================
     const attributes = '(?:' + this.attributes.join('|') + ')';
-    var attributeWithValueRegex = new RegExp( '(?:\\s+' + attributes + '=")([^"]*)(?:")', 'gi' );
+    var attributeWithValueRegex = new RegExp( '(?:\\W+' + attributes + '=")([^"]*)(?:")', 'gi' );
+    var attributeWithValueRegexSingleQuotes = new RegExp("(?:\\W+" + attributes + "=')([^']*)(?:')", 'gi');
     var attributeWithoutValueRegex = new RegExp( '<([A-Z][A-Z0-9]*)(?:(?:\\s+[A-Z0-9-]+)(?:(?:=")(?:[^"]*)(?:"))?)*(?:(?:\\s+' + attributes + '))(?:(?:\\s+[A-Z0-9-]+)(?:(?:=")(?:[^"]*)(?:"))?)*\\s*(?:>(.*?)<\\/\\1>)', 'gi' );
 
     while (( matches = attributeWithValueRegex.exec( fileContent ) )) {
@@ -150,6 +152,18 @@ Parser.prototype._transform = function(file, encoding, done) {
         for (var i in matchKeys) {
             // remove any leading [] in the key
             keys.push( matchKeys[i].replace( /^\[[a-zA-Z0-9_-]*\]/ , '' ) );
+        }
+    }
+
+    //and if specified in options (includeSingleQuoted) also for single-quoted attributes 
+    if (this.includeSingleQuoted) {
+        while (( matches = attributeWithValueRegexSingleQuotes.exec( fileContent ) )) {
+            matchKeys = matches[1].split(';');
+
+            for (var i in matchKeys) {
+                // remove any leading [] in the key
+                keys.push(matchKeys[i].replace(/^\[[a-zA-Z0-9_-]*\]/, ''));
+            }
         }
     }
 
