@@ -188,7 +188,6 @@ Parser.prototype._flush = function(done) {
 
     var self = this;
     var base = path.resolve( self.base, self.output );
-    var translationsHash = {};
 
 
 
@@ -198,22 +197,22 @@ Parser.prototype._flush = function(done) {
 
 
 
-    // turn the array of keys
-    // into an associative object
-    // ==========================
-    for (var index in self.translations) {
-        // simplify ${dot.separated.variables} into just their tails (${variables})
-        var key = self.translations[index].replace( /\$\{(?:[^.}]+\.)*([^}]+)\}/g, '\${$1}' );
-        translationsHash = helpers.hashFromString( key, self.keySeparator, translationsHash );
-    }
-
-
-
     // process each locale and namespace
     // =================================
     for (var i in self.locales) {
         var locale     = self.locales[i];
         var localeBase = path.resolve( self.base, self.output, locale );
+        var translationsHash = {};
+
+
+        // turn the array of keys
+        // into an associative object
+        // ==========================
+        for (var index in self.translations) {
+            // simplify ${dot.separated.variables} into just their tails (${variables})
+            var key = self.translations[index].replace( /\$\{(?:[^.}]+\.)*([^}]+)\}/g, '\${$1}' );
+            translationsHash = helpers.hashFromString( key, self.keySeparator, translationsHash );
+        }
 
         for (var namespace in translationsHash) {
 
