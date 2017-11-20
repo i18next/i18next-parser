@@ -123,7 +123,6 @@ describe('mergeHash helper function', function () {
     });
 });
 
-
 describe('hashFromString helper function', function () {
     it('creates an object from a string path', function (done) {
         var res = hashFromString('one');
@@ -136,6 +135,13 @@ describe('hashFromString helper function', function () {
         var res = hashFromString('one..', '..');
 
         assert.deepEqual(res, { one: '' });
+        done();
+    });
+
+    it('use provided default value', function (done) {
+        var res = hashFromString('one', null, 'myDefaultValue');
+
+        assert.deepEqual(res, { one: 'myDefaultValue' });
         done();
     });
 
