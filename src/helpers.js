@@ -2,7 +2,7 @@
 // turn it into a hash {foo: {bar: ""}}.
 // The generated hash can be attached to an
 // optional `hash`.
-function hashFromString(path, separator, hash) {
+function hashFromString(path, separator, value, hash) {
     separator = separator || '.';
 
     if ( path.indexOf( separator, path.length - separator.length ) >= 0 ) {
@@ -15,7 +15,7 @@ function hashFromString(path, separator, hash) {
 
     for( var x = 0; x < parts.length; x++ ) {
         if ( x == parts.length - 1 ) {
-            tmp_obj[parts[x]] = '';
+            tmp_obj[parts[x]] = value || '';
         }
         else if ( ! tmp_obj[parts[x]] ) {
             tmp_obj[parts[x]] = {};

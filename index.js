@@ -37,6 +37,7 @@ function Parser(options, transformConfig) {
     this.writeOld           = options.writeOld !== false;
     this.keepRemoved        = options.keepRemoved;
     this.ignoreVariables    = options.ignoreVariables || false;
+    this.defaultValues      = options.defaultValues || false;
 
     ['functions', 'locales'].forEach(function( attr ) {
         if ( (typeof self[ attr ] !== 'object') || ! self[ attr ].length ) {
@@ -110,6 +111,11 @@ Parser.prototype._transform = function(file, encoding, done) {
     var stringPattern = '(?:' + singleQuotePattern + '|' + doubleQuotePattern + '|' + backQuotePattern + ')';
     var pattern = '(?:\\W|^)(?:' + fnPattern + ')\\s*\\(?\\s*' + stringPattern + '(?:(?:[^).]*?)\\{(?:.*?)(?:(?:context|\'context\'|"context")\\s*:\\s*' + stringPattern + '(?:.*?)\\}))?';
 
+    if (this.defaultValues) {
+        var defaultValuePattern = '(,\\s*{[^}]*defaultValue\\s*:\\s*' + stringPattern + ')?';
+        pattern += defaultValuePattern;
+    }
+
     var functionRegex = new RegExp( this.regex || pattern, 'g' );
     while (( matches = functionRegex.exec( fileContent ) )) {
         var key = matches[1] || matches[2] || matches[3];
@@ -118,7 +124,8 @@ Parser.prototype._transform = function(file, encoding, done) {
             if (context) {
                 key += this.contextSeparator + context;
             }
-            keys.push( key );
+	        var defaultValue = matches[8] || matches[9] || matches[10];
+	        keys.push( { key: key, defaultValue: defaultValue } );
         }
     }
 
@@ -149,19 +156,20 @@ Parser.prototype._transform = function(file, encoding, done) {
 
         for (var i in matchKeys) {
             // remove any leading [] in the key
-            keys.push( matchKeys[i].replace( /^\[[a-zA-Z0-9_-]*\]/ , '' ) );
+            keys.push( { key: matchKeys[i].replace( /^\[[a-zA-Z0-9_-]*\]/ , '' ) } );
         }
     }
 
     while (( matches = attributeWithoutValueRegex.exec( fileContent ) )) {
-        keys.push( matches[2] );
+        keys.push( { key: matches[2] } );
     }
 
 
     // finally we add the parsed keys to the catalog
     // =============================================
     for (var j in keys) {
-        var key = keys[j];
+	    var key = keys[j].key;
+	    var defaultValue = keys[j].defaultValue;
         // remove the backslash from escaped quotes
         key = key.replace(/\\('|"|`)/g, '$1')
         key = key.replace(/\\n/g, '\n');
@@ -176,10 +184,10 @@ Parser.prototype._transform = function(file, encoding, done) {
             key = key.replace( self.namespaceSeparator, self.keySeparator );
         }
 
-        self.translations.push( key );
+        self.translations.push( { key: key, defaultValue: defaultValue } );
     }
 
-    done();
+	done();
 };
 
 
@@ -194,7 +202,13 @@ Parser.prototype._flush = function(done) {
 
     // remove duplicate keys
     // =====================
-    self.translations = _.uniq( self.translations ).sort();
+    function getKey(translation) {
+        return translation.key;
+    }
+    function byKeyOrder(first, second) {
+        return first.key.localeCompare(second.key);
+    }
+    self.translations = _.uniqBy( self.translations, getKey ).sort(byKeyOrder);
 
 
 
@@ -203,8 +217,9 @@ Parser.prototype._flush = function(done) {
     // ==========================
     for (var index in self.translations) {
         // simplify ${dot.separated.variables} into just their tails (${variables})
-        var key = self.translations[index].replace( /\$\{(?:[^.}]+\.)*([^}]+)\}/g, '\${$1}' );
-        translationsHash = helpers.hashFromString( key, self.keySeparator, translationsHash );
+        var key = self.translations[index].key.replace( /\$\{(?:[^.}]+\.)*([^}]+)\}/g, '\${$1}' );
+        var value = self.translations[index].defaultValue;
+        translationsHash = helpers.hashFromString( key, self.keySeparator, value, translationsHash );
     }
 
 
