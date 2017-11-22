@@ -34,6 +34,7 @@ program
   .option( '--keep-removed'                      , 'Prevent keys no longer found from being removed' )
   .option( '--write-old <string>'                , 'Save (or don\'t if false) _old files' )
   .option( '--ignore-variables'                  , 'Don\'t fail when a variable is found' )
+  .option( '--default-values'                    , 'Extract default values' )
   .parse( process.argv );
 
 
