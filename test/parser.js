@@ -7,7 +7,7 @@ describe('parser', function () {
         });
 
         i18nextParser.on('data', function (file) {
-            if ( file.relative === 'en/translation.json' ) {
+            if ( file.relative === 'en/translation.json' || file.relative === 'en\\translation.json' ) {
                 result = JSON.parse( file.contents );
             }
         });
@@ -27,7 +27,7 @@ describe('parser', function () {
       });
 
       i18nextParser.on('data', function (file) {
-          if ( file.relative === 'en/translation.json' ) {
+          if ( file.relative === 'en/translation.json' || file.relative === 'en\\translation.json' ) {
               result = JSON.parse( file.contents );
           }
       });
@@ -50,7 +50,7 @@ describe('parser', function () {
         });
 
         i18nextParser.on('data', function (file) {
-            if ( file.relative === 'en/translation.json' ) {
+            if ( file.relative === 'en/translation.json' || file.relative === 'en\\translation.json' ) {
                 result = JSON.parse( file.contents );
             }
         });
@@ -69,7 +69,7 @@ describe('parser', function () {
         });
 
         i18nextParser.on('data', function (file) {
-            if ( file.relative === 'en/translation.json' ) {
+            if ( file.relative === 'en/translation.json' || file.relative === 'en\\translation.json' ) {
                 result = JSON.parse( file.contents );
             }
         });
@@ -89,7 +89,7 @@ describe('parser', function () {
         });
 
         i18nextParser.on('data', function (file) {
-            if ( file.relative === 'en/translation.json' ) {
+            if ( file.relative === 'en/translation.json' || file.relative === 'en\\translation.json' ) {
                 result = JSON.parse( file.contents );
             }
         });
@@ -110,7 +110,7 @@ describe('parser', function () {
         });
 
         i18nextParser.on('data', function (file) {
-            if ( file.relative === 'en/translation.json' ) {
+            if ( file.relative === 'en/translation.json' || file.relative === 'en\\translation.json' ) {
                 result = JSON.parse( file.contents );
             }
         });
@@ -122,6 +122,31 @@ describe('parser', function () {
         i18nextParser.end(fakeFile);
     });
 
+    it('parses react templates', function (done) {
+        var commonNs;
+        var specificNs;
+        var i18nextParser = Parser({
+            reactNamespace: true
+        });
+        var fakeFile = new File({
+            contents: fs.readFileSync( path.resolve(__dirname, 'templating/translateHoc.js') )
+        });
+
+        i18nextParser.on('data', function (file) {
+            if ( file.relative === 'en/common.json' || file.relative === 'en\\common.json' ) {
+                commonNs = JSON.parse( file.contents );
+            }
+            if ( file.relative === 'en/specific_namespace.json' || file.relative === 'en\\specific_namespace.json' ) {
+                specificNs = JSON.parse( file.contents );
+            }
+        });
+        i18nextParser.on('end', function (file) {
+            assert.deepEqual( commonNs, { "hello_common": "" } );
+            assert.deepEqual( specificNs, { "hello_specific": "" } );
+            done();
+        });
+        i18nextParser.end(fakeFile);
+    });
 
     it('creates two files per namespace and per locale', function (done) {
         var results = [];
@@ -229,7 +254,7 @@ describe('parser', function () {
         });
 
         i18nextParser.on('data', function (file) {
-            if ( file.relative === 'en/test_separators.json' ) {
+            if ( file.relative === 'en/test_separators.json' || file.relative === 'en\\test_separators.json' ) {
                 result = JSON.parse( file.contents );
             }
         });
@@ -250,7 +275,7 @@ describe('parser', function () {
         });
 
         i18nextParser.on('data', function (file) {
-            if ( file.relative === 'en/translation.json' ) {
+            if ( file.relative === 'en/translation.json' || file.relative === 'en\\translation.json' ) {
                 result = JSON.parse( file.contents );
             }
         });
@@ -273,7 +298,7 @@ describe('parser', function () {
         });
 
         i18nextParser.on('data', function (file) {
-            if ( file.relative === 'en/translation.json' ) {
+            if ( file.relative === 'en/translation.json' || file.relative === 'en\\translation.json' ) {
                 result = JSON.parse( file.contents );
             }
         });
@@ -295,7 +320,7 @@ describe('parser', function () {
         });
 
         i18nextParser.on('data', function (file) {
-            if ( file.relative === 'en/translation.json' ) {
+            if ( file.relative === 'en/translation.json' || file.relative === 'en\\translation.json' ) {
                 result = JSON.parse( file.contents );
             }
         });
@@ -389,7 +414,7 @@ describe('parser', function () {
         };
 
         i18nextParser.on('data', function (file) {
-            if ( file.relative === 'en/test_plural.json' ) {
+            if ( file.relative === 'en/test_plural.json' || file.relative === 'en\\test_plural.json' ) {
                 result = JSON.parse( file.contents );
             }
         });
@@ -415,7 +440,7 @@ describe('parser', function () {
         };
 
         i18nextParser.on('data', function (file) {
-            if ( file.relative === 'en/test_context_plural.json' ) {
+            if ( file.relative === 'en/test_context_plural.json' || file.relative === 'en\\test_context_plural.json' ) {
                 result = JSON.parse( file.contents );
             }
         });
@@ -435,7 +460,7 @@ describe('parser', function () {
         });
 
         i18nextParser.on('data', function (file) {
-            if ( file.relative === 'en/translation.json' ) {
+            if ( file.relative === 'en/translation.json' || file.relative === 'en\\translation.json' ) {
                 result = JSON.parse( file.contents );
             }
         });
@@ -469,7 +494,7 @@ describe('parser', function () {
             contents: new Buffer("// FIX this doesn't work and this t is all alone\nt('first')\nt = function() {}")
         });
         i18nextParser.on('data', function (file) {
-            if ( file.relative === 'en/translation.json' ) {
+            if ( file.relative === 'en/translation.json' || file.relative === 'en\\translation.json' ) {
                 result = JSON.parse( file.contents );
             }
         });
@@ -488,7 +513,7 @@ describe('parser', function () {
         });
 
         i18nextParser.on('data', function (file) {
-            if ( file.relative === 'en/translation.json' ) {
+            if ( file.relative === 'en/translation.json' || file.relative === 'en\\translation.json' ) {
                 result = JSON.parse( file.contents );
             }
         });
@@ -507,7 +532,7 @@ describe('parser', function () {
         });
 
         i18nextParser.on('data', function (file) {
-            if ( file.relative === 'en/translation.json' ) {
+            if ( file.relative === 'en/translation.json' || file.relative === 'en\\translation.json' ) {
                 result = JSON.parse( file.contents );
             }
         });
