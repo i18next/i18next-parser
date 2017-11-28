@@ -25,6 +25,7 @@ program
   .option( '--suffix <string>'                   , 'Suffix filename for each locale, eg.: \'-$suf-LOCALE\' will yield \'default-suf-en.json\'')
   .option( '--extension <string>'                , 'Specify extension for filename for each locale, eg.: \'.$LOCALE.i18n\' will yield \'default.en.i18n\'')
   .option( '-n, --namespace <string>'            , 'The default namespace (translation by default)' )
+  .option( '--react-namespace'                   , 'Use namespace from translate high order component when using react-i18next (false by default)' )
   .option( '-s, --namespace-separator <string>'  , 'The default namespace separator (: by default)' )
   .option( '-k, --key-separator <string>'        , 'The default key separator (. by default)' )
   .option( '-c, --context-separator <string>'    , 'The default context separator (_ by default)' )
