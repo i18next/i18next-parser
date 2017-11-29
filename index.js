@@ -37,6 +37,7 @@ function Parser(options, transformConfig) {
     this.writeOld           = options.writeOld !== false;
     this.keepRemoved        = options.keepRemoved;
     this.ignoreVariables    = options.ignoreVariables || false;
+    this.reactNamespace     = options.reactNamespace || false;
 
     ['functions', 'locales'].forEach(function( attr ) {
         if ( (typeof self[ attr ] !== 'object') || ! self[ attr ].length ) {
@@ -55,7 +56,7 @@ Parser.prototype._transform = function(file, encoding, done) {
 
     var self        = this;
     this.base       = this.base || file.base;
-
+    var namespaceFromReact = null
 
 
     // we do not handle streams
@@ -157,6 +158,15 @@ Parser.prototype._transform = function(file, encoding, done) {
         keys.push( matches[2] );
     }
 
+    // and we parse for translate HOC (react-i18next)
+    // =============================
+    if (this.reactNamespace) {
+        const translateHoc = /translate\((['"])([^'"]+)\1/
+        const translateMatches = fileContent.match(translateHoc)
+        if (translateMatches) {
+            namespaceFromReact = translateMatches[2]
+        }
+    }
 
     // finally we add the parsed keys to the catalog
     // =============================================
@@ -170,7 +180,8 @@ Parser.prototype._transform = function(file, encoding, done) {
         key = key.replace(/\\\\/g, '\\');
 
         if ( key.indexOf( self.namespaceSeparator ) == -1 ) {
-            key = self.defaultNamespace + self.keySeparator + key;
+            const keyNamespace = namespaceFromReact || self.defaultNamespace
+            key = keyNamespace + self.keySeparator + key;
         }
         else {
             key = key.replace( self.namespaceSeparator, self.keySeparator );

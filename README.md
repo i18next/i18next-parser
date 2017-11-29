@@ -74,7 +74,7 @@ Thanks a lot to all the previous [contributors](https://github.com/i18next/i18ne
 - **--prefix <string>**: Prefix filename for each locale, eg.: 'pre-$LOCALE-' will yield 'pre-en-default.json'
 - **--suffix <string>**: Suffix filename for each locale, eg.: '-$suf-LOCALE' will yield 'default-suf-en.json'
 - **--extension <string>**: Specify extension for filename for each locale, eg.: '.$LOCALE.i18n' will yield 'default.en.i18n'
-
+- **--react-namespace**: when using react-i18next, namespace can be extracted from high order component translate
 ---
 
 ## Gulp Usage
