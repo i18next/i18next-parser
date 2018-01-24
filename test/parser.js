@@ -11,7 +11,7 @@ describe('parser', function () {
                 result = JSON.parse( file.contents );
             }
         });
-        i18nextParser.on('end', function (file) {
+        i18nextParser.on('end', function () {
             assert.deepEqual( result, { first: '', second: '', third: '', fourth: '' } );
             done();
         });
@@ -31,7 +31,7 @@ describe('parser', function () {
               result = JSON.parse( file.contents );
           }
       });
-      i18nextParser.on('end', function (file) {
+      i18nextParser.on('end', function () {
           assert.deepEqual( result, { first: '', second: '', third: '' } );
           done();
       });
@@ -39,6 +39,25 @@ describe('parser', function () {
       i18nextParser.end(fakeFile);
     });
 
+	it('parses default js translations', function (done) {
+		var result;
+		var i18nextParser = Parser({ defaultValues: true });
+		var fakeFile = new File({
+			contents: new Buffer("asd t('first', { defaultValue: 'lol' }) t('second', {defaultValue:\"mdr\"}) \n asd t('third', { other: 'yolo', \ndefaultValue: `ptdr` }) ad t('fourth')")
+		});
+
+		i18nextParser.on('data', function (file) {
+			if ( file.relative === 'en/translation.json' ) {
+				result = JSON.parse( file.contents );
+			}
+		});
+		i18nextParser.on('end', function () {
+			assert.deepEqual( result, { first: 'lol', second: 'mdr', third: 'ptdr', fourth: '' } );
+			done();
+		});
+
+		i18nextParser.end(fakeFile);
+	});
 
     it('parses attributes in html templates', function (done) {
         var result;
@@ -54,7 +73,7 @@ describe('parser', function () {
                 result = JSON.parse( file.contents );
             }
         });
-        i18nextParser.on('end', function (file) {
+        i18nextParser.on('end', function () {
             assert.deepEqual( result, { first: '', second: '', third: '', fourth: '', fifth: '' } );
             done();
         });
@@ -73,13 +92,12 @@ describe('parser', function () {
                 result = JSON.parse( file.contents );
             }
         });
-        i18nextParser.on('end', function (file) {
+        i18nextParser.on('end', function () {
             assert.deepEqual( result, { first: '', second: '', third: '', fourth: '', fifth: '' } );
             done();
         });
         i18nextParser.end(fakeFile);
     });
-
 
     it('parses jade templates', function (done) {
         var result;
@@ -93,14 +111,13 @@ describe('parser', function () {
                 result = JSON.parse( file.contents );
             }
         });
-        i18nextParser.on('end', function (file) {
+        i18nextParser.on('end', function () {
             assert.deepEqual( result, { first: '' } );
             done();
         });
 
         i18nextParser.end(fakeFile);
     });
-
 
     it('parses handlebars templates', function (done) {
         var result;
@@ -114,14 +131,13 @@ describe('parser', function () {
                 result = JSON.parse( file.contents );
             }
         });
-        i18nextParser.on('end', function (file) {
+        i18nextParser.on('end', function () {
             assert.deepEqual( result, { first: '', second: '' } );
             done();
         });
 
         i18nextParser.end(fakeFile);
     });
-
 
     it('creates two files per namespace and per locale', function (done) {
         var results = [];
@@ -136,7 +152,7 @@ describe('parser', function () {
         i18nextParser.on('data', function (file) {
             results.push(file.relative);
         });
-        i18nextParser.on('end', function (file) {
+        i18nextParser.on('end', function () {
 
             var expectedFiles = [
                 'en/default.json', 'en/default_old.json', 'en/ns1.json', 'en/ns1_old.json', 'en/ns2.json', 'en/ns2_old.json',
@@ -168,7 +184,7 @@ describe('parser', function () {
         i18nextParser.on('data', function (file) {
             results.push(file.relative);
         });
-        i18nextParser.on('end', function (file) {
+        i18nextParser.on('end', function () {
 
             var expectedFiles = [
                 'en/default.json', 'en/ns1.json', 'en/ns2.json',
@@ -202,7 +218,7 @@ describe('parser', function () {
         i18nextParser.on('data', function (file) {
             results.push(file.relative);
         });
-        i18nextParser.on('end', function (file) {
+        i18nextParser.on('end', function () {
             var expectedFiles = [
                 'en/p-en-default-s-en.en.i18n', 'en/p-en-default-s-en_old.en.i18n'
             ];
@@ -233,7 +249,7 @@ describe('parser', function () {
                 result = JSON.parse( file.contents );
             }
         });
-        i18nextParser.once('end', function (file) {
+        i18nextParser.once('end', function () {
             assert.deepEqual( result, { first: '', second: { third: '' } } );
             done();
         });
@@ -254,10 +270,10 @@ describe('parser', function () {
                 result = JSON.parse( file.contents );
             }
         });
-        i18nextParser.once('end', function (file) {
+        i18nextParser.once('end', function () {
             var keys = Object.keys(result);
-            assert.equal( keys[0], 'escaped "double quotes"' );
-            assert.equal( keys[1], "escaped 'single quotes'" );
+            assert.equal( keys[0], "escaped 'single quotes'" );
+            assert.equal( keys[1], 'escaped "double quotes"' );
             done();
         });
 
@@ -277,7 +293,7 @@ describe('parser', function () {
                 result = JSON.parse( file.contents );
             }
         });
-        i18nextParser.once('end', function (file) {
+        i18nextParser.once('end', function () {
             var keys = Object.keys(result);
             assert.equal( keys[0], 'escaped backslash\\ newline\n\r tab\t' );
             done();
@@ -299,8 +315,7 @@ describe('parser', function () {
                 result = JSON.parse( file.contents );
             }
         });
-        i18nextParser.once('end', function (file) {
-            var keys = Object.keys(result);
+        i18nextParser.once('end', function () {
             assert.deepEqual(Object.keys(result), ['root']);
             assert.deepEqual(Object.keys(result.root), [
               '${path}',
@@ -339,7 +354,7 @@ describe('parser', function () {
                 result = JSON.parse( file.contents );
             }
         });
-        i18nextParser.once('end', function (file) {
+        i18nextParser.once('end', function () {
             assert.deepEqual( result, { first: 'first', second: '' } );
             done();
         });
@@ -365,7 +380,7 @@ describe('parser', function () {
                 result = JSON.parse( file.contents );
             }
         });
-        i18nextParser.once('end', function (file) {
+        i18nextParser.once('end', function () {
             assert.deepEqual( result, expectedResult );
             done();
         });
@@ -393,7 +408,7 @@ describe('parser', function () {
                 result = JSON.parse( file.contents );
             }
         });
-        i18nextParser.once('end', function (file) {
+        i18nextParser.once('end', function () {
             assert.deepEqual( result, expectedResult );
             done();
         });
@@ -419,7 +434,7 @@ describe('parser', function () {
                 result = JSON.parse( file.contents );
             }
         });
-        i18nextParser.once('end', function (file) {
+        i18nextParser.once('end', function () {
             assert.deepEqual( result, expectedResult );
             done();
         });
@@ -439,7 +454,7 @@ describe('parser', function () {
                 result = JSON.parse( file.contents );
             }
         });
-        i18nextParser.on('end', function (file) {
+        i18nextParser.on('end', function () {
             assert.deepEqual( result, { first: '' } );
             done();
         });
@@ -473,7 +488,7 @@ describe('parser', function () {
                 result = JSON.parse( file.contents );
             }
         });
-        i18nextParser.on('end', function (file) {
+        i18nextParser.on('end', function () {
             assert.deepEqual( result, {first: ''} );
             done();
         });
@@ -492,7 +507,7 @@ describe('parser', function () {
                 result = JSON.parse( file.contents );
             }
         });
-        i18nextParser.on('end', function (file) {
+        i18nextParser.on('end', function () {
             assert.deepEqual( result, { first_date: '', second_form2: '', third_context: '', fourth_pipo: '' } );
             done();
         });
@@ -511,7 +526,7 @@ describe('parser', function () {
                 result = JSON.parse( file.contents );
             }
         });
-        i18nextParser.on('end', function (file) {
+        i18nextParser.on('end', function () {
             assert.deepEqual( result, { first: '' });
             done();
         });
