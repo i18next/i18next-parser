@@ -1,6 +1,10 @@
 # Changelog
 
-## 0.12.0 - latest
+## 0.13.0 - latest
+
+- Support `defaultValue` option along the translation key (#68)
+
+## 0.12.0
 
 - Support `prefix`, `suffix` and `extension` option on the CLI (#60)
 
