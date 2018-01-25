@@ -218,7 +218,7 @@ Parser.prototype._flush = function(done) {
         // simplify ${dot.separated.variables} into just their tails (${variables})
         var key = self.translations[index].key.replace( /\$\{(?:[^.}]+\.)*([^}]+)\}/g, '\${$1}' );
         var value = self.translations[index].defaultValue;
-        translationsHash = helpers.hashFromString( key, self.keySeparator, value, translationsHash );
+        translationsHash = helpers.dotPathToHash( key, self.keySeparator, value, translationsHash );
     }
 
 
@@ -274,10 +274,10 @@ Parser.prototype._flush = function(done) {
 
 
             // merges existing translations with the new ones
-            mergedTranslations = helpers.mergeHash( currentTranslations, translationsHash[namespace], null, this.keepRemoved );
+            mergedTranslations = helpers.mergeHashes( currentTranslations, translationsHash[namespace], null, this.keepRemoved );
 
             // restore old translations if the key is empty
-            mergedTranslations.new = helpers.replaceEmpty( oldTranslations, mergedTranslations.new );
+            mergedTranslations.new = helpers.populateHash( oldTranslations, mergedTranslations.new );
 
             // merges former old translations with the new ones
             mergedTranslations.old = _.extend( oldTranslations, mergedTranslations.old );

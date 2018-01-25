@@ -32,7 +32,7 @@ npm install i18next-parser -g
 ## Tests
 
 ```
-mocha --reporter nyan test/test.js
+mocha --require babel-register --require babel-polyfill test/**/*.js
 ```
 
 ---
