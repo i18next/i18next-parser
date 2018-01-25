@@ -202,37 +202,6 @@ describe('parser', function () {
         i18nextParser.end(fakeFile);
     });
 
-    it('handles prefix, suffix and extension with the current locale tag in each', function (done) {
-        var results = [];
-        var i18nextParser = Parser({
-            locales: ['en'],
-            namespace: 'default',
-            prefix: 'p-$LOCALE-',
-            suffix: '-s-$LOCALE',
-            extension: '.$LOCALE.i18n'
-        });
-        var fakeFile = new File({
-            contents: new Buffer("asd t('fourth')")
-        });
-
-        i18nextParser.on('data', function (file) {
-            results.push(file.relative);
-        });
-        i18nextParser.on('end', function () {
-            var expectedFiles = [
-                'en/p-en-default-s-en.en.i18n', 'en/p-en-default-s-en_old.en.i18n'
-            ];
-            var length = expectedFiles.length;
-
-            expectedFiles.forEach(function (filename) {
-                assert( results.indexOf( filename ) !== -1 );
-                if( ! --length ) done();
-            });
-        });
-
-        i18nextParser.end(fakeFile);
-    });
-
     it('handles custom namespace and key separators', function (done) {
         var result;
         var i18nextParser = Parser({
@@ -530,6 +499,35 @@ describe('parser', function () {
             assert.deepEqual( result, { first: '' });
             done();
         });
+        i18nextParser.end(fakeFile);
+    });
+    
+    it('handles custom namespace with the source file name and current locale tag', function (done) {
+        var results = [];
+        var i18nextParser = Parser({
+            locales: ['en'],
+            namespace: '$FILENAME_translation_$LOCALE',
+            extension: '.$LOCALE.i18n'
+        });
+        var fakeFile = new File({
+            contents: new Buffer("asd t('fourth')"), path: '/some/fake/path.html'
+        });
+
+        i18nextParser.on('data', function (file) {
+            results.push(file.relative);
+        });
+        i18nextParser.on('end', function () {
+            var expectedFiles = [
+                'en/path_translation_en.en.i18n', 'en/path_translation_en_old.en.i18n'
+            ];
+            var length = expectedFiles.length;
+
+            expectedFiles.forEach(function (filename) {
+                assert( results.indexOf( filename ) !== -1 );
+                if( ! --length ) done();
+            });
+        });
+
         i18nextParser.end(fakeFile);
     });
 });

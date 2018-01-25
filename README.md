@@ -71,9 +71,9 @@ Thanks a lot to all the previous [contributors](https://github.com/i18next/i18ne
 - **--keep-removed**: Prevent keys no longer found from being removed
 - **--write-old false**: Avoid saving the \_old files
 - **--ignore-variables**: Don't fail when a variable is found
-- **--prefix <string>**: Prefix filename for each locale, eg.: 'pre-$LOCALE-' will yield 'pre-en-default.json'
-- **--suffix <string>**: Suffix filename for each locale, eg.: '-$suf-LOCALE' will yield 'default-suf-en.json'
-- **--extension <string>**: Specify extension for filename for each locale, eg.: '.$LOCALE.i18n' will yield 'default.en.i18n'
+- **--extension <string>**: Edit the extension of the files. Defaults to `.json`
+
+You can inject the locale tag in the namespace and extension using the `$LOCALE` variable, and you can inject the source file name in the namespace using the `$FILENAME` variable.
 
 ---
 
@@ -104,13 +104,11 @@ gulp.task('i18next', function() {
 - **locales**: An array of the locales in your applications. Defaults to `['en','fr']`
 - **parser**: A custom regex for the parser to use.
 - **writeOld**: Save the \_old files. Defaults to `true`
-- **prefix**: Add a custom prefix in front of the file name.
-- **suffix**: Add a custom suffix at the end of the file name.
 - **extension**: Edit the extension of the files. Defaults to `.json`
 - **keepRemoved**: Prevent keys no longer found from being removed
 - **ignoreVariables**: Don't fail when a variable is found
 
-You can inject the locale tag in either the prefix, suffix or extension using the `$LOCALE` variable.
+You can inject the locale tag in the namespace and extension using the `$LOCALE` variable, and you can inject the source file name in the namespace using the `$FILENAME` variable.
 
 ### Note on paths (why your translations are not saved)
 

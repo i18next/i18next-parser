@@ -32,8 +32,8 @@ function Parser(options, transformConfig) {
     this.contextSeparator   = options.contextSeparator || '_';
     this.translations       = [];
     this.extension          = options.extension || '.json';
-    this.suffix             = options.suffix || '';
-    this.prefix             = options.prefix || '';
+    this.suffix             = options.suffix || ''; // backward compatibility for 0.13
+    this.prefix             = options.prefix || ''; // backward compatibility for 0.13
     this.writeOld           = options.writeOld !== false;
     this.keepRemoved        = options.keepRemoved;
     this.ignoreVariables    = options.ignoreVariables || false;
@@ -178,7 +178,12 @@ Parser.prototype._transform = function(file, encoding, done) {
         key = key.replace(/\\\\/g, '\\');
 
         if ( key.indexOf( self.namespaceSeparator ) == -1 ) {
-            key = self.defaultNamespace + self.keySeparator + key;
+            var namespace = self.defaultNamespace;
+            if (file.path) {
+                var filename = path.basename(file.path, path.extname(file.path));
+                namespace = namespace.replace('$FILENAME', filename);
+            }
+            key = namespace + self.keySeparator + key;
         }
         else {
             key = key.replace( self.namespaceSeparator, self.keySeparator );
@@ -233,18 +238,15 @@ Parser.prototype._flush = function(done) {
         for (var namespace in translationsHash) {
 
             // get previous version of the files
-            var prefix = self.prefix.replace( '$LOCALE', locale );
-            var suffix = self.suffix.replace( '$LOCALE', locale );
-            var extension = self.extension.replace( '$LOCALE', locale );
+            var filename = self.prefix + namespace + self.suffix;
+            var extension = self.extension;
+            filename = filename.replace( '$LOCALE', locale );
+            extension = extension.replace( '$LOCALE', locale );
+            var filenameOld = filename + '_old' + extension;
+            filename += extension;
 
-            var namespacePath = path.resolve(
-                localeBase,
-                prefix + namespace + suffix + extension
-            );
-            var namespaceOldPath = path.resolve(
-                localeBase,
-                prefix + namespace + suffix + '_old' + extension
-            );
+            var namespacePath = path.resolve( localeBase, filename );
+            var namespaceOldPath = path.resolve( localeBase, filenameOld );
 
             if ( fs.existsSync( namespacePath ) ) {
                 try {
