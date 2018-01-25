@@ -14,6 +14,10 @@ const PLUGIN_NAME = 'i18next-parser';
 
 
 
+function deprecated(message) {
+	console.log('\x1b[33m%s%s\x1b[0m', 'i18next-parser: ', message);
+}
+
 function Parser(options, transformConfig) {
 
     var self = this;
@@ -32,13 +36,17 @@ function Parser(options, transformConfig) {
     this.contextSeparator   = options.contextSeparator || '_';
     this.translations       = [];
     this.extension          = options.extension || '.json';
-    this.suffix             = options.suffix || '';
-    this.prefix             = options.prefix || '';
     this.writeOld           = options.writeOld !== false;
     this.keepRemoved        = options.keepRemoved;
     this.ignoreVariables    = options.ignoreVariables || false;
     this.defaultValues      = options.defaultValues || false;
 
+    this.suffix             = options.suffix || ''; // backward compatibility for 0.13
+    this.prefix             = options.prefix || ''; // backward compatibility for 0.13
+	if (options.suffix || options.prefix) {
+		deprecated('The --prefix and --suffix options are deprecated. Please use the --namespace option instead.');
+	}
+	
     ['functions', 'locales'].forEach(function( attr ) {
         if ( (typeof self[ attr ] !== 'object') || ! self[ attr ].length ) {
             throw new PluginError(PLUGIN_NAME, '`'+attr+'` must be an array');
@@ -178,7 +186,12 @@ Parser.prototype._transform = function(file, encoding, done) {
         key = key.replace(/\\\\/g, '\\');
 
         if ( key.indexOf( self.namespaceSeparator ) == -1 ) {
-            key = self.defaultNamespace + self.keySeparator + key;
+            var namespace = self.defaultNamespace;
+            if (file.path) {
+                var filename = path.basename(file.path, path.extname(file.path));
+                namespace = namespace.replace(/\$FILENAME/g, filename);
+            }
+            key = namespace + self.keySeparator + key;
         }
         else {
             key = key.replace( self.namespaceSeparator, self.keySeparator );
@@ -233,18 +246,15 @@ Parser.prototype._flush = function(done) {
         for (var namespace in translationsHash) {
 
             // get previous version of the files
-            var prefix = self.prefix.replace( '$LOCALE', locale );
-            var suffix = self.suffix.replace( '$LOCALE', locale );
-            var extension = self.extension.replace( '$LOCALE', locale );
+            var filename = self.prefix + namespace + self.suffix;
+            var extension = self.extension;
+            filename = filename.replace( /\$LOCALE/g, locale );
+            extension = extension.replace( /\$LOCALE/g, locale );
+            var filenameOld = filename + '_old' + extension;
+            filename += extension;
 
-            var namespacePath = path.resolve(
-                localeBase,
-                prefix + namespace + suffix + extension
-            );
-            var namespaceOldPath = path.resolve(
-                localeBase,
-                prefix + namespace + suffix + '_old' + extension
-            );
+            var namespacePath = path.resolve( localeBase, filename );
+            var namespaceOldPath = path.resolve( localeBase, filenameOld );
 
             if ( fs.existsSync( namespacePath ) ) {
                 try {
