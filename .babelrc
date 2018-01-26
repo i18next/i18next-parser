@@ -1,5 +1,8 @@
 {
   "presets": ["env"],
+  "plugins": [
+    "transform-object-rest-spread"
+  ],
   "sourceMaps": true,
   "retainLines": true
 }

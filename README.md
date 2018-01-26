@@ -52,6 +52,12 @@ Thanks a lot to all the previous [contributors](https://github.com/i18next/i18ne
 
 ---
 
+## Lexers
+
+- `HTMLLexer`: parse `data-i18n` and `data-i18n-options` in html. Useful mostly for users of `jquery-i18next`.
+
+---
+
 ## CLI Usage
 
 `i18next /path/to/file/or/dir [-orapfnl]`
