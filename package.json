@@ -15,15 +15,15 @@
     "url": "https://github.com/i18next/i18next-parser"
   },
   "dependencies": {
-    "lodash": "~4.17.3",
-    "readdirp": "~2.1.0",
-    "concat-stream": "~1.6.0",
-    "commander": "~2.9.0",
-    "mkdirp": "~0.5.1",
     "colors": "~1.1.2",
+    "commander": "~2.9.0",
+    "concat-stream": "~1.6.0",
+    "lodash": "~4.17.3",
+    "mkdirp": "~0.5.1",
+    "plugin-error": "^1.0.1",
+    "readdirp": "~2.1.0",
     "through2": "~2.0.3",
-    "vinyl": "~2.0.1",
-    "gulp-util": "~3.0.7"
+    "vinyl": "~2.0.1"
   },
   "engines": {
     "node": ">=0.10.22"
