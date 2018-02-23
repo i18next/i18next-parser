@@ -37,6 +37,7 @@ function Parser(options, transformConfig) {
     this.keepRemoved        = options.keepRemoved;
     this.ignoreVariables    = options.ignoreVariables || false;
     this.defaultValues      = options.defaultValues || false;
+    this.indentation        = options.indentation || 2;
 
     ['functions', 'locales'].forEach(function( attr ) {
         if ( (typeof self[ attr ] !== 'object') || ! self[ attr ].length ) {
@@ -288,7 +289,7 @@ Parser.prototype._flush = function(done) {
             mergedTranslationsFile = new File({
               path: namespacePath,
               base: base,
-              contents: new Buffer( JSON.stringify( mergedTranslations.new, null, 2 ) )
+              contents: new Buffer( JSON.stringify( mergedTranslations.new, null, this.indentation ) )
             });
             this.emit( 'writing', namespacePath );
             self.push( mergedTranslationsFile );
@@ -297,7 +298,7 @@ Parser.prototype._flush = function(done) {
                 mergedOldTranslationsFile = new File({
                     path: namespaceOldPath,
                     base: base,
-                    contents: new Buffer(JSON.stringify(mergedTranslations.old, null, 2))
+                    contents: new Buffer(JSON.stringify(mergedTranslations.old, null, this.indentation))
                 });
                 this.emit( 'writing', namespaceOldPath );
                 self.push( mergedOldTranslationsFile );

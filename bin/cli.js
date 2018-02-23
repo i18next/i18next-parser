@@ -35,6 +35,7 @@ program
   .option( '--write-old <string>'                , 'Save (or don\'t if false) _old files' )
   .option( '--ignore-variables'                  , 'Don\'t fail when a variable is found' )
   .option( '--default-values'                    , 'Extract default values' )
+  .option( '--indentation <number>'              , 'Specify size of indentation in output' )
   .parse( process.argv );
 
 
@@ -78,6 +79,7 @@ program.writeOld = program.writeOld !== 'false';
 program.directoryFilter = program.directoryFilter && program.directoryFilter.split(',');
 program.fileFilter = program.fileFilter && program.fileFilter.split(',');
 program.output = path.resolve(process.cwd(), output);
+program.indentation = program.indentation && parseInt(programm.indentation, 10);
 
 
 
