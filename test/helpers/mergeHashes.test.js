@@ -1,0 +1,157 @@
+import { assert } from 'chai'
+import { mergeHashes } from '../../src/helpers'
+
+describe('mergeHashes helper function', function () {
+  it('replaces empty `target` keys with `source`', function (done) {
+    const source = { key1: 'value1' }
+    const target = { key1: '' }
+    const res    = mergeHashes(source, target)
+
+    assert.deepEqual(res.new, { key1: 'value1' })
+    assert.deepEqual(res.old, {})
+    done()
+  })
+
+  it('does not replaces empty `target` keys with `source` if it is a hash', function (done) {
+    const source = { key1: { key11: 'value1'} }
+    const target = { key1: '' }
+    const res    = mergeHashes(source, target)
+
+    assert.deepEqual(res.new, { key1: '' })
+    assert.deepEqual(res.old, { key1: { key11: 'value1' } })
+    done()
+})
+
+  it('keeps `target` keys not in `source`', function (done) {
+    const source = { key1: 'value1' }
+    const target = { key1: '', key2: '' }
+    const res    = mergeHashes(source, target)
+
+    assert.deepEqual(res.new, { key1: 'value1', key2: '' })
+    assert.deepEqual(res.old, {})
+    done()
+  })
+
+  it('stores into `old` the keys from `source` that are not in `target`', function (done) {
+    const source = { key1: 'value1', key2: 'value2' }
+    const target = { key1: '' }
+    const res    = mergeHashes(source, target)
+
+    assert.deepEqual(res.new, { key1: 'value1' })
+    assert.deepEqual(res.old, { key2: 'value2' })
+    done()
+  })
+
+  it('copies `source` keys to `target` regardless of presence when keepRemoved is enabled', function (done) {
+    const source = { key1: 'value1', key2: 'value2' }
+    const target = { key1: '', key3: '' }
+    const res    = mergeHashes(source, target, null, true)
+
+    assert.deepEqual(res.new, { key1: 'value1', key2: 'value2', key3: '' })
+    assert.deepEqual(res.old, { key2: 'value2' })
+    done()
+  })
+
+  it('restores plural keys when the singular one exists', function (done) {
+    const source = { key1: '', key1_plural: 'value1' }
+    const target = { key1: '' }
+    const res    = mergeHashes(source, target)
+
+    assert.deepEqual(res.new, { key1: '', key1_plural: 'value1' })
+    assert.deepEqual(res.old, {})
+    done()
+  })
+
+  it('does not restores plural keys when the singular one does not', function (done) {
+    const source = { key1: '', key1_plural: 'value1' }
+    const target = { key2: '' }
+    const res    = mergeHashes(source, target)
+
+    assert.deepEqual(res.new, { key2: '' })
+    assert.deepEqual(res.old, { key1: '', key1_plural: 'value1' })
+    done()
+  })
+
+  it('restores context keys when the singular one exists', function (done) {
+    const source = { key1: '', key1_context: 'value1' }
+    const target = { key1: '' }
+    const res    = mergeHashes(source, target)
+
+    assert.deepEqual(res.new, { key1: '', key1_context: 'value1' })
+    assert.deepEqual(res.old, {})
+    done()
+  })
+
+  it('does not restores context keys when the singular one does not', function (done) {
+    const source = { key1: '', key1_context: 'value1' }
+    const target = { key2: '' }
+    const res    = mergeHashes(source, target)
+
+    assert.deepEqual(res.new, { key2: '' })
+    assert.deepEqual(res.old, { key1: '', key1_context: 'value1' })
+    done()
+  })
+
+  it('works with deep objects', function (done) {
+    const source = {
+        key1: 'value1',
+        key2: {
+            key21: 'value21',
+            key22: {
+                key221: 'value221',
+                key222: 'value222'
+            },
+            key23: 'value23'
+        }
+    }
+    const target = {
+        key1: '',
+        key2: {
+            key21: '',
+            key22: {
+                key222: '',
+                key223: ''
+            },
+            key24: ''
+        },
+        key3: ''
+    }
+
+    const res = mergeHashes(source, target)
+
+    const expected_target = {
+        key1: 'value1',
+        key2: {
+            key21: 'value21',
+            key22: {
+                key222: 'value222',
+                key223: ''
+            },
+            key24: ''
+        },
+        key3: ''
+    }
+
+    const expected_old = {
+        key2: {
+            key22: {
+                key221: 'value221'
+            },
+            key23: 'value23'
+        }
+    }
+
+    assert.deepEqual(res.new, expected_target)
+    assert.deepEqual(res.old, expected_old)
+    done()
+  })
+
+  it('leaves arrays of values (multiline) untouched', function (done) {
+    const source = { key1: ['Line one.', 'Line two.'] }
+    const target = { key1: '' }
+    const res    = mergeHashes(source, target)
+
+    assert.deepEqual(res.new, { key1: ['Line one.', 'Line two.'] })
+    done()
+  })
+})

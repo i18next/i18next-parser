@@ -1,4 +1,16 @@
 <div class="foobar">
-    <p>{{t "first"}}</p>
-    {{link-to (t "second") "foo"}}
+  <p>{{t "first"}}</p>
+  <p>{{t "second" "defaultValue" option="foo" context="male"}}</p>
+  <p>{{t "third" defaultValue="defaultValue" context="female"}}</p>
+  <p>{{t "fourth" context="male" bla='asd' defaultValue="defaultValue"}}</p>
+  <p>{{t
+    variable
+    "defaultValue"
+    option="foo"
+    context="male"
+  }}</p>
+  <p>{{t "fifth" variable option="foo" context="male"}}</p>
+  <p>{{t bljha bla-bla "second dsf" "defaultValue" option="foo" context="male"}}</p>
+  {{link-to (t "sixth") "foo"}}
+  {{link-to (t "seventh" "defaultValue") "foo"}}
 </div>

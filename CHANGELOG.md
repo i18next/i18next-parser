@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.0-beta1
+
+
+
 ## 0.13.0 - latest
 
 - Support `defaultValue` option along the translation key (#68)
