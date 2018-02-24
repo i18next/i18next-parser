@@ -15,7 +15,7 @@
 
 - `defaultValue`: replace empty keys with the given value
 - `filename` and `extension` support for `$NAMESPACE` and `$LOCALE` variables
-- `jsonIndentation` let you control the indentation of the catalogs
+- `indentation` let you control the indentation of the catalogs
 - `lineEnding` let you control the line ending of the catalogs
 - `sort` let you enable sorting.
 

@@ -437,10 +437,33 @@ describe('parser', function () {
       i18nextParser.end(fakeFile)
     })
 
-    it('supports an jsonIndentation option', function(done) {
+    it('supports outputing to yml', function(done) {
       let result
       const i18nextParser = new i18nTransform({
-        jsonIndentation: 6
+        extension: '.yml'
+      })
+      const fakeFile = new Vinyl({
+        contents: Buffer.from("asd t('first')"),
+        path: 'file.js'
+      })
+
+      i18nextParser.on('data', (file) => {
+        if (file.relative.endsWith('en/translation.yml')) {
+          result = file.contents.toString('utf8')
+        }
+      })
+      i18nextParser.once('end', function () {
+        assert.equal(result, 'first: ""\n' )
+        done()
+      })
+
+      i18nextParser.end(fakeFile)
+    })
+
+    it('supports an indentation option', function(done) {
+      let result
+      const i18nextParser = new i18nTransform({
+        indentation: 6
       })
       const fakeFile = new Vinyl({
         contents: Buffer.from("asd t('first')"),

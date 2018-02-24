@@ -10,6 +10,7 @@ import fs from 'fs'
 import Parser from './parser'
 import path from 'path'
 import VirtualFile from 'vinyl'
+import YAML from 'yamljs'
 
 export default class i18nTransform extends Transform {
 
@@ -24,7 +25,7 @@ export default class i18nTransform extends Transform {
       defaultValue: '',
       extension: '.json',
       filename: '$NAMESPACE',
-      jsonIndentation: 2,
+      indentation: 2,
       keepRemoved: false,
       keySeparator: '.',
       lexers: {},
@@ -52,14 +53,13 @@ export default class i18nTransform extends Transform {
       content = file.contents
     }
     else {
-      content = fs.readFileSync(file.path, enc)
+      content = fs.readFileSync(file.path, encoding)
     }
 
     this.emit('reading', file)
 
     const extenstion = path.extname(file.path).substring(1)
     const entries = this.parser.parse(content, extenstion)
-
 
     entries.forEach(entry => {
       let key = entry.key
@@ -177,7 +177,13 @@ export default class i18nTransform extends Transform {
   }
 
   pushFile(path, contents) {
-    let text = JSON.stringify(contents, null, this.options.jsonIndentation) + '\n'
+    let text
+    if (path.endsWith('yml')) {
+      text = YAML.stringify(contents, null, this.options.indentation)
+    }
+    else {
+      text = JSON.stringify(contents, null, this.options.indentation) + '\n'
+    }
 
     if (this.options.lineEnding === 'auto') {
       text = eol.auto(text)

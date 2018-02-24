@@ -25,7 +25,8 @@
     "lodash": "~4.17.4",
     "through2": "~2.0.3",
     "vinyl": "~2.0.1",
-    "vinyl-fs": "^3.0.2"
+    "vinyl-fs": "^3.0.2",
+    "yamljs": "^0.3.0"
   },
   "engines": {
     "node": ">=0.10.22"

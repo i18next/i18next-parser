@@ -79,7 +79,7 @@ Option                 | Description                                           |
 **defaultValue**       | Default value to give to empty keys                   | `''`
 **extension**          | Edit the extension of the locale files                | `.json`
 **filename**           | Edit the filename of the locale files                 | `'$NAMESPACE'`
-**jsonIndentation**    | Indentation of the catalog files                      | `2`
+**indentation**    | Indentation of the catalog files                      | `2`
 **keepRemoved**        | Keep keys from the catalog that are no longer in code | `false`
 **keySeparator**       | Key separator used in your translation keys           | `.`
 **lexers**             | See below for details                                 | `{}`
