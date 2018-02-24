@@ -19,7 +19,7 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
     options));
 
     _this.defaults = {
-      contextSeparator: '_', // TODO
+      contextSeparator: '_',
       createOldLibraries: true,
       defaultNamespace: 'translation',
       defaultValue: '',
@@ -159,6 +159,13 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
       } else
       {
         existing = _extends({}, existing, entry);
+      }
+
+      if (entry.context) {
+        var contextEntry = Object.assign({}, entry);
+        delete contextEntry.context;
+        contextEntry.key += this.options.contextSeparator + entry.context;
+        this.addEntry(contextEntry);
       }
     } }, { key: 'getCatalog', value: function getCatalog(
 

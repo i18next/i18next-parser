@@ -51,6 +51,30 @@ describe('parser', function () {
     i18nextParser.end(fakeFile)
   })
 
+  it('creates context keys', function (done) {
+    let result
+    const i18nextParser = new i18nTransform()
+    const fakeFile = new Vinyl({
+      contents: Buffer.from("asd t('first', {context: 'female'})"),
+      path: 'file.js'
+    })
+
+    i18nextParser.on('data', (file) => {
+      if (file.relative.endsWith('en/translation.json')) {
+        result = JSON.parse(file.contents)
+      }
+    })
+    i18nextParser.once('end', () => {
+      assert.deepEqual(result, {
+        first: '',
+        first_female: ''
+      })
+      done()
+    })
+
+    i18nextParser.end(fakeFile)
+  })
+
   it('parses html files', function (done) {
     let result
     const i18nextParser = new i18nTransform()
@@ -89,9 +113,13 @@ describe('parser', function () {
     const expected = {
       first: '',
       second: 'defaultValue',
+      second_male: 'defaultValue',
       third: 'defaultValue',
+      third_female: 'defaultValue',
       fourth: 'defaultValue',
+      fourth_male: 'defaultValue',
       fifth: '',
+      fifth_male: '',
       sixth: '',
       seventh: 'defaultValue'
     }
@@ -181,7 +209,7 @@ describe('parser', function () {
         result = JSON.parse(file.contents)
       }
     })
-    i18nextParser.once('end', function () {
+    i18nextParser.once('end', () => {
       const keys = Object.keys(result)
       assert.equal( keys[0], "escaped 'single quotes'" )
       assert.equal( keys[1], 'escaped "double quotes"' )
@@ -204,7 +232,7 @@ describe('parser', function () {
         result = JSON.parse(file.contents)
       }
     })
-    i18nextParser.once('end', function () {
+    i18nextParser.once('end', () => {
       const keys = Object.keys(result)
       assert.equal( keys[0], 'escaped backslash\\ newline\n\r tab\t' )
       done()
@@ -241,7 +269,7 @@ describe('parser', function () {
         result = JSON.parse(file.contents)
       }
     })
-    i18nextParser.once('end', function () {
+    i18nextParser.once('end', () => {
       assert.deepEqual( result, { first: 'first', second: '' } )
       done()
     })
@@ -266,7 +294,7 @@ describe('parser', function () {
         resultFR = JSON.parse(file.contents)
       }
     })
-    i18nextParser.once('end', function () {
+    i18nextParser.once('end', () => {
       assert.deepEqual( resultEN, { first: 'first', second: 'second' } )
       assert.deepEqual( resultFR, { first: 'premier', second: '' } )
       done()
@@ -294,7 +322,7 @@ describe('parser', function () {
         result = JSON.parse(file.contents)
       }
     })
-    i18nextParser.once('end', function () {
+    i18nextParser.once('end', () => {
       assert.deepEqual( result, expectedResult )
       done()
     })
@@ -323,7 +351,7 @@ describe('parser', function () {
         result = JSON.parse(file.contents)
       }
     })
-    i18nextParser.once('end', function () {
+    i18nextParser.once('end', () => {
       assert.deepEqual( result, expectedResult )
       done()
     })
@@ -350,7 +378,7 @@ describe('parser', function () {
         result = JSON.parse(file.contents)
       }
     })
-    i18nextParser.once('end', function () {
+    i18nextParser.once('end', () => {
       assert.deepEqual( result, expectedResult )
       done()
     })
@@ -406,7 +434,7 @@ describe('parser', function () {
           result = JSON.parse(file.contents)
         }
       })
-      i18nextParser.once('end', function () {
+      i18nextParser.once('end', () => {
         assert.deepEqual( result, { first: '', second: { third: '' } } )
         done()
       })
@@ -429,7 +457,7 @@ describe('parser', function () {
           result = JSON.parse(file.contents)
         }
       })
-      i18nextParser.once('end', function () {
+      i18nextParser.once('end', () => {
         assert.deepEqual( result, { first: 'NOT_TRANSLATED' } )
         done()
       })
@@ -452,7 +480,7 @@ describe('parser', function () {
           result = file.contents.toString('utf8')
         }
       })
-      i18nextParser.once('end', function () {
+      i18nextParser.once('end', () => {
         assert.equal(result, 'first: ""\n' )
         done()
       })
@@ -475,7 +503,7 @@ describe('parser', function () {
           result = file.contents.toString('utf8')
         }
       })
-      i18nextParser.once('end', function () {
+      i18nextParser.once('end', () => {
         assert.deepEqual( result.split('\n')[1], '      "first": ""' )
         done()
       })
@@ -537,7 +565,7 @@ describe('parser', function () {
             result = JSON.parse(file.contents)
           }
         })
-        i18nextParser.once('end', function () {
+        i18nextParser.once('end', () => {
           assert.deepEqual(result, {first: '', second: ''})
           done()
         })
@@ -560,7 +588,7 @@ describe('parser', function () {
             result = JSON.parse(file.contents)
           }
         })
-        i18nextParser.once('end', function () {
+        i18nextParser.once('end', () => {
           assert.sameOrderedMembers(Object.keys(result), ['ccc', 'aaa', 'bbb'])
           assert.sameOrderedMembers(Object.keys(result.bbb), ['bbb', 'aaa'])
           done()
@@ -584,7 +612,7 @@ describe('parser', function () {
             result = JSON.parse(file.contents)
           }
         })
-        i18nextParser.once('end', function () {
+        i18nextParser.once('end', () => {
           assert.sameOrderedMembers(Object.keys(result), ['aaa', 'bbb', 'ccc'])
           assert.sameOrderedMembers(Object.keys(result.bbb), ['aaa', 'bbb'])
           done()

@@ -19,7 +19,7 @@ export default class i18nTransform extends Transform {
     super(options)
 
     this.defaults = {
-      contextSeparator: '_', // TODO
+      contextSeparator: '_',
       createOldLibraries: true,
       defaultNamespace: 'translation',
       defaultValue: '',
@@ -159,6 +159,13 @@ export default class i18nTransform extends Transform {
     }
     else {
       existing = {...existing, ...entry}
+    }
+
+    if (entry.context) {
+      const contextEntry = Object.assign({}, entry)
+      delete contextEntry.context
+      contextEntry.key += this.options.contextSeparator + entry.context
+      this.addEntry(contextEntry)
     }
   }
 
