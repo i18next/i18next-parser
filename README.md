@@ -19,9 +19,9 @@ When translating an application, maintaining the catalog by hand is painful. Thi
 - Behind the hood, it's a stream transform (so it works with gulp)
 - Supports es6 template strings (in addition to single/double quoted strings) with ${expression} placeholders
 
-## `1.x`
+## DISCLAMER: `1.0.0-beta`
 
-`1.x` is currently in beta. It is a deep rewrite of this package that solves many issues, the main one being that it was slowly becoming unmaintainable. The [migration](docs/migration.md) contains all the breaking changes. If you rely on a `0.x.x` version, you can still find the old documentation on its dedicated [branch](https://github.com/i18next/i18next-parser/tree/0.x.x).
+`1.x` is currently in beta. You can follow the pre-releases [here](https://github.com/i18next/i18next-parser/releases). It is a deep rewrite of this package that solves many issues, the main one being that it was slowly becoming unmaintainable. The [migration](docs/migration.md) contains all the breaking changes. Everything that follows is related to `1.x`. If you rely on a `0.x.x` version, you can still find the old documentation on its dedicated [branch](https://github.com/i18next/i18next-parser/tree/0.x.x).
 
 
 ## Usage
@@ -31,8 +31,8 @@ When translating an application, maintaining the catalog by hand is painful. Thi
 You can use the CLI with the package installed locally but if you want to use it from anywhere, you better install it globally:
 
 ```
-yarn global add i18next-parser
-npm install -g i18next-parser
+yarn global add i18next-parser@next
+npm install -g i18next-parser@next
 i18next 'app/**/*.{js,hbs}' 'lib/**/*.{js,hbs}' [-oc]
 ```
 
@@ -47,7 +47,7 @@ Multiple globbing patterns are supported to specify complex file selections. You
 Save the package to your devDependencies:
 
 ```
-yarn add -D i18next-parser
+yarn add -D i18next-parser@next
 npm install --save-dev i18next-parser
 ```
 
