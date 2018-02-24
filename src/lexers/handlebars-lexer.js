@@ -1,7 +1,6 @@
 import BaseLexer from './base-lexer'
 
 export default class HandlebarsLexer extends BaseLexer {
-
   constructor(options = {}) {
     super(options)
 

@@ -18,16 +18,15 @@ const lexers = {
 }
 
 const lexersMap = {
-  'HandlebarsLexer': HandlebarsLexer,
-  'HTMLLexer': HTMLLexer,
-  'JavascriptLexer': JavascriptLexer
+  HandlebarsLexer,
+  HTMLLexer,
+  JavascriptLexer
 }
 
 export default class Parser extends EventEmitter {
-
   constructor(options = {}) {
     super(options)
-    this.lexers = {...lexers, ...options}
+    this.lexers = { ...lexers, ...options }
   }
 
   parse(content, extension) {
@@ -48,7 +47,6 @@ export default class Parser extends EventEmitter {
         lexerOptions = lexerConfig
       }
 
-
       if (!lexersMap[lexerName]) {
         this.emit('error', new Error(`Lexer '${lexerName}' does not exist`))
       }
@@ -60,5 +58,4 @@ export default class Parser extends EventEmitter {
 
     return keys
   }
-
 }

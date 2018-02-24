@@ -18,13 +18,12 @@ var lexers = {
 
 
 var lexersMap = {
-  'HandlebarsLexer': _handlebarsLexer2.default,
-  'HTMLLexer': _htmlLexer2.default,
-  'JavascriptLexer': _javascriptLexer2.default };var
+  HandlebarsLexer: _handlebarsLexer2.default,
+  HTMLLexer: _htmlLexer2.default,
+  JavascriptLexer: _javascriptLexer2.default };var
 
 
 Parser = function (_EventEmitter) {_inherits(Parser, _EventEmitter);
-
   function Parser() {var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};_classCallCheck(this, Parser);var _this = _possibleConstructorReturn(this, (Parser.__proto__ || Object.getPrototypeOf(Parser)).call(this,
     options));
     _this.lexers = _extends({}, lexers, options);return _this;
@@ -47,7 +46,6 @@ Parser = function (_EventEmitter) {_inherits(Parser, _EventEmitter);
           delete lexerConfig.lexer;
           lexerOptions = lexerConfig;
         }
-
 
         if (!lexersMap[lexerName]) {
           _this2.emit('error', new Error('Lexer \'' + lexerName + '\' does not exist'));

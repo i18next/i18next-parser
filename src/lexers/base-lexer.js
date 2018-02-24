@@ -1,7 +1,6 @@
 import EventEmitter from 'events'
 
 export default class BaseLexer extends EventEmitter {
-
   constructor(options = {}) {
     super()
     this.keys = []
@@ -35,19 +34,19 @@ export default class BaseLexer extends EventEmitter {
   }
 
   functionPattern() {
-    return '(?:' + this.functions.join( '|' ).replace( '.', '\\.' ) + ')'
+    return '(?:' + this.functions.join('|').replace('.', '\\.') + ')'
   }
 
   static get singleQuotePattern() {
-    return "'(?:[^\'].*?[^\\\\])?'"
+    return "'(?:[^'].*?[^\\\\])?'"
   }
 
   static get doubleQuotePattern() {
-    return '"(?:[^\"].*?[^\\\\])?"'
+    return '"(?:[^"].*?[^\\\\])?"'
   }
 
   static get backQuotePattern() {
-    return '`(?:[^\`].*?[^\\\\])?`'
+    return '`(?:[^`].*?[^\\\\])?`'
   }
 
   static get variablePattern() {

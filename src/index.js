@@ -1,8 +1,4 @@
-import {
-  dotPathToHash,
-  mergeHashes,
-  populateHash
-} from './helpers'
+import { dotPathToHash, mergeHashes, populateHash } from './helpers'
 import { Transform } from 'stream'
 import _ from 'lodash'
 import eol from 'eol'
@@ -13,7 +9,6 @@ import VirtualFile from 'vinyl'
 import YAML from 'yamljs'
 
 export default class i18nTransform extends Transform {
-
   constructor(options = {}) {
     options.objectMode = true
     super(options)
@@ -30,13 +25,13 @@ export default class i18nTransform extends Transform {
       keySeparator: '.',
       lexers: {},
       lineEnding: 'auto',
-      locales: ['en','fr'],
+      locales: ['en', 'fr'],
       namespaceSeparator: ':',
       output: 'locales',
       sort: false
     }
 
-    this.options = {...this.defaults, ...options}
+    this.options = { ...this.defaults, ...options }
     this.entries = []
 
     this.parser = new Parser(this.options.lexers)
@@ -64,7 +59,6 @@ export default class i18nTransform extends Transform {
     entries.forEach(entry => {
       let key = entry.key
       const parts = key.split(this.options.namespaceSeparator)
-
 
       if (parts.length > 1) {
         entry.namespace = parts.shift()
@@ -104,10 +98,9 @@ export default class i18nTransform extends Transform {
     })
 
     this.options.locales.forEach(locale => {
-
       const outputPath = path.resolve(this.options.output, locale)
 
-      Object.keys(catalog).forEach((namespace) => {
+      Object.keys(catalog).forEach(namespace => {
         let filename = this.options.filename
         filename = filename.replace(this.localeRegex, locale)
         filename = filename.replace(this.namespaceRegex, namespace)
@@ -126,9 +119,8 @@ export default class i18nTransform extends Transform {
         let existingCatalog = this.getCatalog(namespacePath)
         let oldCatalog = this.getCatalog(namespaceOldPath)
 
-
         // merges existing translations with the new ones
-        const {new: newKeys, old: oldKeys} = mergeHashes(
+        const { new: newKeys, old: oldKeys } = mergeHashes(
           existingCatalog,
           catalog[namespace],
           null,
@@ -143,7 +135,7 @@ export default class i18nTransform extends Transform {
 
         // push files back to the stream
         this.pushFile(namespacePath, newCatalog)
-        if ( this.options.createOldLibraries ) {
+        if (this.options.createOldLibraries) {
           this.pushFile(namespaceOldPath, oldCatalog)
         }
       })
@@ -158,7 +150,7 @@ export default class i18nTransform extends Transform {
       this.entries.push(entry)
     }
     else {
-      existing = {...existing, ...entry}
+      existing = { ...existing, ...entry }
     }
 
     if (entry.context) {
@@ -194,11 +186,15 @@ export default class i18nTransform extends Transform {
 
     if (this.options.lineEnding === 'auto') {
       text = eol.auto(text)
-    } else if (lineEnding === '\r\n' || lineEnding === 'crlf') {
+    }
+    else if (lineEnding === '\r\n' || lineEnding === 'crlf') {
       text = eol.crlf(text)
-    } else if (lineEnding === '\r' || lineEnding === 'cr') {
+    }
+    else if (lineEnding === '\r' || lineEnding === 'cr') {
       text = eol.cr(text)
-    } else { // Defaults to LF, aka \n
+    }
+    else {
+      // Defaults to LF, aka \n
       text = eol.lf(text)
     }
 
@@ -208,5 +204,4 @@ export default class i18nTransform extends Transform {
     })
     this.push(file)
   }
-
 }

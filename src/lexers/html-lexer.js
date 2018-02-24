@@ -1,7 +1,6 @@
 import BaseLexer from './base-lexer'
 
 export default class HTMLLexer extends BaseLexer {
-
   constructor(options = {}) {
     super(options)
 
@@ -27,7 +26,7 @@ export default class HTMLLexer extends BaseLexer {
       const keys = attrs.keys.split(';')
       keys.forEach(key => {
         // remove any leading [] in the key
-        key = key.replace(/^\[[a-zA-Z0-9_-]*\]/ , '')
+        key = key.replace(/^\[[a-zA-Z0-9_-]*\]/, '')
 
         // if empty grab innerHTML from regex
         key = key || matches[3]
@@ -36,7 +35,6 @@ export default class HTMLLexer extends BaseLexer {
           this.keys.push({ ...attrs.options, key })
         }
       })
-
     }
 
     return this.keys
@@ -55,7 +53,7 @@ export default class HTMLLexer extends BaseLexer {
   }
 
   parseAttributes(args) {
-    const result = {keys: '', options: {}}
+    const result = { keys: '', options: {} }
     this.attrRegex.lastIndex = 0
     let keysMatch = this.attrRegex.exec(args)
     if (keysMatch && keysMatch[1]) {

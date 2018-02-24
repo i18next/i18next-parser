@@ -1,7 +1,6 @@
 import BaseLexer from './base-lexer'
 
 export default class JavascriptLexer extends BaseLexer {
-
   constructor(options = {}) {
     super(options)
 
@@ -55,7 +54,7 @@ export default class JavascriptLexer extends BaseLexer {
     let matches
     let containsVariable = false
     const parts = []
-    const quotationMark = string.charAt(0) === '"' ? '"' : '\''
+    const quotationMark = string.charAt(0) === '"' ? '"' : "'"
 
     const regex = new RegExp(JavascriptLexer.concatenatedSegmentPattern, 'gi')
     while(matches = regex.exec(string)) {
@@ -65,19 +64,16 @@ export default class JavascriptLexer extends BaseLexer {
       }
     }
 
-    const result = parts.reduce(
-      (concatenatedString, x) => {
-        x = x && x.trim()
-        if (this.validateString(x)) {
-          concatenatedString += x.slice(1, -1)
-        }
-        else {
-          containsVariable = true
-        }
-        return concatenatedString
-      },
-      ''
-    )
+    const result = parts.reduce((concatenatedString, x) => {
+      x = x && x.trim()
+      if (this.validateString(x)) {
+        concatenatedString += x.slice(1, -1)
+      }
+      else {
+        containsVariable = true
+      }
+      return concatenatedString
+    }, '')
     if (!result || containsVariable) {
       return string
     }
@@ -87,25 +83,17 @@ export default class JavascriptLexer extends BaseLexer {
   }
 
   static get concatenatedSegmentPattern() {
-    return (
-      [
-        BaseLexer.singleQuotePattern,
-        BaseLexer.doubleQuotePattern,
-        BaseLexer.backQuotePattern,
-        BaseLexer.variablePattern,
-        '(?:\\s*\\+\\s*)' // support for concatenation via +
-      ].join('|')
-    )
+    return [
+      BaseLexer.singleQuotePattern,
+      BaseLexer.doubleQuotePattern,
+      BaseLexer.backQuotePattern,
+      BaseLexer.variablePattern,
+      '(?:\\s*\\+\\s*)' // support for concatenation via +
+    ].join('|')
   }
 
   static get concatenatedArgumentPattern() {
-    return (
-      '(' +
-      '(?:' +
-      JavascriptLexer.concatenatedSegmentPattern +
-      ')+' +
-      ')'
-    )
+    return '(' + '(?:' + JavascriptLexer.concatenatedSegmentPattern + ')+' + ')'
   }
 
   static get hashPattern() {
@@ -119,7 +107,7 @@ export default class JavascriptLexer extends BaseLexer {
       '(?:' +
       [
         JavascriptLexer.concatenatedArgumentPattern,
-        JavascriptLexer.hashPattern,
+        JavascriptLexer.hashPattern
       ].join('|') +
       ')' +
       '(?:\\s*,\\s*)?' +
@@ -144,7 +132,7 @@ export default class JavascriptLexer extends BaseLexer {
       '(' +
       [
         JavascriptLexer.concatenatedArgumentPattern,
-        JavascriptLexer.hashPattern,
+        JavascriptLexer.hashPattern
       ].join('|') +
       ')' +
       '(?:\\s*,\\s*)?'
@@ -156,10 +144,7 @@ export default class JavascriptLexer extends BaseLexer {
   createHashRegex() {
     const pattern = (
       '(?:(\'|")?(' +
-      [
-        'context',
-        'defaultValue'
-      ].join('|') +
+      ['context', 'defaultValue'].join('|') +
       ')\\1)' +
       '(?:\\s*:\\s*)' +
       '(' + BaseLexer.stringPattern + ')'

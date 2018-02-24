@@ -5,26 +5,25 @@ import _ from 'lodash'
 // The generated hash can be attached to an
 // optional `hash`.
 function dotPathToHash(path, separator = '.', value = '', target = {}) {
-    if (path.endsWith(separator)) {
-      path = path.slice( 0, -separator.length )
+  if (path.endsWith(separator)) {
+    path = path.slice(0, -separator.length)
+  }
+
+  let result = {}
+  const segments = path.split(separator)
+
+  segments.reduce((hash, segment, index) => {
+    if (index === segments.length - 1) {
+      hash[segment] = value
     }
+    else {
+      hash[segment] = {}
+    }
+    return hash[segment]
+  }, result)
 
-    let result = {}
-    const segments = path.split(separator)
-
-    segments.reduce((hash, segment, index) => {
-      if (index === segments.length - 1) {
-        hash[segment] = value
-      }
-      else {
-        hash[segment] = {}
-      }
-      return hash[segment]
-    }, result)
-
-    return _.merge(target, result)
+  return _.merge(target, result)
 }
-
 
 // Takes a `source` hash and make sure its value
 // are pasted in the `target` hash, if the target
@@ -32,18 +31,21 @@ function dotPathToHash(path, separator = '.', value = '', target = {}) {
 // If not, the value is added to an `old` hash.
 function mergeHashes(source, target = {}, old, keepRemoved = false) {
   old = old || {}
-  Object.keys(source).forEach((key) => {
-    const hasNestedEntries = (
-      typeof target[key] === 'object' &&
-      !Array.isArray(target[key])
-    )
+  Object.keys(source).forEach(key => {
+    const hasNestedEntries =
+      typeof target[key] === 'object' && !Array.isArray(target[key])
 
     if (hasNestedEntries) {
-      const nested = mergeHashes(source[key], target[key], old[key], keepRemoved)
+      const nested = mergeHashes(
+        source[key],
+        target[key],
+        old[key],
+        keepRemoved
+      )
       target[key] = nested.new
       old[key] = nested.old
     }
-    else if ( target[key] !== undefined ) {
+    else if (target[key] !== undefined) {
       if (typeof source[key] === 'string' || Array.isArray(source[key])) {
         target[key] = source[key]
       }
@@ -53,7 +55,7 @@ function mergeHashes(source, target = {}, old, keepRemoved = false) {
     }
     else {
       // support for plural in keys
-      const pluralMatch = /_plural(_\d+)?$/.test( key )
+      const pluralMatch = /_plural(_\d+)?$/.test(key)
       const singularKey = key.replace(/_plural(_\d+)?$/, '')
 
       // support for context in keys
@@ -76,16 +78,15 @@ function mergeHashes(source, target = {}, old, keepRemoved = false) {
     }
   })
 
-  return {old, new: target}
+  return { old, new: target }
 }
-
 
 // Takes a `target` hash and replace its empty
 // values with the `source` hash ones if they
 // exist
 function populateHash(source, target = {}) {
-  Object.keys(source).forEach((key) => {
-    if ( target[key] !== undefined ) {
+  Object.keys(source).forEach(key => {
+    if (target[key] !== undefined) {
       if (typeof source[key] === 'object') {
         target[key] = populateHash(source[key], target[key])
       }
@@ -97,7 +98,6 @@ function populateHash(source, target = {}) {
 
   return target
 }
-
 
 
 export {

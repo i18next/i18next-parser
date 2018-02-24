@@ -1,8 +1,4 @@
 'use strict';Object.defineProperty(exports, "__esModule", { value: true });var _extends = Object.assign || function (target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i];for (var key in source) {if (Object.prototype.hasOwnProperty.call(source, key)) {target[key] = source[key];}}}return target;};var _createClass = function () {function defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);}}return function (Constructor, protoProps, staticProps) {if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;};}();var _helpers = require('./helpers');
-
-
-
-
 var _stream = require('stream');
 var _lodash = require('lodash');var _lodash2 = _interopRequireDefault(_lodash);
 var _eol = require('eol');var _eol2 = _interopRequireDefault(_eol);
@@ -13,7 +9,6 @@ var _vinyl = require('vinyl');var _vinyl2 = _interopRequireDefault(_vinyl);
 var _yamljs = require('yamljs');var _yamljs2 = _interopRequireDefault(_yamljs);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function _possibleConstructorReturn(self, call) {if (!self) {throw new ReferenceError("this hasn't been initialised - super() hasn't been called");}return call && (typeof call === "object" || typeof call === "function") ? call : self;}function _inherits(subClass, superClass) {if (typeof superClass !== "function" && superClass !== null) {throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);}subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;}var
 
 i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
-
   function i18nTransform() {var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};_classCallCheck(this, i18nTransform);
     options.objectMode = true;var _this = _possibleConstructorReturn(this, (i18nTransform.__proto__ || Object.getPrototypeOf(i18nTransform)).call(this,
     options));
@@ -65,7 +60,6 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
         var key = entry.key;
         var parts = key.split(_this2.options.namespaceSeparator);
 
-
         if (parts.length > 1) {
           entry.namespace = parts.shift();
         } else
@@ -104,7 +98,6 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
       });
 
       this.options.locales.forEach(function (locale) {
-
         var outputPath = _path2.default.resolve(_this3.options.output, locale);
 
         Object.keys(catalog).forEach(function (namespace) {
@@ -125,7 +118,6 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
           var newCatalog = void 0;
           var existingCatalog = _this3.getCatalog(namespacePath);
           var oldCatalog = _this3.getCatalog(namespaceOldPath);
-
 
           // merges existing translations with the new ones
           var _mergeHashes = (0, _helpers.mergeHashes)(
@@ -194,11 +186,15 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
 
       if (this.options.lineEnding === 'auto') {
         text = _eol2.default.auto(text);
-      } else if (lineEnding === '\r\n' || lineEnding === 'crlf') {
+      } else
+      if (lineEnding === '\r\n' || lineEnding === 'crlf') {
         text = _eol2.default.crlf(text);
-      } else if (lineEnding === '\r' || lineEnding === 'cr') {
+      } else
+      if (lineEnding === '\r' || lineEnding === 'cr') {
         text = _eol2.default.cr(text);
-      } else {// Defaults to LF, aka \n
+      } else
+      {
+        // Defaults to LF, aka \n
         text = _eol2.default.lf(text);
       }
 

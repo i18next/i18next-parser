@@ -25,7 +25,6 @@ function dotPathToHash(path) {var separator = arguments.length > 1 && arguments[
   return _lodash2.default.merge(target, result);
 }
 
-
 // Takes a `source` hash and make sure its value
 // are pasted in the `target` hash, if the target
 // hash has the corresponding key (or if keepRemoved is true).
@@ -34,12 +33,15 @@ function mergeHashes(source) {var target = arguments.length > 1 && arguments[1] 
   old = old || {};
   Object.keys(source).forEach(function (key) {
     var hasNestedEntries =
-    _typeof(target[key]) === 'object' &&
-    !Array.isArray(target[key]);
-
+    _typeof(target[key]) === 'object' && !Array.isArray(target[key]);
 
     if (hasNestedEntries) {
-      var nested = mergeHashes(source[key], target[key], old[key], keepRemoved);
+      var nested = mergeHashes(
+      source[key],
+      target[key],
+      old[key],
+      keepRemoved);
+
       target[key] = nested.new;
       old[key] = nested.old;
     } else
@@ -79,7 +81,6 @@ function mergeHashes(source) {var target = arguments.length > 1 && arguments[1] 
   return { old: old, new: target };
 }
 
-
 // Takes a `target` hash and replace its empty
 // values with the `source` hash ones if they
 // exist
@@ -97,7 +98,6 @@ function populateHash(source) {var target = arguments.length > 1 && arguments[1]
 
   return target;
 }exports.
-
 
 
 
