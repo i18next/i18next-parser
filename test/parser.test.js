@@ -184,7 +184,7 @@ describe('parser', () => {
     })
 
     i18nextParser.on('data', file => {
-      results.push(file.relative.replace('locales/', ''))
+      results.push(file.relative.replace(/locales[\//\\]/, ''))
     })
     i18nextParser.on('end', () => {
       const expectedFiles = [
@@ -210,7 +210,7 @@ describe('parser', () => {
       let length = expectedFiles.length
 
       expectedFiles.forEach(filename => {
-        assert.include(results, filename)
+        assert.include(results, path.normalize(filename))
         if (!--length) done()
       })
     })
@@ -431,7 +431,7 @@ describe('parser', () => {
       })
 
       i18nextParser.on('data', file => {
-        results.push(file.relative.replace('locales/', ''))
+        results.push(file.relative.replace(/locales[\\\/]/, ''))
       })
       i18nextParser.on('end', () => {
         const expectedFiles = [
@@ -441,7 +441,7 @@ describe('parser', () => {
         let length = expectedFiles.length
 
         expectedFiles.forEach(filename => {
-          assert.include(results, filename)
+          assert.include(results, path.normalize(filename))
           if (!--length) done()
         })
       })
@@ -509,12 +509,12 @@ describe('parser', () => {
       })
 
       i18nextParser.on('data', file => {
-        if (file.relative.endsWith('en/translation.yml')) {
+        if (file.relative.endsWith(path.normalize('en/translation.yml'))) {
           result = file.contents.toString('utf8')
         }
       })
       i18nextParser.once('end', () => {
-        assert.equal(result, 'first: ""\n')
+        assert.equal(result.replace(/\r\n/g, '\n'), 'first: ""\n')
         done()
       })
 
@@ -537,7 +537,7 @@ describe('parser', () => {
         }
       })
       i18nextParser.once('end', () => {
-        assert.deepEqual(result.split('\n')[1], '      "first": ""')
+        assert.deepEqual(result.replace(/\r\n/g, '\n').split('\n')[1], '      "first": ""')
         done()
       })
 
@@ -559,7 +559,7 @@ describe('parser', () => {
       })
 
       i18nextParser.on('data', file => {
-        results.push(file.relative.replace('locales/', ''))
+        results.push(file.relative.replace(/locales[\\\/]/, ''))
       })
       i18nextParser.on('end', () => {
         const expectedFiles = [
@@ -576,7 +576,7 @@ describe('parser', () => {
         let length = expectedFiles.length
 
         expectedFiles.forEach(filename => {
-          assert.include(results, filename)
+          assert.include(results, path.normalize(filename))
           if (!--length) done()
         })
       })
