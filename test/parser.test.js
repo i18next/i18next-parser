@@ -4,6 +4,8 @@ import fs from 'fs'
 import i18nTransform from '../src/index'
 import path from 'path'
 
+const enLibraryPath = path.normalize('en/translation.json')
+
 describe('parser', () => {
   it('parses globally on multiple lines', done => {
     let result
@@ -15,7 +17,7 @@ describe('parser', () => {
       path: 'file.js'
     })
     i18nextParser.once('data', file => {
-      if (file.relative.endsWith('en/translation.json')) {
+      if (file.relative.endsWith(enLibraryPath)) {
         result = JSON.parse(file.contents)
       }
     })
@@ -37,7 +39,7 @@ describe('parser', () => {
     })
 
     i18nextParser.on('data', file => {
-      if (file.relative.endsWith('en/translation.json')) {
+      if (file.relative.endsWith(enLibraryPath)) {
         result = JSON.parse(file.contents)
       }
     })
@@ -58,7 +60,7 @@ describe('parser', () => {
     })
 
     i18nextParser.on('data', file => {
-      if (file.relative.endsWith('en/translation.json')) {
+      if (file.relative.endsWith(enLibraryPath)) {
         result = JSON.parse(file.contents)
       }
     })
@@ -92,7 +94,7 @@ describe('parser', () => {
     }
 
     i18nextParser.on('data', file => {
-      if (file.relative.endsWith('en/translation.json')) {
+      if (file.relative.endsWith(enLibraryPath)) {
         result = JSON.parse(file.contents)
       }
     })
@@ -127,7 +129,7 @@ describe('parser', () => {
     }
 
     i18nextParser.on('data', file => {
-      if (file.relative.endsWith('en/translation.json')) {
+      if (file.relative.endsWith(enLibraryPath)) {
         result = JSON.parse(file.contents)
       }
     })
@@ -156,7 +158,7 @@ describe('parser', () => {
     }
 
     i18nextParser.on('data', file => {
-      if (file.relative.endsWith('en/translation.json')) {
+      if (file.relative.endsWith(enLibraryPath)) {
         result = JSON.parse(file.contents)
       }
     })
@@ -227,7 +229,7 @@ describe('parser', () => {
     })
 
     i18nextParser.on('data', file => {
-      if (file.relative.endsWith('en/translation.json')) {
+      if (file.relative.endsWith(enLibraryPath)) {
         result = JSON.parse(file.contents)
       }
     })
@@ -252,7 +254,7 @@ describe('parser', () => {
     })
 
     i18nextParser.on('data', file => {
-      if (file.relative.endsWith('en/translation.json')) {
+      if (file.relative.endsWith(enLibraryPath)) {
         result = JSON.parse(file.contents)
       }
     })
@@ -291,7 +293,7 @@ describe('parser', () => {
     })
 
     i18nextParser.on('data', file => {
-      if (file.relative.endsWith('en/test_merge.json')) {
+      if (file.relative.endsWith(path.normalize('en/test_merge.json'))) {
         result = JSON.parse(file.contents)
       }
     })
@@ -313,10 +315,10 @@ describe('parser', () => {
     })
 
     i18nextParser.on('data', file => {
-      if (file.relative.endsWith('en/test_leak.json')) {
+      if (file.relative.endsWith(path.normalize('en/test_leak.json'))) {
         resultEN = JSON.parse(file.contents)
       }
-      if (file.relative.endsWith('fr/test_leak.json')) {
+      if (file.relative.endsWith(path.normalize('fr/test_leak.json'))) {
         resultFR = JSON.parse(file.contents)
       }
     })
@@ -344,7 +346,7 @@ describe('parser', () => {
     }
 
     i18nextParser.on('data', file => {
-      if (file.relative.endsWith('en/test_context.json')) {
+      if (file.relative.endsWith(path.normalize('en/test_context.json'))) {
         result = JSON.parse(file.contents)
       }
     })
@@ -375,7 +377,7 @@ describe('parser', () => {
     }
 
     i18nextParser.on('data', file => {
-      if (file.relative.endsWith('en/test_plural.json')) {
+      if (file.relative.endsWith(path.normalize('en/test_plural.json'))) {
         result = JSON.parse(file.contents)
       }
     })
@@ -402,7 +404,7 @@ describe('parser', () => {
     }
 
     i18nextParser.on('data', file => {
-      if (file.relative.endsWith('en/test_context_plural.json')) {
+      if (file.relative.endsWith(path.normalize('en/test_context_plural.json'))) {
         result = JSON.parse(file.contents)
       }
     })
@@ -461,7 +463,7 @@ describe('parser', () => {
       })
 
       i18nextParser.on('data', file => {
-        if (file.relative.endsWith('en/test_separators.json')) {
+        if (file.relative.endsWith(path.normalize('en/test_separators.json'))) {
           result = JSON.parse(file.contents)
         }
       })
@@ -484,7 +486,7 @@ describe('parser', () => {
       })
 
       i18nextParser.on('data', file => {
-        if (file.relative.endsWith('en/translation.json')) {
+        if (file.relative.endsWith(enLibraryPath)) {
           result = JSON.parse(file.contents)
         }
       })
@@ -530,7 +532,7 @@ describe('parser', () => {
       })
 
       i18nextParser.on('data', file => {
-        if (file.relative.endsWith('en/translation.json')) {
+        if (file.relative.endsWith(enLibraryPath)) {
           result = file.contents.toString('utf8')
         }
       })
@@ -601,7 +603,7 @@ describe('parser', () => {
         })
 
         i18nextParser.on('data', file => {
-          if (file.relative.endsWith('en/translation.json')) {
+          if (file.relative.endsWith(enLibraryPath)) {
             result = JSON.parse(file.contents)
           }
         })
@@ -626,7 +628,7 @@ describe('parser', () => {
         })
 
         i18nextParser.on('data', file => {
-          if (file.relative.endsWith('en/translation.json')) {
+          if (file.relative.endsWith(enLibraryPath)) {
             result = JSON.parse(file.contents)
           }
         })
@@ -652,7 +654,7 @@ describe('parser', () => {
         })
 
         i18nextParser.on('data', file => {
-          if (file.relative.endsWith('en/translation.json')) {
+          if (file.relative.endsWith(enLibraryPath)) {
             result = JSON.parse(file.contents)
           }
         })
