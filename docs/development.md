@@ -35,7 +35,7 @@ Don't forget to commit the compiled files.
 Make sure the tests pass:
 
 ```
-mocha --require babel-register --require babel-polyfill test/**/*.js
+yarn test
 ```
 
 To test the CLI:

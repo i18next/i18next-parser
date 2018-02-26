@@ -9,7 +9,7 @@
     "i18next": "./bin/cli.js"
   },
   "scripts": {
-    "test": "mocha --require babel-register --require babel-polyfill test/**/*.test.js",
+    "test": "mocha --require babel-register --require babel-polyfill 'test/**/*.test.js'",
     "watch": "babel src -d dist -w"
   },
   "repository": {
