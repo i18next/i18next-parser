@@ -696,7 +696,7 @@ describe('parser', () => {
       })
 
       i18nextParser.on('error', error => {
-        assert.equal(error.message, 'Unexpected token / in JSON at position 0')
+        assert.equal(error.message.startsWith('Unexpected token /'), true)
         done()
       })
       i18nextParser.end(fakeFile)
