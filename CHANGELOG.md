@@ -1,10 +1,14 @@
 # Changelog
 
+## 1.0.0-beta2 - latest
+
+- See [release](https://github.com/i18next/i18next-parser/releases/tag/1.0.0-beta2)
+
 ## 1.0.0-beta1
 
+- See [release](https://github.com/i18next/i18next-parser/releases/tag/1.0.0-beta1)
 
-
-## 0.13.0 - latest
+## 0.13.0
 
 - Support `defaultValue` option along the translation key (#68)
 
