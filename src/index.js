@@ -7,6 +7,7 @@ import Parser from './parser'
 import path from 'path'
 import VirtualFile from 'vinyl'
 import YAML from 'yamljs'
+import BaseLexer from './lexers/base-lexer';
 
 export default class i18nTransform extends Transform {
   constructor(options = {}) {
@@ -28,13 +29,14 @@ export default class i18nTransform extends Transform {
       locales: ['en', 'fr'],
       namespaceSeparator: ':',
       output: 'locales',
+      reactNamespace: false,
       sort: false
     }
 
     this.options = { ...this.defaults, ...options }
     this.entries = []
 
-    this.parser = new Parser(this.options.lexers)
+    this.parser = new Parser(this.options)
     this.parser.on('error', error => this.emit('error', error))
     this.parser.on('warning', warning => this.emit('warning', warning))
 
@@ -45,7 +47,7 @@ export default class i18nTransform extends Transform {
   _transform(file, encoding, done) {
     let content
     if (file.isBuffer()) {
-      content = file.contents
+      content = file.contents.toString('utf8')
     }
     else {
       content = fs.readFileSync(file.path, encoding)
@@ -53,8 +55,8 @@ export default class i18nTransform extends Transform {
 
     this.emit('reading', file)
 
-    const extenstion = path.extname(file.path).substring(1)
-    const entries = this.parser.parse(content, extenstion)
+    const extension = path.extname(file.path).substring(1)
+    const entries = this.parser.parse(content, extension)
 
     entries.forEach(entry => {
       let key = entry.key
@@ -63,9 +65,10 @@ export default class i18nTransform extends Transform {
       if (parts.length > 1) {
         entry.namespace = parts.shift()
       }
-      else {
-        entry.namespace = this.options.defaultNamespace
+      else if (extension === 'jsx' || this.options.reactNamespace) {
+        entry.namespace = this.grabReactNamespace(content)
       }
+      entry.namespace = entry.namespace || this.options.defaultNamespace
 
       key = parts.join(this.options.namespaceSeparator)
       key = key.replace(/\\('|"|`)/g, '$1')
@@ -203,5 +206,15 @@ export default class i18nTransform extends Transform {
       contents: Buffer.from(text)
     })
     this.push(file)
+  }
+
+  grabReactNamespace(content) {
+    const reactTranslateRegex = new RegExp(
+      'translate\\((?:\\s*\\[?\\s*)(' + BaseLexer.stringPattern + ')'
+    )
+    const translateMatches = content.match(reactTranslateRegex)
+    if (translateMatches) {
+      return translateMatches[1].slice(1, -1)
+    }
   }
 }

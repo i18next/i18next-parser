@@ -15,7 +15,7 @@ export default class HTMLLexer extends BaseLexer {
   extract(content) {
     let matches
     const regex = new RegExp(
-      '<([A-Z][A-Z0-9]*)([^>]*\\s' + this.attr + '[^>]*)>(?:(.*?)<\\/\\1>)?',
+      '<([A-Z][A-Z0-9]*)([^>]*\\s' + this.attr + '[^>]*)>(?:((?:\\s|.)*?)<\\/\\1>)?',
       'gi'
     )
 

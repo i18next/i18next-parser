@@ -170,6 +170,36 @@ describe('parser', () => {
     i18nextParser.end(fakeFile)
   })
 
+  it('parses react files', done => {
+    let result
+    const i18nextParser = new i18nTransform()
+    const fakeFile = new Vinyl({
+      contents: fs.readFileSync(
+        path.resolve(__dirname, 'templating/react.jsx')
+      ),
+      path: 'react.jsx'
+    })
+    const expected = {
+      first: '',
+      second: '',
+      third: 'Hello <strong title={t(\'fourth\')}>{{name}}</strong>, you have {{count}} unread message. <Link to="/msgs">Go to messages</Link>.',
+      fourth: ''
+    }
+
+    i18nextParser.on('data', file => {
+      // support for a default Namespace
+      if (file.relative.endsWith(path.normalize('en/react.json'))) {
+        result = JSON.parse(file.contents)
+      }
+    })
+    i18nextParser.on('end', () => {
+      assert.deepEqual(result, expected)
+      done()
+    })
+
+    i18nextParser.end(fakeFile)
+  })
+
   it('creates two files per namespace and per locale', done => {
     let results = []
     const i18nextParser = new i18nTransform({

@@ -87,6 +87,7 @@ Option                 | Description                                           |
 **locales**            | An array of the locales in your applications          | `['en','fr']`
 **namespaceSeparator** | Namespace separator used in your translation keys     | `:`
 **output**             | Where to write the locale files relative to the base  | `locales`
+**reactNamespace**     | For react file, extract the [defaultNamespace](https://react.i18next.com/components/translate-hoc.html)          | `false` (`true` for `.jsx` files)
 **sort**               | Whether or not to sort the catalog                    | `false`
 
 ### Catalog filenames
@@ -107,6 +108,7 @@ The `lexers` option let you configure which Lexer to use for which extension. He
     html: ['HTMLLexer'],
 
     js: ['JavascriptLexer'],
+    jsx: ['JavascriptLexer', 'JsxLexer'],
     mjs: ['JavascriptLexer'],
 
     default: ['JavascriptLexer']
@@ -148,6 +150,12 @@ Option         | Description                 | Default
 Option        | Description                 | Default
 ------------- | --------------------------- | -------
 **functions** | Array of functions to match | `['t']`
+
+**`JsxLexer` options**
+
+Option        | Description            | Default
+------------- | ---------------------- | -------
+**attr**      | Attribute for the keys | `i18nKey`
 
 
 
