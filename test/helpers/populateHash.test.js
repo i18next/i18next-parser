@@ -1,8 +1,8 @@
 import { assert } from 'chai'
 import { populateHash } from '../../src/helpers'
 
-describe('populateHash helper function', function () {
-  it('replaces `target` empty keys with `source` ones', function (done) {
+describe('populateHash helper function', () => {
+  it('replaces `target` empty keys with `source` ones', (done) => {
     const source = { key1: 'value1' }
     const target = { key1: '' }
     const res    = populateHash(source, target)
@@ -11,7 +11,7 @@ describe('populateHash helper function', function () {
     done()
   })
 
-  it('leaves untouched `target` keys that are not empty', function (done) {
+  it('leaves untouched `target` keys that are not empty', (done) => {
     const source = { key1: 'value1' }
     const target = { key1: 'value2' }
     const res    = populateHash(source, target)
@@ -20,7 +20,7 @@ describe('populateHash helper function', function () {
     done()
   })
 
-  it('leaves untouched `target` keys not in `source`', function (done) {
+  it('leaves untouched `target` keys not in `source`', (done) => {
     const source = { key1: 'value1' }
     const target = { key1: '', key2: '' }
     const res    = populateHash(source, target)
@@ -29,7 +29,7 @@ describe('populateHash helper function', function () {
     done()
   })
 
-  it('works with deep objects', function (done) {
+  it('works with deep objects', (done) => {
     const source = {
       key1: 'value1',
       key2: {

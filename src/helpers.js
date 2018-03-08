@@ -1,10 +1,13 @@
 import _ from 'lodash'
 
-// Takes a `path` of the form 'foo.bar' and
-// turn it into a hash {foo: {bar: ""}}.
-// The generated hash can be attached to an
-// optional `hash`.
-function dotPathToHash(path, separator = '.', value = '', target = {}) {
+// Turn an entry for the Parser and turn in into a hash,
+// turning the key path 'foo.bar' into an hash {foo: {bar: ""}}
+// The generated hash can be attached to an optional `target`.
+function dotPathToHash(entry, target = {}, options = {}) {
+  let path = entry.key
+  const separator = options.separator || '.'
+  const value = entry.defaultValue || options.value || ''
+
   if (path.endsWith(separator)) {
     path = path.slice(0, -separator.length)
   }
@@ -13,7 +16,10 @@ function dotPathToHash(path, separator = '.', value = '', target = {}) {
   const segments = path.split(separator)
 
   segments.reduce((hash, segment, index) => {
-    if (index === segments.length - 1) {
+    if (!segment) {
+      return hash
+    }
+    else if (index === segments.length - 1) {
       hash[segment] = value
     }
     else {

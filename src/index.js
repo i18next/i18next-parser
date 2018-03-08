@@ -93,10 +93,12 @@ export default class i18nTransform extends Transform {
 
     this.entries.forEach(entry => {
       catalog = dotPathToHash(
-        entry.key,
-        this.options.keySeparator,
-        entry.defaultValue || this.options.defaultValue,
-        catalog
+        entry,
+        catalog,
+        {
+          separator: this.options.keySeparator,
+          value: this.options.defaultValue
+        }
       )
     })
 

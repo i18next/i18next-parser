@@ -1,8 +1,8 @@
 import { assert } from 'chai'
 import { mergeHashes } from '../../src/helpers'
 
-describe('mergeHashes helper function', function () {
-  it('replaces empty `target` keys with `source`', function (done) {
+describe('mergeHashes helper function', () => {
+  it('replaces empty `target` keys with `source`', (done) => {
     const source = { key1: 'value1' }
     const target = { key1: '' }
     const res    = mergeHashes(source, target)
@@ -12,7 +12,7 @@ describe('mergeHashes helper function', function () {
     done()
   })
 
-  it('does not replaces empty `target` keys with `source` if it is a hash', function (done) {
+  it('does not replaces empty `target` keys with `source` if it is a hash', (done) => {
     const source = { key1: { key11: 'value1'} }
     const target = { key1: '' }
     const res    = mergeHashes(source, target)
@@ -20,9 +20,9 @@ describe('mergeHashes helper function', function () {
     assert.deepEqual(res.new, { key1: '' })
     assert.deepEqual(res.old, { key1: { key11: 'value1' } })
     done()
-})
+  })
 
-  it('keeps `target` keys not in `source`', function (done) {
+  it('keeps `target` keys not in `source`', (done) => {
     const source = { key1: 'value1' }
     const target = { key1: '', key2: '' }
     const res    = mergeHashes(source, target)
@@ -32,7 +32,7 @@ describe('mergeHashes helper function', function () {
     done()
   })
 
-  it('stores into `old` the keys from `source` that are not in `target`', function (done) {
+  it('stores into `old` the keys from `source` that are not in `target`', (done) => {
     const source = { key1: 'value1', key2: 'value2' }
     const target = { key1: '' }
     const res    = mergeHashes(source, target)
@@ -42,7 +42,7 @@ describe('mergeHashes helper function', function () {
     done()
   })
 
-  it('copies `source` keys to `target` regardless of presence when keepRemoved is enabled', function (done) {
+  it('copies `source` keys to `target` regardless of presence when keepRemoved is enabled', (done) => {
     const source = { key1: 'value1', key2: 'value2' }
     const target = { key1: '', key3: '' }
     const res    = mergeHashes(source, target, null, true)
@@ -52,7 +52,7 @@ describe('mergeHashes helper function', function () {
     done()
   })
 
-  it('restores plural keys when the singular one exists', function (done) {
+  it('restores plural keys when the singular one exists', (done) => {
     const source = { key1: '', key1_plural: 'value1' }
     const target = { key1: '' }
     const res    = mergeHashes(source, target)
@@ -62,7 +62,7 @@ describe('mergeHashes helper function', function () {
     done()
   })
 
-  it('does not restores plural keys when the singular one does not', function (done) {
+  it('does not restores plural keys when the singular one does not', (done) => {
     const source = { key1: '', key1_plural: 'value1' }
     const target = { key2: '' }
     const res    = mergeHashes(source, target)
@@ -72,7 +72,7 @@ describe('mergeHashes helper function', function () {
     done()
   })
 
-  it('restores context keys when the singular one exists', function (done) {
+  it('restores context keys when the singular one exists', (done) => {
     const source = { key1: '', key1_context: 'value1' }
     const target = { key1: '' }
     const res    = mergeHashes(source, target)
@@ -82,7 +82,7 @@ describe('mergeHashes helper function', function () {
     done()
   })
 
-  it('does not restores context keys when the singular one does not', function (done) {
+  it('does not restores context keys when the singular one does not', (done) => {
     const source = { key1: '', key1_context: 'value1' }
     const target = { key2: '' }
     const res    = mergeHashes(source, target)
@@ -92,7 +92,7 @@ describe('mergeHashes helper function', function () {
     done()
   })
 
-  it('works with deep objects', function (done) {
+  it('works with deep objects', (done) => {
     const source = {
         key1: 'value1',
         key2: {
@@ -146,7 +146,7 @@ describe('mergeHashes helper function', function () {
     done()
   })
 
-  it('leaves arrays of values (multiline) untouched', function (done) {
+  it('leaves arrays of values (multiline) untouched', (done) => {
     const source = { key1: ['Line one.', 'Line two.'] }
     const target = { key1: '' }
     const res    = mergeHashes(source, target)
