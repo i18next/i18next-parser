@@ -528,6 +528,38 @@ describe('parser', () => {
       i18nextParser.end(fakeFile)
     })
 
+    it('parses Trans if reactNamespace is true', (done) => {
+      let result
+      const i18nextParser = new i18nTransform({
+        reactNamespace: true
+      })
+      const fakeFile = new Vinyl({
+        contents: fs.readFileSync(
+          path.resolve(__dirname, 'templating/react.jsx')
+        ),
+        path: 'react.js'
+      })
+      const expected = {
+        first: '',
+        second: '',
+        third: 'Hello <strong title={t(\'fourth\')}>{{name}}</strong>, you have {{count}} unread message. <Link to="/msgs">Go to messages</Link>.',
+        fourth: ''
+      }
+
+      i18nextParser.on('data', file => {
+        // support for a default Namespace
+        if (file.relative.endsWith(path.normalize('en/react.json'))) {
+          result = JSON.parse(file.contents)
+        }
+      })
+      i18nextParser.on('end', () => {
+        assert.deepEqual(result, expected)
+        done()
+      })
+
+      i18nextParser.end(fakeFile)
+    })
+
     it('supports outputing to yml', (done) => {
       let result
       const i18nextParser = new i18nTransform({
@@ -574,11 +606,11 @@ describe('parser', () => {
       i18nextParser.end(fakeFile)
     })
 
-    it('handles skipping the old catalog with createOldCatalog=false', (done) => {
+    it('handles skipping the old catalog with createOldCatalogs=false', (done) => {
       let results = []
       const i18nextParser = new i18nTransform({
         defaultNamespace: 'default',
-        createOldCatalog: false
+        createOldCatalogs: false
       })
       const fakeFile = new Vinyl({
         contents: Buffer.from(

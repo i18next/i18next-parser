@@ -30,6 +30,11 @@ export default class Parser extends EventEmitter {
   constructor(options = {}) {
     super(options)
     this.options = options
+
+    if (options.reactNamespace) {
+      lexers.js = lexers.jsx
+    }
+
     this.lexers = { ...lexers, ...options.lexers }
   }
 
