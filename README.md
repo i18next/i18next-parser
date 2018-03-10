@@ -74,7 +74,7 @@ gulp.task('i18next', function() {
 Option                 | Description                                           | Default
 ---------------------- | ----------------------------------------------------- | ---
 **contextSeparator**   | Key separator used in your translation keys           | `_`
-**createOldLibraries** | Save the \_old files                                  | `true`
+**createOldCatalogs**   | Save the \_old files                                  | `true`
 **defaultNamespace**   | Default namespace used in your i18next config         | `translation`
 **defaultValue**       | Default value to give to empty keys                   | `''`
 **extension**          | Edit the extension of the locale files                | `.json`

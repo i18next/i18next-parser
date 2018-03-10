@@ -16,7 +16,7 @@ export default class i18nTransform extends Transform {
 
     this.defaults = {
       contextSeparator: '_',
-      createOldLibraries: true,
+      createOldCatalogs: true,
       defaultNamespace: 'translation',
       defaultValue: '',
       extension: '.json',
@@ -140,7 +140,7 @@ export default class i18nTransform extends Transform {
 
         // push files back to the stream
         this.pushFile(namespacePath, newCatalog)
-        if (this.options.createOldLibraries) {
+        if (this.options.createOldCatalogs) {
           this.pushFile(namespaceOldPath, oldCatalog)
         }
       })
