@@ -54,3 +54,11 @@ i18next 'templating/**/*' -o manual
 - `0.x.x` for the old version
 
 I will not maintain the old version but will welcome bug fixes as PRs.
+
+## Deploy
+
+- `yarn watch`
+- update `package.json` version
+- create commit and add version tag
+- `npm pulish --tag next` (skip next tag if not in beta)
+- create a github release
