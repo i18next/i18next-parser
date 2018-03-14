@@ -2,7 +2,7 @@
   "author": "Karel Ledru",
   "description": "Command Line tool for i18next",
   "name": "i18next-parser",
-  "version": "1.0.0-beta4",
+  "version": "1.0.0-beta5",
   "license": "MIT",
   "main": "src/index.js",
   "bin": {
@@ -10,7 +10,7 @@
   },
   "scripts": {
     "test": "mocha --require babel-register --require babel-polyfill 'test/**/*.test.js'",
-    "watch": "babel src -d dist -w"
+    "watch": "./node_modules/babel-cli/bin/babel.js src -d dist -w"
   },
   "repository": {
     "type": "git",

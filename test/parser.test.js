@@ -182,7 +182,9 @@ describe('parser', () => {
     const expected = {
       first: '',
       second: '',
-      third: 'Hello <strong title={t(\'fourth\')}>{{name}}</strong>, you have {{count}} unread message. <Link to="/msgs">Go to messages</Link>.',
+      third: {
+        first: 'Hello <strong title={t(\'fourth\')}>{{name}}</strong>, you have {{count}} unread message. <Link to="/msgs">Go to messages</Link>.'
+      },
       fourth: ''
     }
 
@@ -542,7 +544,9 @@ describe('parser', () => {
       const expected = {
         first: '',
         second: '',
-        third: 'Hello <strong title={t(\'fourth\')}>{{name}}</strong>, you have {{count}} unread message. <Link to="/msgs">Go to messages</Link>.',
+        third: {
+          first: 'Hello <strong title={t(\'fourth\')}>{{name}}</strong>, you have {{count}} unread message. <Link to="/msgs">Go to messages</Link>.'
+        },
         fourth: ''
       }
 

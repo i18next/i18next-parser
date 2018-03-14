@@ -2,6 +2,7 @@
 var _handlebarsLexer = require('./lexers/handlebars-lexer');var _handlebarsLexer2 = _interopRequireDefault(_handlebarsLexer);
 var _htmlLexer = require('./lexers/html-lexer');var _htmlLexer2 = _interopRequireDefault(_htmlLexer);
 var _javascriptLexer = require('./lexers/javascript-lexer');var _javascriptLexer2 = _interopRequireDefault(_javascriptLexer);
+var _jsxLexer = require('./lexers/jsx-lexer');var _jsxLexer2 = _interopRequireDefault(_jsxLexer);
 var _path = require('path');var _path2 = _interopRequireDefault(_path);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function _possibleConstructorReturn(self, call) {if (!self) {throw new ReferenceError("this hasn't been initialised - super() hasn't been called");}return call && (typeof call === "object" || typeof call === "function") ? call : self;}function _inherits(subClass, superClass) {if (typeof superClass !== "function" && superClass !== null) {throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);}subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;}
 
 var lexers = {
@@ -12,6 +13,7 @@ var lexers = {
   html: ['HTMLLexer'],
 
   js: ['JavascriptLexer'],
+  jsx: ['JavascriptLexer', 'JsxLexer'],
   mjs: ['JavascriptLexer'],
 
   default: ['JavascriptLexer'] };
@@ -20,13 +22,20 @@ var lexers = {
 var lexersMap = {
   HandlebarsLexer: _handlebarsLexer2.default,
   HTMLLexer: _htmlLexer2.default,
-  JavascriptLexer: _javascriptLexer2.default };var
+  JavascriptLexer: _javascriptLexer2.default,
+  JsxLexer: _jsxLexer2.default };var
 
 
 Parser = function (_EventEmitter) {_inherits(Parser, _EventEmitter);
   function Parser() {var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};_classCallCheck(this, Parser);var _this = _possibleConstructorReturn(this, (Parser.__proto__ || Object.getPrototypeOf(Parser)).call(this,
     options));
-    _this.lexers = _extends({}, lexers, options);return _this;
+    _this.options = options;
+
+    if (options.reactNamespace) {
+      lexers.js = lexers.jsx;
+    }
+
+    _this.lexers = _extends({}, lexers, options.lexers);return _this;
   }_createClass(Parser, [{ key: 'parse', value: function parse(
 
     content, extension) {var _this2 = this;
