@@ -6,7 +6,8 @@ var _fs = require('fs');var _fs2 = _interopRequireDefault(_fs);
 var _parser = require('./parser');var _parser2 = _interopRequireDefault(_parser);
 var _path = require('path');var _path2 = _interopRequireDefault(_path);
 var _vinyl = require('vinyl');var _vinyl2 = _interopRequireDefault(_vinyl);
-var _yamljs = require('yamljs');var _yamljs2 = _interopRequireDefault(_yamljs);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function _possibleConstructorReturn(self, call) {if (!self) {throw new ReferenceError("this hasn't been initialised - super() hasn't been called");}return call && (typeof call === "object" || typeof call === "function") ? call : self;}function _inherits(subClass, superClass) {if (typeof superClass !== "function" && superClass !== null) {throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);}subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;}var
+var _yamljs = require('yamljs');var _yamljs2 = _interopRequireDefault(_yamljs);
+var _baseLexer = require('./lexers/base-lexer');var _baseLexer2 = _interopRequireDefault(_baseLexer);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function _possibleConstructorReturn(self, call) {if (!self) {throw new ReferenceError("this hasn't been initialised - super() hasn't been called");}return call && (typeof call === "object" || typeof call === "function") ? call : self;}function _inherits(subClass, superClass) {if (typeof superClass !== "function" && superClass !== null) {throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);}subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;}var
 
 i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
   function i18nTransform() {var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};_classCallCheck(this, i18nTransform);
@@ -15,7 +16,7 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
 
     _this.defaults = {
       contextSeparator: '_',
-      createOldLibraries: true,
+      createOldCatalogs: true,
       defaultNamespace: 'translation',
       defaultValue: '',
       extension: '.json',
@@ -28,13 +29,14 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
       locales: ['en', 'fr'],
       namespaceSeparator: ':',
       output: 'locales',
+      reactNamespace: false,
       sort: false };
 
 
     _this.options = _extends({}, _this.defaults, options);
     _this.entries = [];
 
-    _this.parser = new _parser2.default(_this.options.lexers);
+    _this.parser = new _parser2.default(_this.options);
     _this.parser.on('error', function (error) {return _this.emit('error', error);});
     _this.parser.on('warning', function (warning) {return _this.emit('warning', warning);});
 
@@ -45,7 +47,7 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
     file, encoding, done) {var _this2 = this;
       var content = void 0;
       if (file.isBuffer()) {
-        content = file.contents;
+        content = file.contents.toString('utf8');
       } else
       {
         content = _fs2.default.readFileSync(file.path, encoding);
@@ -53,8 +55,8 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
 
       this.emit('reading', file);
 
-      var extenstion = _path2.default.extname(file.path).substring(1);
-      var entries = this.parser.parse(content, extenstion);
+      var extension = _path2.default.extname(file.path).substring(1);
+      var entries = this.parser.parse(content, extension);
 
       entries.forEach(function (entry) {
         var key = entry.key;
@@ -63,9 +65,10 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
         if (parts.length > 1) {
           entry.namespace = parts.shift();
         } else
-        {
-          entry.namespace = _this2.options.defaultNamespace;
+        if (extension === 'jsx' || _this2.options.reactNamespace) {
+          entry.namespace = _this2.grabReactNamespace(content);
         }
+        entry.namespace = entry.namespace || _this2.options.defaultNamespace;
 
         key = parts.join(_this2.options.namespaceSeparator);
         key = key.replace(/\\('|"|`)/g, '$1');
@@ -90,10 +93,12 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
 
       this.entries.forEach(function (entry) {
         catalog = (0, _helpers.dotPathToHash)(
-        entry.key,
-        _this3.options.keySeparator,
-        entry.defaultValue || _this3.options.defaultValue,
-        catalog);
+        entry,
+        catalog,
+        {
+          separator: _this3.options.keySeparator,
+          value: _this3.options.defaultValue });
+
 
       });
 
@@ -135,7 +140,7 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
 
           // push files back to the stream
           _this3.pushFile(namespacePath, newCatalog);
-          if (_this3.options.createOldLibraries) {
+          if (_this3.options.createOldCatalogs) {
             _this3.pushFile(namespaceOldPath, oldCatalog);
           }
         });
@@ -203,4 +208,14 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
         contents: Buffer.from(text) });
 
       this.push(file);
+    } }, { key: 'grabReactNamespace', value: function grabReactNamespace(
+
+    content) {
+      var reactTranslateRegex = new RegExp(
+      'translate\\((?:\\s*\\[?\\s*)(' + _baseLexer2.default.stringPattern + ')');
+
+      var translateMatches = content.match(reactTranslateRegex);
+      if (translateMatches) {
+        return translateMatches[1].slice(1, -1);
+      }
     } }]);return i18nTransform;}(_stream.Transform);exports.default = i18nTransform;

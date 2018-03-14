@@ -1,10 +1,13 @@
 'use strict';Object.defineProperty(exports, "__esModule", { value: true });exports.populateHash = exports.mergeHashes = exports.dotPathToHash = undefined;var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {return typeof obj;} : function (obj) {return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;};var _lodash = require('lodash');var _lodash2 = _interopRequireDefault(_lodash);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
 
-// Takes a `path` of the form 'foo.bar' and
-// turn it into a hash {foo: {bar: ""}}.
-// The generated hash can be attached to an
-// optional `hash`.
-function dotPathToHash(path) {var separator = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '.';var value = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '';var target = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+// Turn an entry for the Parser and turn in into a hash,
+// turning the key path 'foo.bar' into an hash {foo: {bar: ""}}
+// The generated hash can be attached to an optional `target`.
+function dotPathToHash(entry) {var target = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+  var path = entry.key;
+  var separator = options.separator || '.';
+  var value = entry.defaultValue || options.value || '';
+
   if (path.endsWith(separator)) {
     path = path.slice(0, -separator.length);
   }
@@ -13,6 +16,9 @@ function dotPathToHash(path) {var separator = arguments.length > 1 && arguments[
   var segments = path.split(separator);
 
   segments.reduce(function (hash, segment, index) {
+    if (!segment) {
+      return hash;
+    } else
     if (index === segments.length - 1) {
       hash[segment] = value;
     } else

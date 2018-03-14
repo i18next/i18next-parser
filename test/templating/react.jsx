@@ -8,7 +8,7 @@ class Test extends React.Component {
       <div>
         <h1>{t('first')}</h1>
         <Interpolate i18nKey="second" value="some thing" component={interpolateComponent} />
-        <Trans i18nKey="third" count={count}>
+        <Trans i18nKey="third.first" count={count}>
             Hello <strong title={t('fourth')}>{{name}}</strong>, you have {{count}} unread message. <Link to="/msgs">Go to messages</Link>.
         </Trans>
       </div>

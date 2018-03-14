@@ -15,7 +15,7 @@ HTMLLexer = function (_BaseLexer) {_inherits(HTMLLexer, _BaseLexer);
   _createClass(HTMLLexer, [{ key: 'extract', value: function extract(content) {var _this2 = this;
       var matches = void 0;
       var regex = new RegExp(
-      '<([A-Z][A-Z0-9]*)([^>]*\\s' + this.attr + '[^>]*)>(?:(.*?)<\\/\\1>)?',
+      '<([A-Z][A-Z0-9]*)([^>]*\\s' + this.attr + '[^>]*)>(?:((?:\\s|.)*?)<\\/\\1>)?',
       'gi');var _loop = function _loop() {
 
 
