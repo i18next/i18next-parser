@@ -71,34 +71,35 @@ gulp.task('i18next', function() {
 
 ## Options
 
-Option                 | Description                                           | Default
+Option                   | Description                                           | Default
 ---------------------- | ----------------------------------------------------- | ---
-**contextSeparator**   | Key separator used in your translation keys           | `_`
-**createOldCatalogs**   | Save the \_old files                                  | `true`
-**defaultNamespace**   | Default namespace used in your i18next config         | `translation`
-**defaultValue**       | Default value to give to empty keys                   | `''`
-**extension**          | Edit the extension of the locale files                | `.json`
-**filename**           | Edit the filename of the locale files                 | `'$NAMESPACE'`
-**indentation**    | Indentation of the catalog files                      | `2`
-**keepRemoved**        | Keep keys from the catalog that are no longer in code | `false`
-**keySeparator**       | Key separator used in your translation keys           | `.`
-**lexers**             | See below for details                                 | `{}`
-**lineEnding**         | Control the line ending. See options at [eol](https://github.com/ryanve/eol) | `auto`
-**locales**            | An array of the locales in your applications          | `['en','fr']`
-**namespaceSeparator** | Namespace separator used in your translation keys     | `:`
-**output**             | Where to write the locale files relative to the base  | `locales`
-**reactNamespace**     | For react file, extract the [defaultNamespace](https://react.i18next.com/components/translate-hoc.html)          | `false` (`true` for `.jsx` files)
-**sort**               | Whether or not to sort the catalog                    | `false`
+**contextSeparator**     | Key separator used in your translation keys           | `_`
+**createOldCatalogs**    | Save the \_old files                                  | `true`
+**defaultNamespace**     | Default namespace used in your i18next config         | `translation`
+**defaultValue**         | Default value to give to empty keys                   | `''`
+**extension** <sup>1<sup>| Extenstion of the catalogs                            | `.json`
+**filename**  <sup>1<sup>| Filename of the catalogs                              | `'$NAMESPACE'`
+**indentation**          | Indentation of the catalog files                      | `2`
+**keepRemoved**          | Keep keys from the catalog that are no longer in code | `false`
+**keySeparator** <sup>2<sup>| Key separator used in your translation keys           | `.`
+**lexers**               | See below for details                                 | `{}`
+**lineEnding**           | Control the line ending. See options at [eol](https://github.com/ryanve/eol) | `auto`
+**locales**              | An array of the locales in your applications          | `['en','fr']`
+**namespaceSeparator** <sup>2<sup>| Namespace separator used in your translation keys     | `:`
+**output**               | Where to write the locale files relative to the base  | `locales`
+**reactNamespace** <sup>3<sup>| For react file, extract the [defaultNamespace](https://react.i18next.com/components/translate-hoc.html)          | `false`
+**sort**                 | Whether or not to sort the catalog                    | `false`
 
-### Catalog filenames
+1. Both `filename` and `extension` options support injection of `$LOCALE` and `$NAMESPACE` variables. The file output is JSON by default, if you want YAML, the `extension` must end with `yml`.
+2. If you want to use plain english keys, separators such as `.` and `:` will conflict. You might want to set `keySeparator: false` and `namespaceSeparator: false`. That way, `t('Status: Loading...')` will not think that there are a namespace and three separator dots for instance.
+3. If the file being parsed has a `.jsx` extension, this option is ignored and the namespace is being extracted.
 
-Both `filename` and `extension` options support injection of `$LOCALE` and `$NAMESPACE` variables.
 
 ### Lexers
 
 The `lexers` option let you configure which Lexer to use for which extension. Here is the default:
 
-```
+```js
 {
   lexers: {
     hbs: ['HandlebarsLexer'],
@@ -118,7 +119,7 @@ The `lexers` option let you configure which Lexer to use for which extension. He
 
 Note the presence of a `default` which will catch any extension that is not listed. There are 3 lexers available: `HandlebarsLexer`, `HTMLLexer` and `JavascriptLexer`. Each has configurations of its own. If you need to change the defaults, you can do it like so:
 
-```
+```js
 {
   lexers: {
     hbs: [
@@ -127,7 +128,7 @@ Note the presence of a `default` which will catch any extension that is not list
         functions: ['translate', '__']
       }
     ],
-    ...
+    // ...
   }
 }
 ```

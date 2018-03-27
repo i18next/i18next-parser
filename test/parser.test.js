@@ -507,6 +507,30 @@ describe('parser', () => {
       i18nextParser.end(fakeFile)
     })
 
+    it('handles disabling namespace and key separators', (done) => {
+      let result
+      const i18nextParser = new i18nTransform({
+        namespaceSeparator: false,
+        keySeparator: false
+      })
+      const fakeFile = new Vinyl({
+        contents: Buffer.from("asd t('Status: loading...')"),
+        path: 'file.js'
+      })
+
+      i18nextParser.on('data', file => {
+        if (file.relative.endsWith(enLibraryPath)) {
+          result = JSON.parse(file.contents)
+        }
+      })
+      i18nextParser.once('end', () => {
+        assert.deepEqual(result, { 'Status: loading...': '' })
+        done()
+      })
+
+      i18nextParser.end(fakeFile)
+    })
+
     it('supports a defaultValue', (done) => {
       let result
       const i18nextParser = new i18nTransform({

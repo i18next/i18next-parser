@@ -34,6 +34,12 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
 
 
     _this.options = _extends({}, _this.defaults, options);
+    if (_this.options.keySeparator === false) {
+      _this.options.keySeparator = '__!NO_KEY_SEPARATOR!__';
+    }
+    if (_this.options.namespaceSeparator === false) {
+      _this.options.namespaceSeparator = '__!NO_NAMESPACE_SEPARATOR!__';
+    }
     _this.entries = [];
 
     _this.parser = new _parser2.default(_this.options);

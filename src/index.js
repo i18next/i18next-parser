@@ -34,6 +34,12 @@ export default class i18nTransform extends Transform {
     }
 
     this.options = { ...this.defaults, ...options }
+    if (this.options.keySeparator === false) {
+      this.options.keySeparator = '__!NO_KEY_SEPARATOR!__'
+    }
+    if (this.options.namespaceSeparator === false) {
+      this.options.namespaceSeparator = '__!NO_NAMESPACE_SEPARATOR!__'
+    }
     this.entries = []
 
     this.parser = new Parser(this.options)
