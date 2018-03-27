@@ -40,8 +40,12 @@ export default class JsxLexer extends HTMLLexer {
     while (matches = regex.exec(content)) {
       const attrs = this.parseAttributes(matches[1])
       const key = attrs.keys
+
+      if (matches[2] && !attrs.options.defaultValue) {
+        attrs.options.defaultValue = matches[2].trim()
+      }
+
       if (key) {
-        attrs.options.defaultValue = attrs.options.defaultValue || matches[2].trim()
         this.keys.push({ ...attrs.options, key })
       }
     }

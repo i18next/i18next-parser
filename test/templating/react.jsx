@@ -11,6 +11,7 @@ class Test extends React.Component {
         <Trans i18nKey="third.first" count={count}>
             Hello <strong title={t('fourth')}>{{name}}</strong>, you have {{count}} unread message. <Link to="/msgs">Go to messages</Link>.
         </Trans>
+        <Trans i18nKey="fifth" count={count} />
       </div>
     )
   }

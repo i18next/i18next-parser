@@ -40,8 +40,12 @@ JsxLexer = function (_HTMLLexer) {_inherits(JsxLexer, _HTMLLexer);
       while (matches = regex.exec(content)) {
         var attrs = this.parseAttributes(matches[1]);
         var key = attrs.keys;
+
+        if (matches[2] && !attrs.options.defaultValue) {
+          attrs.options.defaultValue = matches[2].trim();
+        }
+
         if (key) {
-          attrs.options.defaultValue = attrs.options.defaultValue || matches[2].trim();
           this.keys.push(_extends({}, attrs.options, { key: key }));
         }
       }

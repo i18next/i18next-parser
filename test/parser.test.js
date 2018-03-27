@@ -185,7 +185,8 @@ describe('parser', () => {
       third: {
         first: 'Hello <strong title={t(\'fourth\')}>{{name}}</strong>, you have {{count}} unread message. <Link to="/msgs">Go to messages</Link>.'
       },
-      fourth: ''
+      fourth: '',
+      fifth: ''
     }
 
     i18nextParser.on('data', file => {
@@ -571,7 +572,8 @@ describe('parser', () => {
         third: {
           first: 'Hello <strong title={t(\'fourth\')}>{{name}}</strong>, you have {{count}} unread message. <Link to="/msgs">Go to messages</Link>.'
         },
-        fourth: ''
+        fourth: '',
+        fifth: ''
       }
 
       i18nextParser.on('data', file => {
