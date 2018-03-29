@@ -32,17 +32,19 @@ export default class JsxLexer extends HTMLLexer {
 
   extractTrans(content) {
     let matches
+    const closingTagPattern = '(?:<Trans([^>]*\\s' + this.attr + '[^>]*?)\\/>)'
+    const selfClosingTagPattern = '(?:<Trans([^>]*\\s' + this.attr + '[^>]*?)>((?:\\s|.)*?)<\\/Trans>)'
     const regex = new RegExp(
-      '<Trans([^>]*\\s' + this.attr + '[^>]*)>(?:((?:\\s|.)*?)<\\/Trans>)?',
+      [closingTagPattern, selfClosingTagPattern].join('|'),
       'gi'
     )
 
     while (matches = regex.exec(content)) {
-      const attrs = this.parseAttributes(matches[1])
+      const attrs = this.parseAttributes(matches[1] || matches[2])
       const key = attrs.keys
 
-      if (matches[2] && !attrs.options.defaultValue) {
-        attrs.options.defaultValue = matches[2].trim()
+      if (matches[3] && !attrs.options.defaultValue) {
+        attrs.options.defaultValue = matches[3].trim()
       }
 
       if (key) {

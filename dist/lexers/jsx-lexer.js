@@ -32,17 +32,19 @@ JsxLexer = function (_HTMLLexer) {_inherits(JsxLexer, _HTMLLexer);
 
     content) {
       var matches = void 0;
+      var closingTagPattern = '(?:<Trans([^>]*\\s' + this.attr + '[^>]*?)\\/>)';
+      var selfClosingTagPattern = '(?:<Trans([^>]*\\s' + this.attr + '[^>]*?)>((?:\\s|.)*?)<\\/Trans>)';
       var regex = new RegExp(
-      '<Trans([^>]*\\s' + this.attr + '[^>]*)>(?:((?:\\s|.)*?)<\\/Trans>)?',
+      [closingTagPattern, selfClosingTagPattern].join('|'),
       'gi');
 
 
       while (matches = regex.exec(content)) {
-        var attrs = this.parseAttributes(matches[1]);
+        var attrs = this.parseAttributes(matches[1] || matches[2]);
         var key = attrs.keys;
 
-        if (matches[2] && !attrs.options.defaultValue) {
-          attrs.options.defaultValue = matches[2].trim();
+        if (matches[3] && !attrs.options.defaultValue) {
+          attrs.options.defaultValue = matches[3].trim();
         }
 
         if (key) {
