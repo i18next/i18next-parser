@@ -21,7 +21,7 @@ class Test extends React.Component {
         <h1>{t('first')}</h1>
         <Interpolate i18nKey="second" value="some thing" component={interpolateComponent} />
         <Trans i18nKey="third.first" count={count}>
-            Hello <strong title={t('fourth')}>{{name}}</strong>, you have {{count}} unread message. <Link to="/msgs">Go to messages</Link>.
+          Hello <strong title={t('fourth')}>{{name}}</strong>, you have {{count}} unread message. <Link to="/msgs">Go to messages</Link>.
         </Trans>
         <span><Trans i18nKey="fifth" count={count} /></span>
       </div>

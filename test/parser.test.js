@@ -183,7 +183,7 @@ describe('parser', () => {
       first: '',
       second: '',
       third: {
-        first: 'Hello <strong title={t(\'fourth\')}>{{name}}</strong>, you have {{count}} unread message. <Link to="/msgs">Go to messages</Link>.'
+        first: 'Hello <1><0>{{name}}</0></1>, you have <3>{{count}}</3> unread message. <5>Go to messages</5>.'
       },
       fourth: '',
       fifth: '',
@@ -572,7 +572,7 @@ describe('parser', () => {
         first: '',
         second: '',
         third: {
-          first: 'Hello <strong title={t(\'fourth\')}>{{name}}</strong>, you have {{count}} unread message. <Link to="/msgs">Go to messages</Link>.'
+          first: 'Hello <1><0>{{name}}</0></1>, you have <3>{{count}}</3> unread message. <5>Go to messages</5>.'
         },
         fourth: '',
         fifth: '',

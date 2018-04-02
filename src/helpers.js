@@ -105,9 +105,13 @@ function populateHash(source, target = {}) {
   return target
 }
 
+class ParsingError extends Error {
+
+}
 
 export {
   dotPathToHash,
   mergeHashes,
-  populateHash
+  populateHash,
+  ParsingError
 }
