@@ -95,8 +95,14 @@ export default class JsxLexer extends HTMLLexer {
     const nextJs = string.indexOf('{') === -1 ? Number.POSITIVE_INFINITY : string.indexOf('{')
     const nextTag = /<[A-Z]/i.test(string) ? /<[A-Z]/i.exec(string).index : Number.POSITIVE_INFINITY
     const textEnd = Math.min(nextJs, nextTag, string.length)
+    // We trim the text content, only if there's a newline inside it
+    const textContent = string.slice(0, textEnd).replace(/^(?:\s*(\n|\r)\s*)?(.*)(?:\s*(\n|\r)\s*)?$/, '$2');
 
-    return [{content: string.slice(0, textEnd), length: textEnd, type: 'text'}, ...this.parseJsx(string.slice(textEnd))]
+    if (textContent.length === 0) {
+      return this.parseJsx(string.slice(textEnd));
+    } else {
+      return [{content: textContent, length: textEnd, type: 'text'}, ...this.parseJsx(string.slice(textEnd))];
+    }
   }
 
   /**
