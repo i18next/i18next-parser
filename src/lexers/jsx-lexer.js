@@ -47,7 +47,7 @@ export default class JsxLexer extends HTMLLexer {
       const key = attrs.keys
 
       if (matches[3] && !attrs.options.defaultValue) {
-        attrs.options.defaultValue = this.eraseTags(matches[3].trim()).replace(/\\s+/g, ' ')
+        attrs.options.defaultValue = this.eraseTags(matches[3]).replace(/\\s+/g, ' ')
       }
 
       if (key) {

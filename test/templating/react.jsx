@@ -24,6 +24,12 @@ class Test extends React.Component {
           Hello <strong title={t('fourth')}>{{name}}</strong>, you have {{count}} unread message. <Link to="/msgs">Go to messages</Link>.
         </Trans>
         <span><Trans i18nKey="fifth" count={count} /></span>
+        <Trans i18nKey="third.second"> <b>Hello,</b> this shouldn't be trimmed.</Trans>
+        <Trans i18nKey="third.third">
+         <b>Hello,</b>
+         this should be trimmed.
+         <i> and this shoudln't</i>
+        </Trans>
       </div>
     )
   }
