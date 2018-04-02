@@ -114,7 +114,7 @@ export default class JsxLexer extends HTMLLexer {
     // this.eraseTags checks this first, so should be ok
     assert(/^<[A-Z]/i.test(string), "The string must begin with an html tag")
 
-    const tag = /[A-Z-]+/i.exec(string)[0].toLowerCase()
+    const tag = /[A-Z0-9-]+/i.exec(string)[0].toLowerCase()
 
     let currentIndex = tag.length+1
 
