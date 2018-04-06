@@ -67,7 +67,9 @@ export default class JsxLexer extends HTMLLexer {
    * @returns string
    */
   eraseTags(string) {
-    const children = this.simplify(acorn.parse(string, {plugins: {jsx: true}}).body[0].expression.children, string);
+    const acornAst = acorn.parse(string, {plugins: {jsx: true}});
+    const acornTransAst = acornAst.body[0].expression;
+    const children = this.parseAcornPayload(acornTransAst.children, string);
 
     const elemsToString = children => children.map((child, index) => {
       switch(child.type) {
@@ -86,9 +88,8 @@ export default class JsxLexer extends HTMLLexer {
    * @param {*} children An array of elements contained inside an html tag
    * @param {string} originalString The original string being parsed
    */
-  simplify(children, originalString) {
-    for (let i = 0; i < children.length; i ++) {
-      const child = children[i];
+  parseAcornPayload(children, originalString) {
+    children.forEach((child, i) => {
       switch (child.type) {
         case 'JSXText': children[i] = {
           type: 'text',
@@ -96,7 +97,7 @@ export default class JsxLexer extends HTMLLexer {
         }; break
         case 'JSXElement': children[i] = {
           type: 'tag',
-          children: this.simplify(child.children, originalString)
+          children: this.parseAcornPayload(child.children, originalString)
         }; break;
         case 'JSXExpressionContainer': children[i] = {
           type: 'js',
@@ -104,12 +105,10 @@ export default class JsxLexer extends HTMLLexer {
         }; break;
         default: throw new ParsingError("Unknown ast element when parsing jsx: " + child.type)
       }
-    }
+    });
 
-    // Filter empty text elements. Using string.length instead of !string because
-    // '0' is a valid text element, and '' is not, and !string doesn't make a difference
-    // between the two.
-    children = children.filter(child => !(child.type === 'text' && child.content.length === 0));
+    // Remove empty text elements
+    children = children.filter(child => child.type !== 'text' || child.content);
 
     return children;
   }
