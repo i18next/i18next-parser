@@ -89,27 +89,23 @@ export default class JsxLexer extends HTMLLexer {
    * @param {string} originalString The original string being parsed
    */
   parseAcornPayload(children, originalString) {
-    children.forEach((child, i) => {
+    return children.map(child => {
       switch (child.type) {
-        case 'JSXText': children[i] = {
+        case 'JSXText': return {
           type: 'text',
           content: child.value.replace(/^(?:\s*(\n|\r)\s*)?(.*)(?:\s*(\n|\r)\s*)?$/, '$2')
-        }; break
-        case 'JSXElement': children[i] = {
+        }; 
+        case 'JSXElement': return {
           type: 'tag',
           children: this.parseAcornPayload(child.children, originalString)
-        }; break;
-        case 'JSXExpressionContainer': children[i] = {
+        }; 
+        case 'JSXExpressionContainer': return {
           type: 'js',
           content: originalString.slice(child.start, child.end)
-        }; break;
+        };
         default: throw new ParsingError("Unknown ast element when parsing jsx: " + child.type)
       }
-    });
-
-    // Remove empty text elements
-    children = children.filter(child => child.type !== 'text' || child.content);
-
-    return children;
+      // Remove empty text elements
+    }).filter(child => child.type !== 'text' || child.content);
   }
 }
