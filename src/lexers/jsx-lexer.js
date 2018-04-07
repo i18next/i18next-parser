@@ -1,8 +1,8 @@
-import * as acorn from 'acorn-jsx';
+import * as acorn from 'acorn-jsx'
 import assert from 'assert'
 import HTMLLexer from './html-lexer'
-import BaseLexer from './base-lexer';
-import { ParsingError } from '../helpers';
+import BaseLexer from './base-lexer'
+import { ParsingError } from '../helpers'
 
 export default class JsxLexer extends HTMLLexer {
   constructor(options = {}) {
@@ -61,26 +61,25 @@ export default class JsxLexer extends HTMLLexer {
 
   /**
    * Recursively convert html tags and js injections to tags with the child index in it
-   *
    * @param {string} string
    *
    * @returns string
    */
   eraseTags(string) {
-    const acornAst = acorn.parse(string, {plugins: {jsx: true}});
-    const acornTransAst = acornAst.body[0].expression;
-    const children = this.parseAcornPayload(acornTransAst.children, string);
+    const acornAst = acorn.parse(string, {plugins: {jsx: true}})
+    const acornTransAst = acornAst.body[0].expression
+    const children = this.parseAcornPayload(acornTransAst.children, string)
 
     const elemsToString = children => children.map((child, index) => {
       switch(child.type) {
-        case 'text': return child.content;
-        case 'js': return `<${index}>${child.content}</${index}>`;
-        case 'tag': return `<${index}>${elemsToString(child.children)}</${index}>`;
-        default: throw new ParsingError('Unknown parsed content: ' + child.type);
+        case 'text': return child.content
+        case 'js': return `<${index}>${child.content}</${index}>`
+        case 'tag': return `<${index}>${elemsToString(child.children)}</${index}>`
+        default: throw new ParsingError('Unknown parsed content: ' + child.type)
       }
-    }).join('');
+    }).join('')
 
-    return elemsToString(children);
+    return elemsToString(children)
   }
 
   /**
@@ -90,22 +89,27 @@ export default class JsxLexer extends HTMLLexer {
    */
   parseAcornPayload(children, originalString) {
     return children.map(child => {
-      switch (child.type) {
-        case 'JSXText': return {
+      if (child.type === 'JSXText') {
+        return {
           type: 'text',
           content: child.value.replace(/^(?:\s*(\n|\r)\s*)?(.*)(?:\s*(\n|\r)\s*)?$/, '$2')
-        }; 
-        case 'JSXElement': return {
+        }
+      }
+      else if (child.type === 'JSXElement') {
+        return {
           type: 'tag',
           children: this.parseAcornPayload(child.children, originalString)
-        }; 
-        case 'JSXExpressionContainer': return {
+        }
+      }
+      else if (child.type === 'JSXExpressionContainer') {
+        return {
           type: 'js',
           content: originalString.slice(child.start, child.end)
-        };
-        default: throw new ParsingError("Unknown ast element when parsing jsx: " + child.type)
+        }
       }
-      // Remove empty text elements
-    }).filter(child => child.type !== 'text' || child.content);
+      else {
+        throw new ParsingError('Unknown ast element when parsing jsx: ' + child.type)
+      }
+    }).filter(child => child.type !== 'text' || child.content)
   }
 }

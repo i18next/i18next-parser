@@ -1,4 +1,4 @@
-'use strict';Object.defineProperty(exports, "__esModule", { value: true });exports.populateHash = exports.mergeHashes = exports.dotPathToHash = undefined;var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {return typeof obj;} : function (obj) {return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;};var _lodash = require('lodash');var _lodash2 = _interopRequireDefault(_lodash);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
+'use strict';Object.defineProperty(exports, "__esModule", { value: true });exports.ParsingError = exports.populateHash = exports.mergeHashes = exports.dotPathToHash = undefined;var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {return typeof obj;} : function (obj) {return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;};var _lodash = require('lodash');var _lodash2 = _interopRequireDefault(_lodash);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function _possibleConstructorReturn(self, call) {if (!self) {throw new ReferenceError("this hasn't been initialised - super() hasn't been called");}return call && (typeof call === "object" || typeof call === "function") ? call : self;}function _inherits(subClass, superClass) {if (typeof superClass !== "function" && superClass !== null) {throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);}subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;}
 
 // Turn an entry for the Parser and turn in into a hash,
 // turning the key path 'foo.bar' into an hash {foo: {bar: ""}}
@@ -103,10 +103,17 @@ function populateHash(source) {var target = arguments.length > 1 && arguments[1]
   });
 
   return target;
-}exports.
+}var
+
+ParsingError = function (_Error) {_inherits(ParsingError, _Error);
+  function ParsingError(message) {_classCallCheck(this, ParsingError);var _this = _possibleConstructorReturn(this, (ParsingError.__proto__ || Object.getPrototypeOf(ParsingError)).call(this,
+    message));
+    _this.name = 'ParsingError';return _this;
+  }return ParsingError;}(Error);exports.
 
 
 
 dotPathToHash = dotPathToHash;exports.
 mergeHashes = mergeHashes;exports.
-populateHash = populateHash;
+populateHash = populateHash;exports.
+ParsingError = ParsingError;

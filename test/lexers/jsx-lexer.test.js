@@ -31,10 +31,12 @@ describe('JsxLexer', () => {
       ])
       done()
     })
+  })
 
-    it('erases tags from content', done => {
+  describe('eraseTags()', () => {
+    it('erases tags from content', (done) => {
       const Lexer = new JsxLexer()
-      const content = '<Trans>a<b test={"</b>"}>c<c>z</c></b>{d}<br stuff={y}/></Trans>';
+      const content = '<Trans>a<b test={"</b>"}>c<c>z</c></b>{d}<br stuff={y}/></Trans>'
       assert.equal(Lexer.eraseTags(content), 'a<1>c<1>z</1></1><2>{d}</2><3></3>')
       done()
     })
