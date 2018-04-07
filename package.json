@@ -17,6 +17,7 @@
     "url": "https://github.com/i18next/i18next-parser"
   },
   "dependencies": {
+    "acorn-jsx": "^4.1.1",
     "colors": "~1.2.0-rc0",
     "commander": "~2.9.0",
     "concat-stream": "~1.6.0",

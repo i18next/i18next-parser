@@ -105,9 +105,16 @@ function populateHash(source, target = {}) {
   return target
 }
 
+class ParsingError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "ParsingError";
+  }
+}
 
 export {
   dotPathToHash,
   mergeHashes,
-  populateHash
+  populateHash,
+  ParsingError
 }

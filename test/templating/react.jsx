@@ -21,9 +21,15 @@ class Test extends React.Component {
         <h1>{t('first')}</h1>
         <Interpolate i18nKey="second" value="some thing" component={interpolateComponent} />
         <Trans i18nKey="third.first" count={count}>
-            Hello <strong title={t('fourth')}>{{name}}</strong>, you have {{count}} unread message. <Link to="/msgs">Go to messages</Link>.
+          Hello <strong title={t('fourth')}>{{name}}</strong>, you have {{count}} unread message. <Link to="/msgs">Go to messages</Link>.
         </Trans>
         <span><Trans i18nKey="fifth" count={count} /></span>
+        <Trans i18nKey="third.second"> <b>Hello,</b> this shouldn't be trimmed.</Trans>
+        <Trans i18nKey="third.third">
+         <b>Hello,</b>
+         this should be trimmed.
+         <i> and this shoudln't</i>
+        </Trans>
       </div>
     )
   }
