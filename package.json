@@ -2,9 +2,9 @@
   "author": "Karel Ledru",
   "description": "Command Line tool for i18next",
   "name": "i18next-parser",
-  "version": "1.0.0-beta9",
+  "version": "1.0.0-beta10",
   "license": "MIT",
-  "main": "src/index.js",
+  "main": "dist/index.js",
   "bin": {
     "i18next": "./bin/cli.js"
   },
