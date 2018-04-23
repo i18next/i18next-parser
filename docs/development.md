@@ -43,7 +43,13 @@ To test the CLI:
 ```
 yarn link
 cd test
-i18next 'templating/**/*' -o manual
+i18next test/**/*.html  -c i18next-parser.config.js
+```
+
+To test gulp:
+
+```
+gulp i18next
 ```
 
 ## `0.x` vs `1.x`
