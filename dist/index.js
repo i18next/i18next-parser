@@ -224,4 +224,4 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
       if (translateMatches) {
         return translateMatches[1].slice(1, -1);
       }
-    } }]);return i18nTransform;}(_stream.Transform);exports.default = i18nTransform;
+    } }]);return i18nTransform;}(_stream.Transform);exports.default = i18nTransform;module.exports = exports['default'];

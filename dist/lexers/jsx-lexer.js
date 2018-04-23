@@ -111,4 +111,4 @@ JsxLexer = function (_HTMLLexer) {_inherits(JsxLexer, _HTMLLexer);
           throw new _helpers.ParsingError('Unknown ast element when parsing jsx: ' + child.type);
         }
       }).filter(function (child) {return child.type !== 'text' || child.content;});
-    } }]);return JsxLexer;}(_htmlLexer2.default);exports.default = JsxLexer;
+    } }]);return JsxLexer;}(_htmlLexer2.default);exports.default = JsxLexer;module.exports = exports['default'];

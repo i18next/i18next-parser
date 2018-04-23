@@ -70,4 +70,4 @@ HTMLLexer = function (_BaseLexer) {_inherits(HTMLLexer, _BaseLexer);
       }
 
       return result;
-    } }]);return HTMLLexer;}(_baseLexer2.default);exports.default = HTMLLexer;
+    } }]);return HTMLLexer;}(_baseLexer2.default);exports.default = HTMLLexer;module.exports = exports['default'];

@@ -60,4 +60,4 @@ HandlebarsLexer = function (_BaseLexer) {_inherits(HandlebarsLexer, _BaseLexer);
       ')';
       this.argumentsRegex = new RegExp(pattern, 'gi');
       return this.argumentsRegex;
-    } }]);return HandlebarsLexer;}(_baseLexer2.default);exports.default = HandlebarsLexer;
+    } }]);return HandlebarsLexer;}(_baseLexer2.default);exports.default = HandlebarsLexer;module.exports = exports['default'];

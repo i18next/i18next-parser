@@ -66,4 +66,4 @@ Parser = function (_EventEmitter) {_inherits(Parser, _EventEmitter);
       });
 
       return keys;
-    } }]);return Parser;}(_events2.default);exports.default = Parser;
+    } }]);return Parser;}(_events2.default);exports.default = Parser;module.exports = exports['default'];

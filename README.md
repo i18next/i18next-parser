@@ -58,11 +58,11 @@ const i18next = require('i18next-parser');
 
 gulp.task('i18next', function() {
   gulp.src('app/**')
-    .pipe(i18next({
+    .pipe(new i18next({
       locales: ['en', 'de'],
-      output: '../locales'
+      output: 'locales'
     }))
-    .pipe(gulp.dest('locales'));
+    .pipe(gulp.dest('./'));
 });
 ```
 
