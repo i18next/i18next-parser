@@ -1,6 +1,10 @@
 # Changelog
 
-## 1.0.0-beta10 - latest
+## 1.0.0-beta11 - latest
+
+- See [release](https://github.com/i18next/i18next-parser/releases/tag/1.0.0-beta11)
+
+## 1.0.0-beta10
 
 - See [release](https://github.com/i18next/i18next-parser/releases/tag/1.0.0-beta10)
 
