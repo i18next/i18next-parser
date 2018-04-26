@@ -36,6 +36,15 @@ describe('JavascriptLexer', () => {
     done()
   })
 
+  it('extracts the defaultValue/context options with interpolated value', (done) => {
+    const Lexer = new JavascriptLexer()
+    const content = 'i18n.t("first", {context: "foo", "defaultValue": \'{{var}} bla\'})'
+    assert.deepEqual(Lexer.extract(content), [
+      { key: 'first', defaultValue: '{{var}} bla', context: 'foo' }
+    ])
+    done()
+  })
+
   it('supports multiline and concatenation', (done) => {
     const Lexer = new JavascriptLexer()
     const content = 'i18n.t("foo" + \n "bar")'

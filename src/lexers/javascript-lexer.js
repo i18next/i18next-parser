@@ -97,7 +97,7 @@ export default class JavascriptLexer extends BaseLexer {
   }
 
   static get hashPattern() {
-    return '(\\{[^}]*\\})'
+    return '(\\{.*\\})'
   }
 
   static get stringOrVariableOrHashPattern() {
