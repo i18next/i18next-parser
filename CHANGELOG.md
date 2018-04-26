@@ -1,32 +1,8 @@
 # Changelog
 
-## 1.0.0-beta11 - latest
+## 1.0.0-beta12 - latest
 
-- See [release](https://github.com/i18next/i18next-parser/releases/tag/1.0.0-beta11)
-
-## 1.0.0-beta10
-
-- See [release](https://github.com/i18next/i18next-parser/releases/tag/1.0.0-beta10)
-
-## 1.0.0-beta9
-
-- See [release](https://github.com/i18next/i18next-parser/releases/tag/1.0.0-beta9)
-
-## 1.0.0-beta8
-
-- See [release](https://github.com/i18next/i18next-parser/releases/tag/1.0.0-beta8)
-
-## 1.0.0-beta7
-
-- See [release](https://github.com/i18next/i18next-parser/releases/tag/1.0.0-beta7)
-
-## 1.0.0-beta2
-
-- See [release](https://github.com/i18next/i18next-parser/releases/tag/1.0.0-beta2)
-
-## 1.0.0-beta1
-
-- See [release](https://github.com/i18next/i18next-parser/releases/tag/1.0.0-beta1)
+- The changelog for the beta can be found in the [releases](https://github.com/i18next/i18next-parser/releases)
 
 ## 0.13.0
 
