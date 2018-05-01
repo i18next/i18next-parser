@@ -31,6 +31,27 @@ describe('JsxLexer', () => {
       ])
       done()
     })
+
+    it('extracts keys from Trans elements without an i18nKey', (done) => {
+      const Lexer = new JsxLexer()
+      const content = '<Trans count={count}>Yo</Trans>'
+      assert.deepEqual(Lexer.extractTrans(content), [
+        { key: 'Yo', defaultValue: 'Yo' }
+      ])
+      done()
+    })
+
+    it('doesn\'t add a blank key for self-closing or empty tags', (done) => {
+      const Lexer = new JsxLexer()
+      
+      const emptyTag = '<Trans count={count}></Trans>'
+      assert.deepEqual(Lexer.extractTrans(emptyTag), [])
+
+      const selfClosing = '<Trans count={count}/>'
+      assert.deepEqual(Lexer.extractTrans(selfClosing), [])
+
+      done()
+    })
   })
 
   describe('eraseTags()', () => {

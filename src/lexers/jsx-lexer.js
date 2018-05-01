@@ -34,18 +34,23 @@ export default class JsxLexer extends HTMLLexer {
     return this.keys
   }
 
+  /**
+  * Extract tags and content from the Trans component.
+  * @param {string} string
+  * @returns {array} Array of key options
+  */
   extractTrans(content) {
     let matches
-    const closingTagPattern = '(?:<Trans([^>]*\\s' + this.attr + '[^>]*?)\\/>)'
-    const selfClosingTagPattern = '(?:<Trans([^>]*\\s' + this.attr + '[^>]*?)>((?:\\s|.)*?)<\\/Trans>)'
+    const selfClosingTagPattern = '(?:<\\s*Trans([^>]*)?/>)'
+    const closingTagPattern = '(?:<\\s*Trans([^>]*)?>((?:(?!</\\s*Trans\\s*>)[^])*)</\\s*Trans\\s*>)'
     const regex = new RegExp(
-      [closingTagPattern, selfClosingTagPattern].join('|'),
+      [selfClosingTagPattern, closingTagPattern].join('|'),
       'gi'
     )
 
     while (matches = regex.exec(content)) {
       const attrs = this.parseAttributes(matches[1] || matches[2])
-      const key = attrs.keys
+      const key = attrs.keys || matches[3]
 
       if (matches[3] && !attrs.options.defaultValue) {
         attrs.options.defaultValue = this.eraseTags(matches[0]).replace(/\s+/g, ' ')
