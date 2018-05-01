@@ -32,20 +32,25 @@ JsxLexer = function (_HTMLLexer) {_inherits(JsxLexer, _HTMLLexer);
       }
 
       return this.keys;
-    } }, { key: 'extractTrans', value: function extractTrans(
+    }
 
+    /**
+      * Extract tags and content from the Trans component.
+      * @param {string} string
+      * @returns {array} Array of key options
+      */ }, { key: 'extractTrans', value: function extractTrans(
     content) {
       var matches = void 0;
-      var closingTagPattern = '(?:<Trans([^>]*\\s' + this.attr + '[^>]*?)\\/>)';
-      var selfClosingTagPattern = '(?:<Trans([^>]*\\s' + this.attr + '[^>]*?)>((?:\\s|.)*?)<\\/Trans>)';
+      var selfClosingTagPattern = '(?:<\\s*Trans([^>]*)?/>)';
+      var closingTagPattern = '(?:<\\s*Trans([^>]*)?>((?:(?!</\\s*Trans\\s*>)[^])*)</\\s*Trans\\s*>)';
       var regex = new RegExp(
-      [closingTagPattern, selfClosingTagPattern].join('|'),
+      [selfClosingTagPattern, closingTagPattern].join('|'),
       'gi');
 
 
       while (matches = regex.exec(content)) {
         var attrs = this.parseAttributes(matches[1] || matches[2]);
-        var key = attrs.keys;
+        var key = attrs.keys || matches[3];
 
         if (matches[3] && !attrs.options.defaultValue) {
           attrs.options.defaultValue = this.eraseTags(matches[0]).replace(/\s+/g, ' ');
