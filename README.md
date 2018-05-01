@@ -2,22 +2,21 @@
 
 [![NPM](https://nodei.co/npm/i18next-parser.png?downloads=true&stars=true)](https://www.npmjs.com/package/i18next-parser)
 
-When translating an application, maintaining the catalog by hand is painful. This package automate the process. Don't let the name fool you, it was originally built with i18next in mind but it works well with other i18n libraries.
+When translating an application, maintaining the translation catalog by hand is painful. This package automates this process.
 
 
 
 ## Features
 
 - Choose your weapon: A CLI, a standalone parser or a stream transform
-- Three built in lexers: Javascript, HTML and Handlebars
+- 4 built in lexers: Javascript, JSX, HTML and Handlebars
 - Creates one catalog file per locale and per namespace
-- Backs up the old keys your code doesn't use anymore in `namespace_old.json` catalog.
-- Restores keys from the `_old` file if the one in the translation file is empty.
+- Backs up the old keys your code doesn't use anymore in `namespace_old.json` catalog
+- Restores keys from the `_old` file if the one in the translation file is empty
 - Supports i18next features:
   - **Context**: keys of the form `key_context`
   - **Plural**: keys of the form `key_plural` and `key_plural_0`
-- Behind the hood, it's a stream transform (so it works with gulp)
-- Supports es6 template strings (in addition to single/double quoted strings) with ${expression} placeholders
+- Tested on Node 6+
 
 ## DISCLAMER: `1.0.0-beta`
 
