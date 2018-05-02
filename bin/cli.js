@@ -89,7 +89,10 @@ vfs.src(globs)
     }
   })
   .on('error', function (message, region) {
-    console.log('  [error] '.red + message + ': ' + region.trim())
+    if (typeof region === 'string') {
+      message += ': ' + region.trim()
+    }
+    console.log('  [error] '.red + message)
   })
   .on('finish', function () {
     if (!program.silent) {

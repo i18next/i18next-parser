@@ -52,7 +52,6 @@ export default class Parser extends EventEmitter {
       }
       else {
         lexerName = lexerConfig.lexer
-        delete lexerConfig.lexer
         lexerOptions = lexerConfig
       }
 

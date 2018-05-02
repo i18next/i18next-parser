@@ -52,7 +52,6 @@ Parser = function (_EventEmitter) {_inherits(Parser, _EventEmitter);
         } else
         {
           lexerName = lexerConfig.lexer;
-          delete lexerConfig.lexer;
           lexerOptions = lexerConfig;
         }
 
