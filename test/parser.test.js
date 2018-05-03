@@ -12,7 +12,7 @@ describe('parser', () => {
     const i18nextParser = new i18nTransform()
     const fakeFile = new Vinyl({
       contents: Buffer.from(
-        "asd t('first') t('second') \n asd t('third') ad t('fourth')"
+        "t('first'); t('second') \n t('third'); t('fourth');"
       ),
       path: 'file.js'
     })
@@ -33,7 +33,7 @@ describe('parser', () => {
     const i18nextParser = new i18nTransform()
     const fakeFile = new Vinyl({
       contents: Buffer.from(
-        "asd t(\n  'first'\n) t('second') \n asd t(\n\n'third')"
+        "t(\n  'first'\n)\n t('second'); t(\n\n'third')"
       ),
       path: 'file.js'
     })
@@ -55,7 +55,7 @@ describe('parser', () => {
     let result
     const i18nextParser = new i18nTransform()
     const fakeFile = new Vinyl({
-      contents: Buffer.from("asd t('first', {context: 'female'})"),
+      contents: Buffer.from("t('first', {context: 'female'})"),
       path: 'file.js'
     })
 
@@ -153,7 +153,7 @@ describe('parser', () => {
     const expected = {
       first: '',
       second: 'defaultValue',
-      third: 'defaultValue',
+      third: '{{var}} defaultValue',
       fourth: ''
     }
 
@@ -215,7 +215,7 @@ describe('parser', () => {
     })
     const fakeFile = new Vinyl({
       contents: Buffer.from(
-        "asd t('ns1:first') t('second') \n asd t('ns2:third') ad t('fourth')"
+        "t('ns1:first'); t('second') \n t('ns2:third'); t('fourth')"
       ),
       path: 'file.js'
     })
@@ -260,7 +260,7 @@ describe('parser', () => {
     const i18nextParser = new i18nTransform()
     const fakeFile = new Vinyl({
       contents: Buffer.from(
-        'asd t(\'escaped \\\'single quotes\\\'\') t("escaped \\"double quotes\\"")'
+        't(\'escaped \\\'single quotes\\\'\'); t("escaped \\"double quotes\\"")'
       ),
       path: 'file.js'
     })
@@ -285,7 +285,7 @@ describe('parser', () => {
     const i18nextParser = new i18nTransform()
     const fakeFile = new Vinyl({
       contents: Buffer.from(
-        "asd t('escaped backslash\\\\ newline\\n\\r tab\\t')"
+        "t('escaped backslash\\\\ newline\\n\\r tab\\t')"
       ),
       path: 'file.js'
     })
@@ -308,7 +308,7 @@ describe('parser', () => {
     const i18nextParser = new i18nTransform()
     const fakeFile = new Vinyl({
       contents: Buffer.from(
-        "asd t('first') t('second') \n asd t('third') ad t('fourth')"
+        "t('first')"
       ),
       path: 'file.js'
     })
@@ -325,7 +325,7 @@ describe('parser', () => {
     let result
     const i18nextParser = new i18nTransform({ output: 'test/locales' })
     const fakeFile = new Vinyl({
-      contents: Buffer.from("asd t('test_merge:first') t('test_merge:second')"),
+      contents: Buffer.from("t('test_merge:first'); t('test_merge:second')"),
       path: 'file.js'
     })
 
@@ -347,7 +347,7 @@ describe('parser', () => {
     let resultFR
     const i18nextParser = new i18nTransform({ output: 'test/locales' })
     const fakeFile = new Vinyl({
-      contents: Buffer.from("asd t('test_leak:first') t('test_leak:second')"),
+      contents: Buffer.from("t('test_leak:first'); t('test_leak:second')"),
       path: 'file.js'
     })
 
@@ -372,7 +372,7 @@ describe('parser', () => {
     let result
     const i18nextParser = new i18nTransform({ output: 'test/locales' })
     const fakeFile = new Vinyl({
-      contents: Buffer.from("asd t('test_context:first')"),
+      contents: Buffer.from("t('test_context:first')"),
       path: 'file.js'
     })
 
@@ -400,7 +400,7 @@ describe('parser', () => {
     const i18nextParser = new i18nTransform({ output: 'test/locales' })
     const fakeFile = new Vinyl({
       contents: Buffer.from(
-        "asd t('test_plural:first') t('test_plural:second')"
+        "t('test_plural:first'); t('test_plural:second')"
       ),
       path: 'file.js'
     })
@@ -430,7 +430,7 @@ describe('parser', () => {
     let result
     const i18nextParser = new i18nTransform({ output: 'test/locales' })
     const fakeFile = new Vinyl({
-      contents: Buffer.from("asd t('test_context_plural:first')"),
+      contents: Buffer.from("t('test_context_plural:first')"),
       path: 'file.js'
     })
 
@@ -463,7 +463,7 @@ describe('parser', () => {
         extension: '.$LOCALE.i18n'
       })
       const fakeFile = new Vinyl({
-        contents: Buffer.from("asd t('fourth')"),
+        contents: Buffer.from("t('fourth')"),
         path: 'file.js'
       })
 
@@ -494,7 +494,7 @@ describe('parser', () => {
       })
       const fakeFile = new Vinyl({
         contents: Buffer.from(
-          "asd t('test_separators?first') t('test_separators?second-third')"
+          "t('test_separators?first'); t('test_separators?second-third')"
         ),
         path: 'file.js'
       })
@@ -519,7 +519,7 @@ describe('parser', () => {
         keySeparator: false
       })
       const fakeFile = new Vinyl({
-        contents: Buffer.from("asd t('Status: loading...')"),
+        contents: Buffer.from("t('Status: loading...')"),
         path: 'file.js'
       })
 
@@ -542,7 +542,7 @@ describe('parser', () => {
         defaultValue: 'NOT_TRANSLATED'
       })
       const fakeFile = new Vinyl({
-        contents: Buffer.from("asd t('first')"),
+        contents: Buffer.from("t('first')"),
         path: 'file.js'
       })
 
@@ -604,7 +604,7 @@ describe('parser', () => {
         extension: '.yml'
       })
       const fakeFile = new Vinyl({
-        contents: Buffer.from("asd t('first')"),
+        contents: Buffer.from("t('first')"),
         path: 'file.js'
       })
 
@@ -627,7 +627,7 @@ describe('parser', () => {
         indentation: 6
       })
       const fakeFile = new Vinyl({
-        contents: Buffer.from("asd t('first')"),
+        contents: Buffer.from("t('first')"),
         path: 'file.js'
       })
 
@@ -652,7 +652,7 @@ describe('parser', () => {
       })
       const fakeFile = new Vinyl({
         contents: Buffer.from(
-          "asd t('ns1:first') t('second') \n asd ad t('fourth')"
+          "t('ns1:first'); t('second') \n t('fourth')"
         ),
         path: 'file.js'
       })
@@ -693,7 +693,7 @@ describe('parser', () => {
           }
         })
         const fakeFile = new Vinyl({
-          contents: Buffer.from("asd bla('first') _e('second')"),
+          contents: Buffer.from("bla('first'); _e('second')"),
           path: 'file.js'
         })
 
@@ -717,7 +717,7 @@ describe('parser', () => {
         const i18nextParser = new i18nTransform()
         const fakeFile = new Vinyl({
           contents: Buffer.from(
-            "asd t('ccc') t('aaa') t('bbb.bbb') t('bbb.aaa')"
+            "t('ccc'); t('aaa'); t('bbb.bbb'); t('bbb.aaa')"
           ),
           path: 'file.js'
         })
@@ -743,7 +743,7 @@ describe('parser', () => {
         })
         const fakeFile = new Vinyl({
           contents: Buffer.from(
-            "asd t('ccc') t('aaa') t('bbb.bbb') t('bbb.aaa')"
+            "t('ccc'); t('aaa'); t('bbb.bbb'); t('bbb.aaa')"
           ),
           path: 'file.js'
         })

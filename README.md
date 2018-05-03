@@ -150,6 +150,7 @@ Option         | Description                 | Default
 Option        | Description                 | Default
 ------------- | --------------------------- | -------
 **functions** | Array of functions to match | `['t']`
+**acorn**     | Options to pass to acorn    | `{}`
 
 **`JsxLexer` options**
 

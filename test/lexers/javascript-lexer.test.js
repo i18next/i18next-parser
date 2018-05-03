@@ -11,7 +11,7 @@ describe('JavascriptLexer', () => {
 
   it('extracts the second argument as defaultValue', (done) => {
     const Lexer = new JavascriptLexer()
-    const content = 'i18n.t("first" "bla")'
+    const content = 'i18n.t("first", "bla")'
     assert.deepEqual(Lexer.extract(content), [
       { key: 'first', defaultValue: 'bla' }
     ])
@@ -21,6 +21,15 @@ describe('JavascriptLexer', () => {
   it('extracts the defaultValue/context options', (done) => {
     const Lexer = new JavascriptLexer()
     const content = 'i18n.t("first", {defaultValue: "foo", context: \'bar\'})'
+    assert.deepEqual(Lexer.extract(content), [
+      { key: 'first', defaultValue: 'foo', context: 'bar' }
+    ])
+    done()
+  })
+
+  it('extracts the defaultValue/context on multiple lines', (done) => {
+    const Lexer = new JavascriptLexer()
+    const content = 'i18n.t("first", {\ndefaultValue: "foo",\n context: \'bar\'})'
     assert.deepEqual(Lexer.extract(content), [
       { key: 'first', defaultValue: 'foo', context: 'bar' }
     ])
@@ -61,8 +70,8 @@ describe('JavascriptLexer', () => {
 
   it('ignores functions that ends with a t', (done) => {
     const Lexer = new JavascriptLexer()
-    const js = "import './yolo.js' t('first')"
-    assert.deepEqual(Lexer.extract(js), [{ key: 'first' }])
+    const js = "ttt('first')"
+    assert.deepEqual(Lexer.extract(js), [])
     done()
   })
 
@@ -74,61 +83,5 @@ describe('JavascriptLexer', () => {
       { key: 'second' }
     ])
     done()
-  })
-
-  describe('concatenateString()', () => {
-    it('concatenates strings', (done) => {
-      const Lexer = new JavascriptLexer()
-      assert.equal(Lexer.concatenateString('"foo" + \'bar\''), '"foobar"')
-      done()
-    })
-
-    it('returns the original string if it contains variables', (done) => {
-      const Lexer = new JavascriptLexer()
-      assert.equal(Lexer.concatenateString('"foo" + bar'), '"foo" + bar')
-      done()
-    })
-
-    it('returns the original string if it contains backquote string', (done) => {
-      const Lexer = new JavascriptLexer()
-      assert.equal(Lexer.concatenateString('"foo" + `bar`'), '"foo" + `bar`')
-      done()
-    })
-  })
-
-  describe('parseArguments()', () => {
-    it('matches string arguments', (done) => {
-      const Lexer = new JavascriptLexer()
-      const args = '"first", "bla"'
-      assert.deepEqual(Lexer.parseArguments(args), {
-        arguments: ['"first"', '"bla"'],
-        options: {}
-      })
-      done()
-    })
-
-    it('matches variable arguments', (done) => {
-      const Lexer = new JavascriptLexer()
-      const args = 'first bla'
-      assert.deepEqual(Lexer.parseArguments(args), {
-        arguments: ['first', 'bla'],
-        options: {}
-      })
-      done()
-    })
-
-    it('matches concatenated arguments and concatenate when possible', (done) => {
-      const Lexer = new JavascriptLexer()
-      const args = "'first' + asd, 'bla' + 'asd', foo+bar+baz"
-      assert.deepEqual(Lexer.parseArguments(args), {
-        arguments: [
-          "'first' + asd",
-          "'blaasd'", // string got concatenated!
-          'foo+bar+baz'
-        ],
-        options: {}
-      })
-      done()
-    })
   })
 })

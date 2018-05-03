@@ -1,155 +1,102 @@
+import * as acorn from 'acorn-jsx'
+import * as walk from 'acorn/dist/walk'
 import BaseLexer from './base-lexer'
 
 export default class JavascriptLexer extends BaseLexer {
   constructor(options = {}) {
     super(options)
 
+    this.acornOptions = { sourceType: 'module', ...options.acorn }
     this.functions = options.functions || ['t']
-
-    this.createFunctionRegex()
-    this.createArgumentsRegex()
-    this.createHashRegex()
+    this.attr = options.attr || 'i18nKey'
   }
 
   extract(content) {
-    let matches
+    const that = this
 
-    while (matches = this.functionRegex.exec(content)) {
-      const args = this.parseArguments(matches[1] || matches[2])
-      this.populateKeysFromArguments(args)
-    }
+    walk.simple(
+      acorn.parse(content, this.acornOptions),
+      {
+        CallExpression(node) {
+          that.expressionExtractor.call(that, node)
+        }
+      }
+    )
 
     return this.keys
   }
 
-  parseArguments(args) {
-    let matches
-    const result = {
-      arguments: [],
-      options: {}
-    }
-    while (matches = this.argumentsRegex.exec(args)) {
-      let arg = matches[1]
+  expressionExtractor(node) {
+    const entry = {}
+    const isTranslationFunction = (
+      node.callee && (
+        this.functions.includes(node.callee.name) ||
+        node.callee.property && this.functions.includes(node.callee.property.name)
+      )
+    )
+    if (isTranslationFunction) {
+      const keyArgument = node.arguments.shift()
 
-      if (arg.startsWith('{')) {
-        let optionMatches
-        while (optionMatches = this.hashRegex.exec(args)) {
-          const key = optionMatches[2]
-          let value = optionMatches[3]
-          if (this.validateString(value)) {
-            result.options[key] = value.slice(1, -1)
-          }
+      if (keyArgument && keyArgument.type === 'Literal') {
+        entry.key = keyArgument.value
+      }
+      else if (keyArgument && keyArgument.type === 'BinaryExpression') {
+        const concatenatedString = this.concatenateString(keyArgument)
+        if (!concatenatedString) {
+          this.emit('warning', `Key is not a string litteral: ${keyArgument.name}`)
+          return
         }
+        entry.key = concatenatedString
       }
       else {
-        arg = this.concatenateString(arg)
+        if (keyArgument.type === 'Identifier') {
+          this.emit('warning', `Key is not a string litteral: ${keyArgument.name}`)
+        }
+
+        return
       }
-      result.arguments.push(arg)
+
+
+      const optionsArgument = node.arguments.shift()
+
+      if (optionsArgument && optionsArgument.type === 'Literal') {
+        entry.defaultValue = optionsArgument.value
+      }
+      else if (optionsArgument && optionsArgument.type === 'ObjectExpression') {
+        optionsArgument.properties.forEach(p => {
+          entry[p.key.name || p.key.value] = p.value.value
+        })
+      }
+
+      this.keys.push(entry)
     }
-    return result
   }
 
-  concatenateString(string) {
-    string = string.trim()
-    let matches
-    let containsVariable = false
-    const parts = []
-    const quotationMark = string.charAt(0) === '"' ? '"' : "'"
-
-    const regex = new RegExp(JavascriptLexer.concatenatedSegmentPattern, 'gi')
-    while(matches = regex.exec(string)) {
-      const match = matches[0].trim()
-      if (match !== '+') {
-        parts.push(match)
-      }
+  concatenateString(binaryExpression, string = '') {
+    if (binaryExpression.operator !== '+') {
+      return
     }
 
-    const result = parts.reduce((concatenatedString, x) => {
-      x = x && x.trim()
-      if (this.validateString(x)) {
-        concatenatedString += x.slice(1, -1)
-      }
-      else {
-        containsVariable = true
-      }
-      return concatenatedString
-    }, '')
-    if (!result || containsVariable) {
-      return string
+    if (binaryExpression.left.type === 'BinaryExpression') {
+      string += this.concatenateString(binaryExpression.left, string)
+    }
+    else if (binaryExpression.left.type === 'Literal') {
+      string += binaryExpression.left.value
     }
     else {
-      return quotationMark + result + quotationMark
+      return
     }
-  }
 
-  static get concatenatedSegmentPattern() {
-    return [
-      BaseLexer.singleQuotePattern,
-      BaseLexer.doubleQuotePattern,
-      BaseLexer.backQuotePattern,
-      BaseLexer.variablePattern,
-      '(?:\\s*\\+\\s*)' // support for concatenation via +
-    ].join('|')
-  }
+    if (binaryExpression.right.type === 'BinaryExpression') {
+      string += this.concatenateString(binaryExpression.right, string)
+    }
+    else if (binaryExpression.right.type === 'Literal') {
+      string += binaryExpression.right.value
+    }
+    else {
+      return
+    }
 
-  static get concatenatedArgumentPattern() {
-    return '(' + '(?:' + JavascriptLexer.concatenatedSegmentPattern + ')+' + ')'
-  }
-
-  static get hashPattern() {
-    return '(\\{.*\\})'
-  }
-
-  static get stringOrVariableOrHashPattern() {
-    return (
-      '(' +
-      '(' +
-      '(?:' +
-      [
-        JavascriptLexer.concatenatedArgumentPattern,
-        JavascriptLexer.hashPattern
-      ].join('|') +
-      ')' +
-      '(?:\\s*,\\s*)?' +
-      ')+' +
-      ')'
-    )
-  }
-
-  createFunctionRegex() {
-    const pattern = (
-      '(?:\\W|^)' +
-      this.functionPattern() + '\\s*\\(\\s*' +
-        JavascriptLexer.stringOrVariableOrHashPattern +
-      '\\s*\\)'
-    )
-    this.functionRegex = new RegExp(pattern, 'gi')
-    return this.functionRegex
-  }
-
-  createArgumentsRegex() {
-    const pattern = (
-      '(' +
-      [
-        JavascriptLexer.concatenatedArgumentPattern,
-        JavascriptLexer.hashPattern
-      ].join('|') +
-      ')' +
-      '(?:\\s*,\\s*)?'
-    )
-    this.argumentsRegex = new RegExp(pattern, 'gi')
-    return this.argumentsRegex
-  }
-
-  createHashRegex() {
-    const pattern = (
-      '(?:(\'|")?(' +
-      ['context', 'defaultValue'].join('|') +
-      ')\\1)' +
-      '(?:\\s*:\\s*)' +
-      '(' + BaseLexer.stringPattern + ')'
-    )
-    this.hashRegex = new RegExp(pattern, 'gi')
-    return this.hashRegex
+    return string
   }
 }

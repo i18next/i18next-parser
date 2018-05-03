@@ -1,155 +1,101 @@
-'use strict';Object.defineProperty(exports, "__esModule", { value: true });var _createClass = function () {function defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);}}return function (Constructor, protoProps, staticProps) {if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;};}();var _baseLexer = require('./base-lexer');var _baseLexer2 = _interopRequireDefault(_baseLexer);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function _possibleConstructorReturn(self, call) {if (!self) {throw new ReferenceError("this hasn't been initialised - super() hasn't been called");}return call && (typeof call === "object" || typeof call === "function") ? call : self;}function _inherits(subClass, superClass) {if (typeof superClass !== "function" && superClass !== null) {throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);}subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;}var
+'use strict';Object.defineProperty(exports, "__esModule", { value: true });var _extends = Object.assign || function (target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i];for (var key in source) {if (Object.prototype.hasOwnProperty.call(source, key)) {target[key] = source[key];}}}return target;};var _createClass = function () {function defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);}}return function (Constructor, protoProps, staticProps) {if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;};}();var _acornJsx = require('acorn-jsx');var acorn = _interopRequireWildcard(_acornJsx);
+var _walk = require('acorn/dist/walk');var walk = _interopRequireWildcard(_walk);
+var _baseLexer = require('./base-lexer');var _baseLexer2 = _interopRequireDefault(_baseLexer);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function _interopRequireWildcard(obj) {if (obj && obj.__esModule) {return obj;} else {var newObj = {};if (obj != null) {for (var key in obj) {if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key];}}newObj.default = obj;return newObj;}}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function _possibleConstructorReturn(self, call) {if (!self) {throw new ReferenceError("this hasn't been initialised - super() hasn't been called");}return call && (typeof call === "object" || typeof call === "function") ? call : self;}function _inherits(subClass, superClass) {if (typeof superClass !== "function" && superClass !== null) {throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);}subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;}var
 
 JavascriptLexer = function (_BaseLexer) {_inherits(JavascriptLexer, _BaseLexer);
   function JavascriptLexer() {var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};_classCallCheck(this, JavascriptLexer);var _this = _possibleConstructorReturn(this, (JavascriptLexer.__proto__ || Object.getPrototypeOf(JavascriptLexer)).call(this,
     options));
 
+    _this.acornOptions = _extends({ sourceType: 'module' }, options.acorn);
     _this.functions = options.functions || ['t'];
-
-    _this.createFunctionRegex();
-    _this.createArgumentsRegex();
-    _this.createHashRegex();return _this;
+    _this.attr = options.attr || 'i18nKey';return _this;
   }_createClass(JavascriptLexer, [{ key: 'extract', value: function extract(
 
     content) {
-      var matches = void 0;
+      var that = this;
 
-      while (matches = this.functionRegex.exec(content)) {
-        var args = this.parseArguments(matches[1] || matches[2]);
-        this.populateKeysFromArguments(args);
-      }
+      walk.simple(
+      acorn.parse(content, this.acornOptions),
+      {
+        CallExpression: function CallExpression(node) {
+          that.expressionExtractor.call(that, node);
+        } });
+
+
 
       return this.keys;
-    } }, { key: 'parseArguments', value: function parseArguments(
+    } }, { key: 'expressionExtractor', value: function expressionExtractor(
 
-    args) {
-      var matches = void 0;
-      var result = {
-        arguments: [],
-        options: {} };
+    node) {
+      var entry = {};
+      var isTranslationFunction =
+      node.callee && (
+      this.functions.includes(node.callee.name) ||
+      node.callee.property && this.functions.includes(node.callee.property.name));
 
-      while (matches = this.argumentsRegex.exec(args)) {
-        var arg = matches[1];
 
-        if (arg.startsWith('{')) {
-          var optionMatches = void 0;
-          while (optionMatches = this.hashRegex.exec(args)) {
-            var key = optionMatches[2];
-            var value = optionMatches[3];
-            if (this.validateString(value)) {
-              result.options[key] = value.slice(1, -1);
-            }
+      if (isTranslationFunction) {
+        var keyArgument = node.arguments.shift();
+
+        if (keyArgument && keyArgument.type === 'Literal') {
+          entry.key = keyArgument.value;
+        } else
+        if (keyArgument && keyArgument.type === 'BinaryExpression') {
+          var concatenatedString = this.concatenateString(keyArgument);
+          if (!concatenatedString) {
+            this.emit('warning', 'Key is not a string litteral: ' + keyArgument.name);
+            return;
           }
+          entry.key = concatenatedString;
         } else
         {
-          arg = this.concatenateString(arg);
+          if (keyArgument.type === 'Identifier') {
+            this.emit('warning', 'Key is not a string litteral: ' + keyArgument.name);
+          }
+
+          return;
         }
-        result.arguments.push(arg);
+
+
+        var optionsArgument = node.arguments.shift();
+
+        if (optionsArgument && optionsArgument.type === 'Literal') {
+          entry.defaultValue = optionsArgument.value;
+        } else
+        if (optionsArgument && optionsArgument.type === 'ObjectExpression') {
+          optionsArgument.properties.forEach(function (p) {
+            entry[p.key.name || p.key.value] = p.value.value;
+          });
+        }
+
+        this.keys.push(entry);
       }
-      return result;
     } }, { key: 'concatenateString', value: function concatenateString(
 
-    string) {var _this2 = this;
-      string = string.trim();
-      var matches = void 0;
-      var containsVariable = false;
-      var parts = [];
-      var quotationMark = string.charAt(0) === '"' ? '"' : "'";
-
-      var regex = new RegExp(JavascriptLexer.concatenatedSegmentPattern, 'gi');
-      while (matches = regex.exec(string)) {
-        var match = matches[0].trim();
-        if (match !== '+') {
-          parts.push(match);
-        }
+    binaryExpression) {var string = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+      if (binaryExpression.operator !== '+') {
+        return;
       }
 
-      var result = parts.reduce(function (concatenatedString, x) {
-        x = x && x.trim();
-        if (_this2.validateString(x)) {
-          concatenatedString += x.slice(1, -1);
-        } else
-        {
-          containsVariable = true;
-        }
-        return concatenatedString;
-      }, '');
-      if (!result || containsVariable) {
-        return string;
+      if (binaryExpression.left.type === 'BinaryExpression') {
+        string += this.concatenateString(binaryExpression.left, string);
+      } else
+      if (binaryExpression.left.type === 'Literal') {
+        string += binaryExpression.left.value;
       } else
       {
-        return quotationMark + result + quotationMark;
+        return;
       }
-    } }, { key: 'createFunctionRegex', value: function createFunctionRegex()
 
+      if (binaryExpression.right.type === 'BinaryExpression') {
+        string += this.concatenateString(binaryExpression.right, string);
+      } else
+      if (binaryExpression.right.type === 'Literal') {
+        string += binaryExpression.right.value;
+      } else
+      {
+        return;
+      }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    {
-      var pattern =
-      '(?:\\W|^)' +
-      this.functionPattern() + '\\s*\\(\\s*' +
-      JavascriptLexer.stringOrVariableOrHashPattern +
-      '\\s*\\)';
-
-      this.functionRegex = new RegExp(pattern, 'gi');
-      return this.functionRegex;
-    } }, { key: 'createArgumentsRegex', value: function createArgumentsRegex()
-
-    {
-      var pattern =
-      '(' +
-      [
-      JavascriptLexer.concatenatedArgumentPattern,
-      JavascriptLexer.hashPattern].
-      join('|') +
-      ')' +
-      '(?:\\s*,\\s*)?';
-
-      this.argumentsRegex = new RegExp(pattern, 'gi');
-      return this.argumentsRegex;
-    } }, { key: 'createHashRegex', value: function createHashRegex()
-
-    {
-      var pattern =
-      '(?:(\'|")?(' +
-      ['context', 'defaultValue'].join('|') +
-      ')\\1)' +
-      '(?:\\s*:\\s*)' +
-      '(' + _baseLexer2.default.stringPattern + ')';
-
-      this.hashRegex = new RegExp(pattern, 'gi');
-      return this.hashRegex;
-    } }], [{ key: 'concatenatedSegmentPattern', get: function get() {return [_baseLexer2.default.singleQuotePattern, _baseLexer2.default.doubleQuotePattern, _baseLexer2.default.backQuotePattern, _baseLexer2.default.variablePattern, '(?:\\s*\\+\\s*)' // support for concatenation via +
-      ].join('|');} }, { key: 'concatenatedArgumentPattern', get: function get() {return '(' + '(?:' + JavascriptLexer.concatenatedSegmentPattern + ')+' + ')';} }, { key: 'hashPattern', get: function get() {return '(\\{.*\\})';} }, { key: 'stringOrVariableOrHashPattern', get: function get() {return '(' + '(' + '(?:' + [JavascriptLexer.concatenatedArgumentPattern, JavascriptLexer.hashPattern].join('|') + ')' + '(?:\\s*,\\s*)?' + ')+' + ')';} }]);return JavascriptLexer;}(_baseLexer2.default);exports.default = JavascriptLexer;module.exports = exports['default'];
+      return string;
+    } }]);return JavascriptLexer;}(_baseLexer2.default);exports.default = JavascriptLexer;module.exports = exports['default'];

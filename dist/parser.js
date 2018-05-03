@@ -13,7 +13,7 @@ var lexers = {
   html: ['HTMLLexer'],
 
   js: ['JavascriptLexer'],
-  jsx: ['JavascriptLexer', 'JsxLexer'],
+  jsx: ['JsxLexer'],
   mjs: ['JavascriptLexer'],
 
   default: ['JavascriptLexer'] };

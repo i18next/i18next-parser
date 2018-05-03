@@ -1,79 +1,92 @@
 import * as acorn from 'acorn-jsx'
-import assert from 'assert'
-import HTMLLexer from './html-lexer'
-import BaseLexer from './base-lexer'
-import { ParsingError } from '../helpers'
+import * as walk from 'acorn/dist/walk'
+import JavascriptLexer from './javascript-lexer'
 
-export default class JsxLexer extends HTMLLexer {
+const JSXParserExtension = Object.assign({}, walk.base, {
+  JSXText(node, st, c) {
+    // We need this catch, but we don't need the catch to do anything.
+  },
+  JSXElement(node, st, c) {
+    node.openingElement.attributes.forEach(attr => c(attr, st, attr.type))
+    node.children.forEach(child => c(child, st, child.type))
+  },
+  JSXExpressionContainer(node, st, c) {
+    c(node.expression, st, node.expression.type)
+  },
+  JSXAttribute(node, st, c) {
+    if (node.value !== null) {
+      c(node.value, st, node.value.type)
+    }
+  },
+  JSXSpreadAttribute(node, st, c) {
+    c(node.argument, st, node.argument.type)
+  }
+})
+
+export default class JsxLexer extends JavascriptLexer {
   constructor(options = {}) {
-    options.attr = options.attr || 'i18nKey'
     super(options)
+
+    this.acornOptions = { sourceType: 'module', plugins: { jsx: true }, ...options.acorn }
+
+    this.functions = options.functions || ['t']
+    this.attr = options.attr || 'i18nKey'
   }
 
   extract(content) {
-    this.extractInterpolate(content)
-    this.extractTrans(content)
-    return this.keys
-  }
+    const that = this
 
-  extractInterpolate(content) {
-    let matches
-    const regex = new RegExp(
-      '<Interpolate([^>]*\\s' + this.attr + '[^>]*)\\/?>',
-      'gi'
+    walk.simple(
+      acorn.parse(content, this.acornOptions),
+      {
+        CallExpression(node) {
+          that.expressionExtractor.call(that, node)
+        },
+        JSXElement(node) {
+          const element = node.openingElement
+          if (element.name.name === "Trans") {
+            const entry = {}
+            const defaultValue = that.nodeToString.call(that, node, content)
+
+            element.attributes.forEach(attr => {
+              if (attr.name.name === that.attr) {
+                entry.key = attr.value.value
+              }
+            })
+
+            if (defaultValue !== '') {
+              entry.defaultValue = defaultValue
+
+              if (!entry.key)
+              entry.key = entry.defaultValue
+            }
+
+            if (entry.key)
+              that.keys.push(entry)
+          }
+
+          else if (element.name.name === "Interpolate") {
+            const entry = {}
+
+            element.attributes.forEach(attr => {
+              if (attr.name.name === that.attr) {
+                entry.key = attr.value.value
+              }
+            })
+
+            if (entry.key)
+              that.keys.push(entry)
+          }
+        }
+      },
+      JSXParserExtension
     )
 
-    while (matches = regex.exec(content)) {
-      const attrs = this.parseAttributes(matches[1])
-      const key = attrs.keys
-      if (key) {
-        this.keys.push({ ...attrs.options, key })
-      }
-    }
-
     return this.keys
   }
 
-  /**
-  * Extract tags and content from the Trans component.
-  * @param {string} string
-  * @returns {array} Array of key options
-  */
-  extractTrans(content) {
-    let matches
-    const selfClosingTagPattern = '(?:<\\s*Trans([^>]*)?/>)'
-    const closingTagPattern = '(?:<\\s*Trans([^>]*)?>((?:(?!</\\s*Trans\\s*>)[^])*)</\\s*Trans\\s*>)'
-    const regex = new RegExp(
-      [selfClosingTagPattern, closingTagPattern].join('|'),
-      'gi'
-    )
-
-    while (matches = regex.exec(content)) {
-      const attrs = this.parseAttributes(matches[1] || matches[2])
-      const key = attrs.keys || matches[3]
-
-      if (matches[3] && !attrs.options.defaultValue) {
-        attrs.options.defaultValue = this.eraseTags(matches[0]).replace(/\s+/g, ' ')
-      }
-
-      if (key) {
-        this.keys.push({ ...attrs.options, key })
-      }
-    }
-
-    return this.keys
-  }
-
-  /**
-   * Recursively convert html tags and js injections to tags with the child index in it
-   * @param {string} string
-   *
-   * @returns string
-   */
-  eraseTags(string) {
-    const acornAst = acorn.parse(string, {plugins: {jsx: true}})
-    const acornTransAst = acornAst.body[0].expression
-    const children = this.parseAcornPayload(acornTransAst.children, string)
+  nodeToString(ast, string) {
+    const children = this.parseAcornPayload(ast.children, string)
 
     const elemsToString = children => children.map((child, index) => {
       switch(child.type) {
@@ -87,11 +100,6 @@ export default class JsxLexer extends HTMLLexer {
     return elemsToString(children)
   }
 
-  /**
-   * Simplify the bulky AST given by Acorn
-   * @param {*} children An array of elements contained inside an html tag
-   * @param {string} originalString The original string being parsed
-   */
   parseAcornPayload(children, originalString) {
     return children.map(child => {
       if (child.type === 'JSXText') {
