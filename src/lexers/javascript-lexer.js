@@ -1,14 +1,16 @@
-import * as acorn from 'acorn'
+import * as acorn from 'acorn-jsx'
 import * as walk from 'acorn/dist/walk'
 import { ParsingError } from '../helpers'
 import BaseLexer from './base-lexer'
+import { JSXParserExtension, nodeToString } from './jsx-lexer'
 
 export default class JavascriptLexer extends BaseLexer {
   constructor(options = {}) {
     super(options)
 
-    this.acornOptions = { sourceType: 'module', ...options.acorn }
+    this.acornOptions = { sourceType: 'module', plugins: { jsx: true }, ...options.acorn }
     this.functions = options.functions || ['t']
+    this.attr = options.attr || 'i18nKey'
   }
 
   extract(content) {
@@ -17,10 +19,9 @@ export default class JavascriptLexer extends BaseLexer {
     walk.simple(
       acorn.parse(content, this.acornOptions),
       {
-        Expression(node) {
+        CallExpression(node) {
           let entry = {}
           const isTranslationFunction = (
-            node.type === 'CallExpression' &&
             node.callee && (
               that.functions.includes(node.callee.name) ||
               node.callee.property && that.functions.includes(node.callee.property.name)
@@ -57,8 +58,45 @@ export default class JavascriptLexer extends BaseLexer {
 
             that.keys.push(entry)
           }
+        },
+        JSXElement(node) {
+          const element = node.openingElement
+          if (element.name.name === "Trans") {
+            const entry = {}
+            const defaultValue = nodeToString(node, content)
+        
+            element.attributes.forEach(attr => {
+              if (attr.name.name === that.attr) {
+                entry.key = attr.value.value
+              }
+            })
+        
+            if (defaultValue !== '') {
+              entry.defaultValue = defaultValue
+
+              if (!entry.key)
+              entry.key = entry.defaultValue
+            }
+        
+            if (entry.key)
+              that.keys.push(entry)
+          }
+
+          else if (element.name.name === "Interpolate") {
+            const entry = {}
+        
+            element.attributes.forEach(attr => {
+              if (attr.name.name === that.attr) {
+                entry.key = attr.value.value
+              }
+            })
+        
+            if (entry.key)
+              that.keys.push(entry)
+          }
         }
-      }
+      },
+      JSXParserExtension
     )
 
     return this.keys
