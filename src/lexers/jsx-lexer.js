@@ -28,9 +28,6 @@ export default class JsxLexer extends JavascriptLexer {
     super(options)
 
     this.acornOptions = { sourceType: 'module', plugins: { jsx: true }, ...options.acorn }
-
-    this.functions = options.functions || ['t']
-    this.attr = options.attr || 'i18nKey'
   }
 
   extract(content) {

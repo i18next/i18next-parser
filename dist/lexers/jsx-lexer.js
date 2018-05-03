@@ -27,10 +27,7 @@ JsxLexer = function (_JavascriptLexer) {_inherits(JsxLexer, _JavascriptLexer);
   function JsxLexer() {var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};_classCallCheck(this, JsxLexer);var _this = _possibleConstructorReturn(this, (JsxLexer.__proto__ || Object.getPrototypeOf(JsxLexer)).call(this,
     options));
 
-    _this.acornOptions = _extends({ sourceType: 'module', plugins: { jsx: true } }, options.acorn);
-
-    _this.functions = options.functions || ['t'];
-    _this.attr = options.attr || 'i18nKey';return _this;
+    _this.acornOptions = _extends({ sourceType: 'module', plugins: { jsx: true } }, options.acorn);return _this;
   }_createClass(JsxLexer, [{ key: 'extract', value: function extract(
 
     content) {
