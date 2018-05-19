@@ -820,7 +820,7 @@ describe('parser', () => {
       })
 
       i18nextParser.on('warning', message => {
-        assert.equal(message, 'Key is not a string litteral: variable')
+        assert.equal(message, 'Key is not a string literal: variable')
         done()
       })
       i18nextParser.end(fakeFile)

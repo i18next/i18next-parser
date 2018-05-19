@@ -14,7 +14,7 @@ BaseLexer = function (_EventEmitter) {_inherits(BaseLexer, _EventEmitter);
       var isDefaultValueString = this.validateString(secondArgument);
 
       if (!isKeyString) {
-        this.emit('warning', 'Key is not a string litteral: ' + firstArgument);
+        this.emit('warning', 'Key is not a string literal: ' + firstArgument);
       } else
       {
         var result = _extends({},

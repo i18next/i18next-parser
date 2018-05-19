@@ -43,14 +43,14 @@ JavascriptLexer = function (_BaseLexer) {_inherits(JavascriptLexer, _BaseLexer);
         if (keyArgument && keyArgument.type === 'BinaryExpression') {
           var concatenatedString = this.concatenateString(keyArgument);
           if (!concatenatedString) {
-            this.emit('warning', 'Key is not a string litteral: ' + keyArgument.name);
+            this.emit('warning', 'Key is not a string literal: ' + keyArgument.name);
             return;
           }
           entry.key = concatenatedString;
         } else
         {
           if (keyArgument.type === 'Identifier') {
-            this.emit('warning', 'Key is not a string litteral: ' + keyArgument.name);
+            this.emit('warning', 'Key is not a string literal: ' + keyArgument.name);
           }
 
           return;
