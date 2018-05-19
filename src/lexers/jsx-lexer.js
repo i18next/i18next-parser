@@ -6,6 +6,9 @@ const JSXParserExtension = Object.assign({}, walk.base, {
   JSXText(node, st, c) {
     // We need this catch, but we don't need the catch to do anything.
   },
+  JSXEmptyExpression(node, st, c) {
+    // We need this catch, but we don't need the catch to do anything.
+  },
   JSXElement(node, st, c) {
     node.openingElement.attributes.forEach(attr => c(attr, st, attr.type))
     node.children.forEach(child => c(child, st, child.type))
