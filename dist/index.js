@@ -68,7 +68,8 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
         var key = entry.key;
         var parts = key.split(_this2.options.namespaceSeparator);
 
-        if (parts.length > 1) {
+        // make sure we're not pulling a 'namespace' out of a default value
+        if (parts.length > 1 && key !== entry.defaultValue) {
           entry.namespace = parts.shift();
         } else
         if (extension === 'jsx' || _this2.options.reactNamespace) {
