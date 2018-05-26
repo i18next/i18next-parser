@@ -6,6 +6,9 @@ var JSXParserExtension = Object.assign({}, walk.base, {
   JSXText: function JSXText(node, st, c) {
     // We need this catch, but we don't need the catch to do anything.
   },
+  JSXEmptyExpression: function JSXEmptyExpression(node, st, c) {
+    // We need this catch, but we don't need the catch to do anything.
+  },
   JSXElement: function JSXElement(node, st, c) {
     node.openingElement.attributes.forEach(function (attr) {return c(attr, st, attr.type);});
     node.children.forEach(function (child) {return c(child, st, child.type);});
@@ -112,9 +115,35 @@ JsxLexer = function (_JavascriptLexer) {_inherits(JsxLexer, _JavascriptLexer);
 
         } else
         if (child.type === 'JSXExpressionContainer') {
+          // strip empty expressions
+          if (child.expression.type === 'JSXEmptyExpression')
+          return {
+            type: 'text',
+            content: ''
+
+
+            // strip properties from ObjectExpressions
+            // annoying (and who knows how many other exceptions we'll need to write) but necessary
+          };else if (child.expression.type === 'ObjectExpression') {
+            var content = '{';
+            var start = child.expression.start;
+
+            child.expression.properties.forEach(function (prop) {
+              content += originalString.slice(start, prop.key.end);
+              start = prop.value.end;
+            });
+            content += originalString.slice(start, child.expression.end) + '}';
+
+            return {
+              type: 'js',
+              content: content };
+
+          }
+
+          // slice on the expression so that we ignore comments around it
           return {
             type: 'js',
-            content: originalString.slice(child.start, child.end) };
+            content: '{' + originalString.slice(child.expression.start, child.expression.end) + '}' };
 
         } else
         {

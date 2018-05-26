@@ -30,6 +30,13 @@ class Test extends React.Component {
          this should be trimmed.
          <i> and this shoudln't</i>
         </Trans>
+        <Trans>
+          This should be part of the value and the key
+          {/* this shouldn't */}
+        </Trans>
+        <Trans>
+          don't split {{ on: this }}
+        </Trans>
       </div>
     )
   }

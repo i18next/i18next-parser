@@ -68,7 +68,8 @@ export default class i18nTransform extends Transform {
       let key = entry.key
       const parts = key.split(this.options.namespaceSeparator)
 
-      if (parts.length > 1) {
+      // make sure we're not pulling a 'namespace' out of a default value
+      if (parts.length > 1 && key !== entry.defaultValue) {
         entry.namespace = parts.shift()
       }
       else if (extension === 'jsx' || this.options.reactNamespace) {

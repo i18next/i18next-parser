@@ -14,7 +14,7 @@ export default class BaseLexer extends EventEmitter {
     const isDefaultValueString = this.validateString(secondArgument)
 
     if (!isKeyString) {
-      this.emit('warning', `Key is not a string litteral: ${firstArgument}`)
+      this.emit('warning', `Key is not a string literal: ${firstArgument}`)
     }
     else {
       const result = {
