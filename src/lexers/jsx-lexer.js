@@ -125,18 +125,24 @@ export default class JsxLexer extends JavascriptLexer {
         // strip properties from ObjectExpressions
         // annoying (and who knows how many other exceptions we'll need to write) but necessary
         else if (child.expression.type === 'ObjectExpression') {
-          let content = '{'
-          let start = child.expression.start
+          // i18next-react only accepts two props, any random single prop, and a format prop
+          // for our purposes, format prop is always ignored
 
-          child.expression.properties.forEach(prop => {
-            content += originalString.slice(start, prop.key.end)
-            start = prop.value.end
-          })
-          content += originalString.slice(start, child.expression.end) + '}'
+          let nonFormatProperties = child.expression.properties.filter(prop => prop.key.name !== 'format')
+
+          // more than one property throw a warning in i18next-react, but still works as a key
+          if (nonFormatProperties.length > 1) {
+            this.emit('warning', `The passed in object contained more than one variable - the object should look like {{ value, format }} where format is optional.`)
+
+            return {
+              type: 'text',
+              content: ''
+            }
+          }
 
           return {
             type: 'js',
-            content
+            content: `{{${nonFormatProperties[0].key.name}}}`
           }
         }
 
