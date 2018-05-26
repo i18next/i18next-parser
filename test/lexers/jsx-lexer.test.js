@@ -59,11 +59,20 @@ describe('JsxLexer', () => {
       done()
     })
 
-    it('extracts keys from Trans elements and ignores values of expressions', (done) => {
+    it('extracts keys from Trans elements and ignores values of expressions and spaces', (done) => {
       const Lexer = new JsxLexer()
-      const content = '<Trans count={count}>{{key: property}}</Trans>'
+      const content = '<Trans count={count}>{{ key: property }}</Trans>'
       assert.deepEqual(Lexer.extract(content), [
         { key: '<0>{{key}}</0>', defaultValue: '<0>{{key}}</0>' }
+      ])
+      done()
+    })
+
+    it('invalid interpolation gets stripped', (done) => {
+      const Lexer = new JsxLexer()
+      const content = '<Trans count={count}>before{{ key1, key2 }}after</Trans>'
+      assert.deepEqual(Lexer.extract(content), [
+        { key: 'beforeafter', defaultValue: 'beforeafter' }
       ])
       done()
     })

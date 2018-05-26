@@ -192,7 +192,7 @@ describe('parser', () => {
       bar: '',
       foo: '',
       "This should be part of the value and the key": "This should be part of the value and the key",
-      "don't split <1>{{ on }}</1>": "don't split <1>{{ on }}</1>"
+      "don't split <1>{{on}}</1>": "don't split <1>{{on}}</1>"
     }
 
     i18nextParser.on('data', file => {
@@ -585,7 +585,7 @@ describe('parser', () => {
         bar: '',
         foo: '',
         "This should be part of the value and the key": "This should be part of the value and the key",
-        "don't split <1>{{ on }}</1>": "don't split <1>{{ on }}</1>"
+        "don't split <1>{{on}}</1>": "don't split <1>{{on}}</1>"
       }
 
       i18nextParser.on('data', file => {
@@ -825,6 +825,20 @@ describe('parser', () => {
 
       i18nextParser.on('warning', message => {
         assert.equal(message, 'Key is not a string literal: variable')
+        done()
+      })
+      i18nextParser.end(fakeFile)
+    })
+
+    it('emits a `warning` event if a react value contains two variables', (done) => {
+      const i18nextParser = new i18nTransform({ output: 'test/locales' })
+      const fakeFile = new Vinyl({
+        contents: Buffer.from('<Trans>{{ key1, key2 }}</Trans>'),
+        path: 'file.js'
+      })
+
+      i18nextParser.on('warning', message => {
+        assert.equal(message, 'The passed in object contained more than one variable - the object should look like {{ value, format }} where format is optional.')
         done()
       })
       i18nextParser.end(fakeFile)
