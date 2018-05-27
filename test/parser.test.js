@@ -90,7 +90,8 @@ describe('parser', () => {
       third: '',
       fourth: '',
       fifth: 'bar',
-      sixth: ''
+      sixth: '',
+      selfClosing: ''
     }
 
     i18nextParser.on('data', file => {

@@ -1,4 +1,5 @@
 import BaseLexer from './base-lexer'
+import cheerio from 'cheerio'
 
 export default class HTMLLexer extends BaseLexer {
   constructor(options = {}) {
@@ -6,69 +7,38 @@ export default class HTMLLexer extends BaseLexer {
 
     this.attr = options.attr || 'data-i18n'
     this.optionAttr = options.optionAttr || 'data-i18n-options'
-
-    this.createAttributeRegex()
-    this.createOptionAttributeRegex()
   }
 
-  // TODO rewrite to support the BaseLexer.extract()
   extract(content) {
-    let matches
-    const regex = new RegExp(
-      '<([A-Z][A-Z0-9]*)([^>]*\\s' + this.attr + '[^>]*)>(?:((?:\\s|.)*?)<\\/\\1>)?',
-      'gi'
-    )
-
-    while (matches = regex.exec(content)) {
-      const attrs = this.parseAttributes(matches[2])
+    const that = this
+    const $ = cheerio.load(content)
+    $(`[${that.attr}]`).each((index, node) => {
+      const $node = cheerio.load(node)
 
       // the attribute can hold multiple keys
-      const keys = attrs.keys.split(';')
+      const keys = node.attribs[that.attr].split(';')
+      let options = node.attribs[that.optionAttr]
+
+      if (options) {
+        try {
+          options = JSON.parse(options)
+        }
+        finally {}
+      }
+
       keys.forEach(key => {
         // remove any leading [] in the key
         key = key.replace(/^\[[a-zA-Z0-9_-]*\]/, '')
 
         // if empty grab innerHTML from regex
-        key = key || matches[3]
+        key = key || $node.text()
 
         if (key) {
-          this.keys.push({ ...attrs.options, key })
+          this.keys.push({ ...options, key })
         }
       })
-    }
+    })
 
     return this.keys
-  }
-
-  createAttributeRegex() {
-    const pattern = '(?:' + this.attr + ')(?:\\s*=\\s*(' + BaseLexer.stringPattern + ')|$|\\s)'
-    this.attrRegex = new RegExp(pattern, 'i')
-    return this.attrRegex
-  }
-
-  createOptionAttributeRegex() {
-    const pattern = '(?:' + this.optionAttr + ')(?:\\s*=\\s*(' + BaseLexer.stringPattern + '))?'
-    this.optionAttrRegex = new RegExp(pattern, 'i')
-    return this.optionAttrRegex
-  }
-
-  parseAttributes(args) {
-    const result = { keys: '', options: {} }
-    this.attrRegex.lastIndex = 0
-    let keysMatch = this.attrRegex.exec(args)
-    if (keysMatch && keysMatch[1]) {
-      result.keys = keysMatch[1].slice(1, -1)
-    }
-
-    this.optionAttrRegex.lastIndex = 0
-    const optionsMatch = this.optionAttrRegex.exec(args)
-    if (optionsMatch && optionsMatch[1]) {
-      try {
-        result.options = JSON.parse(optionsMatch[1].slice(1, -1))
-      }
-      finally {}
-    }
-
-    return result
   }
 }

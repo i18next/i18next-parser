@@ -38,6 +38,27 @@ export default class HandlebarsLexer extends BaseLexer {
     return result
   }
 
+  populateKeysFromArguments(args) {
+    const firstArgument = args.arguments[0]
+    const secondArgument = args.arguments[1]
+    const isKeyString = this.validateString(firstArgument)
+    const isDefaultValueString = this.validateString(secondArgument)
+
+    if (!isKeyString) {
+      this.emit('warning', `Key is not a string literal: ${firstArgument}`)
+    }
+    else {
+      const result = {
+        ...args.options,
+        key: firstArgument.slice(1, -1)
+      }
+      if (isDefaultValueString) {
+        result.defaultValue = secondArgument.slice(1, -1)
+      }
+      this.keys.push(result)
+    }
+  }
+
   createFunctionRegex() {
     const functionPattern = this.functionPattern()
     const curlyPattern = '(?:{{)' + functionPattern + '\\s+(.*)(?:}})'

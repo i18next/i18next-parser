@@ -19,6 +19,7 @@
   "dependencies": {
     "acorn": "^5.5.3",
     "acorn-jsx": "^4.1.1",
+    "cheerio": "^1.0.0-rc.2",
     "colors": "~1.2.0-rc0",
     "commander": "~2.9.0",
     "concat-stream": "~1.6.0",
