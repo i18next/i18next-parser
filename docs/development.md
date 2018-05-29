@@ -49,6 +49,8 @@ i18next test/**/*.html  -c i18next-parser.config.js
 To test gulp:
 
 ```
+yarn global add gulp@next
+cd test
 gulp i18next
 ```
 
