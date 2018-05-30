@@ -1,7 +1,7 @@
 import { assert } from 'chai'
 import Vinyl from 'vinyl'
 import fs from 'fs'
-import i18nTransform from '../src/index'
+import i18nTransform from '../src/transform'
 import path from 'path'
 
 const enLibraryPath = path.normalize('en/translation.json')
