@@ -19,6 +19,7 @@
   "dependencies": {
     "acorn": "^5.5.3",
     "acorn-jsx": "^4.1.1",
+    "broccoli-plugin": "^1.3.0",
     "cheerio": "^1.0.0-rc.2",
     "colors": "~1.2.0-rc0",
     "commander": "~2.9.0",
@@ -26,6 +27,7 @@
     "eol": "^0.9.1",
     "gulp-sort": "^2.0.0",
     "lodash": "~4.17.4",
+    "rsvp": "^4.8.2",
     "through2": "~2.0.3",
     "vinyl": "~2.0.1",
     "vinyl-fs": "^3.0.2",
@@ -41,7 +43,10 @@
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "babel-register": "^6.26.0",
+    "broccoli": "^1.1.4",
+    "broccoli-funnel": "^2.0.1",
     "chai": "^4.1.2",
+    "fs-extra": "^6.0.1",
     "gulp": "^4.0.0",
     "mocha": "^5.0.0"
   },

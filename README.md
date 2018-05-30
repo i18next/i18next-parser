@@ -47,17 +47,17 @@ Save the package to your devDependencies:
 
 ```
 yarn add -D i18next-parser@next
-npm install --save-dev i18next-parser
+npm install --save-dev i18next-parser@next
 ```
 
 [Gulp](http://gulpjs.com/) defines itself as the streaming build system. Put simply, it is like Grunt, but performant and elegant.
 
 ```javascript
-const i18next = require('i18next-parser');
+const i18nextParser = require('i18next-parser').gulp;
 
 gulp.task('i18next', function() {
   gulp.src('app/**')
-    .pipe(new i18next({
+    .pipe(new i18nextParser({
       locales: ['en', 'de'],
       output: 'locales'
     }))
@@ -67,6 +67,35 @@ gulp.task('i18next', function() {
 
 **IMPORTANT**: `output` is required to know where to read the catalog from. You might think that `gulp.dest()` is enough though it does not inform the transform where to read the existing catalog from.
 
+### Broccoli
+
+Save the package to your devDependencies:
+
+```
+yarn add -D i18next-parser@next
+npm install --save-dev i18next-parser@next
+```
+
+[Broccoli.js](https://github.com/broccolijs/broccoli) defines itself as a fast, reliable asset pipeline, supporting constant-time rebuilds and compact build definitions. 
+
+```javascript
+
+const Funnel = require('broccoli-funnel')
+const i18nextParser = require('i18next-parser').broccoli;
+
+const appRoot = 'broccoli'
+
+let i18n = new Funnel(appRoot, {
+  files: ['handlebars.hbs', 'javascript.js'],
+  annotation: 'i18next-parser'
+})
+
+i18n = new i18nextParser([i18n], {
+  output: 'broccoli/locales'
+})
+
+module.exports = i18n
+```
 
 ## Options
 

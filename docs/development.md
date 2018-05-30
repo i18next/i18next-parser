@@ -54,6 +54,15 @@ cd test
 gulp i18next
 ```
 
+To test broccoli:
+
+```
+yarn global add broccoli-cli
+cd test
+rm -rf dist && broccoli build dist
+```
+
+
 ## `0.x` vs `1.x`
 
 `1.x` is a major release. It is not backward compatible. There are two separate branches:
