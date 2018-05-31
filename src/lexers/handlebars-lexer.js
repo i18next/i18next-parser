@@ -61,7 +61,7 @@ export default class HandlebarsLexer extends BaseLexer {
 
   createFunctionRegex() {
     const functionPattern = this.functionPattern()
-    const curlyPattern = '(?:{{)' + functionPattern + '\\s+(.*)(?:}})'
+    const curlyPattern = '(?:{{)' + functionPattern + '\\s+(.*?)(?:}})'
     const parenthesisPattern = '(?:\\()' + functionPattern + '\\s+(.*)(?:\\))'
     const pattern = curlyPattern + '|' + parenthesisPattern
     this.functionRegex = new RegExp(pattern, 'gi')
