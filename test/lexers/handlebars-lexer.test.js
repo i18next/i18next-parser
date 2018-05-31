@@ -9,6 +9,13 @@ describe('HandlebarsLexer', () => {
     done()
   })
 
+  it('extracts multiple keys on a single line', (done) => {
+    const Lexer = new HandlebarsLexer()
+    const content = '<p>{{t "first"}} {{t "second"}}</p>'
+    assert.deepEqual(Lexer.extract(content), [{ key: 'first' }, { key: 'second' }])
+    done()
+  })
+
   it('extracts the second argument as defaultValue', (done) => {
     const Lexer = new HandlebarsLexer()
     const content = '<p>{{t "first" "bla"}}</p>'

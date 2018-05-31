@@ -61,7 +61,7 @@ HandlebarsLexer = function (_BaseLexer) {_inherits(HandlebarsLexer, _BaseLexer);
 
     {
       var functionPattern = this.functionPattern();
-      var curlyPattern = '(?:{{)' + functionPattern + '\\s+(.*)(?:}})';
+      var curlyPattern = '(?:{{)' + functionPattern + '\\s+(.*?)(?:}})';
       var parenthesisPattern = '(?:\\()' + functionPattern + '\\s+(.*)(?:\\))';
       var pattern = curlyPattern + '|' + parenthesisPattern;
       this.functionRegex = new RegExp(pattern, 'gi');
