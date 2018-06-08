@@ -199,10 +199,10 @@ export default class i18nTransform extends Transform {
     if (this.options.lineEnding === 'auto') {
       text = eol.auto(text)
     }
-    else if (lineEnding === '\r\n' || lineEnding === 'crlf') {
+    else if (this.options.lineEnding === '\r\n' || this.options.lineEnding === 'crlf') {
       text = eol.crlf(text)
     }
-    else if (lineEnding === '\r' || lineEnding === 'cr') {
+    else if (this.options.lineEnding === '\r' || this.options.lineEnding === 'cr') {
       text = eol.cr(text)
     }
     else {
