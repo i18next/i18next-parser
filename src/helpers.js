@@ -1,8 +1,10 @@
 import _ from 'lodash'
 
-// Turn an entry for the Parser and turn in into a hash,
-// turning the key path 'foo.bar' into an hash {foo: {bar: ""}}
-// The generated hash can be attached to an optional `target`.
+/**
+ * Turn an entry for the Parser and turn in into a hash,
+ * turning the key path 'foo.bar' into an hash {foo: {bar: ""}}
+ * The generated hash can be attached to an optional `target`.
+ */
 function dotPathToHash(entry, target = {}, options = {}) {
   let path = entry.key
   const separator = options.separator || '.'
@@ -31,10 +33,12 @@ function dotPathToHash(entry, target = {}, options = {}) {
   return _.merge(target, result)
 }
 
-// Takes a `source` hash and make sure its value
-// are pasted in the `target` hash, if the target
-// hash has the corresponding key (or if keepRemoved is true).
-// If not, the value is added to an `old` hash.
+/**
+ * Takes a `source` hash and makes sure its value
+ * is pasted in the `target` hash, if the target
+ * hash has the corresponding key (or if `keepRemoved` is true).
+ * If not, the value is added to an `old` hash.
+ */
 function mergeHashes(source, target = {}, old, keepRemoved = false) {
   old = old || {}
   Object.keys(source).forEach(key => {
@@ -49,7 +53,9 @@ function mergeHashes(source, target = {}, old, keepRemoved = false) {
         keepRemoved
       )
       target[key] = nested.new
-      old[key] = nested.old
+      if (Object.keys(nested.old).length > 0) {
+        old[key] = nested.old
+      }
     }
     else if (target[key] !== undefined) {
       if (typeof source[key] === 'string' || Array.isArray(source[key])) {
@@ -87,9 +93,10 @@ function mergeHashes(source, target = {}, old, keepRemoved = false) {
   return { old, new: target }
 }
 
-// Takes a `target` hash and replace its empty
-// values with the `source` hash ones if they
-// exist
+/**
+ * Takes a `target` hash and replace its empty values with the
+ * `source` hash ones if they exist.
+ */
 function populateHash(source, target = {}) {
   Object.keys(source).forEach(key => {
     if (target[key] !== undefined) {
@@ -105,6 +112,22 @@ function populateHash(source, target = {}) {
   return target
 }
 
+/**
+ * Merge `source` into `target` by merging nested dictionaries.
+ */
+function transferValues(source, target) {
+  for (let key in source) {
+    const sourceValue = source[key]
+    const targetValue = target[key]
+    if (typeof sourceValue === 'object' && typeof targetValue === 'object' && !Array.isArray(sourceValue)) {
+      transferValues(sourceValue, targetValue)
+    }
+    else {
+      target[key] = sourceValue;
+    }
+  }
+}
+
 class ParsingError extends Error {
   constructor(message) {
     super(message);
@@ -116,5 +139,6 @@ export {
   dotPathToHash,
   mergeHashes,
   populateHash,
+  transferValues,
   ParsingError
 }

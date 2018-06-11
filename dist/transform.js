@@ -1,6 +1,5 @@
 'use strict';Object.defineProperty(exports, "__esModule", { value: true });var _extends = Object.assign || function (target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i];for (var key in source) {if (Object.prototype.hasOwnProperty.call(source, key)) {target[key] = source[key];}}}return target;};var _createClass = function () {function defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);}}return function (Constructor, protoProps, staticProps) {if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;};}();var _helpers = require('./helpers');
 var _stream = require('stream');
-var _lodash = require('lodash');var _lodash2 = _interopRequireDefault(_lodash);
 var _eol = require('eol');var _eol2 = _interopRequireDefault(_eol);
 var _fs = require('fs');var _fs2 = _interopRequireDefault(_fs);
 var _parser = require('./parser');var _parser2 = _interopRequireDefault(_parser);
@@ -143,11 +142,11 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
           newCatalog = (0, _helpers.populateHash)(oldCatalog, newKeys);
 
           // add keys from the current catalog that are no longer used
-          oldCatalog = _lodash2.default.extend(oldCatalog, oldKeys);
+          (0, _helpers.transferValues)(oldKeys, oldCatalog);
 
           // push files back to the stream
           _this3.pushFile(namespacePath, newCatalog);
-          if (_this3.options.createOldCatalogs) {
+          if (_this3.options.createOldCatalogs && Object.keys(oldCatalog).length > 0) {
             _this3.pushFile(namespaceOldPath, oldCatalog);
           }
         });
