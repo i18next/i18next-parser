@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.0.0-beta17 - latest
+## 1.0.0-beta - latest
 
 - The changelog for the beta can be found in the [releases](https://github.com/i18next/i18next-parser/releases)
 
