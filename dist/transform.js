@@ -199,10 +199,10 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
       if (this.options.lineEnding === 'auto') {
         text = _eol2.default.auto(text);
       } else
-      if (lineEnding === '\r\n' || lineEnding === 'crlf') {
+      if (this.options.lineEnding === '\r\n' || this.options.lineEnding === 'crlf') {
         text = _eol2.default.crlf(text);
       } else
-      if (lineEnding === '\r' || lineEnding === 'cr') {
+      if (this.options.lineEnding === '\r' || this.options.lineEnding === 'cr') {
         text = _eol2.default.cr(text);
       } else
       {
