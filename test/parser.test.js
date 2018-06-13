@@ -315,8 +315,8 @@ describe('parser', () => {
     i18nextParser.end(fakeFile)
   })
 
-  it('retrieves values in existing catalog', (done) => {
-    let result
+  it('retrieves values in existing catalog and creates old catalog', (done) => {
+    let result, resultOld
     const i18nextParser = new i18nTransform({ output: 'test/locales' })
     const fakeFile = new Vinyl({
       contents: Buffer.from("t('test_merge:first'); t('test_merge:second')"),
@@ -327,9 +327,13 @@ describe('parser', () => {
       if (file.relative.endsWith(path.normalize('en/test_merge.json'))) {
         result = JSON.parse(file.contents)
       }
+      else if (file.relative.endsWith(path.normalize('en/test_merge_old.json'))) {
+        resultOld = JSON.parse(file.contents)
+      }
     })
     i18nextParser.once('end', () => {
       assert.deepEqual(result, { first: 'first', second: '' })
+      assert.deepEqual(resultOld, { third: 'third' })
       done()
     })
 

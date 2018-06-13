@@ -146,7 +146,7 @@ export default class i18nTransform extends Transform {
 
         // push files back to the stream
         this.pushFile(namespacePath, newCatalog)
-        if (this.options.createOldCatalogs && Object.keys(oldCatalog).length > 0) {
+        if (this.options.createOldCatalogs && Object.keys(oldCatalog).length) {
           this.pushFile(namespaceOldPath, oldCatalog)
         }
       })

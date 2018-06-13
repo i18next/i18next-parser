@@ -53,7 +53,7 @@ function mergeHashes(source, target = {}, old, keepRemoved = false) {
         keepRemoved
       )
       target[key] = nested.new
-      if (Object.keys(nested.old).length > 0) {
+      if (Object.keys(nested.old).length) {
         old[key] = nested.old
       }
     }
@@ -119,7 +119,8 @@ function transferValues(source, target) {
   for (let key in source) {
     const sourceValue = source[key]
     const targetValue = target[key]
-    if (typeof sourceValue === 'object' && typeof targetValue === 'object' && !Array.isArray(sourceValue)) {
+    if (typeof sourceValue === 'object' && typeof targetValue === 'object' &&
+      !Array.isArray(sourceValue)) {
       transferValues(sourceValue, targetValue)
     }
     else {
