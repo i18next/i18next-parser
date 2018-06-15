@@ -102,6 +102,9 @@ describe('mergeHashes helper function', () => {
                 key222: 'value222'
             },
             key23: 'value23'
+        },
+        key4: {
+          key41: 'value41'
         }
     }
     const target = {
@@ -114,7 +117,10 @@ describe('mergeHashes helper function', () => {
             },
             key24: ''
         },
-        key3: ''
+        key3: '',
+        key4: {
+          key41: 'value41'
+        }
     }
 
     const res = mergeHashes(source, target)
@@ -129,7 +135,10 @@ describe('mergeHashes helper function', () => {
             },
             key24: ''
         },
-        key3: ''
+        key3: '',
+        key4: {
+          key41: 'value41'
+        }
     }
 
     const expected_old = {

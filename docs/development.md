@@ -77,5 +77,5 @@ I will not maintain the old version but will welcome bug fixes as PRs.
 - `yarn watch`
 - update `package.json` version
 - create commit and add version tag
-- `npm pulish --tag next` (skip next tag if not in beta)
+- `npm publish --tag next` (skip next tag if not in beta)
 - create a github release

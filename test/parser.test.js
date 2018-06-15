@@ -210,7 +210,7 @@ describe('parser', () => {
     i18nextParser.end(fakeFile)
   })
 
-  it('creates two files per namespace and per locale', (done) => {
+  it('creates one file per namespace and per locale', (done) => {
     let results = []
     const i18nextParser = new i18nTransform({
       locales: ['en', 'de', 'fr'],
@@ -229,23 +229,14 @@ describe('parser', () => {
     i18nextParser.on('end', () => {
       const expectedFiles = [
         'en/default.json',
-        'en/default_old.json',
         'en/ns1.json',
-        'en/ns1_old.json',
         'en/ns2.json',
-        'en/ns2_old.json',
         'de/default.json',
-        'de/default_old.json',
         'de/ns1.json',
-        'de/ns1_old.json',
         'de/ns2.json',
-        'de/ns2_old.json',
         'fr/default.json',
-        'fr/default_old.json',
         'fr/ns1.json',
-        'fr/ns1_old.json',
-        'fr/ns2.json',
-        'fr/ns2_old.json'
+        'fr/ns2.json'
       ]
       let length = expectedFiles.length
 
@@ -324,8 +315,8 @@ describe('parser', () => {
     i18nextParser.end(fakeFile)
   })
 
-  it('retrieves values in existing catalog', (done) => {
-    let result
+  it('retrieves values in existing catalog and creates old catalog', (done) => {
+    let result, resultOld
     const i18nextParser = new i18nTransform({ output: 'test/locales' })
     const fakeFile = new Vinyl({
       contents: Buffer.from("t('test_merge:first'); t('test_merge:second')"),
@@ -336,9 +327,13 @@ describe('parser', () => {
       if (file.relative.endsWith(path.normalize('en/test_merge.json'))) {
         result = JSON.parse(file.contents)
       }
+      else if (file.relative.endsWith(path.normalize('en/test_merge_old.json'))) {
+        resultOld = JSON.parse(file.contents)
+      }
     })
     i18nextParser.once('end', () => {
       assert.deepEqual(result, { first: 'first', second: '' })
+      assert.deepEqual(resultOld, { third: 'third' })
       done()
     })
 
@@ -392,6 +387,34 @@ describe('parser', () => {
     })
     i18nextParser.once('end', () => {
       assert.deepEqual(result, expectedResult)
+      done()
+    })
+
+    i18nextParser.end(fakeFile)
+  })
+
+  it('saves unused translations in the old catalog', (done) => {
+    const i18nextParser = new i18nTransform({ output: 'test/locales' })
+    const fakeFile = new Vinyl({
+      contents: Buffer.from("t('test_old:parent.third', 'third'), t('test_old:fourth', 'fourth')"),
+      path: 'file.js'
+    })
+
+    const expectedResult = { parent: { third: 'third' }, fourth: 'fourth' }
+    const expectedResultOld = { parent: { first: 'first', some: 'some' }, second: 'second', other: 'other' }
+
+    let result, resultOld;
+    i18nextParser.on('data', file => {
+      if (file.relative.endsWith(path.normalize('en/test_old.json'))) {
+        result = JSON.parse(file.contents)
+      }
+      else if (file.relative.endsWith(path.normalize('en/test_old_old.json'))) {
+        resultOld = JSON.parse(file.contents)
+      }
+    })
+    i18nextParser.once('end', () => {
+      assert.deepEqual(result, expectedResult)
+      assert.deepEqual(resultOld, expectedResultOld)
       done()
     })
 
@@ -458,7 +481,7 @@ describe('parser', () => {
 
   describe('options', () => {
     it('handles filename and extension with $LOCALE and $NAMESPACE var', (done) => {
-      let results = []
+      let result
       const i18nextParser = new i18nTransform({
         locales: ['en'],
         defaultNamespace: 'default',
@@ -471,19 +494,11 @@ describe('parser', () => {
       })
 
       i18nextParser.on('data', file => {
-        results.push(file.relative.replace(/locales[\\\/]/, ''))
+        result = file.relative.replace(/locales[\\\/]/, '')
       })
       i18nextParser.on('end', () => {
-        const expectedFiles = [
-          'en/p-en-default.en.i18n',
-          'en/p-en-default_old.en.i18n'
-        ]
-        let length = expectedFiles.length
-
-        expectedFiles.forEach(filename => {
-          assert.include(results, path.normalize(filename))
-          if (!--length) done()
-        })
+        assert.strictEqual(result, path.normalize('en/p-en-default.en.i18n'))
+        done()
       })
 
       i18nextParser.end(fakeFile)
