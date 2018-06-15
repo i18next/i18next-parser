@@ -208,6 +208,6 @@ The transform emits a `warning:variable` event if the file has a key that contai
 
 ## Contribute
 
-Any contribution is welcome. Please [read the guidelines](doc/development.md) first.
+Any contribution is welcome. Please [read the guidelines](docs/development.md) first.
 
 Thanks a lot to all the previous [contributors](https://github.com/i18next/i18next-parser/graphs/contributors).

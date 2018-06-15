@@ -1,6 +1,5 @@
-import { dotPathToHash, mergeHashes, populateHash } from './helpers'
+import { dotPathToHash, mergeHashes, populateHash, transferValues } from './helpers'
 import { Transform } from 'stream'
-import _ from 'lodash'
 import eol from 'eol'
 import fs from 'fs'
 import Parser from './parser'
@@ -143,11 +142,11 @@ export default class i18nTransform extends Transform {
         newCatalog = populateHash(oldCatalog, newKeys)
 
         // add keys from the current catalog that are no longer used
-        oldCatalog = _.extend(oldCatalog, oldKeys)
+        transferValues(oldKeys, oldCatalog)
 
         // push files back to the stream
         this.pushFile(namespacePath, newCatalog)
-        if (this.options.createOldCatalogs) {
+        if (this.options.createOldCatalogs && Object.keys(oldCatalog).length) {
           this.pushFile(namespaceOldPath, oldCatalog)
         }
       })
