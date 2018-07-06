@@ -12,7 +12,7 @@ describe('mergeHashes helper function', () => {
     done()
   })
 
-  it('does not replaces empty `target` keys with `source` if it is a hash', (done) => {
+  it('does not replace empty `target` keys with `source` if it is a hash', (done) => {
     const source = { key1: { key11: 'value1'} }
     const target = { key1: '' }
     const res    = mergeHashes(source, target)
@@ -45,10 +45,10 @@ describe('mergeHashes helper function', () => {
   it('copies `source` keys to `target` regardless of presence when keepRemoved is enabled', (done) => {
     const source = { key1: 'value1', key2: 'value2' }
     const target = { key1: '', key3: '' }
-    const res    = mergeHashes(source, target, null, true)
+    const res    = mergeHashes(source, target, true)
 
     assert.deepEqual(res.new, { key1: 'value1', key2: 'value2', key3: '' })
-    assert.deepEqual(res.old, { key2: 'value2' })
+    assert.deepEqual(res.old, { })
     done()
   })
 
@@ -62,7 +62,7 @@ describe('mergeHashes helper function', () => {
     done()
   })
 
-  it('does not restores plural keys when the singular one does not', (done) => {
+  it('does not restore plural keys when the singular one does not', (done) => {
     const source = { key1: '', key1_plural: 'value1' }
     const target = { key2: '' }
     const res    = mergeHashes(source, target)
@@ -82,7 +82,7 @@ describe('mergeHashes helper function', () => {
     done()
   })
 
-  it('does not restores context keys when the singular one does not', (done) => {
+  it('does not restore context keys when the singular one does not', (done) => {
     const source = { key1: '', key1_context: 'value1' }
     const target = { key2: '' }
     const res    = mergeHashes(source, target)
