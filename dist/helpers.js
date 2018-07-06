@@ -76,13 +76,10 @@ function mergeHashes(source) {var target = arguments.length > 1 && arguments[1] 
 
       if (
       contextMatch && target[rawKey] !== undefined ||
-      pluralMatch && target[singularKey] !== undefined)
+      pluralMatch && target[singularKey] !== undefined ||
+      keepRemoved)
       {
         target[key] = source[key];
-      } else
-      if (keepRemoved) {
-        target[key] = source[key];
-        old[key] = source[key];
       } else
       {
         old[key] = source[key];
