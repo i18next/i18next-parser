@@ -87,25 +87,6 @@ function mergeHashes(source, target = {}, old, keepRemoved = false) {
     }
   })
 
-  return { old, new: target }
-}
-
-/**
- * Takes a `target` hash and replace its empty values with the
- * `source` hash ones if they exist.
- */
-function populateHash(source, target = {}) {
-  Object.keys(source).forEach(key => {
-    if (target[key] !== undefined) {
-      if (typeof source[key] === 'object') {
-        target[key] = populateHash(source[key], target[key])
-      }
-      else if (target[key] === '') {
-        target[key] = source[key]
-      }
-    }
-  })
-
   return target
 }
 
@@ -139,7 +120,6 @@ class ParsingError extends Error {
 export {
   dotPathToHash,
   mergeHashes,
-  populateHash,
   transferValues,
   ParsingError
 }

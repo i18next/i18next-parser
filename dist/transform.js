@@ -139,7 +139,7 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
 
 
           // restore old translations if the key is empty
-          newCatalog = (0, _helpers.populateHash)(oldCatalog, newKeys);
+          (0, _helpers.mergeHashes)(oldCatalog, newCatalog);
 
           // add keys from the current catalog that are no longer used
           (0, _helpers.transferValues)(oldKeys, oldCatalog);

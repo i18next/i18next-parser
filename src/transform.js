@@ -1,4 +1,4 @@
-import { dotPathToHash, mergeHashes, populateHash, transferValues } from './helpers'
+import { dotPathToHash, mergeHashes, transferValues } from './helpers'
 import { Transform } from 'stream'
 import eol from 'eol'
 import fs from 'fs'
@@ -139,7 +139,7 @@ export default class i18nTransform extends Transform {
         )
 
         // restore old translations if the key is empty
-        newCatalog = populateHash(oldCatalog, newKeys)
+        mergeHashes(oldCatalog, newCatalog)
 
         // add keys from the current catalog that are no longer used
         transferValues(oldKeys, oldCatalog)
