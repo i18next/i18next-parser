@@ -126,7 +126,6 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
           var namespacePath = _path2.default.resolve(outputPath, filename);
           var namespaceOldPath = _path2.default.resolve(outputPath, oldFilename);
 
-          var newCatalog = void 0;
           var existingCatalog = _this3.getCatalog(namespacePath);
           var oldCatalog = _this3.getCatalog(namespaceOldPath);
 
@@ -134,8 +133,7 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
           var _mergeHashes = (0, _helpers.mergeHashes)(
           existingCatalog,
           catalog[namespace],
-          null,
-          _this3.options.keepRemoved),newKeys = _mergeHashes.new,oldKeys = _mergeHashes.old;
+          _this3.options.keepRemoved),newCatalog = _mergeHashes.new,oldKeys = _mergeHashes.old;
 
 
           // restore old translations if the key is empty

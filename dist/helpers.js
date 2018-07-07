@@ -37,11 +37,12 @@ function dotPathToHash(entry) {var target = arguments.length > 1 && arguments[1]
    * Takes a `source` hash and makes sure its value
    * is pasted in the `target` hash, if the target
    * hash has the corresponding key (or if `keepRemoved` is true).
-   * If not, the value is added to an `old` hash.
+   * @returns An `{ old, new }` object. `old` is a hash of
+   * values that have not been merged into `target`. `new` is `target`.
    */
-function mergeHashes(source) {var target = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};var old = arguments[2];var keepRemoved = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
-  old = old || {};
-  Object.keys(source).forEach(function (key) {
+function mergeHashes(source, target) {var keepRemoved = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+  var old = {};
+  for (var key in source) {
     var hasNestedEntries =
     _typeof(target[key]) === 'object' && !Array.isArray(target[key]);
 
@@ -52,42 +53,35 @@ function mergeHashes(source) {var target = arguments.length > 1 && arguments[1] 
       old[key],
       keepRemoved);
 
-      target[key] = nested.new;
       if (Object.keys(nested.old).length) {
         old[key] = nested.old;
       }
     } else
-    if (target[key] !== undefined) {
-      if (typeof source[key] === 'string' || Array.isArray(source[key])) {
-        target[key] = source[key];
-      } else
-      {
-        old[key] = source[key];
-      }
-    } else
     {
-      // support for plural in keys
-      var pluralMatch = /_plural(_\d+)?$/.test(key);
-      var singularKey = key.replace(/_plural(_\d+)?$/, '');
-
-      // support for context in keys
-      var contextMatch = /_([^_]+)?$/.test(singularKey);
-      var rawKey = singularKey.replace(/_([^_]+)?$/, '');
-
-      if (
-      contextMatch && target[rawKey] !== undefined ||
-      pluralMatch && target[singularKey] !== undefined ||
-      keepRemoved)
-      {
-        target[key] = source[key];
+      var mergeTarget = void 0;
+      if (target[key] !== undefined) {
+        mergeTarget = typeof source[key] === 'string' || Array.isArray(source[key]);
       } else
       {
-        old[key] = source[key];
-      }
-    }
-  });
+        // support for plural in keys
+        var pluralMatch = /_plural(_\d+)?$/.test(key);
+        var singularKey = key.replace(/_plural(_\d+)?$/, '');
 
-  return target;
+        // support for context in keys
+        var contextMatch = /_([^_]+)?$/.test(singularKey);
+        var rawKey = singularKey.replace(/_([^_]+)?$/, '');
+
+        mergeTarget =
+        contextMatch && target[rawKey] !== undefined ||
+        pluralMatch && target[singularKey] !== undefined ||
+        keepRemoved;
+
+      }
+      (mergeTarget ? target : old)[key] = source[key];
+    }
+  }
+
+  return { old: old, new: target };
 }
 
 /**
