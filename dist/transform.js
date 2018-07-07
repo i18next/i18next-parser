@@ -126,7 +126,6 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
           var namespacePath = _path2.default.resolve(outputPath, filename);
           var namespaceOldPath = _path2.default.resolve(outputPath, oldFilename);
 
-          var newCatalog = void 0;
           var existingCatalog = _this3.getCatalog(namespacePath);
           var oldCatalog = _this3.getCatalog(namespaceOldPath);
 
@@ -134,20 +133,19 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
           var _mergeHashes = (0, _helpers.mergeHashes)(
           existingCatalog,
           catalog[namespace],
-          null,
-          _this3.options.keepRemoved),newKeys = _mergeHashes.new,oldKeys = _mergeHashes.old;
+          _this3.options.keepRemoved),newCatalog = _mergeHashes.new,oldKeys = _mergeHashes.old;
 
 
           // restore old translations if the key is empty
-          newCatalog = (0, _helpers.populateHash)(oldCatalog, newKeys);
+          var _mergeHashes2 = (0, _helpers.mergeHashes)(oldCatalog, newCatalog),newOldCatalog = _mergeHashes2.old;
 
           // add keys from the current catalog that are no longer used
-          (0, _helpers.transferValues)(oldKeys, oldCatalog);
+          (0, _helpers.transferValues)(oldKeys, newOldCatalog);
 
           // push files back to the stream
           _this3.pushFile(namespacePath, newCatalog);
-          if (_this3.options.createOldCatalogs && Object.keys(oldCatalog).length) {
-            _this3.pushFile(namespaceOldPath, oldCatalog);
+          if (_this3.options.createOldCatalogs && (Object.keys(newOldCatalog).length || oldCatalog)) {
+            _this3.pushFile(namespaceOldPath, newOldCatalog);
           }
         });
       });
@@ -173,17 +171,16 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
     } }, { key: 'getCatalog', value: function getCatalog(
 
     path) {
-      var content = void 0;
       try {
-        content = JSON.parse(_fs2.default.readFileSync(path));
+        var content = JSON.parse(_fs2.default.readFileSync(path));
+        return content;
       }
       catch (error) {
         if (error.code !== 'ENOENT') {
           this.emit('error', error);
         }
-        content = {};
       }
-      return content;
+      return null;
     } }, { key: 'pushFile', value: function pushFile(
 
     path, contents) {
