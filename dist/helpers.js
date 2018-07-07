@@ -120,5 +120,6 @@ ParsingError = function (_Error) {_inherits(ParsingError, _Error);
 
 dotPathToHash = dotPathToHash;exports.
 mergeHashes = mergeHashes;exports.
+populateHash = populateHash;exports.
 transferValues = transferValues;exports.
 ParsingError = ParsingError;

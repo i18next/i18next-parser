@@ -120,6 +120,7 @@ class ParsingError extends Error {
 export {
   dotPathToHash,
   mergeHashes,
+  populateHash,
   transferValues,
   ParsingError
 }
