@@ -137,15 +137,15 @@ export default class i18nTransform extends Transform {
         )
 
         // restore old translations if the key is empty
-        mergeHashes(oldCatalog, newCatalog)
+        const { old: newOldCatalog } = mergeHashes(oldCatalog, newCatalog)
 
         // add keys from the current catalog that are no longer used
-        transferValues(oldKeys, oldCatalog)
+        transferValues(oldKeys, newOldCatalog)
 
         // push files back to the stream
         this.pushFile(namespacePath, newCatalog)
-        if (this.options.createOldCatalogs && Object.keys(oldCatalog).length) {
-          this.pushFile(namespaceOldPath, oldCatalog)
+        if (this.options.createOldCatalogs && (Object.keys(newOldCatalog).length || oldCatalog)) {
+          this.pushFile(namespaceOldPath, newOldCatalog)
         }
       })
     })
@@ -171,17 +171,16 @@ export default class i18nTransform extends Transform {
   }
 
   getCatalog(path) {
-    let content
     try {
-      content = JSON.parse( fs.readFileSync( path ) )
+      let content = JSON.parse(fs.readFileSync(path))
+      return content
     }
     catch (error) {
       if (error.code !== 'ENOENT') {
         this.emit('error', error)
       }
-      content = {}
     }
-    return content
+    return null
   }
 
   pushFile(path, contents) {
