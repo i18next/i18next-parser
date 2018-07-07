@@ -60,7 +60,7 @@ function mergeHashes(source, target, keepRemoved = false) {
     else {
       let mergeTarget
       if (target[key] !== undefined) {
-        mergeTarget = (typeof source[key] === 'string' || Array.isArray(source[key]))
+        mergeTarget = typeof source[key] === 'string' || Array.isArray(source[key])
       }
       else {
         // support for plural in keys
@@ -77,7 +77,11 @@ function mergeHashes(source, target, keepRemoved = false) {
           keepRemoved
         )
       }
-      (mergeTarget ? target : old)[key] = source[key]
+      if (mergeTarget) {
+        target[key] = source[key]
+      } else {
+        old[key] = source[key]
+      }
     }
   }
 
