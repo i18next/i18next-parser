@@ -42,7 +42,7 @@ export default class Parser extends EventEmitter {
     let keys = []
     const lexers = this.lexers[extension] || this.lexers.default
 
-    lexers.forEach(lexerConfig => {
+    for (const lexerConfig of lexers) {
       let lexerName
       let lexerOptions
 
@@ -62,7 +62,7 @@ export default class Parser extends EventEmitter {
       const Lexer = new lexersMap[lexerName](lexerOptions)
       Lexer.on('warning', warning => this.emit('warning', warning))
       keys = keys.concat(Lexer.extract(content))
-    })
+    }
 
     return keys
   }

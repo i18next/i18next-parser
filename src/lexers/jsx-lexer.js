@@ -48,11 +48,11 @@ export default class JsxLexer extends JavascriptLexer {
             const entry = {}
             const defaultValue = that.nodeToString.call(that, node, content)
 
-            element.attributes.forEach(attr => {
+            for (const attr of element.attributes) {
               if (attr.name.name === that.attr) {
                 entry.key = attr.value.value
               }
-            })
+            }
 
             if (defaultValue !== '') {
               entry.defaultValue = defaultValue
@@ -68,11 +68,11 @@ export default class JsxLexer extends JavascriptLexer {
           else if (element.name.name === "Interpolate") {
             const entry = {}
 
-            element.attributes.forEach(attr => {
+            for (const attr of element.attributes) {
               if (attr.name.name === that.attr) {
                 entry.key = attr.value.value
               }
-            })
+            }
 
             if (entry.key)
               that.keys.push(entry)

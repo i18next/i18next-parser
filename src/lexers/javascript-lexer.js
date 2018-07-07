@@ -63,9 +63,9 @@ export default class JavascriptLexer extends BaseLexer {
         entry.defaultValue = optionsArgument.value
       }
       else if (optionsArgument && optionsArgument.type === 'ObjectExpression') {
-        optionsArgument.properties.forEach(p => {
+        for (const p of optionsArgument.properties) {
           entry[p.key.name || p.key.value] = p.value.value
-        })
+        }
       }
 
       this.keys.push(entry)

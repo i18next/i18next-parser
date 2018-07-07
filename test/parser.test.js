@@ -240,10 +240,10 @@ describe('parser', () => {
       ]
       let length = expectedFiles.length
 
-      expectedFiles.forEach(filename => {
+      for (const filename of expectedFiles) {
         assert.include(results, path.normalize(filename))
         if (!--length) done()
-      })
+      }
     })
 
     i18nextParser.end(fakeFile)
@@ -764,10 +764,10 @@ describe('parser', () => {
         let length = expectedFiles.length
 
         assert.equal(results.length, expectedFiles.length)
-        expectedFiles.forEach(filename => {
+        for (const filename of expectedFiles) {
           assert.include(results, path.normalize(filename))
           if (!--length) done()
-        })
+        }
       })
 
       i18nextParser.end(fakeFile)

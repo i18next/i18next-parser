@@ -63,7 +63,7 @@ export default class i18nTransform extends Transform {
     const extension = path.extname(file.path).substring(1)
     const entries = this.parser.parse(content, extension)
 
-    entries.forEach(entry => {
+    for (const entry of entries) {
       let key = entry.key
       const parts = key.split(this.options.namespaceSeparator)
 
@@ -85,7 +85,7 @@ export default class i18nTransform extends Transform {
       entry.key = entry.namespace + this.options.keySeparator + key
 
       this.addEntry(entry)
-    })
+    }
 
     done()
   }
@@ -97,7 +97,7 @@ export default class i18nTransform extends Transform {
       this.entries = this.entries.sort((a, b) => a.key.localeCompare(b.key))
     }
 
-    this.entries.forEach(entry => {
+    for (const entry of this.entries) {
       catalog = dotPathToHash(
         entry,
         catalog,
@@ -106,12 +106,12 @@ export default class i18nTransform extends Transform {
           value: this.options.defaultValue
         }
       )
-    })
+    }
 
-    this.options.locales.forEach(locale => {
+    for (const locale of this.options.locales) {
       const outputPath = path.resolve(this.options.output, locale)
 
-      Object.keys(catalog).forEach(namespace => {
+      for (const namespace in catalog) {
         let filename = this.options.filename
         filename = filename.replace(this.localeRegex, locale)
         filename = filename.replace(this.namespaceRegex, namespace)
@@ -150,8 +150,8 @@ export default class i18nTransform extends Transform {
         ) {
           this.pushFile(namespaceOldPath, oldCatalog)
         }
-      })
-    })
+      }
+    }
 
     done()
   }

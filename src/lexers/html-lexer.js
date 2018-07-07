@@ -26,7 +26,7 @@ export default class HTMLLexer extends BaseLexer {
         finally {}
       }
 
-      keys.forEach(key => {
+      for (let key of keys) {
         // remove any leading [] in the key
         key = key.replace(/^\[[a-zA-Z0-9_-]*\]/, '')
 
@@ -36,7 +36,7 @@ export default class HTMLLexer extends BaseLexer {
         if (key) {
           this.keys.push({ ...options, key })
         }
-      })
+      }
     })
 
     return this.keys
