@@ -126,15 +126,13 @@ export default class i18nTransform extends Transform {
         const namespacePath = path.resolve(outputPath, filename)
         const namespaceOldPath = path.resolve(outputPath, oldFilename)
 
-        let newCatalog
         let existingCatalog = this.getCatalog(namespacePath)
         let oldCatalog = this.getCatalog(namespaceOldPath)
 
         // merges existing translations with the new ones
-        const { new: newKeys, old: oldKeys } = mergeHashes(
+        const { new: newCatalog, old: oldKeys } = mergeHashes(
           existingCatalog,
           catalog[namespace],
-          null,
           this.options.keepRemoved
         )
 
