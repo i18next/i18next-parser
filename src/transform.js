@@ -127,25 +127,28 @@ export default class i18nTransform extends Transform {
         const namespaceOldPath = path.resolve(outputPath, oldFilename)
 
         let existingCatalog = this.getCatalog(namespacePath)
-        let oldCatalog = this.getCatalog(namespaceOldPath)
+        let existingOldCatalog = this.getCatalog(namespaceOldPath)
 
         // merges existing translations with the new ones
-        const { new: newCatalog, old: oldKeys } = mergeHashes(
+        let { new: newCatalog, old: oldKeys } = mergeHashes(
           existingCatalog,
           catalog[namespace],
           this.options.keepRemoved
         )
 
         // restore old translations if the key is empty
-        const { old: newOldCatalog } = mergeHashes(oldCatalog, newCatalog)
+        const { old: oldCatalog } = mergeHashes(existingOldCatalog, newCatalog)
 
         // add keys from the current catalog that are no longer used
-        transferValues(oldKeys, newOldCatalog)
+        transferValues(oldKeys, oldCatalog)
 
         // push files back to the stream
         this.pushFile(namespacePath, newCatalog)
-        if (this.options.createOldCatalogs && (Object.keys(newOldCatalog).length || oldCatalog)) {
-          this.pushFile(namespaceOldPath, newOldCatalog)
+        if (
+          this.options.createOldCatalogs &&
+          (Object.keys(oldCatalog).length || existingOldCatalog)
+        ) {
+          this.pushFile(namespaceOldPath, oldCatalog)
         }
       })
     })
