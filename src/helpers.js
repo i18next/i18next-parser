@@ -37,11 +37,12 @@ function dotPathToHash(entry, target = {}, options = {}) {
  * Takes a `source` hash and makes sure its value
  * is pasted in the `target` hash, if the target
  * hash has the corresponding key (or if `keepRemoved` is true).
- * If not, the value is added to an `old` hash.
+ * @returns An `{ old, new }` object. `old` is a hash of
+ * values that have not been merged into `target`. `new` is `target`.
  */
-function mergeHashes(source, target = {}, old, keepRemoved = false) {
-  old = old || {}
-  Object.keys(source).forEach(key => {
+function mergeHashes(source, target, keepRemoved = false) {
+  let old = {}
+  for (const key in source) {
     const hasNestedEntries =
       typeof target[key] === 'object' && !Array.isArray(target[key])
 
@@ -52,71 +53,49 @@ function mergeHashes(source, target = {}, old, keepRemoved = false) {
         old[key],
         keepRemoved
       )
-      target[key] = nested.new
       if (Object.keys(nested.old).length) {
         old[key] = nested.old
       }
     }
-    else if (target[key] !== undefined) {
-      if (typeof source[key] === 'string' || Array.isArray(source[key])) {
-        target[key] = source[key]
-      }
-      else {
-        old[key] = source[key]
-      }
-    }
     else {
-      // support for plural in keys
-      const pluralMatch = /_plural(_\d+)?$/.test(key)
-      const singularKey = key.replace(/_plural(_\d+)?$/, '')
-
-      // support for context in keys
-      const contextMatch = /_([^_]+)?$/.test(singularKey)
-      const rawKey = singularKey.replace(/_([^_]+)?$/, '')
-
-      if (
-        (contextMatch && target[rawKey] !== undefined) ||
-        (pluralMatch && target[singularKey] !== undefined)
-      ) {
-        target[key] = source[key]
-      }
-      else if (keepRemoved) {
-        target[key] = source[key]
-        old[key] = source[key]
+      let isKeyMergeable
+      if (target[key] !== undefined) {
+        isKeyMergeable = (
+          typeof source[key] === 'string' ||
+          Array.isArray(source[key])
+        )
       }
       else {
+        // support for plural in keys
+        const pluralMatch = /_plural(_\d+)?$/.test(key)
+        const singularKey = key.replace(/_plural(_\d+)?$/, '')
+
+        // support for context in keys
+        const contextMatch = /_([^_]+)?$/.test(singularKey)
+        const rawKey = singularKey.replace(/_([^_]+)?$/, '')
+
+        isKeyMergeable = (
+          (contextMatch && target[rawKey] !== undefined) ||
+          (pluralMatch && target[singularKey] !== undefined) ||
+          keepRemoved
+        )
+      }
+      if (isKeyMergeable) {
+        target[key] = source[key]
+      } else {
         old[key] = source[key]
       }
     }
-  })
+  }
 
   return { old, new: target }
-}
-
-/**
- * Takes a `target` hash and replace its empty values with the
- * `source` hash ones if they exist.
- */
-function populateHash(source, target = {}) {
-  Object.keys(source).forEach(key => {
-    if (target[key] !== undefined) {
-      if (typeof source[key] === 'object') {
-        target[key] = populateHash(source[key], target[key])
-      }
-      else if (target[key] === '') {
-        target[key] = source[key]
-      }
-    }
-  })
-
-  return target
 }
 
 /**
  * Merge `source` into `target` by merging nested dictionaries.
  */
 function transferValues(source, target) {
-  for (let key in source) {
+  for (const key in source) {
     const sourceValue = source[key]
     const targetValue = target[key]
     if (
@@ -142,7 +121,6 @@ class ParsingError extends Error {
 export {
   dotPathToHash,
   mergeHashes,
-  populateHash,
   transferValues,
   ParsingError
 }

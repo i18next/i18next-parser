@@ -421,6 +421,34 @@ describe('parser', () => {
     i18nextParser.end(fakeFile)
   })
 
+  it('restores translations from the old catalog', (done) => {
+    const i18nextParser = new i18nTransform({ output: 'test/locales' })
+    const fakeFile = new Vinyl({
+      contents: Buffer.from("t('test_old:parent.some', 'random'), t('test_old:other', 'random')"),
+      path: 'file.js'
+    })
+
+    const expectedResult = { parent: { some: 'some' }, other: 'other' }
+    const expectedResultOld = { parent: { first: 'first' }, second: 'second' }
+
+    let result, resultOld;
+    i18nextParser.on('data', file => {
+      if (file.relative.endsWith(path.normalize('en/test_old.json'))) {
+        result = JSON.parse(file.contents)
+      }
+      else if (file.relative.endsWith(path.normalize('en/test_old_old.json'))) {
+        resultOld = JSON.parse(file.contents)
+      }
+    })
+    i18nextParser.once('end', () => {
+      assert.deepEqual(result, expectedResult)
+      assert.deepEqual(resultOld, expectedResultOld)
+      done()
+    })
+
+    i18nextParser.end(fakeFile)
+  })
+
   it('retrieves plural values in existing catalog', (done) => {
     let result
     const i18nextParser = new i18nTransform({ output: 'test/locales' })
@@ -571,6 +599,29 @@ describe('parser', () => {
       })
       i18nextParser.once('end', () => {
         assert.deepEqual(result, { first: 'NOT_TRANSLATED' })
+        done()
+      })
+
+      i18nextParser.end(fakeFile)
+    })
+
+    it('supports a lineEnding', (done) => {
+      let result
+      const i18nextParser = new i18nTransform({
+        lineEnding: '\r\n'
+      })
+      const fakeFile = new Vinyl({
+        contents: Buffer.from("t('first')"),
+        path: 'file.js'
+      })
+
+      i18nextParser.on('data', file => {
+        if (file.relative.endsWith(enLibraryPath)) {
+          result = file.contents.toString()
+        }
+      })
+      i18nextParser.once('end', () => {
+        assert.equal(result, '{\r\n  "first": ""\r\n}\r\n')
         done()
       })
 

@@ -1,4 +1,4 @@
-import { dotPathToHash, mergeHashes, populateHash, transferValues } from './helpers'
+import { dotPathToHash, mergeHashes, transferValues } from './helpers'
 import { Transform } from 'stream'
 import eol from 'eol'
 import fs from 'fs'
@@ -126,27 +126,28 @@ export default class i18nTransform extends Transform {
         const namespacePath = path.resolve(outputPath, filename)
         const namespaceOldPath = path.resolve(outputPath, oldFilename)
 
-        let newCatalog
         let existingCatalog = this.getCatalog(namespacePath)
-        let oldCatalog = this.getCatalog(namespaceOldPath)
+        let existingOldCatalog = this.getCatalog(namespaceOldPath)
 
         // merges existing translations with the new ones
-        const { new: newKeys, old: oldKeys } = mergeHashes(
+        let { new: newCatalog, old: oldKeys } = mergeHashes(
           existingCatalog,
           catalog[namespace],
-          null,
           this.options.keepRemoved
         )
 
         // restore old translations if the key is empty
-        newCatalog = populateHash(oldCatalog, newKeys)
+        const { old: oldCatalog } = mergeHashes(existingOldCatalog, newCatalog)
 
         // add keys from the current catalog that are no longer used
         transferValues(oldKeys, oldCatalog)
 
         // push files back to the stream
         this.pushFile(namespacePath, newCatalog)
-        if (this.options.createOldCatalogs && Object.keys(oldCatalog).length) {
+        if (
+          this.options.createOldCatalogs &&
+          (Object.keys(oldCatalog).length || existingOldCatalog)
+        ) {
           this.pushFile(namespaceOldPath, oldCatalog)
         }
       })
@@ -173,17 +174,16 @@ export default class i18nTransform extends Transform {
   }
 
   getCatalog(path) {
-    let content
     try {
-      content = JSON.parse( fs.readFileSync( path ) )
+      let content = JSON.parse(fs.readFileSync(path))
+      return content
     }
     catch (error) {
       if (error.code !== 'ENOENT') {
         this.emit('error', error)
       }
-      content = {}
     }
-    return content
+    return null
   }
 
   pushFile(path, contents) {
