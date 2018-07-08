@@ -42,7 +42,7 @@ describe('mergeHashes helper function', () => {
     done()
   })
 
-  it('copies `source` keys to `target` regardless of presence when keepRemoved is enabled', (done) => {
+  it('copies `source` keys to `target` regardless of presence when `keepRemoved` is enabled', (done) => {
     const source = { key1: 'value1', key2: 'value2' }
     const target = { key1: '', key3: '' }
     const res    = mergeHashes(source, target, true)

@@ -628,6 +628,29 @@ describe('parser', () => {
       i18nextParser.end(fakeFile)
     })
 
+    it('supports a lineEnding', (done) => {
+      let result
+      const i18nextParser = new i18nTransform({
+        lineEnding: '\r\n'
+      })
+      const fakeFile = new Vinyl({
+        contents: Buffer.from("t('first')"),
+        path: 'file.js'
+      })
+
+      i18nextParser.on('data', file => {
+        if (file.relative.endsWith(enLibraryPath)) {
+          result = file.contents.toString()
+        }
+      })
+      i18nextParser.once('end', () => {
+        assert.equal(result, '{\r\n  "first": ""\r\n}\r\n')
+        done()
+      })
+
+      i18nextParser.end(fakeFile)
+    })
+
     it('parses Trans if reactNamespace is true', (done) => {
       let result
       const i18nextParser = new i18nTransform({

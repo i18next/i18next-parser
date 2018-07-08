@@ -77,7 +77,11 @@ function mergeHashes(source, target) {var keepRemoved = arguments.length > 2 && 
         keepRemoved;
 
       }
-      (mergeTarget ? target : old)[key] = source[key];
+      if (mergeTarget) {
+        target[key] = source[key];
+      } else {
+        old[key] = source[key];
+      }
     }
   }
 
