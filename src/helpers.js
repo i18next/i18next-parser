@@ -72,15 +72,15 @@ function mergeHashes(source, target, keepRemoved = false) {
       }
     }
     else {
-      let isKeyMergeable
       if (target[key] !== undefined) {
-        isKeyMergeable = (
+        if (
           typeof source[key] === 'string' ||
           Array.isArray(source[key])
-        )
-        if (isKeyMergeable) {
+        ) {
+          target[key] = source[key]
           mergeCount += 1
         } else {
+          old[key] = source[key]
           oldCount += 1
         }
       }
@@ -89,27 +89,26 @@ function mergeHashes(source, target, keepRemoved = false) {
         const pluralRegex = /_plural(_\d+)?$/;
         const pluralMatch = pluralRegex.test(key)
         const singularKey = key.replace(pluralRegex, '')
-
+    
         // support for context in keys
         const contextRegex = /_([^_]+)?$/;
         const contextMatch = contextRegex.test(singularKey)
         const rawKey = singularKey.replace(contextRegex, '')
-
-        isKeyMergeable = (
+    
+        if (
           (contextMatch && target[rawKey] !== undefined) ||
           (pluralMatch && target[singularKey] !== undefined)
-        )
-        if (isKeyMergeable) {
+        ) {
+          target[key] = source[key]
           pullCount += 1
         } else {
-          isKeyMergeable = keepRemoved
+          if (keepRemoved) {
+            target[key] = source[key]
+          } else {
+            old[key] = source[key]
+          }
           oldCount += 1
         }
-      }
-      if (isKeyMergeable) {
-        target[key] = source[key]
-      } else {
-        old[key] = source[key]
       }
     }
   }

@@ -118,7 +118,7 @@ Option                   | Description                                          
 **output**               | Where to write the locale files relative to the base  | `locales`
 **reactNamespace** <sup>3<sup>| For react file, extract the [defaultNamespace](https://react.i18next.com/components/translate-hoc.html)          | `false`
 **sort**                 | Whether or not to sort the catalog                    | `false`
-**verbose**              | The verbostiy level (0 or 1)                          | `0`
+**verbose**              | Whether or not to be verbose                          | `false`
 
 1. Both `filename` and `extension` options support injection of `$LOCALE` and `$NAMESPACE` variables. The file output is JSON by default, if you want YAML, the `extension` must end with `yml`.
 2. If you want to use plain english keys, separators such as `.` and `:` will conflict. You might want to set `keySeparator: false` and `namespaceSeparator: false`. That way, `t('Status: Loading...')` will not think that there are a namespace and three separator dots for instance.

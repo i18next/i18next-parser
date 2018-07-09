@@ -72,15 +72,15 @@ function mergeHashes(source, target) {var keepRemoved = arguments.length > 2 && 
       }
     } else
     {
-      var isKeyMergeable = void 0;
       if (target[key] !== undefined) {
-        isKeyMergeable =
+        if (
         typeof source[key] === 'string' ||
-        Array.isArray(source[key]);
-
-        if (isKeyMergeable) {
+        Array.isArray(source[key]))
+        {
+          target[key] = source[key];
           mergeCount += 1;
         } else {
+          old[key] = source[key];
           oldCount += 1;
         }
       } else
@@ -95,21 +95,20 @@ function mergeHashes(source, target) {var keepRemoved = arguments.length > 2 && 
         var contextMatch = contextRegex.test(singularKey);
         var rawKey = singularKey.replace(contextRegex, '');
 
-        isKeyMergeable =
+        if (
         contextMatch && target[rawKey] !== undefined ||
-        pluralMatch && target[singularKey] !== undefined;
-
-        if (isKeyMergeable) {
+        pluralMatch && target[singularKey] !== undefined)
+        {
+          target[key] = source[key];
           pullCount += 1;
         } else {
-          isKeyMergeable = keepRemoved;
+          if (keepRemoved) {
+            target[key] = source[key];
+          } else {
+            old[key] = source[key];
+          }
           oldCount += 1;
         }
-      }
-      if (isKeyMergeable) {
-        target[key] = source[key];
-      } else {
-        old[key] = source[key];
       }
     }
   }

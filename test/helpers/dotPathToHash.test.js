@@ -5,7 +5,7 @@ describe('dotPathToHash helper function', () => {
   it('creates an object from a string path', (done) => {
     const { target, duplicate } = dotPathToHash({ key: 'one' })
     assert.deepEqual(target, { one: '' })
-    assert.isFalse(duplicate)
+    assert.equal(duplicate, false)
     done()
   })
 
@@ -33,7 +33,7 @@ describe('dotPathToHash helper function', () => {
       { one: { twenty: '' } }
     )
     assert.deepEqual(target, { one: { two: { three: '' }, twenty: '' } })
-    assert.isFalse(duplicate)
+    assert.equal(duplicate, false)
     done()
   })
 
@@ -63,8 +63,8 @@ describe('dotPathToHash helper function', () => {
       { one: { two: { three: '' } } },
     )
     assert.deepEqual(target, { one: { two: { three: '' } } })
-    assert.isTrue(duplicate)
-    assert.isFalse(conflict)
+    assert.equal(duplicate, true)
+    assert.equal(conflict, false)
     done()
   })
 
@@ -74,8 +74,8 @@ describe('dotPathToHash helper function', () => {
       { one: { two: { three: 'old' } } },
     )
     assert.deepEqual(target, { one: { two: { three: 'new' } } })
-    assert.isTrue(duplicate)
-    assert.isTrue(conflict)
+    assert.equal(duplicate, true)
+    assert.equal(conflict, true)
     done()
   })
 })

@@ -34,7 +34,7 @@ export default class i18nTransform extends Transform {
       output: 'locales',
       reactNamespace: false,
       sort: false,
-      verbose: 0
+      verbose: false
     }
 
     this.options = { ...this.defaults, ...options }
@@ -64,7 +64,7 @@ export default class i18nTransform extends Transform {
     }
 
     this.emit('reading', file)
-    if (this.options.verbose > 0) {
+    if (this.options.verbose) {
       console.log(`Parsing ${file.path}`)
     }
 
@@ -118,11 +118,15 @@ export default class i18nTransform extends Transform {
       if (duplicate) {
         uniqueCount -= 1
         if (conflict) {
-          warn(`Found same keys with different values: ${entry.key}`)
+          const warning = `Found same keys with different values: ${entry.key}`
+          this.emit('warning', warning)
+          if (this.options.verbose) {
+            warn(warning)
+          }
         }
       }
     }
-    if (this.options.verbose > 0) {
+    if (this.options.verbose) {
       console.log(`\nParsed keys: ${uniqueCount}\n`)
     }
 
@@ -161,7 +165,7 @@ export default class i18nTransform extends Transform {
         // backup unused translations
         transferValues(oldKeys, oldCatalog)
 
-        if (this.options.verbose > 0) {
+        if (this.options.verbose) {
           console.log(`[${locale}] ${namespace}\n`)
           const addCount = uniqueCount - mergeCount
           console.log(`Added keys: ${addCount}`)

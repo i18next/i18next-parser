@@ -34,7 +34,7 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
       output: 'locales',
       reactNamespace: false,
       sort: false,
-      verbose: 0 };
+      verbose: false };
 
 
     _this.options = _extends({}, _this.defaults, options);
@@ -64,7 +64,7 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
       }
 
       this.emit('reading', file);
-      if (this.options.verbose > 0) {
+      if (this.options.verbose) {
         console.log('Parsing ' + file.path);
       }
 
@@ -118,11 +118,15 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
           if (duplicate) {
             uniqueCount -= 1;
             if (conflict) {
-              warn('Found same keys with different values: ' + entry.key);
+              var warning = 'Found same keys with different values: ' + entry.key;
+              this.emit('warning', warning);
+              if (this.options.verbose) {
+                warn(warning);
+              }
             }
           }
         }} catch (err) {_didIteratorError2 = true;_iteratorError2 = err;} finally {try {if (!_iteratorNormalCompletion2 && _iterator2.return) {_iterator2.return();}} finally {if (_didIteratorError2) {throw _iteratorError2;}}}
-      if (this.options.verbose > 0) {
+      if (this.options.verbose) {
         console.log('\nParsed keys: ' + uniqueCount + '\n');
       }var _iteratorNormalCompletion3 = true;var _didIteratorError3 = false;var _iteratorError3 = undefined;try {
 
@@ -161,7 +165,7 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
             // backup unused translations
             (0, _helpers.transferValues)(oldKeys, oldCatalog);
 
-            if (this.options.verbose > 0) {
+            if (this.options.verbose) {
               console.log('[' + locale + '] ' + namespace + '\n');
               var addCount = uniqueCount - mergeCount;
               console.log('Added keys: ' + addCount);
