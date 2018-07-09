@@ -6,7 +6,11 @@ import Parser from './parser'
 import path from 'path'
 import VirtualFile from 'vinyl'
 import YAML from 'yamljs'
-import BaseLexer from './lexers/base-lexer';
+import BaseLexer from './lexers/base-lexer'
+
+function warn(...args) {
+  console.warn('\x1b[33m%s\x1b[0m', ...args)
+}
 
 export default class i18nTransform extends Transform {
   constructor(options = {}) {
@@ -29,7 +33,8 @@ export default class i18nTransform extends Transform {
       namespaceSeparator: ':',
       output: 'locales',
       reactNamespace: false,
-      sort: false
+      sort: false,
+      verbose: false
     }
 
     this.options = { ...this.defaults, ...options }
@@ -59,11 +64,14 @@ export default class i18nTransform extends Transform {
     }
 
     this.emit('reading', file)
+    if (this.options.verbose) {
+      console.log(`Parsing ${file.path}`)
+    }
 
     const extension = path.extname(file.path).substring(1)
     const entries = this.parser.parse(content, extension)
 
-    entries.forEach(entry => {
+    for (const entry of entries) {
       let key = entry.key
       const parts = key.split(this.options.namespaceSeparator)
 
@@ -85,7 +93,7 @@ export default class i18nTransform extends Transform {
       entry.key = entry.namespace + this.options.keySeparator + key
 
       this.addEntry(entry)
-    })
+    }
 
     done()
   }
@@ -97,8 +105,9 @@ export default class i18nTransform extends Transform {
       this.entries = this.entries.sort((a, b) => a.key.localeCompare(b.key))
     }
 
-    this.entries.forEach(entry => {
-      catalog = dotPathToHash(
+    let uniqueCount = this.entries.length
+    for (const entry of this.entries) {
+      const { duplicate, conflict } = dotPathToHash(
         entry,
         catalog,
         {
@@ -106,12 +115,25 @@ export default class i18nTransform extends Transform {
           value: this.options.defaultValue
         }
       )
-    })
+      if (duplicate) {
+        uniqueCount -= 1
+        if (conflict) {
+          const warning = `Found same keys with different values: ${entry.key}`
+          this.emit('warning', warning)
+          if (this.options.verbose) {
+            warn(warning)
+          }
+        }
+      }
+    }
+    if (this.options.verbose) {
+      console.log(`\nParsed keys: ${uniqueCount}\n`)
+    }
 
-    this.options.locales.forEach(locale => {
+    for (const locale of this.options.locales) {
       const outputPath = path.resolve(this.options.output, locale)
 
-      Object.keys(catalog).forEach(namespace => {
+      for (const namespace in catalog) {
         let filename = this.options.filename
         filename = filename.replace(this.localeRegex, locale)
         filename = filename.replace(this.namespaceRegex, namespace)
@@ -130,17 +152,31 @@ export default class i18nTransform extends Transform {
         let existingOldCatalog = this.getCatalog(namespaceOldPath)
 
         // merges existing translations with the new ones
-        let { new: newCatalog, old: oldKeys } = mergeHashes(
+        const { new: newCatalog, old: oldKeys, mergeCount, oldCount } =
+          mergeHashes(
           existingCatalog,
           catalog[namespace],
           this.options.keepRemoved
         )
 
-        // restore old translations if the key is empty
-        const { old: oldCatalog } = mergeHashes(existingOldCatalog, newCatalog)
+        // restore old translations
+        const { old: oldCatalog, mergeCount: restoreCount } = mergeHashes(existingOldCatalog, newCatalog)
 
-        // add keys from the current catalog that are no longer used
+        // backup unused translations
         transferValues(oldKeys, oldCatalog)
+
+        if (this.options.verbose) {
+          console.log(`[${locale}] ${namespace}\n`)
+          const addCount = uniqueCount - mergeCount
+          console.log(`Added keys: ${addCount}`)
+          console.log(`Restored keys: ${restoreCount}`)
+          if (this.options.keepRemoved) {
+            console.log(`Unreferenced keys: ${oldCount}`)
+          } else {
+            console.log(`Removed keys: ${oldCount}`)
+          }
+          console.log()
+        }
 
         // push files back to the stream
         this.pushFile(namespacePath, newCatalog)
@@ -150,20 +186,14 @@ export default class i18nTransform extends Transform {
         ) {
           this.pushFile(namespaceOldPath, oldCatalog)
         }
-      })
-    })
+      }
+    }
 
     done()
   }
 
   addEntry(entry) {
-    let existing = this.entries.filter(x => x.key === entry.key)[0]
-    if (!existing) {
-      this.entries.push(entry)
-    }
-    else {
-      existing = { ...existing, ...entry }
-    }
+    this.entries.push(entry)
 
     if (entry.context) {
       const contextEntry = Object.assign({}, entry)

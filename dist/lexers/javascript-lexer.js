@@ -62,10 +62,10 @@ JavascriptLexer = function (_BaseLexer) {_inherits(JavascriptLexer, _BaseLexer);
         if (optionsArgument && optionsArgument.type === 'Literal') {
           entry.defaultValue = optionsArgument.value;
         } else
-        if (optionsArgument && optionsArgument.type === 'ObjectExpression') {
-          optionsArgument.properties.forEach(function (p) {
-            entry[p.key.name || p.key.value] = p.value.value;
-          });
+        if (optionsArgument && optionsArgument.type === 'ObjectExpression') {var _iteratorNormalCompletion = true;var _didIteratorError = false;var _iteratorError = undefined;try {
+            for (var _iterator = optionsArgument.properties[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {var p = _step.value;
+              entry[p.key.name || p.key.value] = p.value.value;
+            }} catch (err) {_didIteratorError = true;_iteratorError = err;} finally {try {if (!_iteratorNormalCompletion && _iterator.return) {_iterator.return();}} finally {if (_didIteratorError) {throw _iteratorError;}}}
         }
 
         this.keys.push(entry);

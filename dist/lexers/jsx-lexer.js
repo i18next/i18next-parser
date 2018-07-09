@@ -46,13 +46,13 @@ JsxLexer = function (_JavascriptLexer) {_inherits(JsxLexer, _JavascriptLexer);
           var element = node.openingElement;
           if (element.name.name === "Trans") {
             var entry = {};
-            var defaultValue = that.nodeToString.call(that, node, content);
+            var defaultValue = that.nodeToString.call(that, node, content);var _iteratorNormalCompletion = true;var _didIteratorError = false;var _iteratorError = undefined;try {
 
-            element.attributes.forEach(function (attr) {
-              if (attr.name.name === that.attr) {
-                entry.key = attr.value.value;
-              }
-            });
+              for (var _iterator = element.attributes[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {var attr = _step.value;
+                if (attr.name.name === that.attr) {
+                  entry.key = attr.value.value;
+                }
+              }} catch (err) {_didIteratorError = true;_iteratorError = err;} finally {try {if (!_iteratorNormalCompletion && _iterator.return) {_iterator.return();}} finally {if (_didIteratorError) {throw _iteratorError;}}}
 
             if (defaultValue !== '') {
               entry.defaultValue = defaultValue;
@@ -66,13 +66,13 @@ JsxLexer = function (_JavascriptLexer) {_inherits(JsxLexer, _JavascriptLexer);
           } else
 
           if (element.name.name === "Interpolate") {
-            var _entry = {};
+            var _entry = {};var _iteratorNormalCompletion2 = true;var _didIteratorError2 = false;var _iteratorError2 = undefined;try {
 
-            element.attributes.forEach(function (attr) {
-              if (attr.name.name === that.attr) {
-                _entry.key = attr.value.value;
-              }
-            });
+              for (var _iterator2 = element.attributes[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {var _attr = _step2.value;
+                if (_attr.name.name === that.attr) {
+                  _entry.key = _attr.value.value;
+                }
+              }} catch (err) {_didIteratorError2 = true;_iteratorError2 = err;} finally {try {if (!_iteratorNormalCompletion2 && _iterator2.return) {_iterator2.return();}} finally {if (_didIteratorError2) {throw _iteratorError2;}}}
 
             if (_entry.key)
             that.keys.push(_entry);

@@ -9,6 +9,9 @@ describe('mergeHashes helper function', () => {
 
     assert.deepEqual(res.new, { key1: 'value1' })
     assert.deepEqual(res.old, {})
+    assert.strictEqual(res.mergeCount, 1)
+    assert.strictEqual(res.pullCount, 0)
+    assert.strictEqual(res.oldCount, 0)
     done()
   })
 
@@ -19,6 +22,9 @@ describe('mergeHashes helper function', () => {
 
     assert.deepEqual(res.new, { key1: '' })
     assert.deepEqual(res.old, { key1: { key11: 'value1' } })
+    assert.strictEqual(res.mergeCount, 0)
+    assert.strictEqual(res.pullCount, 0)
+    assert.strictEqual(res.oldCount, 1)
     done()
   })
 
@@ -29,6 +35,9 @@ describe('mergeHashes helper function', () => {
 
     assert.deepEqual(res.new, { key1: 'value1', key2: '' })
     assert.deepEqual(res.old, {})
+    assert.strictEqual(res.mergeCount, 1)
+    assert.strictEqual(res.pullCount, 0)
+    assert.strictEqual(res.oldCount, 0)
     done()
   })
 
@@ -39,6 +48,9 @@ describe('mergeHashes helper function', () => {
 
     assert.deepEqual(res.new, { key1: 'value1' })
     assert.deepEqual(res.old, { key2: 'value2' })
+    assert.strictEqual(res.mergeCount, 1)
+    assert.strictEqual(res.pullCount, 0)
+    assert.strictEqual(res.oldCount, 1)
     done()
   })
 
@@ -49,6 +61,9 @@ describe('mergeHashes helper function', () => {
 
     assert.deepEqual(res.new, { key1: 'value1', key2: 'value2', key3: '' })
     assert.deepEqual(res.old, { })
+    assert.strictEqual(res.mergeCount, 1)
+    assert.strictEqual(res.pullCount, 0)
+    assert.strictEqual(res.oldCount, 1)
     done()
   })
 
@@ -59,6 +74,9 @@ describe('mergeHashes helper function', () => {
 
     assert.deepEqual(res.new, { key1: '', key1_plural: 'value1' })
     assert.deepEqual(res.old, {})
+    assert.strictEqual(res.mergeCount, 1)
+    assert.strictEqual(res.pullCount, 1)
+    assert.strictEqual(res.oldCount, 0)
     done()
   })
 
@@ -69,6 +87,9 @@ describe('mergeHashes helper function', () => {
 
     assert.deepEqual(res.new, { key2: '' })
     assert.deepEqual(res.old, { key1: '', key1_plural: 'value1' })
+    assert.strictEqual(res.mergeCount, 0)
+    assert.strictEqual(res.pullCount, 0)
+    assert.strictEqual(res.oldCount, 2)
     done()
   })
 
@@ -79,6 +100,9 @@ describe('mergeHashes helper function', () => {
 
     assert.deepEqual(res.new, { key1: '', key1_context: 'value1' })
     assert.deepEqual(res.old, {})
+    assert.strictEqual(res.mergeCount, 1)
+    assert.strictEqual(res.pullCount, 1)
+    assert.strictEqual(res.oldCount, 0)
     done()
   })
 
@@ -89,6 +113,9 @@ describe('mergeHashes helper function', () => {
 
     assert.deepEqual(res.new, { key2: '' })
     assert.deepEqual(res.old, { key1: '', key1_context: 'value1' })
+    assert.strictEqual(res.mergeCount, 0)
+    assert.strictEqual(res.pullCount, 0)
+    assert.strictEqual(res.oldCount, 2)
     done()
   })
 
@@ -152,6 +179,9 @@ describe('mergeHashes helper function', () => {
 
     assert.deepEqual(res.new, expected_target)
     assert.deepEqual(res.old, expected_old)
+    assert.strictEqual(res.mergeCount, 4)
+    assert.strictEqual(res.pullCount, 0)
+    assert.strictEqual(res.oldCount, 2)
     done()
   })
 
@@ -161,6 +191,10 @@ describe('mergeHashes helper function', () => {
     const res    = mergeHashes(source, target)
 
     assert.deepEqual(res.new, { key1: ['Line one.', 'Line two.'] })
+    assert.deepEqual(res.old, {})
+    assert.strictEqual(res.mergeCount, 1)
+    assert.strictEqual(res.pullCount, 0)
+    assert.strictEqual(res.oldCount, 0)
     done()
   })
 })

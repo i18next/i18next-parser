@@ -24,19 +24,19 @@ HTMLLexer = function (_BaseLexer) {_inherits(HTMLLexer, _BaseLexer);
             options = JSON.parse(options);
           } finally
           {}
-        }
+        }var _iteratorNormalCompletion = true;var _didIteratorError = false;var _iteratorError = undefined;try {
 
-        keys.forEach(function (key) {
-          // remove any leading [] in the key
-          key = key.replace(/^\[[a-zA-Z0-9_-]*\]/, '');
+          for (var _iterator = keys[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {var key = _step.value;
+            // remove any leading [] in the key
+            key = key.replace(/^\[[a-zA-Z0-9_-]*\]/, '');
 
-          // if empty grab innerHTML from regex
-          key = key || $node.text();
+            // if empty grab innerHTML from regex
+            key = key || $node.text();
 
-          if (key) {
-            _this2.keys.push(_extends({}, options, { key: key }));
-          }
-        });
+            if (key) {
+              _this2.keys.push(_extends({}, options, { key: key }));
+            }
+          }} catch (err) {_didIteratorError = true;_iteratorError = err;} finally {try {if (!_iteratorNormalCompletion && _iterator.return) {_iterator.return();}} finally {if (_didIteratorError) {throw _iteratorError;}}}
       });
 
       return this.keys;

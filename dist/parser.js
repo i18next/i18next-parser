@@ -40,29 +40,29 @@ Parser = function (_EventEmitter) {_inherits(Parser, _EventEmitter);
 
     content, extension) {var _this2 = this;
       var keys = [];
-      var lexers = this.lexers[extension] || this.lexers.default;
+      var lexers = this.lexers[extension] || this.lexers.default;var _iteratorNormalCompletion = true;var _didIteratorError = false;var _iteratorError = undefined;try {
 
-      lexers.forEach(function (lexerConfig) {
-        var lexerName = void 0;
-        var lexerOptions = void 0;
+        for (var _iterator = lexers[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {var lexerConfig = _step.value;
+          var lexerName = void 0;
+          var lexerOptions = void 0;
 
-        if (typeof lexerConfig === 'string') {
-          lexerName = lexerConfig;
-          lexerOptions = {};
-        } else
-        {
-          lexerName = lexerConfig.lexer;
-          lexerOptions = lexerConfig;
-        }
+          if (typeof lexerConfig === 'string') {
+            lexerName = lexerConfig;
+            lexerOptions = {};
+          } else
+          {
+            lexerName = lexerConfig.lexer;
+            lexerOptions = lexerConfig;
+          }
 
-        if (!lexersMap[lexerName]) {
-          _this2.emit('error', new Error('Lexer \'' + lexerName + '\' does not exist'));
-        }
+          if (!lexersMap[lexerName]) {
+            this.emit('error', new Error('Lexer \'' + lexerName + '\' does not exist'));
+          }
 
-        var Lexer = new lexersMap[lexerName](lexerOptions);
-        Lexer.on('warning', function (warning) {return _this2.emit('warning', warning);});
-        keys = keys.concat(Lexer.extract(content));
-      });
+          var Lexer = new lexersMap[lexerName](lexerOptions);
+          Lexer.on('warning', function (warning) {return _this2.emit('warning', warning);});
+          keys = keys.concat(Lexer.extract(content));
+        }} catch (err) {_didIteratorError = true;_iteratorError = err;} finally {try {if (!_iteratorNormalCompletion && _iterator.return) {_iterator.return();}} finally {if (_didIteratorError) {throw _iteratorError;}}}
 
       return keys;
     } }]);return Parser;}(_events2.default);exports.default = Parser;module.exports = exports['default'];
