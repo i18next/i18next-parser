@@ -84,4 +84,23 @@ describe('JavascriptLexer', () => {
     ])
     done()
   })
+
+  it('supports the acorn-es7 plugin', (done) => {
+    const Lexer = new JavascriptLexer({ acorn: { plugins: { es7: true } } })
+    const content = '@decorator() class Test { test() { t("foo") } }'
+    assert.deepEqual(Lexer.extract(content), [
+      { key: 'foo' }
+    ])
+    done()
+  })
+
+  it('supports the acorn-object-rest-spread plugin', (done) => {
+    const Lexer = new JavascriptLexer({ acorn: { plugins: { objectRestSpread: true } } })
+    const content = 'const data = { text: t("foo"), ...rest }; const { text, ...more } = data;'
+    assert.deepEqual(Lexer.extract(content), [
+      { key: 'foo' }
+    ])
+    done()
+  })
+
 })
