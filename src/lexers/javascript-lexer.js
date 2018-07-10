@@ -18,17 +18,21 @@ export default class JavascriptLexer extends BaseLexer {
   extract(content) {
     const that = this
 
-    var localAcorn = acorn;
+    let localAcorn = acorn
 
-    if(this.acornOptions.plugins) {
-      if(this.acornOptions.plugins.stage3)
-        localAcorn = injectAcornStage3(localAcorn);
-      if(this.acornOptions.plugins.es7)
-        injectAcornEs7(localAcorn);
-      if(this.acornOptions.plugins.staticClassPropertyInitializer)
-        injectAcornStaticClassPropertyInitializer(localAcorn);
-      if(this.acornOptions.plugins.objectRestSpread)
-        injectAcornObjectRestSpread(localAcorn);
+    if (this.acornOptions.plugins) {
+      if (this.acornOptions.plugins.stage3) {
+        localAcorn = injectAcornStage3(localAcorn)
+      }
+      if (this.acornOptions.plugins.es7) {
+        injectAcornEs7(localAcorn)
+      }
+      if (this.acornOptions.plugins.staticClassPropertyInitializer) {
+        injectAcornStaticClassPropertyInitializer(localAcorn)
+      }
+      if (this.acornOptions.plugins.objectRestSpread) {
+        injectAcornObjectRestSpread(localAcorn)
+      }
     }
 
     walk.simple(
