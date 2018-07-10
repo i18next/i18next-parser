@@ -158,6 +158,20 @@ Note the presence of a `default` which will catch any extension that is not list
         functions: ['translate', '__']
       }
     ],
+    js: [
+      {
+        lexer: 'JavascriptLexer',
+        acorn: {
+          plugins: {
+            stage3: true,
+            jsx: true,
+            objectRestSpread: true,
+            staticClassPropertyInitializer: true,
+            es7: true
+          }
+        }
+      }
+    ]
     // ...
   }
 }

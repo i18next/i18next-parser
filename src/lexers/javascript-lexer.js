@@ -1,4 +1,8 @@
 import * as acorn from 'acorn-jsx'
+import injectAcornStage3 from "acorn-stage3/inject"
+import injectAcornObjectRestSpread from "acorn-object-rest-spread/inject"
+import injectAcornEs7 from "acorn-es7"
+import injectAcornStaticClassPropertyInitializer from "acorn-static-class-property-initializer/inject"
 import * as walk from 'acorn/dist/walk'
 import BaseLexer from './base-lexer'
 
@@ -14,8 +18,21 @@ export default class JavascriptLexer extends BaseLexer {
   extract(content) {
     const that = this
 
+    var localAcorn = acorn;
+
+    if(this.acornOptions.plugins) {
+      if(this.acornOptions.plugins.stage3)
+        localAcorn = injectAcornStage3(localAcorn);
+      if(this.acornOptions.plugins.es7)
+        injectAcornEs7(localAcorn);
+      if(this.acornOptions.plugins.staticClassPropertyInitializer)
+        injectAcornStaticClassPropertyInitializer(localAcorn);
+      if(this.acornOptions.plugins.objectRestSpread)
+        injectAcornObjectRestSpread(localAcorn);
+    }
+
     walk.simple(
-      acorn.parse(content, this.acornOptions),
+      localAcorn.parse(content, this.acornOptions),
       {
         CallExpression(node) {
           that.expressionExtractor.call(that, node)
