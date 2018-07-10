@@ -163,10 +163,8 @@ Note the presence of a `default` which will catch any extension that is not list
         lexer: 'JavascriptLexer',
         acorn: {
           plugins: {
-            stage3: true,
             jsx: true,
             objectRestSpread: true,
-            staticClassPropertyInitializer: true,
             es7: true
           }
         }
