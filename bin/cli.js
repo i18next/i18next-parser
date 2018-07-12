@@ -26,16 +26,6 @@ program.on('--help', function() {
 
 program.parse(process.argv)
 
-var args = program.args || []
-
-var globs = args.map(function (s) {
-  s = s.trim()
-  if (s.match(/(^'.*'$|^".*"$)/)) {
-    s = s.slice(1, -1)
-  }
-  return s
-})
-
 var config = {}
 if (program.config) {
   try {
@@ -47,6 +37,33 @@ if (program.config) {
 }
 
 var output = config.output || program.output
+
+var args = program.args || []
+var globs
+
+// if config has an input parameter, try to use it
+if (config.input) {
+  if (!Array.isArray(config.input)) {
+    console.log('  [error] '.red + '`input` must be an array when specified in the config')
+    program.help()
+    program.exit(1)
+  }
+
+  globs = config.input.map(function (s) {
+    return path.resolve(path.dirname(path.resolve(program.config)), s)
+  })
+}
+
+// otherwise, expect to have it specified in the cli
+else {
+  var globs = args.map(function (s) {
+    s = s.trim()
+    if (s.match(/(^'.*'$|^".*"$)/)) {
+      s = s.slice(1, -1)
+    }
+    return s
+  })
+}
 
 if (!output) {
   console.log('  [error] '.red + 'an `output` is required via --config or --output option')
