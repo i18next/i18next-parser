@@ -1,8 +1,8 @@
-import * as acorn from 'acorn-jsx'
-import * as walk from 'acorn/dist/walk'
 import JavascriptLexer from './javascript-lexer'
+import * as walk from 'acorn/dist/walk'
+import injectAcornJsx from 'acorn-jsx/inject'
 
-const JSXParserExtension = Object.assign({}, walk.base, {
+const JSXParserExtension = {
   JSXText(node, st, c) {
     // We need this catch, but we don't need the catch to do anything.
   },
@@ -24,20 +24,26 @@ const JSXParserExtension = Object.assign({}, walk.base, {
   JSXSpreadAttribute(node, st, c) {
     c(node.argument, st, node.argument.type)
   }
-})
+}
 
 export default class JsxLexer extends JavascriptLexer {
   constructor(options = {}) {
     super(options)
 
-    this.acornOptions = { sourceType: 'module', plugins: { jsx: true }, ...options.acorn }
+    // super will setup acornOptions, acorn and the walker, just add what we need
+    this.acornOptions.plugins.jsx = true
+    this.WalkerBase = Object.assign({}, this.WalkerBase, {
+      ...JSXParserExtension
+    })
+
+    this.acorn = injectAcornJsx(this.acorn)
   }
 
   extract(content) {
     const that = this
 
     walk.simple(
-      acorn.parse(content, this.acornOptions),
+      this.acorn.parse(content, this.acornOptions),
       {
         CallExpression(node) {
           that.expressionExtractor.call(that, node)
@@ -79,7 +85,7 @@ export default class JsxLexer extends JavascriptLexer {
           }
         }
       },
-      JSXParserExtension
+      this.WalkerBase
     )
 
     return this.keys
