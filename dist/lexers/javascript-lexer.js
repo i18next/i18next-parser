@@ -1,39 +1,57 @@
-"use strict";Object.defineProperty(exports, "__esModule", { value: true });var _extends = Object.assign || function (target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i];for (var key in source) {if (Object.prototype.hasOwnProperty.call(source, key)) {target[key] = source[key];}}}return target;};var _createClass = function () {function defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);}}return function (Constructor, protoProps, staticProps) {if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;};}();var _acornJsx = require("acorn-jsx");var acorn = _interopRequireWildcard(_acornJsx);
-var _inject = require("acorn-object-rest-spread/inject");var _inject2 = _interopRequireDefault(_inject);
+"use strict";Object.defineProperty(exports, "__esModule", { value: true });var _extends = Object.assign || function (target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i];for (var key in source) {if (Object.prototype.hasOwnProperty.call(source, key)) {target[key] = source[key];}}}return target;};var _createClass = function () {function defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);}}return function (Constructor, protoProps, staticProps) {if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;};}();var _acorn = require("acorn");var acorn = _interopRequireWildcard(_acorn);
+var _inject = require("acorn-stage3/inject");var _inject2 = _interopRequireDefault(_inject);
 var _acornEs = require("acorn-es7");var _acornEs2 = _interopRequireDefault(_acornEs);
 var _walk = require("acorn/dist/walk");var walk = _interopRequireWildcard(_walk);
-var _baseLexer = require("./base-lexer");var _baseLexer2 = _interopRequireDefault(_baseLexer);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function _interopRequireWildcard(obj) {if (obj && obj.__esModule) {return obj;} else {var newObj = {};if (obj != null) {for (var key in obj) {if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key];}}newObj.default = obj;return newObj;}}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function _possibleConstructorReturn(self, call) {if (!self) {throw new ReferenceError("this hasn't been initialised - super() hasn't been called");}return call && (typeof call === "object" || typeof call === "function") ? call : self;}function _inherits(subClass, superClass) {if (typeof superClass !== "function" && superClass !== null) {throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);}subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;}var
+var _baseLexer = require("./base-lexer");var _baseLexer2 = _interopRequireDefault(_baseLexer);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function _interopRequireWildcard(obj) {if (obj && obj.__esModule) {return obj;} else {var newObj = {};if (obj != null) {for (var key in obj) {if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key];}}newObj.default = obj;return newObj;}}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function _possibleConstructorReturn(self, call) {if (!self) {throw new ReferenceError("this hasn't been initialised - super() hasn't been called");}return call && (typeof call === "object" || typeof call === "function") ? call : self;}function _inherits(subClass, superClass) {if (typeof superClass !== "function" && superClass !== null) {throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);}subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;}
+
+var WalkerBase = Object.assign({}, walk.base, {
+  Import: function Import(node, st, c) {
+    // We need this catch, but we don't need the catch to do anything.
+  } });var
+
 
 JavascriptLexer = function (_BaseLexer) {_inherits(JavascriptLexer, _BaseLexer);
   function JavascriptLexer() {var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};_classCallCheck(this, JavascriptLexer);var _this = _possibleConstructorReturn(this, (JavascriptLexer.__proto__ || Object.getPrototypeOf(JavascriptLexer)).call(this,
     options));
 
-    _this.acornOptions = _extends({ sourceType: 'module' }, options.acorn);
+    _this.acornOptions = _extends({
+      sourceType: 'module',
+      ecmaVersion: 9 },
+    options.acorn, {
+      plugins: _extends({
+        stage3: true,
+        es7: true },
+      options.acorn ? options.acorn.plugins : {}) });
+
+
+
     _this.functions = options.functions || ['t'];
-    _this.attr = options.attr || 'i18nKey';return _this;
+    _this.attr = options.attr || 'i18nKey';
+
+    _this.acorn = acorn;
+    _this.WalkerBase = WalkerBase;
+
+    if (_this.acornOptions.plugins) {
+      if (_this.acornOptions.plugins.stage3) {
+        _this.acorn = (0, _inject2.default)(_this.acorn);
+      }
+      if (_this.acornOptions.plugins.es7) {
+        (0, _acornEs2.default)(_this.acorn);
+      }
+    }return _this;
   }_createClass(JavascriptLexer, [{ key: "extract", value: function extract(
 
     content) {
       var that = this;
 
-      var localAcorn = acorn;
-
-      if (this.acornOptions.plugins) {
-        if (this.acornOptions.plugins.es7) {
-          (0, _acornEs2.default)(localAcorn);
-        }
-        if (this.acornOptions.plugins.objectRestSpread) {
-          (0, _inject2.default)(localAcorn);
-        }
-      }
-
       walk.simple(
-      localAcorn.parse(content, this.acornOptions),
+      this.acorn.parse(content, this.acornOptions),
       {
         CallExpression: function CallExpression(node) {
           that.expressionExtractor.call(that, node);
-        } });
+        } },
 
+      this.WalkerBase);
 
 
       return this.keys;

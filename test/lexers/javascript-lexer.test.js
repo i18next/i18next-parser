@@ -85,6 +85,13 @@ describe('JavascriptLexer', () => {
     done()
   })
 
+  it('supports async/await', (done) => {
+    const Lexer = new JavascriptLexer({ acorn: { ecmaVersion: 8 } })
+    const content = 'const data = async () => await Promise.resolve()'
+    Lexer.extract(content)
+    done()
+  })
+
   it('supports the acorn-es7 plugin', (done) => {
     const Lexer = new JavascriptLexer({ acorn: { plugins: { es7: true } } })
     const content = '@decorator() class Test { test() { t("foo") } }'
@@ -94,8 +101,8 @@ describe('JavascriptLexer', () => {
     done()
   })
 
-  it('supports the acorn-object-rest-spread plugin', (done) => {
-    const Lexer = new JavascriptLexer({ acorn: { plugins: { objectRestSpread: true } } })
+  it('supports the spread operator in objects plugin', (done) => {
+    const Lexer = new JavascriptLexer({ acorn: { ecmaVersion: 9 } })
     const content = 'const data = { text: t("foo"), ...rest }; const { text, ...more } = data;'
     assert.deepEqual(Lexer.extract(content), [
       { key: 'foo' }
@@ -103,4 +110,14 @@ describe('JavascriptLexer', () => {
     done()
   })
 
+  describe('supports the acorn-stage3 plugin', () => {
+
+    it('supports dynamic imports', (done) => {
+      const Lexer = new JavascriptLexer({ acorn: { ecmaVersion: 6, plugins: { stage3: true } } })
+      const content = 'import("path/to/some/file").then(doSomethingWithData)'
+      Lexer.extract(content)
+      done()
+    })
+
+  })
 })
