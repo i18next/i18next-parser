@@ -100,109 +100,141 @@ module.exports = i18n
 
 ## Options
 
-Option                   | Description                                           | Default
----------------------- | ----------------------------------------------------- | ---
-**contextSeparator**     | Key separator used in your translation keys           | `_`
-**createOldCatalogs**    | Save the \_old files                                  | `true`
-**defaultNamespace**     | Default namespace used in your i18next config         | `translation`
-**defaultValue**         | Default value to give to empty keys                   | `''`
-**extension** <sup>1<sup>| Extenstion of the catalogs                            | `.json`
-**filename**  <sup>1<sup>| Filename of the catalogs                              | `'$NAMESPACE'`
-**indentation**          | Indentation of the catalog files                      | `2`
-**keepRemoved**          | Keep keys from the catalog that are no longer in code | `false`
-**keySeparator** <sup>2<sup>| Key separator used in your translation keys           | `.`
-**lexers**               | See below for details                                 | `{}`
-**lineEnding**           | Control the line ending. See options at [eol](https://github.com/ryanve/eol) | `auto`
-**locales**              | An array of the locales in your applications          | `['en','fr']`
-**namespaceSeparator** <sup>2<sup>| Namespace separator used in your translation keys     | `:`
-**output**               | Where to write the locale files relative to the base  | `locales`
-**input**               | An array of globs that describe where to look for source files  | `undefined`
-**reactNamespace** <sup>3<sup>| For react file, extract the [defaultNamespace](https://react.i18next.com/components/translate-hoc.html)          | `false`
-**sort**                 | Whether or not to sort the catalog                    | `false`
-**verbose**              | Display info about the parsing including some stats   | `false`
-
-1. Both `filename` and `extension` options support injection of `$LOCALE` and `$NAMESPACE` variables. The file output is JSON by default, if you want YAML, the `extension` must end with `yml`.
-2. If you want to use plain english keys, separators such as `.` and `:` will conflict. You might want to set `keySeparator: false` and `namespaceSeparator: false`. That way, `t('Status: Loading...')` will not think that there are a namespace and three separator dots for instance.
-3. If the file being parsed has a `.jsx` extension, this option is ignored and the namespace is being extracted.
-
-
-### Lexers
-
-The `lexers` option let you configure which Lexer to use for which extension. Here is the default:
+Using a config file gives you fine-grained control over how i18next-parser treats your files. Here's an example config showing all config options with their defaults.
 
 ```js
-{
-  lexers: {
+// i18next-parser.config.js
+
+module.exports = {
+  "contextSeparator": "_",
+  // Key separator used in your translation keys     
+
+  "createOldCatalogs": true,
+  // Save the \_old files                                  
+
+  "defaultNamespace": "translation",
+  // Default namespace used in your i18next config         
+
+  "defaultValue": "",
+  // Default value to give to empty keys                   
+
+  "extension": ".json",
+  // Extension of the catalogs 
+  // Supports $LOCALE and $NAMESPACE injection
+
+  "filename": "$NAMESPACE",
+  // Filename of the catalogs                              
+  // Supports $LOCALE and $NAMESPACE injection
+
+  "indentation": 2,
+  // Indentation of the catalog files                      
+
+  "keepRemoved": false,
+  // Keep keys from the catalog that are no longer in code 
+
+  "keySeparator": ".",
+  // Key separator used in your translation keys
+  // If you want to use plain english keys, separators such as `.` and `:` will conflict. You might want to set `keySeparator: false` and `namespaceSeparator: false`. That way, `t('Status: Loading...')` will not think that there are a namespace and three separator dots for instance.        
+
+  // see below for more details
+  "lexers": {
     hbs: ['HandlebarsLexer'],
     handlebars: ['HandlebarsLexer'],
 
     htm: ['HTMLLexer'],
     html: ['HTMLLexer'],
 
-    js: ['JavascriptLexer'],
-    jsx: ['JavascriptLexer', 'JsxLexer'],
+    js: ['JavascriptLexer'], // if you're writing jsx inside .js files, change this to JsxLexer
+    jsx: ['JsxLexer'],
     mjs: ['JavascriptLexer'],
 
     default: ['JavascriptLexer']
-  }
+  },
+
+  "lineEnding": auto,
+  // Control the line ending. See options at https://github.com/ryanve/eol
+
+  "locales": ['en', 'fr'],
+  // An array of the locales in your applications          
+
+  "namespaceSeparator": ":",
+  // Namespace separator used in your translation keys   
+  // If you want to use plain english keys, separators such as `.` and `:` will conflict. You might want to set `keySeparator: false` and `namespaceSeparator: false`. That way, `t('Status: Loading...')` will not think that there are a namespace and three separator dots for instance.
+
+  "output": "locales",
+  // Where to write the locale files relative to the base
+
+  "input": undefined,
+  // An array of globs that describe where to look for source files
+
+  "reactNamespace": false,
+  // For react file, extract the defaultNamespace - https://react.i18next.com/components/translate-hoc.html
+  // Ignored when parsing a `.jsx` file and namespace is extracted from that file.
+
+  "sort": false,
+  // Whether or not to sort the catalog
+
+  "verbose": false
+  // Display info about the parsing including some stats
 }
 ```
+
+### Lexers
+
+The `lexers` option let you configure which Lexer to use for which extension. Here is the default:
 
 Note the presence of a `default` which will catch any extension that is not listed. There are 3 lexers available: `HandlebarsLexer`, `HTMLLexer` and `JavascriptLexer`. Each has configurations of its own. If you need to change the defaults, you can do it like so:
 
 ```js
-{
-  lexers: {
-    hbs: [
-      {
-        lexer: 'HandlebarsLexer',
-        functions: ['translate', '__']
+[
+  // HandlebarsLexer default config (hbs, handlebars)
+  "handlebars": [{
+    lexer: 'HandlebarsLexer',
+    functions: ['t'] // Array of functions to match
+  }]
+
+  // HtmlLexer default config (htm, html)
+  "html": [{
+    lexer: 'HtmlLexer',
+    attr: 'data-i18n' // Attribute for the keys	
+    optionAttr: 'data-i18n-options' // Attribute for the options
+  }]
+
+  // JavascriptLexer default config (js, mjs)
+  "js": [{
+    lexer: 'JavascriptLexer'
+    functions: ['t'], // Array of functions to match
+
+    // acorn config (for more information on the acorn options, see here: https://github.com/acornjs/acorn#main-parser)
+    acorn: {
+      sourceType: 'module', 
+      ecmaVersion: 9, // forward compatibility
+      plugins: {
+        es7: true, // some es7 parsing that's not yet in acorn (decorators)
+        stage3: true // load some stage3 configs not yet in a version
       }
-    ],
-    js: [
-      {
-        lexer: 'JavascriptLexer',
-        acorn: {
-          plugins: {
-            jsx: true,
-            objectRestSpread: true,
-            es7: true
-          }
-        }
+    }
+  }],
+
+  // JsxLexer default config (jsx)
+  // JsxLexer can take all the options of the JavascriptLexer plus the following
+  "jsx": [{
+    lexer: 'JsxLexer',
+    attr: "i18nKey", // Attribute for the keys
+
+    // acorn config (for more information on the acorn options, see here: https://github.com/acornjs/acorn#main-parser)
+    acorn: {
+      sourceType: 'module', 
+      ecmaVersion: 9, // forward compatibility
+      plugins: {
+        es7: true, // some es7 parsing that's not yet in acorn (decorators)
+        stage3: true, // load some stage3 configs not yet in a version
+        jsx: true // always defaults to true in .jsx files
       }
-    ]
-    // ...
-  }
-}
+    }
+  }]
+]
 ```
-
-**`HandlebarsLexer` options**
-
-Option        | Description                 | Default
-------------- | --------------------------- | -------
-**functions** | Array of functions to match | `['t']`
-
-**`HTMLLexer` options**
-
-Option         | Description                 | Default
--------------- | --------------------------- | -------
-**attr**       | Attribute for the keys      | `'data-i18n'`
-**optionAttr** | Attribute for the options   | `'data-i18n-options'`
-
-**`JavscriptLexer` options**
-
-Option        | Description                 | Default
-------------- | --------------------------- | -------
-**functions** | Array of functions to match | `['t']`
-**acorn**     | Options to pass to acorn    | `{}`
-
-**`JsxLexer` options**
-
-Option        | Description            | Default
-------------- | ---------------------- | -------
-**attr**      | Attribute for the keys | `i18nKey`
-
-
 
 ## Events
 
