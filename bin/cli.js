@@ -41,8 +41,19 @@ var output = config.output || program.output
 var args = program.args || []
 var globs
 
+// prefer globs specified in the cli
+if (args.length) {
+  globs = args.map(function (s) {
+    s = s.trim()
+    if (s.match(/(^'.*'$|^".*"$)/)) {
+      s = s.slice(1, -1)
+    }
+    return s
+  })
+}
+
 // if config has an input parameter, try to use it
-if (config.input) {
+else if (config.input) {
   if (!Array.isArray(config.input)) {
     console.log('  [error] '.red + '`input` must be an array when specified in the config')
     program.help()
@@ -51,17 +62,6 @@ if (config.input) {
 
   globs = config.input.map(function (s) {
     return path.resolve(path.dirname(path.resolve(program.config)), s)
-  })
-}
-
-// otherwise, expect to have it specified in the cli
-else {
-  var globs = args.map(function (s) {
-    s = s.trim()
-    if (s.match(/(^'.*'$|^".*"$)/)) {
-      s = s.slice(1, -1)
-    }
-    return s
   })
 }
 
