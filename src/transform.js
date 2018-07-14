@@ -22,8 +22,6 @@ export default class i18nTransform extends Transform {
       createOldCatalogs: true,
       defaultNamespace: 'translation',
       defaultValue: '',
-      extension: '.json',
-      filename: '$NAMESPACE',
       indentation: 2,
       keepRemoved: false,
       keySeparator: '.',
@@ -131,22 +129,16 @@ export default class i18nTransform extends Transform {
     }
 
     for (const locale of this.options.locales) {
-      const outputPath = path.resolve(this.options.output, locale)
+      const outputPath = path.resolve(this.options.output)
 
       for (const namespace in catalog) {
-        let filename = this.options.filename
-        filename = filename.replace(this.localeRegex, locale)
-        filename = filename.replace(this.namespaceRegex, namespace)
+        let namespacePath = outputPath
+        namespacePath = namespacePath.replace(this.localeRegex, locale)
+        namespacePath = namespacePath.replace(this.namespaceRegex, namespace)
 
-        let extension = this.options.extension
-        extension = extension.replace(this.localeRegex, locale)
-        extension = extension.replace(this.namespaceRegex, namespace)
+        let parsedNamespacePath = path.parse(namespacePath)
 
-        const oldFilename = filename + '_old' + extension
-        filename += extension
-
-        const namespacePath = path.resolve(outputPath, filename)
-        const namespaceOldPath = path.resolve(outputPath, oldFilename)
+        const namespaceOldPath = parsedNamespacePath.dir + parsedNamespacePath.name + '_old' + parsedNamespacePath.ext
 
         let existingCatalog = this.getCatalog(namespacePath)
         let existingOldCatalog = this.getCatalog(namespaceOldPath)
