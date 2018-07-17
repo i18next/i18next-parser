@@ -116,6 +116,7 @@ Option                   | Description                                          
 **locales**              | An array of the locales in your applications          | `['en','fr']`
 **namespaceSeparator** <sup>2<sup>| Namespace separator used in your translation keys     | `:`
 **output**               | Where to write the locale files relative to the base  | `locales`
+**input**               | An array of globs that describe where to look for source files  | `undefined`
 **reactNamespace** <sup>3<sup>| For react file, extract the [defaultNamespace](https://react.i18next.com/components/translate-hoc.html)          | `false`
 **sort**                 | Whether or not to sort the catalog                    | `false`
 **verbose**              | Display info about the parsing including some stats   | `false`
