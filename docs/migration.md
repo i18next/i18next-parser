@@ -9,6 +9,8 @@
 - `namespace` was renamed `defaultNamespace`. It defaults to `translation`.
 - `prefix` was deprecated. Use `output`
 - `suffix` was deprecated. Use `output`
+- `filename` was deprecated. Use `output`
+- `extension` was deprecated. Use `output`
 - catalogs are no longer sorted by default. Set `sort` to `true` to enable this.
 
 ## Improvements
