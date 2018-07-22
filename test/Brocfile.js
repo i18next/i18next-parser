@@ -9,7 +9,7 @@ let i18n = new Funnel(appRoot, {
 })
 
 i18n = new i18nextParser([i18n], {
-  output: 'broccoli/locales'
+  output: 'broccoli/locales/$LOCALE/$NAMESPACE.json'
 })
 
 module.exports = i18n

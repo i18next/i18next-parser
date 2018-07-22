@@ -60,7 +60,7 @@ gulp.task('i18next', function() {
   gulp.src('app/**')
     .pipe(new i18nextParser({
       locales: ['en', 'de'],
-      output: 'locales'
+      output: 'locales/$LOCALE/$NAMESPACE.json'
     }))
     .pipe(gulp.dest('./'));
 });
@@ -92,7 +92,7 @@ let i18n = new Funnel(appRoot, {
 })
 
 i18n = new i18nextParser([i18n], {
-  output: 'broccoli/locales'
+  output: 'broccoli/locales/$LOCALE/$NAMESPACE.json'
 })
 
 module.exports = i18n

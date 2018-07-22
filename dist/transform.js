@@ -29,7 +29,7 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
       lineEnding: 'auto',
       locales: ['en', 'fr'],
       namespaceSeparator: ':',
-      output: 'locales',
+      output: 'locales/$LOCALE/$NAMESPACE.json',
       reactNamespace: false,
       sort: false,
       verbose: false };
@@ -138,7 +138,7 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
 
             var parsedNamespacePath = _path2.default.parse(namespacePath);
 
-            var namespaceOldPath = parsedNamespacePath.dir + parsedNamespacePath.name + '_old' + parsedNamespacePath.ext;
+            var namespaceOldPath = _path2.default.join(parsedNamespacePath.dir, parsedNamespacePath.name + '_old' + parsedNamespacePath.ext);
 
             var existingCatalog = this.getCatalog(namespacePath);
             var existingOldCatalog = this.getCatalog(namespaceOldPath);

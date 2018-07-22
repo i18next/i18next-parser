@@ -29,7 +29,7 @@ export default class i18nTransform extends Transform {
       lineEnding: 'auto',
       locales: ['en', 'fr'],
       namespaceSeparator: ':',
-      output: 'locales',
+      output: 'locales/$LOCALE/$NAMESPACE.json',
       reactNamespace: false,
       sort: false,
       verbose: false
@@ -138,7 +138,7 @@ export default class i18nTransform extends Transform {
 
         let parsedNamespacePath = path.parse(namespacePath)
 
-        const namespaceOldPath = parsedNamespacePath.dir + parsedNamespacePath.name + '_old' + parsedNamespacePath.ext
+        const namespaceOldPath = path.join(parsedNamespacePath.dir, `${parsedNamespacePath.name}_old${parsedNamespacePath.ext}`)
 
         let existingCatalog = this.getCatalog(namespacePath)
         let existingOldCatalog = this.getCatalog(namespaceOldPath)

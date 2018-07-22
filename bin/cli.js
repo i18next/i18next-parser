@@ -12,7 +12,7 @@ var vfs           = require('vinyl-fs')
 program
 .version(pkg.version)
 .option('-c, --config <path>', 'Path to the config file (default: i18next-scanner.config.js)')
-.option('-o, --output <path>', 'Path to the output directory (default: locales)')
+.option('-o, --output <path>', 'Path to the output directory (default: locales/$LOCALE/$NAMESPACE.json)')
 .option('-s, --silent', 'Disable logging to stdout')
 
 program.on('--help', function() {
@@ -20,7 +20,7 @@ program.on('--help', function() {
   console.log('')
   console.log('    $ i18next "src/**/*.{js,jsx}"')
   console.log('    $ i18next "/path/to/src/app.js" "/path/to/assets/index.html"')
-  console.log('    $ i18next --config i18next-parser.config.js --output /path/to/output \'src/**/*.{js,jsx}\'')
+  console.log('    $ i18next --config i18next-parser.config.js --output locales/$LOCALE/$NAMESPACE.json \'src/**/*.{js,jsx}\'')
   console.log('')
 })
 

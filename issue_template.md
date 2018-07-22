@@ -15,7 +15,7 @@ Here is my config file:
 ```
 {
   locales: ['en', 'de'],
-  output: '../locales'
+  output: 'locales/$LOCALE/$NAMESPACE.json'
 }
 ```
 

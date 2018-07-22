@@ -4,18 +4,18 @@
 
 Command line (the options are identical):
 
-`i18next /path/to/file/or/dir -o /output/directory`
+`i18next /path/to/file/or/dir -o /translations/$LOCALE/$NAMESPACE.json`
 
-`i18next /path/to/file/or/dir:/output/directory`
+`i18next /path/to/file/or/dir:/translations/$LOCALE/$NAMESPACE.json`
 
 Gulp:
 
-`.pipe(i18next({output: 'translations'}))`
+`.pipe(i18next({output: 'translations/$LOCALE/$NAMESPACE.json'}))`
 
 It will create the file in the specified folder (in case of gulp it doesn't actually create the files until you call `dest()`):
 
 ```
-/output/directory/en/translation.json
+/translations/en/translation.json
 ...
 ```
 
@@ -148,12 +148,10 @@ In recursive mode, it will parse `*.hbs` and `*.js` files and skip `.git` folder
 **Work with Meteor TAP-i18N (gulp)**
 
 `.pipe(i18next({
-    output: "i18n",
+    output: "i18n/$LOCALE/$NAMESPACE.$LOCALE.i18n.json",
     locales: ['en', 'de', 'fr', 'es'],
     functions: ['_'],
     namespace: 'client',
-    suffix: '.$LOCALE',
-    extension: ".i18n.json",
     writeOld: false
 }))`
 
