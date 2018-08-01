@@ -4,8 +4,13 @@
 
 When translating an application, maintaining the translation catalog by hand is painful. This package parses your code and automates this process. 
 
-If you want to make this process even less painful, I invite you to check [Locize](https://locize.com/). And if you use this package and like it, supporting me on [Patreon](https://www.patreon.com/karelledru) would mean a great deal! (disclamer: Locize is supporting this project on Patreon).
+Finally, if you want to make this process even less painful, I invite you to check [Locize](https://locize.com/). They are a sponsor of this project. Actually, if you use this package and like it, supporting me on [Patreon](https://www.patreon.com/karelledru) would mean a great deal!
 
+<p>
+  <a href="https://www.patreon.com/karelledru" target="_blank">
+    <img src="https://c5.patreon.com/external/logo/become_a_patron_button.png" alt="Become a Patreon">
+  </a>
+</p>
 
 ## Features
 
@@ -250,3 +255,21 @@ The transform emits a `warning:variable` event if the file has a key that contai
 Any contribution is welcome. Please [read the guidelines](docs/development.md) first.
 
 Thanks a lot to all the previous [contributors](https://github.com/i18next/i18next-parser/graphs/contributors).
+
+If you use this package and like it, supporting me on [Patreon](https://www.patreon.com/karelledru) is another great way to contribute!
+
+<p>
+  <a href="https://www.patreon.com/karelledru" target="_blank">
+    <img src="https://c5.patreon.com/external/logo/become_a_patron_button.png" alt="Become a Patreon">
+  </a>
+</p>
+
+--------------
+
+## Gold Sponsors
+
+<p>
+  <a href="https://locize.com/" target="_blank">
+    <img src="https://raw.githubusercontent.com/i18next/i18next/master/assets/locize_sponsor_240.gif" width="240px">
+  </a>
+</p>
