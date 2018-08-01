@@ -7,14 +7,16 @@
 - `ignoreVariables` was deprecated. Keys that are not string litterals now emit a warning
 - `writeOld` was renamed `createOldLibraries`. It defaults to `true`.
 - `namespace` was renamed `defaultNamespace`. It defaults to `translation`.
-- `prefix` was deprecated. Use `filename`
-- `suffix` was deprecated. Use `filename`
+- `prefix` was deprecated. Use `output`
+- `suffix` was deprecated. Use `output`
+- `filename` was deprecated. Use `output`
+- `extension` was deprecated. Use `output`
 - catalogs are no longer sorted by default. Set `sort` to `true` to enable this.
 
 ## Improvements
 
 - `defaultValue`: replace empty keys with the given value
-- `filename` and `extension` support for `$NAMESPACE` and `$LOCALE` variables
+- `output` support for `$NAMESPACE` and `$LOCALE` variables
 - `indentation` let you control the indentation of the catalogs
 - `lineEnding` let you control the line ending of the catalogs
 - `sort` let you enable sorting.

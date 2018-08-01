@@ -317,7 +317,7 @@ describe('parser', () => {
 
   it('retrieves values in existing catalog and creates old catalog', (done) => {
     let result, resultOld
-    const i18nextParser = new i18nTransform({ output: 'test/locales' })
+    const i18nextParser = new i18nTransform({ output: 'test/locales/$LOCALE/$NAMESPACE.json' })
     const fakeFile = new Vinyl({
       contents: Buffer.from("t('test_merge:first'); t('test_merge:second')"),
       path: 'file.js'
@@ -343,7 +343,7 @@ describe('parser', () => {
   it('does not leak values between locales', (done) => {
     let resultEN
     let resultFR
-    const i18nextParser = new i18nTransform({ output: 'test/locales' })
+    const i18nextParser = new i18nTransform({ output: 'test/locales/$LOCALE/$NAMESPACE.json' })
     const fakeFile = new Vinyl({
       contents: Buffer.from("t('test_leak:first'); t('test_leak:second')"),
       path: 'file.js'
@@ -368,7 +368,7 @@ describe('parser', () => {
 
   it('retrieves context values in existing catalog', (done) => {
     let result
-    const i18nextParser = new i18nTransform({ output: 'test/locales' })
+    const i18nextParser = new i18nTransform({ output: 'test/locales/$LOCALE/$NAMESPACE.json' })
     const fakeFile = new Vinyl({
       contents: Buffer.from("t('test_context:first')"),
       path: 'file.js'
@@ -394,7 +394,7 @@ describe('parser', () => {
   })
 
   it('saves unused translations in the old catalog', (done) => {
-    const i18nextParser = new i18nTransform({ output: 'test/locales' })
+    const i18nextParser = new i18nTransform({ output: 'test/locales/$LOCALE/$NAMESPACE.json' })
     const fakeFile = new Vinyl({
       contents: Buffer.from("t('test_old:parent.third', 'third'), t('test_old:fourth', 'fourth')"),
       path: 'file.js'
@@ -422,7 +422,7 @@ describe('parser', () => {
   })
 
   it('restores translations from the old catalog', (done) => {
-    const i18nextParser = new i18nTransform({ output: 'test/locales' })
+    const i18nextParser = new i18nTransform({ output: 'test/locales/$LOCALE/$NAMESPACE.json' })
     const fakeFile = new Vinyl({
       contents: Buffer.from("t('test_old:parent.some', 'random'), t('test_old:other', 'random')"),
       path: 'file.js'
@@ -451,7 +451,7 @@ describe('parser', () => {
 
   it('retrieves plural values in existing catalog', (done) => {
     let result
-    const i18nextParser = new i18nTransform({ output: 'test/locales' })
+    const i18nextParser = new i18nTransform({ output: 'test/locales/$LOCALE/$NAMESPACE.json' })
     const fakeFile = new Vinyl({
       contents: Buffer.from(
         "t('test_plural:first'); t('test_plural:second')"
@@ -482,7 +482,7 @@ describe('parser', () => {
 
   it('retrieves plural and context values in existing catalog', (done) => {
     let result
-    const i18nextParser = new i18nTransform({ output: 'test/locales' })
+    const i18nextParser = new i18nTransform({ output: 'test/locales/$LOCALE/$NAMESPACE.json' })
     const fakeFile = new Vinyl({
       contents: Buffer.from("t('test_context_plural:first')"),
       path: 'file.js'
@@ -508,13 +508,12 @@ describe('parser', () => {
   })
 
   describe('options', () => {
-    it('handles filename and extension with $LOCALE and $NAMESPACE var', (done) => {
+    it('handles output with $LOCALE and $NAMESPACE var', (done) => {
       let result
       const i18nextParser = new i18nTransform({
         locales: ['en'],
         defaultNamespace: 'default',
-        filename: 'p-$LOCALE-$NAMESPACE',
-        extension: '.$LOCALE.i18n'
+        output: 'locales/$LOCALE/p-$LOCALE-$NAMESPACE.$LOCALE.i18n'
       })
       const fakeFile = new Vinyl({
         contents: Buffer.from("t('fourth')"),
@@ -695,7 +694,7 @@ describe('parser', () => {
     it('supports outputing to yml', (done) => {
       let result
       const i18nextParser = new i18nTransform({
-        extension: '.yml'
+        output: 'locales/$LOCALE/$NAMESPACE.yml'
       })
       const fakeFile = new Vinyl({
         contents: Buffer.from("t('first')"),
@@ -878,7 +877,7 @@ describe('parser', () => {
     })
 
     it('emits a `error` event if the catalog is not valid json', (done) => {
-      const i18nextParser = new i18nTransform({ output: 'test/locales' })
+      const i18nextParser = new i18nTransform({ output: 'test/locales/$LOCALE/$NAMESPACE.json' })
       const fakeFile = new Vinyl({
         contents: Buffer.from("t('test_invalid:content')"),
         path: 'file.js'
@@ -907,7 +906,7 @@ describe('parser', () => {
     })
 
     it('emits a `warning` event if a key contains a variable', (done) => {
-      const i18nextParser = new i18nTransform({ output: 'test/locales' })
+      const i18nextParser = new i18nTransform({ output: 'test/locales/$LOCALE/$NAMESPACE.json' })
       const fakeFile = new Vinyl({
         contents: Buffer.from('t(variable)'),
         path: 'file.js'
@@ -921,7 +920,7 @@ describe('parser', () => {
     })
 
     it('emits a `warning` event if a react value contains two variables', (done) => {
-      const i18nextParser = new i18nTransform({ output: 'test/locales' })
+      const i18nextParser = new i18nTransform({ output: 'test/locales/$LOCALE/$NAMESPACE.json' })
       const fakeFile = new Vinyl({
         contents: Buffer.from('<Trans>{{ key1, key2 }}</Trans>'),
         path: 'file.js'

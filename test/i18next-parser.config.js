@@ -1,3 +1,3 @@
 module.exports = {
-  output: 'manual'
+  output: 'manual/$LOCALE/$NAMESPACE.json'
 };

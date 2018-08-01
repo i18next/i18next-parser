@@ -60,7 +60,7 @@ gulp.task('i18next', function() {
   gulp.src('app/**')
     .pipe(new i18nextParser({
       locales: ['en', 'de'],
-      output: 'locales'
+      output: 'locales/$LOCALE/$NAMESPACE.json'
     }))
     .pipe(gulp.dest('./'));
 });
@@ -92,7 +92,7 @@ let i18n = new Funnel(appRoot, {
 })
 
 i18n = new i18nextParser([i18n], {
-  output: 'broccoli/locales'
+  output: 'broccoli/locales/$LOCALE/$NAMESPACE.json'
 })
 
 module.exports = i18n
@@ -117,14 +117,6 @@ module.exports = {
 
   "defaultValue": "",
   // Default value to give to empty keys                   
-
-  "extension": ".json",
-  // Extension of the catalogs 
-  // Supports $LOCALE and $NAMESPACE injection
-
-  "filename": "$NAMESPACE",
-  // Filename of the catalogs                              
-  // Supports $LOCALE and $NAMESPACE injection
 
   "indentation": 2,
   // Indentation of the catalog files                      
@@ -161,7 +153,8 @@ module.exports = {
   // Namespace separator used in your translation keys   
   // If you want to use plain english keys, separators such as `.` and `:` will conflict. You might want to set `keySeparator: false` and `namespaceSeparator: false`. That way, `t('Status: Loading...')` will not think that there are a namespace and three separator dots for instance.
 
-  "output": "locales",
+  "output": "locales/$LOCALE/$NAMESPACE.json",
+  // Supports $LOCALE and $NAMESPACE injection
   // Where to write the locale files relative to the base
 
   "input": undefined,

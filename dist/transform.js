@@ -22,8 +22,6 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
       createOldCatalogs: true,
       defaultNamespace: 'translation',
       defaultValue: '',
-      extension: '.json',
-      filename: '$NAMESPACE',
       indentation: 2,
       keepRemoved: false,
       keySeparator: '.',
@@ -31,7 +29,7 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
       lineEnding: 'auto',
       locales: ['en', 'fr'],
       namespaceSeparator: ':',
-      output: 'locales',
+      output: 'locales/$LOCALE/$NAMESPACE.json',
       reactNamespace: false,
       sort: false,
       verbose: false };
@@ -131,22 +129,16 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
       }var _iteratorNormalCompletion3 = true;var _didIteratorError3 = false;var _iteratorError3 = undefined;try {
 
         for (var _iterator3 = this.options.locales[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {var locale = _step3.value;
-          var outputPath = _path2.default.resolve(this.options.output, locale);
+          var outputPath = _path2.default.resolve(this.options.output);
 
           for (var namespace in catalog) {
-            var filename = this.options.filename;
-            filename = filename.replace(this.localeRegex, locale);
-            filename = filename.replace(this.namespaceRegex, namespace);
+            var namespacePath = outputPath;
+            namespacePath = namespacePath.replace(this.localeRegex, locale);
+            namespacePath = namespacePath.replace(this.namespaceRegex, namespace);
 
-            var extension = this.options.extension;
-            extension = extension.replace(this.localeRegex, locale);
-            extension = extension.replace(this.namespaceRegex, namespace);
+            var parsedNamespacePath = _path2.default.parse(namespacePath);
 
-            var oldFilename = filename + '_old' + extension;
-            filename += extension;
-
-            var namespacePath = _path2.default.resolve(outputPath, filename);
-            var namespaceOldPath = _path2.default.resolve(outputPath, oldFilename);
+            var namespaceOldPath = _path2.default.join(parsedNamespacePath.dir, parsedNamespacePath.name + '_old' + parsedNamespacePath.ext);
 
             var existingCatalog = this.getCatalog(namespacePath);
             var existingOldCatalog = this.getCatalog(namespaceOldPath);
