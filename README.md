@@ -111,30 +111,30 @@ Using a config file gives you fine-grained control over how i18next-parser treat
 // i18next-parser.config.js
 
 module.exports = {
-  "contextSeparator": "_",
+  contextSeparator: '_',
   // Key separator used in your translation keys     
 
-  "createOldCatalogs": true,
+  createOldCatalogs: true,
   // Save the \_old files                                  
 
-  "defaultNamespace": "translation",
+  defaultNamespace: 'translation',
   // Default namespace used in your i18next config         
 
-  "defaultValue": "",
+  defaultValue: '',
   // Default value to give to empty keys                   
 
-  "indentation": 2,
+  indentation: 2,
   // Indentation of the catalog files                      
 
-  "keepRemoved": false,
+  keepRemoved: false,
   // Keep keys from the catalog that are no longer in code 
 
-  "keySeparator": ".",
+  keySeparator: '.',
   // Key separator used in your translation keys
   // If you want to use plain english keys, separators such as `.` and `:` will conflict. You might want to set `keySeparator: false` and `namespaceSeparator: false`. That way, `t('Status: Loading...')` will not think that there are a namespace and three separator dots for instance.        
 
   // see below for more details
-  "lexers": {
+  lexers: {
     hbs: ['HandlebarsLexer'],
     handlebars: ['HandlebarsLexer'],
 
@@ -148,31 +148,31 @@ module.exports = {
     default: ['JavascriptLexer']
   },
 
-  "lineEnding": auto,
+  lineEnding: 'auto',
   // Control the line ending. See options at https://github.com/ryanve/eol
 
-  "locales": ['en', 'fr'],
+  locales: ['en', 'fr'],
   // An array of the locales in your applications          
 
-  "namespaceSeparator": ":",
+  namespaceSeparator: :",
   // Namespace separator used in your translation keys   
   // If you want to use plain english keys, separators such as `.` and `:` will conflict. You might want to set `keySeparator: false` and `namespaceSeparator: false`. That way, `t('Status: Loading...')` will not think that there are a namespace and three separator dots for instance.
 
-  "output": "locales/$LOCALE/$NAMESPACE.json",
+  output: 'locales/$LOCALE/$NAMESPACE.json',
   // Supports $LOCALE and $NAMESPACE injection
   // Where to write the locale files relative to the base
 
-  "input": undefined,
+  input: undefined,
   // An array of globs that describe where to look for source files
 
-  "reactNamespace": false,
+  reactNamespace: false,
   // For react file, extract the defaultNamespace - https://react.i18next.com/components/translate-hoc.html
   // Ignored when parsing a `.jsx` file and namespace is extracted from that file.
 
-  "sort": false,
+  sort: false,
   // Whether or not to sort the catalog
 
-  "verbose": false
+  verbose: false
   // Display info about the parsing including some stats
 }
 ```
@@ -186,20 +186,20 @@ Note the presence of a `default` which will catch any extension that is not list
 ```js
 [
   // HandlebarsLexer default config (hbs, handlebars)
-  "handlebars": [{
+  handlebars: [{
     lexer: 'HandlebarsLexer',
     functions: ['t'] // Array of functions to match
   }]
 
   // HtmlLexer default config (htm, html)
-  "html": [{
+  html: [{
     lexer: 'HtmlLexer',
     attr: 'data-i18n' // Attribute for the keys	
     optionAttr: 'data-i18n-options' // Attribute for the options
   }]
 
   // JavascriptLexer default config (js, mjs)
-  "js": [{
+  js: [{
     lexer: 'JavascriptLexer'
     functions: ['t'], // Array of functions to match
 
@@ -216,9 +216,9 @@ Note the presence of a `default` which will catch any extension that is not list
 
   // JsxLexer default config (jsx)
   // JsxLexer can take all the options of the JavascriptLexer plus the following
-  "jsx": [{
+  jsx: [{
     lexer: 'JsxLexer',
-    attr: "i18nKey", // Attribute for the keys
+    attr: 'i18nKey', // Attribute for the keys
 
     // acorn config (for more information on the acorn options, see here: https://github.com/acornjs/acorn#main-parser)
     acorn: {
