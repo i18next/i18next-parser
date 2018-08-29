@@ -20,7 +20,7 @@ program.on('--help', function() {
   console.log('')
   console.log('    $ i18next "src/**/*.{js,jsx}"')
   console.log('    $ i18next "/path/to/src/app.js" "/path/to/assets/index.html"')
-  console.log('    $ i18next --config i18next-parser.config.js --output locales/$LOCALE/$NAMESPACE.json \'src/**/*.{js,jsx}\'')
+  console.log('    $ i18next --config i18next-parser.config.js --output locales/$LOCALE/$NAMESPACE.json')
   console.log('')
 })
 
@@ -55,9 +55,14 @@ if (args.length) {
 // if config has an input parameter, try to use it
 else if (config.input) {
   if (!Array.isArray(config.input)) {
-    console.log('  [error] '.red + '`input` must be an array when specified in the config')
-    program.help()
-    program.exit(1)
+    if (typeof config.input === 'string') {
+      config.input = [config.input]
+    }
+    else {
+      console.log('  [error] '.red + '`input` must be an array when specified in the config')
+      program.help()
+      program.exit(1)
+    }
   }
 
   globs = config.input.map(function (s) {
