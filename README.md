@@ -45,7 +45,7 @@ Multiple globbing patterns are supported to specify complex file selections. You
 
 - **-o, --output <path>**: Where to write the locale files.
 - **-c, --config <path>**: The config file with all the options
-- **-S, --silent**: The config file with all the options
+- **-S, --silent**: Run the command without output.
 
 ### Gulp
 
