@@ -43,8 +43,8 @@ i18next 'app/**/*.{js,hbs}' 'lib/**/*.{js,hbs}' [-oc]
 
 Multiple globbing patterns are supported to specify complex file selections. You can learn how to write globs [here](https://github.com/isaacs/node-glob). Note that glob must be wrapped with single quotes when passed as arguments.
 
+- **-c, --config <path>**: Path to the output directory (default: locales/$LOCALE/$NAMESPACE.json)
 - **-o, --output <path>**: Where to write the locale files.
-- **-c, --config <path>**: The config file with all the options
 - **-S, --silent**: Disable logging to stdout.
 
 ### Gulp

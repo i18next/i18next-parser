@@ -11,7 +11,7 @@ var vfs           = require('vinyl-fs')
 
 program
 .version(pkg.version)
-.option('-c, --config <path>', 'Path to the config file (default: i18next-scanner.config.js)')
+.option('-c, --config <path>', 'Path to the config file (default: i18next-parser.config.js)')
 .option('-o, --output <path>', 'Path to the output directory (default: locales/$LOCALE/$NAMESPACE.json)')
 .option('-s, --silent', 'Disable logging to stdout')
 
