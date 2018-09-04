@@ -102,7 +102,7 @@ describe('JavascriptLexer', () => {
   })
 
   it('supports the spread operator in objects plugin', (done) => {
-    const Lexer = new JavascriptLexer({ acorn: { ecmaVersion: 9 } })
+    const Lexer = new JavascriptLexer({ acorn: { ecmaVersion: 9, plugins: { objectRestSpread: true } } })
     const content = 'const data = { text: t("foo"), ...rest }; const { text, ...more } = data;'
     assert.deepEqual(Lexer.extract(content), [
       { key: 'foo' }

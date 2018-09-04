@@ -1,6 +1,7 @@
 import * as acorn from 'acorn'
 import injectAcornStage3 from "acorn-stage3/inject"
 import injectAcornEs7 from "acorn-es7"
+import injectAcornObjectRestSpread from "acorn-object-rest-spread/inject"
 import * as walk from 'acorn/dist/walk'
 import BaseLexer from './base-lexer'
 
@@ -14,8 +15,8 @@ export default class JavascriptLexer extends BaseLexer {
   constructor(options = {}) {
     super(options)
 
-    this.acornOptions = { 
-      sourceType: 'module', 
+    this.acornOptions = {
+      sourceType: 'module',
       ecmaVersion: 9,
       ...options.acorn,
       plugins: {
@@ -37,6 +38,9 @@ export default class JavascriptLexer extends BaseLexer {
       }
       if (this.acornOptions.plugins.es7) {
         injectAcornEs7(this.acorn)
+      }
+      if (this.acornOptions.plugins.objectRestSpread) {
+        injectAcornObjectRestSpread(this.acorn)
       }
     }
   }
