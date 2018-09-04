@@ -58,6 +58,12 @@ acorn-numeric-separator@^0.1.1:
   dependencies:
     acorn "^5.2.1"
 
+acorn-object-rest-spread@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/acorn-object-rest-spread/-/acorn-object-rest-spread-1.1.0.tgz#78699aefdd18ec3182caadadf52e2697c048f476"
+  dependencies:
+    acorn "^5.0.3"
+
 acorn-optional-catch-binding@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/acorn-optional-catch-binding/-/acorn-optional-catch-binding-0.1.0.tgz#d9a1874dbffce1eb3495836e5e75b2ad9c300868"
