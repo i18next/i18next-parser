@@ -10,35 +10,32 @@ const WalkerBase = Object.assign({}, walk.base, {
   }
 })
 
+const defaultInjectors = [injectAcornEs7, injectAcornStage3]
+const defaultPlugins = { stage3: true, es7: true }
+
 export default class JavascriptLexer extends BaseLexer {
   constructor(options = {}) {
     super(options)
 
-    this.acornOptions = { 
-      sourceType: 'module', 
+    this.acornOptions = {
+      sourceType: 'module',
       ecmaVersion: 9,
       ...options.acorn,
       plugins: {
-        stage3: true,
-        es7: true,
+        ...defaultPlugins,
         ...(options.acorn ? options.acorn.plugins : {})
       }
     }
 
     this.functions = options.functions || ['t']
     this.attr = options.attr || 'i18nKey'
+    this.injectors = [...defaultInjectors, ...((options.acorn && options.acorn.injectors) || [])]
 
     this.acorn = acorn
     this.WalkerBase = WalkerBase
 
-    if (this.acornOptions.plugins) {
-      if (this.acornOptions.plugins.stage3) {
-        this.acorn = injectAcornStage3(this.acorn)
-      }
-      if (this.acornOptions.plugins.es7) {
-        injectAcornEs7(this.acorn)
-      }
-    }
+    // Apply all injectors to the acorn instance
+    this.injectors.reduce((acornInstance, injector) => injector(acornInstance), this.acorn)
   }
 
   extract(content) {
