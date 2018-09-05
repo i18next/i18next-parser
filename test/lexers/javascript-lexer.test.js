@@ -1,4 +1,5 @@
-import { assert } from 'chai'
+import { assert, expect } from 'chai'
+import { spy } from 'sinon'
 import JavascriptLexer from '../../src/lexers/javascript-lexer'
 
 describe('JavascriptLexer', () => {
@@ -111,13 +112,19 @@ describe('JavascriptLexer', () => {
   })
 
   describe('supports the acorn-stage3 plugin', () => {
-
     it('supports dynamic imports', (done) => {
       const Lexer = new JavascriptLexer({ acorn: { ecmaVersion: 6, plugins: { stage3: true } } })
       const content = 'import("path/to/some/file").then(doSomethingWithData)'
       Lexer.extract(content)
       done()
     })
-
+  })
+  describe('supports additional plugins via injector option', () => {
+    it('provided injectors are called with acorn', (done) => {
+      const injector = spy(acorn => acorn)
+      const Lexer = new JavascriptLexer({ acorn: { ecmaVersion: 6, injectors: [injector] } })
+      expect(injector.calledOnce).to.be.true
+      done()
+    })
   })
 })
