@@ -36,7 +36,7 @@ if (program.config) {
   }
 }
 
-var output = config.output || program.output
+var output = config.output || program.output || process.cwd()
 
 var args = program.args || []
 var globs
@@ -123,4 +123,4 @@ vfs.src(globs)
     console.log('  Stats:  '.yellow + count + ' files were parsed')
   })
 )
-.pipe(vfs.dest(process.cwd()))
+.pipe(vfs.dest(output))
