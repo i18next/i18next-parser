@@ -1,7 +1,7 @@
 import { assert } from 'chai'
 import JavascriptLexer from '../../src/lexers/javascript-lexer'
 
-describe('JavascriptLexer', () => {
+export function testJavaScriptLexer(JavascriptLexer) {
   it('extracts keys from translation components', (done) => {
     const Lexer = new JavascriptLexer()
     const content = 'i18n.t("first")'
@@ -120,4 +120,8 @@ describe('JavascriptLexer', () => {
     })
 
   })
+}
+
+describe('JavascriptLexer', () => {
+  testJavaScriptLexer(JavascriptLexer)
 })

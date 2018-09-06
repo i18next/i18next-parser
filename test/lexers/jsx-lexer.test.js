@@ -1,7 +1,7 @@
 import { assert } from 'chai'
 import JsxLexer from '../../src/lexers/jsx-lexer'
 
-describe('JsxLexer', () => {
+export function testJsxLexer(JsxLexer) {
   describe('<Interpolate>', () => {
     it('extracts keys from i18nKey attributes', (done) => {
       const Lexer = new JsxLexer()
@@ -103,4 +103,8 @@ describe('JsxLexer', () => {
       done()
     })
   })
+}
+
+describe('JsxLexer', () => {
+  testJsxLexer(JsxLexer)
 })

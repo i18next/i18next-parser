@@ -2,7 +2,7 @@
 
 [![NPM](https://nodei.co/npm/i18next-parser.png?downloads=true&stars=true)](https://www.npmjs.com/package/i18next-parser)
 
-When translating an application, maintaining the translation catalog by hand is painful. This package parses your code and automates this process. 
+When translating an application, maintaining the translation catalog by hand is painful. This package parses your code and automates this process.
 
 Finally, if you want to make this process even less painful, I invite you to check [Locize](https://locize.com/). They are a sponsor of this project. Actually, if you use this package and like it, supporting me on [Patreon](https://www.patreon.com/karelledru) would mean a great deal!
 
@@ -15,7 +15,7 @@ Finally, if you want to make this process even less painful, I invite you to che
 ## Features
 
 - Choose your weapon: A CLI, a standalone parser or a stream transform
-- 4 built in lexers: Javascript, JSX, HTML and Handlebars
+- 5 built in lexers: Javascript, JSX, HTML, Handlebars, and TypeScript+tsx
 - Creates one catalog file per locale and per namespace
 - Backs up the old keys your code doesn't use anymore in `namespace_old.json` catalog
 - Restores keys from the `_old` file if the one in the translation file is empty
@@ -82,7 +82,7 @@ yarn add -D i18next-parser@next
 npm install --save-dev i18next-parser@next
 ```
 
-[Broccoli.js](https://github.com/broccolijs/broccoli) defines itself as a fast, reliable asset pipeline, supporting constant-time rebuilds and compact build definitions. 
+[Broccoli.js](https://github.com/broccolijs/broccoli) defines itself as a fast, reliable asset pipeline, supporting constant-time rebuilds and compact build definitions.
 
 ```javascript
 
@@ -112,26 +112,26 @@ Using a config file gives you fine-grained control over how i18next-parser treat
 
 module.exports = {
   contextSeparator: '_',
-  // Key separator used in your translation keys     
+  // Key separator used in your translation keys
 
   createOldCatalogs: true,
-  // Save the \_old files                                  
+  // Save the \_old files
 
   defaultNamespace: 'translation',
-  // Default namespace used in your i18next config         
+  // Default namespace used in your i18next config
 
   defaultValue: '',
-  // Default value to give to empty keys                   
+  // Default value to give to empty keys
 
   indentation: 2,
-  // Indentation of the catalog files                      
+  // Indentation of the catalog files
 
   keepRemoved: false,
-  // Keep keys from the catalog that are no longer in code 
+  // Keep keys from the catalog that are no longer in code
 
   keySeparator: '.',
   // Key separator used in your translation keys
-  // If you want to use plain english keys, separators such as `.` and `:` will conflict. You might want to set `keySeparator: false` and `namespaceSeparator: false`. That way, `t('Status: Loading...')` will not think that there are a namespace and three separator dots for instance.        
+  // If you want to use plain english keys, separators such as `.` and `:` will conflict. You might want to set `keySeparator: false` and `namespaceSeparator: false`. That way, `t('Status: Loading...')` will not think that there are a namespace and three separator dots for instance.
 
   // see below for more details
   lexers: {
@@ -145,6 +145,9 @@ module.exports = {
     jsx: ['JsxLexer'],
     mjs: ['JavascriptLexer'],
 
+    ts: ['TypescriptLexer'],
+    tsx: ['TypescriptLexer'],
+
     default: ['JavascriptLexer']
   },
 
@@ -152,10 +155,10 @@ module.exports = {
   // Control the line ending. See options at https://github.com/ryanve/eol
 
   locales: ['en', 'fr'],
-  // An array of the locales in your applications          
+  // An array of the locales in your applications
 
   namespaceSeparator: ':',
-  // Namespace separator used in your translation keys   
+  // Namespace separator used in your translation keys
   // If you want to use plain english keys, separators such as `.` and `:` will conflict. You might want to set `keySeparator: false` and `namespaceSeparator: false`. That way, `t('Status: Loading...')` will not think that there are a namespace and three separator dots for instance.
 
   output: 'locales/$LOCALE/$NAMESPACE.json',
@@ -194,7 +197,7 @@ Note the presence of a `default` which will catch any extension that is not list
   // HtmlLexer default config (htm, html)
   html: [{
     lexer: 'HtmlLexer',
-    attr: 'data-i18n' // Attribute for the keys	
+    attr: 'data-i18n' // Attribute for the keys
     optionAttr: 'data-i18n-options' // Attribute for the options
   }]
 
@@ -205,7 +208,7 @@ Note the presence of a `default` which will catch any extension that is not list
 
     // acorn config (for more information on the acorn options, see here: https://github.com/acornjs/acorn#main-parser)
     acorn: {
-      sourceType: 'module', 
+      sourceType: 'module',
       ecmaVersion: 9, // forward compatibility
       plugins: {
         es7: true, // some es7 parsing that's not yet in acorn (decorators)
@@ -222,7 +225,32 @@ Note the presence of a `default` which will catch any extension that is not list
 
     // acorn config (for more information on the acorn options, see here: https://github.com/acornjs/acorn#main-parser)
     acorn: {
-      sourceType: 'module', 
+      sourceType: 'module',
+      ecmaVersion: 9, // forward compatibility
+      plugins: {
+        es7: true, // some es7 parsing that's not yet in acorn (decorators)
+        stage3: true, // load some stage3 configs not yet in a version
+        jsx: true // always defaults to true in .jsx files
+      }
+    }
+  }],
+
+  // TypescriptLexer default config (ts/x)
+  // TypescriptLexer can take all the options of the JsxLexer in addition to
+  // optional tsOptions to pass as compilerOptions to TypeScript.
+  ts: [{
+    lexer: 'TypescriptLexer',
+    attr: 'i18nKey', // Attribute for the keys
+
+    // compiler options (https://www.typescriptlang.org/docs/handbook/compiler-options.html)
+    // note that jsx MUST be set to Preserve, or your strings will not be extracted.
+    tsOptions: {
+      jsx: 'Preserve',
+    },
+
+    // acorn config (for more information on the acorn options, see here: https://github.com/acornjs/acorn#main-parser)
+    acorn: {
+      sourceType: 'module',
       ecmaVersion: 9, // forward compatibility
       plugins: {
         es7: true, // some es7 parsing that's not yet in acorn (decorators)
