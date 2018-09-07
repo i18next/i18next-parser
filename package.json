@@ -36,6 +36,7 @@
     "vinyl-fs": "^3.0.2",
     "yamljs": "^0.3.0"
   },
+  "optionalDependencies": {},
   "engines": {
     "node": ">=0.10.22"
   },
@@ -50,7 +51,8 @@
     "broccoli-funnel": "^2.0.1",
     "chai": "^4.1.2",
     "gulp": "^4.0.0",
-    "mocha": "^5.0.0"
+    "mocha": "^5.0.0",
+    "typescript": "^3.0.3"
   },
   "keywords": [
     "gulpplugin",

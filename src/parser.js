@@ -3,6 +3,7 @@ import HandlebarsLexer from './lexers/handlebars-lexer'
 import HTMLLexer from './lexers/html-lexer'
 import JavascriptLexer from './lexers/javascript-lexer'
 import JsxLexer from './lexers/jsx-lexer'
+import TypescriptLexer from './lexers/typescript-lexer'
 import path from 'path'
 
 const lexers = {
@@ -16,6 +17,9 @@ const lexers = {
   jsx: ['JsxLexer'],
   mjs: ['JavascriptLexer'],
 
+  ts: ['TypescriptLexer'],
+  tsx: ['TypescriptLexer'],
+
   default: ['JavascriptLexer']
 }
 
@@ -23,7 +27,8 @@ const lexersMap = {
   HandlebarsLexer,
   HTMLLexer,
   JavascriptLexer,
-  JsxLexer
+  JsxLexer,
+  TypescriptLexer
 }
 
 export default class Parser extends EventEmitter {
