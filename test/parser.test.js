@@ -210,6 +210,44 @@ describe('parser', () => {
     i18nextParser.end(fakeFile)
   })
 
+  it('parses typescript files', (done) => {
+    let result
+    const i18nextParser = new i18nTransform()
+    const fakeFile = new Vinyl({
+      contents: fs.readFileSync(
+        path.resolve(__dirname, 'templating/typescript.tsx')
+      ),
+      path: 'typescript.tsx'
+    })
+    const expected = {
+      first: '',
+      second: '',
+      third: {
+        first: 'Hello <1><0>{{name}}</0></1>, you have <3>{{count}}</3> unread message. <5>Go to messages</5>.',
+        second: ' <1>Hello,</1> this shouldn\'t be trimmed.',
+        third: '<0>Hello,</0>this should be trimmed.<2> and this shoudln\'t</2>'
+      },
+      fourth: '',
+      fifth: '',
+      bar: '',
+      foo: '',
+      "This should be part of the value and the key": "This should be part of the value and the key",
+      "don't split <1>{{on}}</1>": "don't split <1>{{on}}</1>"
+    }
+
+    i18nextParser.on('data', file => {
+      if (file.relative.endsWith(enLibraryPath)) {
+        result = JSON.parse(file.contents)
+      }
+    })
+    i18nextParser.on('end', () => {
+      assert.deepEqual(result, expected)
+      done()
+    })
+
+    i18nextParser.end(fakeFile)
+  })
+
   it('creates one file per namespace and per locale', (done) => {
     let results = []
     const i18nextParser = new i18nTransform({

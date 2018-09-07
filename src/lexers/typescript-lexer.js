@@ -5,13 +5,14 @@ import { join } from 'path'
 let loadedTs = null
 function loadTypeScript() {
   if (loadedTs) {
-    return loadedTs;
+    return loadedTs
   }
 
   try {
     loadedTs = require('typescript')
   } catch (e) {
-    throw new ParsingError(`You must install typescript to parse TypeScript files. Try running "yarn install typescript"`)
+    throw new ParsingError(`You must install typescript to parse TypeScript files. `
+      + `Try running "yarn add typescript" or "npm install typescript"`)
   }
 
   return loadedTs
@@ -19,7 +20,7 @@ function loadTypeScript() {
 
 export default class TypescriptLexer extends JsxLexer {
   constructor(options = {}) {
-    super(options);
+    super(options)
     this.tsOptions = options.tsOptions
   }
 
@@ -27,7 +28,8 @@ export default class TypescriptLexer extends JsxLexer {
     const transpiled = loadTypeScript().transpileModule(content, {
       compilerOptions: {
         ...this.tsOptions,
-        jsx: 'Preserve'
+        jsx: 'Preserve',
+        target: 'esnext'
       }
     })
 

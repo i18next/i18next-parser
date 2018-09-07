@@ -246,6 +246,7 @@ Note the presence of a `default` which will catch any extension that is not list
     // note that jsx MUST be set to Preserve, or your strings will not be extracted.
     tsOptions: {
       jsx: 'Preserve',
+      target: 'esnext'
     },
 
     // acorn config (for more information on the acorn options, see here: https://github.com/acornjs/acorn#main-parser)

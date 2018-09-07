@@ -11,7 +11,8 @@ function loadTypeScript() {
   try {
     loadedTs = require('typescript');
   } catch (e) {
-    throw new ParsingError('You must install typescript to parse TypeScript files. Try running "yarn install typescript"');
+    throw new ParsingError('You must install typescript to parse TypeScript files. ' + 'Try running "yarn add typescript" or "npm install typescript"');
+
   }
 
   return loadedTs;
@@ -27,7 +28,8 @@ TypescriptLexer = function (_JsxLexer) {_inherits(TypescriptLexer, _JsxLexer);
       var transpiled = loadTypeScript().transpileModule(content, {
         compilerOptions: _extends({},
         this.tsOptions, {
-          jsx: 'Preserve' }) });
+          jsx: 'Preserve',
+          target: 'esnext' }) });
 
 
 
