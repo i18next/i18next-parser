@@ -160,10 +160,12 @@ module.exports = {
 
   output: 'locales/$LOCALE/$NAMESPACE.json',
   // Supports $LOCALE and $NAMESPACE injection
-  // Where to write the locale files relative to the base
+  // Where to write the locale files relative to the location
+  // of the configuration file
 
   input: undefined,
   // An array of globs that describe where to look for source files
+  // relative to the location of the configuration file
 
   reactNamespace: false,
   // For react file, extract the defaultNamespace - https://react.i18next.com/components/translate-hoc.html
