@@ -36,7 +36,7 @@ if (program.config) {
   }
 }
 
-var output = config.output || program.output
+config.output = config.output || program.output
 
 var args = program.args || []
 var globs
@@ -70,7 +70,7 @@ else if (config.input) {
   })
 }
 
-if (!output) {
+if (!config.output) {
   console.log('  [error] '.red + 'an `output` is required via --config or --output option')
   program.help()
   program.exit(1)
@@ -87,7 +87,7 @@ console.log()
 console.log('  i18next Parser'.yellow)
 console.log('  --------------'.yellow)
 console.log('  Input:  '.yellow + args.join(', '))
-console.log('  Output: '.yellow + output)
+console.log('  Output: '.yellow + config.output)
 if (!program.silent) {
   console.log()
 }
