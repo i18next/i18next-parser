@@ -43,6 +43,8 @@ i18next 'app/**/*.{js,hbs}' 'lib/**/*.{js,hbs}' [-oc]
 
 Multiple globbing patterns are supported to specify complex file selections. You can learn how to write globs [here](https://github.com/isaacs/node-glob). Note that glob must be wrapped with single quotes when passed as arguments.
 
+**IMPORTANT NOTE**: If you pass the globs as CLI argument, they must be relative to where you run the command (aka relative to `process.cwd()`). If you pass the globs via the `input` option of the config file, they must be relative to the config file. 
+
 - **-c, --config <path>**: Path to the output directory (default: locales/$LOCALE/$NAMESPACE.json)
 - **-o, --output <path>**: Where to write the locale files.
 - **-S, --silent**: Disable logging to stdout.
@@ -160,8 +162,7 @@ module.exports = {
 
   output: 'locales/$LOCALE/$NAMESPACE.json',
   // Supports $LOCALE and $NAMESPACE injection
-  // Where to write the locale files relative to the location
-  // of the configuration file
+  // Where to write the locale files relative to process.cwd()
 
   input: undefined,
   // An array of globs that describe where to look for source files
