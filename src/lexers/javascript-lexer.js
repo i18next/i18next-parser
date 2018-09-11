@@ -1,6 +1,4 @@
 import * as acorn from 'acorn'
-import injectAcornStage3 from "acorn-stage3/inject"
-import injectAcornEs7 from "acorn-es7"
 import * as walk from 'acorn/dist/walk'
 import BaseLexer from './base-lexer'
 
