@@ -215,10 +215,7 @@ Note the presence of a `default` which will catch any extension that is not list
       ecmaVersion: 9, // forward compatibility
       // Allows additional acorn plugins via the exported injector functions
       injectors: [],
-      plugins: {
-        es7: true, // some es7 parsing that's not yet in acorn (decorators)
-        stage3: true // load some stage3 configs not yet in a version
-      }
+      plugins: {},
     }
   }],
 
@@ -232,11 +229,8 @@ Note the presence of a `default` which will catch any extension that is not list
     acorn: {
       sourceType: 'module',
       ecmaVersion: 9, // forward compatibility
-      plugins: {
-        es7: true, // some es7 parsing that's not yet in acorn (decorators)
-        stage3: true, // load some stage3 configs not yet in a version
-        jsx: true // always defaults to true in .jsx files
-      }
+      injectors: [],
+      plugins: {},
     }
   }],
 
@@ -253,19 +247,6 @@ Note the presence of a `default` which will catch any extension that is not list
       jsx: 'Preserve',
       target: 'esnext'
     },
-
-    // acorn config (for more information on the acorn options, see here: https://github.com/acornjs/acorn#main-parser)
-    acorn: {
-      sourceType: 'module',
-      ecmaVersion: 9, // forward compatibility
-      // Allows additional acorn plugins via the exported injector functions
-      injectors: [],
-      plugins: {
-        es7: true, // some es7 parsing that's not yet in acorn (decorators)
-        stage3: true, // load some stage3 configs not yet in a version
-        jsx: true // always defaults to true in .jsx files
-      }
-    }
   }]
 ]
 ```
@@ -278,7 +259,7 @@ import injectAcornStaticClassPropertyInitializer from 'acorn-static-class-proper
 
 injectAcornStaticClassPropertyInitializer(acorn);
 ```
-To support these plugins in this project, there is an `injectors` option on the `acorn` configuration key. To add additional plugins to the `JavascriptLexer` oor `JsxLexer`, the configuration would look something like this:
+To support these plugins in this project, there is an `injectors` option on the `acorn` configuration key. To add additional plugins to the `JavascriptLexer` or `JsxLexer`, the configuration would look something like this:
 ```javascript
 import injectAcornStaticClassPropertyInitializer from 'acorn-static-class-property-initializer/inject';
 
