@@ -18,6 +18,9 @@ export default class JavascriptLexer extends BaseLexer {
       sourceType: 'module',
       ecmaVersion: 9,
       ...options.acorn,
+      // Lexers that inherit from JSLexer assume that the plugins
+      // object exists.
+      plugins: options.acorn ? options.acorn.plugins : {},
     }
 
     this.functions = options.functions || ['t']
