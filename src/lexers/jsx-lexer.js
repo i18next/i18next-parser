@@ -1,6 +1,5 @@
 import JavascriptLexer from './javascript-lexer'
 import * as walk from 'acorn/dist/walk'
-import injectAcornJsx from 'acorn-jsx/inject'
 
 const JSXParserExtension = {
   JSXText(node, st, c) {
@@ -36,7 +35,13 @@ export default class JsxLexer extends JavascriptLexer {
       ...JSXParserExtension
     })
 
-    this.acorn = injectAcornJsx(this.acorn)
+    try {
+      const injectAcornJsx = require('acorn-jsx/inject')
+      this.acorn = injectAcornJsx(this.acorn)
+    } catch (e) {
+      throw new ParsingError(`You must install acorn-jsx to parse jsx files. `
+        + `Try running "yarn add acorn-jsx" or "npm install acorn-jsx"`)
+    }
   }
 
   extract(content) {
