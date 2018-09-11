@@ -2,20 +2,14 @@ import JsxLexer from './jsx-lexer'
 import { readFileSync } from 'fs'
 import { join } from 'path'
 
-let loadedTs = null
 function loadTypeScript() {
-  if (loadedTs) {
-    return loadedTs
-  }
-
   try {
-    loadedTs = require('typescript')
+    return require('typescript')
   } catch (e) {
     throw new ParsingError(`You must install typescript to parse TypeScript files. `
       + `Try running "yarn add typescript" or "npm install typescript"`)
   }
-
-  return loadedTs
+  return null
 }
 
 export default class TypescriptLexer extends JsxLexer {
