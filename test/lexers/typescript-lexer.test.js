@@ -206,16 +206,6 @@ describe('TypeScript lexer', () => {
     Lexer.extract(content)
     done()
   })
-
-  it('supports the acorn-es7 plugin', (done) => {
-    const Lexer = new TypescriptLexer({ acorn: { plugins: { es7: true } } })
-    const content = '@decorator() class Test { test() { t("foo") } }'
-    assert.deepEqual(Lexer.extract(content), [
-      { key: 'foo' }
-    ])
-    done()
-  })
-
   it('supports the spread operator in objects plugin', (done) => {
     const Lexer = new TypescriptLexer({ acorn: { ecmaVersion: 9 } })
     const content = 'const data = { text: t("foo"), ...rest }; const { text, ...more } = data;'
@@ -223,16 +213,5 @@ describe('TypeScript lexer', () => {
       { key: 'foo' }
     ])
     done()
-  })
-
-  describe('supports the acorn-stage3 plugin', () => {
-
-    it('supports dynamic imports', (done) => {
-      const Lexer = new TypescriptLexer({ acorn: { ecmaVersion: 6, plugins: { stage3: true } } })
-      const content = 'import("path/to/some/file").then(doSomethingWithData)'
-      Lexer.extract(content)
-      done()
-    })
-
   })
 })
