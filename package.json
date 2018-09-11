@@ -18,10 +18,6 @@
   },
   "dependencies": {
     "acorn": "^5.5.3",
-    "acorn-es7": "^0.1.0",
-    "acorn-jsx": "^4.1.1",
-    "acorn-object-rest-spread": "^1.1.0",
-    "acorn-stage3": "^0.6.0",
     "broccoli-plugin": "^1.3.0",
     "cheerio": "^1.0.0-rc.2",
     "colors": "~1.2.0-rc0",
@@ -36,7 +32,13 @@
     "vinyl-fs": "^3.0.2",
     "yamljs": "^0.3.0"
   },
-  "optionalDependencies": {},
+  "optionalDependencies": {
+    "acorn-es7": "^0.1.0",
+    "acorn-jsx": "^4.1.1",
+    "acorn-object-rest-spread": "^1.1.0",
+    "acorn-stage3": "^0.6.0",
+    "typescript": "^3.0.3"
+  },
   "engines": {
     "node": ">=0.10.22"
   },
@@ -52,7 +54,6 @@
     "chai": "^4.1.2",
     "gulp": "^4.0.0",
     "mocha": "^5.0.0",
-    "typescript": "^3.0.3",
     "sinon": "^6.2.0"
   },
   "keywords": [
