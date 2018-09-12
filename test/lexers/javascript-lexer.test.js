@@ -101,7 +101,7 @@ describe('JavascriptLexer', () => {
     done()
   })
   describe('supports additional plugins via injector option', () => {
-    it('provided injectors are called with acorn', (done) => {
+    it('calls provided injectors with acorn', (done) => {
       const injector = spy(acorn => acorn)
       const Lexer = new JavascriptLexer({ acorn: { ecmaVersion: 6, injectors: [injector] } })
       expect(injector.calledOnce).to.be.true
