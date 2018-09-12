@@ -39,8 +39,10 @@ export default class JsxLexer extends JavascriptLexer {
       const injectAcornJsx = require('acorn-jsx/inject')
       this.acorn = injectAcornJsx(this.acorn)
     } catch (e) {
-      throw new Error(`You must install acorn-jsx to parse jsx files. `
-        + `Try running "yarn add acorn-jsx" or "npm install acorn-jsx"`)
+      throw new Error(
+        'You must install acorn-jsx to parse jsx files. ' +
+        'Try running "yarn add acorn-jsx" or "npm install acorn-jsx"'
+      )
     }
   }
 

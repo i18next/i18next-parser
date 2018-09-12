@@ -9,8 +9,10 @@ export default class TypescriptLexer extends JsxLexer {
     try {
       this.typescript = require('typescript')
     } catch (e) {
-      throw new Error(`You must install typescript to parse TypeScript files. `
-        + `Try running "yarn add typescript" or "npm install typescript"`)
+      throw new Error(
+        'You must install typescript to parse TypeScript files. ' +
+        'Try running "yarn add typescript" or "npm install typescript"'
+      )
     }
   }
 
