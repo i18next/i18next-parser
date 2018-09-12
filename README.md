@@ -195,7 +195,8 @@ If you need to change the defaults, you can do it like so:
 #### Javascript
 The Javascript lexer uses [Acorn](https://github.com/acornjs/acorn) to walk through your code and extract references
 translation functions. If your code uses features not supported natively by Acorn, you can enable support through
-`injectors` and `plugins` configuration. This is an example configuration that adds all non-jsx plugins supported by acorn
+`injectors` and `plugins` configuration. Note that you must install these additional dependencies yourself through
+`yarn` or `npm`; they are not included in this package. This is an example configuration that adds all non-jsx plugins supported by acorn
 at the time of writing:
 ```javascript
 const injectAcornStaticClassPropertyInitializer = require('acorn-static-class-property-initializer/inject');
