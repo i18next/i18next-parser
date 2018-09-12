@@ -333,8 +333,6 @@ Default configuration:
 }
 ```
 
-#### Plugins and Lexers
-
 ## Events
 
 The transform emits a `reading` event for each file it parses:
