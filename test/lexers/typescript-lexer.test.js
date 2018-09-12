@@ -1,4 +1,7 @@
 import { assert } from 'chai'
+import stage3Injector from 'acorn-stage3/inject'
+import es7Injector from 'acorn-es7'
+
 import TypescriptLexer from '../../src/lexers/typescript-lexer'
 
 describe('TypeScript lexer', () => {
@@ -207,15 +210,6 @@ describe('TypeScript lexer', () => {
     done()
   })
 
-  it('supports the acorn-es7 plugin', (done) => {
-    const Lexer = new TypescriptLexer({ acorn: { plugins: { es7: true } } })
-    const content = '@decorator() class Test { test() { t("foo") } }'
-    assert.deepEqual(Lexer.extract(content), [
-      { key: 'foo' }
-    ])
-    done()
-  })
-
   it('supports the spread operator in objects plugin', (done) => {
     const Lexer = new TypescriptLexer({ acorn: { ecmaVersion: 9 } })
     const content = 'const data = { text: t("foo"), ...rest }; const { text, ...more } = data;'
@@ -225,10 +219,19 @@ describe('TypeScript lexer', () => {
     done()
   })
 
+  it('supports the acorn-es7 plugin', (done) => {
+    const Lexer = new TypescriptLexer({ acorn: { injectors: [es7Injector], plugins: { es7: true } } })
+    const content = '@decorator() class Test { test() { t("foo") } }'
+    assert.deepEqual(Lexer.extract(content), [
+      { key: 'foo' }
+    ])
+    done()
+  })
+
   describe('supports the acorn-stage3 plugin', () => {
 
     it('supports dynamic imports', (done) => {
-      const Lexer = new TypescriptLexer({ acorn: { ecmaVersion: 6, plugins: { stage3: true } } })
+      const Lexer = new TypescriptLexer({ acorn: { ecmaVersion: 6, injectors: [stage3Injector], plugins: { stage3: true } } })
       const content = 'import("path/to/some/file").then(doSomethingWithData)'
       Lexer.extract(content)
       done()

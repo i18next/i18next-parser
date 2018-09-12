@@ -1,5 +1,8 @@
 import { assert, expect } from 'chai'
 import { spy } from 'sinon'
+import stage3Injector from 'acorn-stage3/inject'
+import es7Injector from 'acorn-es7'
+
 import JavascriptLexer from '../../src/lexers/javascript-lexer'
 
 describe('JavascriptLexer', () => {
@@ -93,15 +96,6 @@ describe('JavascriptLexer', () => {
     done()
   })
 
-  it('supports the acorn-es7 plugin', (done) => {
-    const Lexer = new JavascriptLexer({ acorn: { plugins: { es7: true } } })
-    const content = '@decorator() class Test { test() { t("foo") } }'
-    assert.deepEqual(Lexer.extract(content), [
-      { key: 'foo' }
-    ])
-    done()
-  })
-
   it('supports the spread operator in objects plugin', (done) => {
     const Lexer = new JavascriptLexer({ acorn: { ecmaVersion: 9 } })
     const content = 'const data = { text: t("foo"), ...rest }; const { text, ...more } = data;'
@@ -113,11 +107,19 @@ describe('JavascriptLexer', () => {
 
   describe('supports the acorn-stage3 plugin', () => {
     it('supports dynamic imports', (done) => {
-      const Lexer = new JavascriptLexer({ acorn: { ecmaVersion: 6, plugins: { stage3: true } } })
+      const Lexer = new JavascriptLexer({ acorn: { ecmaVersion: 6, injectors: [stage3Injector], plugins: { stage3: true } } })
       const content = 'import("path/to/some/file").then(doSomethingWithData)'
       Lexer.extract(content)
       done()
     })
+  })
+  it('supports the acorn-es7 plugin', (done) => {
+    const Lexer = new JavascriptLexer({ acorn: { injectors: [es7Injector], plugins: { es7: true } } })
+    const content = '@decorator() class Test { test() { t("foo") } }'
+    assert.deepEqual(Lexer.extract(content), [
+      { key: 'foo' }
+    ])
+    done()
   })
   describe('supports additional plugins via injector option', () => {
     it('calls provided injectors with acorn', (done) => {
