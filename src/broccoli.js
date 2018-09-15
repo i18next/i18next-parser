@@ -1,6 +1,4 @@
-import colors from 'colors'
 import fse from 'fs-extra'
-import path from 'path'
 import Plugin from 'broccoli-plugin'
 import i18nTransform from '../dist/transform'
 import rsvp from 'rsvp'

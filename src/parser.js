@@ -4,7 +4,6 @@ import HTMLLexer from './lexers/html-lexer'
 import JavascriptLexer from './lexers/javascript-lexer'
 import JsxLexer from './lexers/jsx-lexer'
 import TypescriptLexer from './lexers/typescript-lexer'
-import path from 'path'
 
 const lexers = {
   hbs: ['HandlebarsLexer'],

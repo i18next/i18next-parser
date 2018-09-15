@@ -1,6 +1,4 @@
 import JsxLexer from './jsx-lexer'
-import { readFileSync } from 'fs'
-import { join } from 'path'
 
 let loadedTs = null
 function loadTypeScript() {
