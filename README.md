@@ -187,23 +187,58 @@ module.exports = {
 
 The `lexers` option let you configure which Lexer to use for which extension. Here is the default:
 
-Note the presence of a `default` which will catch any extension that is not listed. There are 3 lexers available: `HandlebarsLexer`, `HTMLLexer` and `JavascriptLexer`. Each has configurations of its own. If you need to change the defaults, you can do it like so:
+Note the presence of a `default` which will catch any extension that is not listed.
+There are 5 lexers available: `HandlebarsLexer`, `HTMLLexer`, `JavascriptLexer`,
+`JsxLexer`, and `TypescriptLexer`. Each has configurations of its own.
+If you need to change the defaults, you can do it like so:
+
+#### Javascript
+The Javascript lexer uses [Acorn](https://github.com/acornjs/acorn) to walk through your code and extract references
+translation functions. If your code uses features not supported natively by Acorn, you can enable support through
+`injectors` and `plugins` configuration. Note that you must install these additional dependencies yourself through
+`yarn` or `npm`; they are not included in this package. This is an example configuration that adds all non-jsx plugins supported by acorn
+at the time of writing:
+```javascript
+const injectAcornStaticClassPropertyInitializer = require('acorn-static-class-property-initializer/inject');
+const injectAcornStage3 = require('acorn-stage3/inject');
+const injectAcornEs7 = require('acorn-es7');
+
+// ...
+  js: [{
+    lexer: 'JavascriptLexer'
+    functions: ['t'], // Array of functions to match
+
+    // acorn config (for more information on the acorn options, see here: https://github.com/acornjs/acorn#main-parser)
+    acorn: {
+      injectors: [
+          injectAcornStaticClassPropertyInitializer,
+          injectAcornStage3,
+          injectAcornEs7,
+        ],
+      plugins: {
+        // The presence of these plugin options is important -
+        // without them, the plugins will be available but not
+        // enabled.
+        staticClassPropertyInitializer: true,
+        stage3: true,
+        es7: true,
+      }
+    }
+  }],
+// ...
+```
+
+If you receive an error that looks like this:
+```bash
+TypeError: baseVisitor[type] is not a function
+# rest of stack trace...
+```
+The problem is likely that you are missing a plugin that supports a feature that your code uses.
+
+The default configuration is below:
 
 ```js
-[
-  // HandlebarsLexer default config (hbs, handlebars)
-  handlebars: [{
-    lexer: 'HandlebarsLexer',
-    functions: ['t'] // Array of functions to match
-  }]
-
-  // HtmlLexer default config (htm, html)
-  html: [{
-    lexer: 'HtmlLexer',
-    attr: 'data-i18n' // Attribute for the keys
-    optionAttr: 'data-i18n-options' // Attribute for the options
-  }]
-
+{
   // JavascriptLexer default config (js, mjs)
   js: [{
     lexer: 'JavascriptLexer'
@@ -213,13 +248,25 @@ Note the presence of a `default` which will catch any extension that is not list
     acorn: {
       sourceType: 'module',
       ecmaVersion: 9, // forward compatibility
-      plugins: {
-        es7: true, // some es7 parsing that's not yet in acorn (decorators)
-        stage3: true // load some stage3 configs not yet in a version
-      }
+      // Allows additional acorn plugins via the exported injector functions
+      injectors: [],
+      plugins: {},
     }
   }],
+}
+```
 
+#### Jsx
+The JSX lexer builds off of the Javascript lexer, and additionally requires the `acorn-jsx` plugin. To use it, add `acorn-jsx` to your dev dependencies:
+```bash
+npm install -D acorn-jsx
+# or
+yarn add -D acorn-jsx
+```
+
+Default configuration:
+```js
+{
   // JsxLexer default config (jsx)
   // JsxLexer can take all the options of the JavascriptLexer plus the following
   jsx: [{
@@ -230,14 +277,24 @@ Note the presence of a `default` which will catch any extension that is not list
     acorn: {
       sourceType: 'module',
       ecmaVersion: 9, // forward compatibility
-      plugins: {
-        es7: true, // some es7 parsing that's not yet in acorn (decorators)
-        stage3: true, // load some stage3 configs not yet in a version
-        jsx: true // always defaults to true in .jsx files
-      }
+      injectors: [],
+      plugins: {},
     }
   }],
+}
+```
+#### Ts(x)
+The Typescript lexer builds off of the JSX lexer, and additionally requires Typescript. To use it, add both `typescript` and `acorn-jsx` to your dev dependencies:
+```bash
+npm install -D typescript acorn-jsx
+# or
+yarn add -D typescript acorn-jsx
+```
+If you need additional plugins, you can install them in the same way as described in the Javascript lexer configuration.
 
+Default configuration:
+```js
+{
   // TypescriptLexer default config (ts/x)
   // TypescriptLexer can take all the options of the JsxLexer in addition to
   // optional tsOptions to pass as compilerOptions to TypeScript.
@@ -251,19 +308,30 @@ Note the presence of a `default` which will catch any extension that is not list
       jsx: 'Preserve',
       target: 'esnext'
     },
-
-    // acorn config (for more information on the acorn options, see here: https://github.com/acornjs/acorn#main-parser)
-    acorn: {
-      sourceType: 'module',
-      ecmaVersion: 9, // forward compatibility
-      plugins: {
-        es7: true, // some es7 parsing that's not yet in acorn (decorators)
-        stage3: true, // load some stage3 configs not yet in a version
-        jsx: true // always defaults to true in .jsx files
-      }
-    }
   }]
-]
+}
+```
+
+#### Handlebars
+```js
+{
+  // HandlebarsLexer default config (hbs, handlebars)
+  handlebars: [{
+    lexer: 'HandlebarsLexer',
+    functions: ['t'] // Array of functions to match
+  }]
+}
+```
+#### Html
+```js
+{
+  // HtmlLexer default config (htm, html)
+  html: [{
+    lexer: 'HtmlLexer',
+    attr: 'data-i18n' // Attribute for the keys
+    optionAttr: 'data-i18n-options' // Attribute for the options
+  }]
+}
 ```
 
 ## Events

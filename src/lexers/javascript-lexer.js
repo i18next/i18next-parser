@@ -1,6 +1,4 @@
 import * as acorn from 'acorn'
-import injectAcornStage3 from "acorn-stage3/inject"
-import injectAcornEs7 from "acorn-es7"
 import * as walk from 'acorn/dist/walk'
 import BaseLexer from './base-lexer'
 
@@ -14,31 +12,22 @@ export default class JavascriptLexer extends BaseLexer {
   constructor(options = {}) {
     super(options)
 
-    this.acornOptions = { 
-      sourceType: 'module', 
+    this.acornOptions = {
+      sourceType: 'module',
       ecmaVersion: 9,
+      plugins: {},
       ...options.acorn,
-      plugins: {
-        stage3: true,
-        es7: true,
-        ...(options.acorn ? options.acorn.plugins : {})
-      }
     }
 
     this.functions = options.functions || ['t']
     this.attr = options.attr || 'i18nKey'
+    this.injectors = (options.acorn && options.acorn.injectors) || []
 
     this.acorn = acorn
     this.WalkerBase = WalkerBase
 
-    if (this.acornOptions.plugins) {
-      if (this.acornOptions.plugins.stage3) {
-        this.acorn = injectAcornStage3(this.acorn)
-      }
-      if (this.acornOptions.plugins.es7) {
-        injectAcornEs7(this.acorn)
-      }
-    }
+    // Apply all injectors to the acorn instance
+    this.injectors.reduce((acornInstance, injector) => injector(acornInstance), this.acorn)
   }
 
   extract(content) {

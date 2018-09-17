@@ -1,4 +1,5 @@
-import { assert } from 'chai'
+import { assert, expect } from 'chai'
+import { spy } from 'sinon'
 import JsxLexer from '../../src/lexers/jsx-lexer'
 
 describe('JsxLexer', () => {
@@ -100,6 +101,14 @@ describe('JsxLexer', () => {
       const Lexer = new JsxLexer()
       const content = '<Trans>{/* some comment */}Some Content</Trans>'
       assert.equal(Lexer.extract(content)[0].defaultValue, 'Some Content')
+      done()
+    })
+  })
+  describe('supports additional plugins via injector option', () => {
+    it('provided injectors are called with acorn', (done) => {
+      const injector = spy(acorn => acorn)
+      const Lexer = new JsxLexer({ acorn: { ecmaVersion: 6, injectors: [injector] } })
+      expect(injector.calledOnce).to.be.true
       done()
     })
   })
