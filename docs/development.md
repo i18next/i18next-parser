@@ -2,9 +2,9 @@
 
 Any contribution is welcome. Just follow those guidelines:
 
-1. If you are unsure, open a ticket before working on anything
+1. If you are unsure, open a ticket before working on anything.
 2. Fork and clone the project
-3. Create a branch `git checkout -b feature/my-feature` (or `hotfix`)
+3. Create a branch `git checkout -b feature/my-feature` (or `hotfix`). If you want to work on multiple bugs or improvements, do so in multiple branches and PRs. It almost always complicated things to mix unrelated changes.
 4. Push the code to your fork
 5. **Write tests and documentation. I won't merge a PR without it!**
 6. Make a pull request from your new branch

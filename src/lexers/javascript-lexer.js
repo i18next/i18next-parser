@@ -15,19 +15,22 @@ export default class JavascriptLexer extends BaseLexer {
     this.acornOptions = {
       sourceType: 'module',
       ecmaVersion: 9,
+      injectors: [],
       plugins: {},
       ...options.acorn,
     }
 
     this.functions = options.functions || ['t']
     this.attr = options.attr || 'i18nKey'
-    this.injectors = (options.acorn && options.acorn.injectors) || []
 
     this.acorn = acorn
     this.WalkerBase = WalkerBase
 
     // Apply all injectors to the acorn instance
-    this.injectors.reduce((acornInstance, injector) => injector(acornInstance), this.acorn)
+    this.acornOptions.injectors.reduce(
+      (acornInstance, injector) => injector(acornInstance),
+      this.acorn
+    )
   }
 
   extract(content) {

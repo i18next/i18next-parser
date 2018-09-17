@@ -105,14 +105,19 @@ describe('JavascriptLexer', () => {
     done()
   })
 
-  describe('supports the acorn-stage3 plugin', () => {
-    it('supports dynamic imports', (done) => {
-      const Lexer = new JavascriptLexer({ acorn: { ecmaVersion: 6, injectors: [stage3Injector], plugins: { stage3: true } } })
-      const content = 'import("path/to/some/file").then(doSomethingWithData)'
-      Lexer.extract(content)
-      done()
+  it('supports dynamic imports with acorn-stage3 plugin', (done) => {
+    const Lexer = new JavascriptLexer({
+      acorn: {
+        ecmaVersion: 6,
+        injectors: [stage3Injector],
+        plugins: { stage3: true }
+      }
     })
+    const content = 'import("path/to/some/file").then(doSomethingWithData)'
+    Lexer.extract(content)
+    done()
   })
+
   it('supports the acorn-es7 plugin', (done) => {
     const Lexer = new JavascriptLexer({ acorn: { injectors: [es7Injector], plugins: { es7: true } } })
     const content = '@decorator() class Test { test() { t("foo") } }'
@@ -121,6 +126,7 @@ describe('JavascriptLexer', () => {
     ])
     done()
   })
+
   describe('supports additional plugins via injector option', () => {
     it('calls provided injectors with acorn', (done) => {
       const injector = spy(acorn => acorn)

@@ -228,14 +228,10 @@ describe('TypeScript lexer', () => {
     done()
   })
 
-  describe('supports the acorn-stage3 plugin', () => {
-
-    it('supports dynamic imports', (done) => {
-      const Lexer = new TypescriptLexer({ acorn: { ecmaVersion: 6, injectors: [stage3Injector], plugins: { stage3: true } } })
-      const content = 'import("path/to/some/file").then(doSomethingWithData)'
-      Lexer.extract(content)
-      done()
-    })
-
+  it('supports dynamic imports with acorn-stage3 plugin', (done) => {
+    const Lexer = new TypescriptLexer({ acorn: { ecmaVersion: 6, injectors: [stage3Injector], plugins: { stage3: true } } })
+    const content = 'import("path/to/some/file").then(doSomethingWithData)'
+    Lexer.extract(content)
+    done()
   })
 })
