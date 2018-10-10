@@ -1,12 +1,12 @@
-import { dotPathToHash, mergeHashes, transferValues } from './helpers'
-import { Transform } from 'stream'
-import eol from 'eol'
-import fs from 'fs'
-import Parser from './parser'
-import path from 'path'
-import VirtualFile from 'vinyl'
-import YAML from 'yamljs'
-import BaseLexer from './lexers/base-lexer'
+import eol from 'eol';
+import fs from 'fs';
+import path from 'path';
+import { Transform } from 'stream';
+import VirtualFile from 'vinyl';
+import YAML from 'yamljs';
+import { dotPathToHash, mergeHashes, transferValues } from './helpers';
+import BaseLexer from './lexers/base-lexer';
+import Parser from './parser';
 
 function warn(...args) {
   console.warn('\x1b[33m%s\x1b[0m', ...args)
@@ -146,10 +146,10 @@ export default class i18nTransform extends Transform {
         // merges existing translations with the new ones
         const { new: newCatalog, old: oldKeys, mergeCount, oldCount } =
           mergeHashes(
-          existingCatalog,
-          catalog[namespace],
-          this.options.keepRemoved
-        )
+            existingCatalog,
+            catalog[namespace],
+            this.options.keepRemoved
+          )
 
         // restore old translations
         const { old: oldCatalog, mergeCount: restoreCount } = mergeHashes(existingOldCatalog, newCatalog)
@@ -240,11 +240,11 @@ export default class i18nTransform extends Transform {
 
   grabReactNamespace(content) {
     const reactTranslateRegex = new RegExp(
-      'translate\\((?:\\s*\\[?\\s*)(' + BaseLexer.stringPattern + ')'
+      '(withNamespaces|translate)\\((?:\\s*\\[?\\s*)(' + BaseLexer.stringPattern + ')'
     )
     const translateMatches = content.match(reactTranslateRegex)
     if (translateMatches) {
-      return translateMatches[1].slice(1, -1)
+      return translateMatches[2].slice(1, -1)
     }
   }
 }
