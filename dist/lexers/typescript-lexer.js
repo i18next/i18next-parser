@@ -20,7 +20,7 @@ TypescriptLexer = function (_JsxLexer) {_inherits(TypescriptLexer, _JsxLexer);
       var transpiled = this.typescript.transpileModule(content, {
         compilerOptions: _extends({},
         this.tsOptions, {
-          jsx: 'Preserve',
+          jsx: extension === 'ts' ? false : 'Preserve',
           target: 'esnext' }) });
 
 

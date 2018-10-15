@@ -20,7 +20,7 @@ export default class TypescriptLexer extends JsxLexer {
     const transpiled = this.typescript.transpileModule(content, {
       compilerOptions: {
         ...this.tsOptions,
-        jsx: 'Preserve',
+        jsx: extension === 'ts' ? false : 'Preserve',
         target: 'esnext'
       }
     })

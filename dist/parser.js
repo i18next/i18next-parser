@@ -66,7 +66,7 @@ Parser = function (_EventEmitter) {_inherits(Parser, _EventEmitter);
 
           var Lexer = new lexersMap[lexerName](lexerOptions);
           Lexer.on('warning', function (warning) {return _this2.emit('warning', warning);});
-          keys = keys.concat(Lexer.extract(content));
+          keys = keys.concat(Lexer.extract(content, extension));
         }} catch (err) {_didIteratorError = true;_iteratorError = err;} finally {try {if (!_iteratorNormalCompletion && _iterator.return) {_iterator.return();}} finally {if (_didIteratorError) {throw _iteratorError;}}}
 
       return keys;
