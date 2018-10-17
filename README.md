@@ -45,8 +45,8 @@ Multiple globbing patterns are supported to specify complex file selections. You
 
 **IMPORTANT NOTE**: If you pass the globs as CLI argument, they must be relative to where you run the command (aka relative to `process.cwd()`). If you pass the globs via the `input` option of the config file, they must be relative to the config file. 
 
-- **-c, --config <path>**: Path to the output directory (default: locales/$LOCALE/$NAMESPACE.json)
-- **-o, --output <path>**: Where to write the locale files.
+- **-c, --config <path>**: Path to the config file (default: i18next-parser.config.js).
+- **-o, --output <path>**: Path to the output directory (default: locales/$LOCALE/$NAMESPACE.json).
 - **-S, --silent**: Disable logging to stdout.
 
 ### Gulp
