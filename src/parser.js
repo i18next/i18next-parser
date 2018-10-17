@@ -66,7 +66,7 @@ export default class Parser extends EventEmitter {
 
       const Lexer = new lexersMap[lexerName](lexerOptions)
       Lexer.on('warning', warning => this.emit('warning', warning))
-      keys = keys.concat(Lexer.extract(content))
+      keys = keys.concat(Lexer.extract(content, extension))
     }
 
     return keys
