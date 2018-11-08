@@ -188,7 +188,7 @@ module.exports = {
 The `lexers` option let you configure which Lexer to use for which extension. Here is the default:
 
 Note the presence of a `default` which will catch any extension that is not listed.
-There are 5 lexers available: `HandlebarsLexer`, `HTMLLexer`, `JavascriptLexer`,
+There are 6 lexers available: `HandlebarsLexer`, `SwigLexer`, `HTMLLexer`, `JavascriptLexer`,
 `JsxLexer`, and `TypescriptLexer`. Each has configurations of its own.
 If you need to change the defaults, you can do it like so:
 
@@ -322,6 +322,18 @@ Default configuration:
   }]
 }
 ```
+#### Swig-templates
+( swig differs (for our purposes) from Handlebars only in that a swig tag with a function call looks like `{{ t('some text') }}`, rather than `{{ t 'some text' }}` )
+```js
+{
+  // SwigLexer default config (swig)
+  swig: [{
+    lexer: 'SwigLexer',
+    functions: ['t'] // Array of functions to match   
+  }]
+}
+```
+
 #### Html
 ```js
 {
