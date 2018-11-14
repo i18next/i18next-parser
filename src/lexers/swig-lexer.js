@@ -5,7 +5,6 @@ export default class SwigLexer extends BaseLexer {
     super(options)
 
     this.functions = options.functions || ['t']
-    console.log(this.functions);
 
     this.createFunctionRegex()
     this.createArgumentsRegex()
@@ -15,7 +14,6 @@ export default class SwigLexer extends BaseLexer {
     let matches
 
     while (matches = this.functionRegex.exec(content)) {
-      console.log('function matches are ', matches[0]);
       const args = this.parseArguments(matches[1] || matches[2])
       this.populateKeysFromArguments(args)
     }
@@ -31,7 +29,7 @@ export default class SwigLexer extends BaseLexer {
     }
     while (matches = this.argumentsRegex.exec(args)) {
       const arg = matches[1]
-      console.log('arg matches: ', matches);
+      // console.log('arg matches: ', matches);
       const parts = arg.split('=')
       result.arguments.push(arg)
       if (parts.length === 2 && this.validateString(parts[1])) {
@@ -84,7 +82,7 @@ export default class SwigLexer extends BaseLexer {
         '|' +
         BaseLexer.stringPattern +
       ')?'
-    console.log(pattern);
+    // console.log(pattern);
     this.argumentsRegex = new RegExp(pattern, 'gi')
     return this.argumentsRegex
   }

@@ -1,5 +1,6 @@
 'use strict';Object.defineProperty(exports, "__esModule", { value: true });var _extends = Object.assign || function (target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i];for (var key in source) {if (Object.prototype.hasOwnProperty.call(source, key)) {target[key] = source[key];}}}return target;};var _createClass = function () {function defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);}}return function (Constructor, protoProps, staticProps) {if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;};}();var _events = require('events');var _events2 = _interopRequireDefault(_events);
 var _handlebarsLexer = require('./lexers/handlebars-lexer');var _handlebarsLexer2 = _interopRequireDefault(_handlebarsLexer);
+var _swigLexer = require('./lexers/swig-lexer');var _swigLexer2 = _interopRequireDefault(_swigLexer);
 var _htmlLexer = require('./lexers/html-lexer');var _htmlLexer2 = _interopRequireDefault(_htmlLexer);
 var _javascriptLexer = require('./lexers/javascript-lexer');var _javascriptLexer2 = _interopRequireDefault(_javascriptLexer);
 var _jsxLexer = require('./lexers/jsx-lexer');var _jsxLexer2 = _interopRequireDefault(_jsxLexer);
@@ -9,6 +10,8 @@ var _path = require('path');var _path2 = _interopRequireDefault(_path);function 
 var lexers = {
   hbs: ['HandlebarsLexer'],
   handlebars: ['HandlebarsLexer'],
+
+  swig: ['SwigLexer'],
 
   htm: ['HTMLLexer'],
   html: ['HTMLLexer'],
@@ -22,9 +25,10 @@ var lexers = {
 
   default: ['JavascriptLexer'] };
 
-
+console.log('lexers are:', lexers);
 var lexersMap = {
   HandlebarsLexer: _handlebarsLexer2.default,
+  SwigLexer: _swigLexer2.default,
   HTMLLexer: _htmlLexer2.default,
   JavascriptLexer: _javascriptLexer2.default,
   JsxLexer: _jsxLexer2.default,

@@ -17,7 +17,7 @@ describe('SwigLexer', () => {
   })
 
   // I'm not sure if I need all these 2nd argument features.
-
+/*
   it('extracts the defaultValue arguments', (done) => {
     const Lexer = new SwigLexer()
     const content = '<p>{ {t("first", {defaultValue:"bla"}) }</p>'
@@ -25,7 +25,7 @@ describe('SwigLexer', () => {
       { key: 'first', defaultValue: 'bla' }
     ])
     done()
-  })
+  })*/
 /*
   it('extracts the context arguments', (done) => {
     const Lexer = new SwigLexer()
