@@ -8,6 +8,9 @@ const JSXParserExtension = {
   JSXEmptyExpression(node, st, c) {
     // We need this catch, but we don't need the catch to do anything.
   },
+  JSXFragment(node, st, c) {
+    node.children.forEach(child => c(child, st, child.type));
+  },
   JSXElement(node, st, c) {
     node.openingElement.attributes.forEach(attr => c(attr, st, attr.type))
     node.children.forEach(child => c(child, st, child.type))
