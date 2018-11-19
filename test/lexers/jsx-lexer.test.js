@@ -103,6 +103,15 @@ describe('JsxLexer', () => {
       assert.equal(Lexer.extract(content)[0].defaultValue, 'Some Content')
       done()
     })
+
+    it('handles jsx fragments', (done) => {
+      const Lexer = new JsxLexer()
+      const content = '<><Trans i18nKey="first" /></>'
+      assert.deepEqual(Lexer.extract(content), [
+        { key: 'first' }
+      ])
+      done()
+    })
   })
   describe('supports additional plugins via injector option', () => {
     it('provided injectors are called with acorn', (done) => {
