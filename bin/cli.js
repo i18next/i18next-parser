@@ -36,7 +36,7 @@ if (program.config) {
   }
 }
 
-config.output = config.output || program.output
+config.output = program.output || config.output
 
 var args = program.args || []
 var globs
