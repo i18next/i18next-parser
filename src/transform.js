@@ -197,7 +197,13 @@ export default class i18nTransform extends Transform {
 
   getCatalog(path) {
     try {
-      let content = JSON.parse(fs.readFileSync(path))
+      let content
+      if (path.endsWith('yml')) {
+        content = YAML.parse(fs.readFileSync(path).toString())
+      }
+      else {
+        content = JSON.parse(fs.readFileSync(path))
+      }
       return content
     }
     catch (error) {
@@ -205,6 +211,7 @@ export default class i18nTransform extends Transform {
         this.emit('error', error)
       }
     }
+    
     return null
   }
 

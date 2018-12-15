@@ -197,7 +197,13 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
 
     path) {
       try {
-        var content = JSON.parse(_fs2.default.readFileSync(path));
+        var content = void 0;
+        if (path.endsWith('yml')) {
+          content = _yamljs2.default.parse(_fs2.default.readFileSync(path).toString());
+        } else
+        {
+          content = JSON.parse(_fs2.default.readFileSync(path));
+        }
         return content;
       }
       catch (error) {
@@ -205,6 +211,7 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
           this.emit('error', error);
         }
       }
+
       return null;
     } }, { key: 'pushFile', value: function pushFile(
 

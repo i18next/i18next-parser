@@ -752,6 +752,29 @@ describe('parser', () => {
       i18nextParser.end(fakeFile)
     })
 
+    it('reads existing yml catalog', (done) => {
+      let result
+      const i18nextParser = new i18nTransform({
+        output: 'test/locales/$LOCALE/test.yml'
+      })
+      const fakeFile = new Vinyl({
+        contents: Buffer.from("t('first')"),
+        path: 'file.js'
+      })
+
+      i18nextParser.on('data', file => {
+        if (file.relative.endsWith(path.normalize('en/test.yml'))) {
+          result = file.contents.toString('utf8')
+        }
+      })
+      i18nextParser.once('end', () => {
+        assert.equal(result.replace(/\r\n/g, '\n'), 'first: foo\n')
+        done()
+      })
+
+      i18nextParser.end(fakeFile)
+    })
+
     it('supports an indentation option', (done) => {
       let result
       const i18nextParser = new i18nTransform({
