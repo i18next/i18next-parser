@@ -32,6 +32,7 @@ export default class i18nTransform extends Transform {
       output: 'locales/$LOCALE/$NAMESPACE.json',
       reactNamespace: false,
       sort: false,
+      useKeysAsDefaultValue: false,
       verbose: false
     }
 
@@ -110,7 +111,8 @@ export default class i18nTransform extends Transform {
         catalog,
         {
           separator: this.options.keySeparator,
-          value: this.options.defaultValue
+          value: this.options.defaultValue,
+          useKeysAsDefaultValue: this.options.useKeysAsDefaultValue
         }
       )
       if (duplicate) {
@@ -211,7 +213,7 @@ export default class i18nTransform extends Transform {
         this.emit('error', error)
       }
     }
-    
+
     return null
   }
 

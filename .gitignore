@@ -18,6 +18,7 @@ Thumbs.db
 *.sublime-*
 *.swp
 /sftp-config.json
+/.vscode
 
 # node files
 node_modules/
