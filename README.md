@@ -43,7 +43,7 @@ i18next 'app/**/*.{js,hbs}' 'lib/**/*.{js,hbs}' [-oc]
 
 Multiple globbing patterns are supported to specify complex file selections. You can learn how to write globs [here](https://github.com/isaacs/node-glob). Note that glob must be wrapped with single quotes when passed as arguments.
 
-**IMPORTANT NOTE**: If you pass the globs as CLI argument, they must be relative to where you run the command (aka relative to `process.cwd()`). If you pass the globs via the `input` option of the config file, they must be relative to the config file. 
+**IMPORTANT NOTE**: If you pass the globs as CLI argument, they must be relative to where you run the command (aka relative to `process.cwd()`). If you pass the globs via the `input` option of the config file, they must be relative to the config file.
 
 - **-c, --config <path>**: Path to the config file (default: i18next-parser.config.js).
 - **-o, --output <path>**: Path to the output directory (default: locales/$LOCALE/$NAMESPACE.json).
@@ -178,6 +178,10 @@ module.exports = {
 
   sort: false,
   // Whether or not to sort the catalog
+
+  useKeysAsDefaultValue: false,
+  // Whether to use the keys as the default value; ex. "Hello": "Hello", "World": "World"
+  // The option `defaultValue` will not work if this is set to true
 
   verbose: false
   // Display info about the parsing including some stats
