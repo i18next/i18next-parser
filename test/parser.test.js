@@ -851,7 +851,7 @@ describe('parser', () => {
         }
       })
       i18nextParser.on('end', () => {
-        assert.deepEqual(result, { first: '', second: '', third: '', fourth: '' })
+        assert.deepEqual(result, { first: 'first', second: 'second', third: 'third', fourth: 'fourth' })
         done()
       })
       i18nextParser.end(fakeFile)
