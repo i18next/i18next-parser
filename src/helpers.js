@@ -10,7 +10,7 @@ function dotPathToHash(entry, target = {}, options = {}) {
   let path = entry.key
   const keyValue = entry.key.substring(entry.key.indexOf('.')+1, entry.key.length)
   const separator = options.separator || '.'
-  const newValue = entry.defaultValue || options.value || options.useKeysAsDefaultValue ? keyValue : ''
+  const newValue = options.useKeysAsDefaultValue ? keyValue : entry.defaultValue || entry.defaultValue || options.value || ''
 
   if (path.endsWith(separator)) {
     path = path.slice(0, -separator.length)
