@@ -33,7 +33,7 @@ export default class i18nTransform extends Transform {
       reactNamespace: false,
       sort: false,
       useKeysAsDefaultValue: false,
-      verbose: false
+      verbose: false,
     }
 
     this.options = { ...this.defaults, ...options }
