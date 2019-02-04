@@ -9,7 +9,10 @@
 function dotPathToHash(entry) {var target = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
   var path = entry.key;
   var separator = options.separator || '.';
-  var newValue = entry.defaultValue || options.value || '';
+  var newValue = entry.defaultValue || entry.defaultValue || options.value || '';
+  if (options.useKeysAsDefaultValue) {
+    newValue = entry.key.substring(entry.key.indexOf('.') + 1, entry.key.length);
+  }
 
   if (path.endsWith(separator)) {
     path = path.slice(0, -separator.length);

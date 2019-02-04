@@ -833,14 +833,14 @@ describe('parser', () => {
       i18nextParser.end(fakeFile)
     })
 
-    it('supports useKeysAsDefaultValue', (done) => {
+    it.only('supports useKeysAsDefaultValue', (done) => {
       let result
       const i18nextParser = new i18nTransform({
         useKeysAsDefaultValue: true,
       })
       const fakeFile = new Vinyl({
         contents: Buffer.from(
-          "t('first'); \n t('second and third'); t('$fourth %fifth%');"
+          "t('first'); \n t('second and third'); t('$fourth %fifth%'); t('six.seven');"
         ),
         path: 'file.js'
       })
@@ -851,7 +851,14 @@ describe('parser', () => {
         }
       })
       i18nextParser.on('end', () => {
-        assert.deepEqual(result, { first: 'first', "second and third": "second and third", "$fourth %fifth%": "$fourth %fifth%" })
+        assert.deepEqual(result, { 
+          first: 'first', 
+          'second and third': 'second and third', 
+          '$fourth %fifth%': '$fourth %fifth%',
+          six: {
+            seven: 'six.seven'
+          }
+        })
         done()
       })
       i18nextParser.end(fakeFile)

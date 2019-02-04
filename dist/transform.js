@@ -32,6 +32,7 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
       output: 'locales/$LOCALE/$NAMESPACE.json',
       reactNamespace: false,
       sort: false,
+      useKeysAsDefaultValue: false,
       verbose: false };
 
 
@@ -110,7 +111,8 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
           catalog,
           {
             separator: this.options.keySeparator,
-            value: this.options.defaultValue }),duplicate = _dotPathToHash.duplicate,conflict = _dotPathToHash.conflict;
+            value: this.options.defaultValue,
+            useKeysAsDefaultValue: this.options.useKeysAsDefaultValue }),duplicate = _dotPathToHash.duplicate,conflict = _dotPathToHash.conflict;
 
 
           if (duplicate) {
