@@ -833,6 +833,30 @@ describe('parser', () => {
       i18nextParser.end(fakeFile)
     })
 
+    it('supports useKeysAsDefaultValue', (done) => {
+      let result
+      const i18nextParser = new i18nTransform({
+        useKeysAsDefaultValue: true,
+      })
+      const fakeFile = new Vinyl({
+        contents: Buffer.from(
+          "t('first'); \n t('second and third'); t('$fourth %fifth%');"
+        ),
+        path: 'file.js'
+      })
+
+      i18nextParser.once('data', file => {
+        if (file.relative.endsWith(enLibraryPath)) {
+          result = JSON.parse(file.contents)
+        }
+      })
+      i18nextParser.on('end', () => {
+        assert.deepEqual(result, { first: 'first', "second and third": "second and third", "$fourth %fifth%": "$fourth %fifth%" })
+        done()
+      })
+      i18nextParser.end(fakeFile)
+    })
+
     describe('lexers', () => {
       it('support custom lexers options', (done) => {
         let result
