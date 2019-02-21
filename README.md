@@ -24,7 +24,7 @@ Finally, if you want to make this process even less painful, I invite you to che
   - **Plural**: keys of the form `key_plural` and `key_plural_0`
 - Tested on Node 6+
 
-## DISCLAMER: `1.0.0-beta`
+## DISCLAIMER: `1.0.0-beta`
 
 `1.x` is currently in beta. You can follow the pre-releases [here](https://github.com/i18next/i18next-parser/releases). It is a deep rewrite of this package that solves many issues, the main one being that it was slowly becoming unmaintainable. The [migration](docs/migration.md) contains all the breaking changes. Everything that follows is related to `1.x`. If you rely on a `0.x.x` version, you can still find the old documentation on its dedicated [branch](https://github.com/i18next/i18next-parser/tree/0.x.x).
 
