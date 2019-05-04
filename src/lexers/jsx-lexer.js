@@ -31,6 +31,10 @@ const JSXParserExtension = {
 export default class JsxLexer extends JavascriptLexer {
   constructor(options = {}) {
     super(options)
+    
+    // TODO: this is default in react-i18next, so maybe here too?
+    this.transSupportBasicHtmlNodes = options.transSupportBasicHtmlNodes || false;
+    this.transKeepBasicHtmlNodesFor = options.transKeepBasicHtmlNodesFor || ['br', 'strong', 'i', 'p'];
 
     // super will setup acornOptions, acorn and the walker, just add what we need
     this.acornOptions.plugins.jsx = true
@@ -106,9 +110,17 @@ export default class JsxLexer extends JavascriptLexer {
 
     const elemsToString = children => children.map((child, index) => {
       switch(child.type) {
-        case 'text': return child.content
-        case 'js': return `<${index}>${child.content}</${index}>`
-        case 'tag': return `<${index}>${elemsToString(child.children)}</${index}>`
+        case 'js':
+        case 'text':
+          return child.content
+        case 'tag':
+          const elementName =
+            child.isBasic &&
+            this.transSupportBasicHtmlNodes &&
+            this.transKeepBasicHtmlNodesFor.includes(child.name)
+              ? child.name
+              : index;
+          return `<${elementName}>${elemsToString(child.children)}</${elementName}>`
         default: throw new Error('Unknown parsed content: ' + child.type)
       }
     }).join('')
@@ -125,9 +137,15 @@ export default class JsxLexer extends JavascriptLexer {
         }
       }
       else if (child.type === 'JSXElement') {
+        const name = child.openingElement.name.name
+        const isBasic = 
+          (!child.openingElement.attributes || !child.openingElement.attributes.length) &&
+          (!child.closingElement.attributes || !child.closingElement.attributes.length);
         return {
           type: 'tag',
-          children: this.parseAcornPayload(child.children, originalString)
+          children: this.parseAcornPayload(child.children, originalString),
+          name,
+          isBasic
         }
       }
       else if (child.type === 'JSXExpressionContainer') {

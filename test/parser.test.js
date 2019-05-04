@@ -179,7 +179,7 @@ describe('parser', () => {
       first: '',
       second: '',
       third: {
-        first: 'Hello <1><0>{{name}}</0></1>, you have <3>{{count}}</3> unread message. <5>Go to messages</5>.',
+        first: 'Hello <1>{{name}}</1>, you have {{count}} unread message. <5>Go to messages</5>.',
         second: ' <1>Hello,</1> this shouldn\'t be trimmed.',
         third: '<0>Hello,</0>this should be trimmed.<2> and this shoudln\'t</2>'
       },
@@ -188,7 +188,7 @@ describe('parser', () => {
       bar: '',
       foo: '',
       "This should be part of the value and the key": "This should be part of the value and the key",
-      "don't split <1>{{on}}</1>": "don't split <1>{{on}}</1>"
+      "don't split {{on}}": "don't split {{on}}"
     }
 
     i18nextParser.on('data', file => {
@@ -218,7 +218,7 @@ describe('parser', () => {
       first: '',
       second: '',
       third: {
-        first: 'Hello <1><0>{{name}}</0></1>, you have <3>{{count}}</3> unread message. <5>Go to messages</5>.',
+        first: 'Hello <1>{{name}}</1>, you have {{count}} unread message. <5>Go to messages</5>.',
         second: ' <1>Hello,</1> this shouldn\'t be trimmed.',
         third: '<0>Hello,</0>this should be trimmed.<2> and this shoudln\'t</2>'
       },
@@ -227,7 +227,7 @@ describe('parser', () => {
       bar: '',
       foo: '',
       "This should be part of the value and the key": "This should be part of the value and the key",
-      "don't split <1>{{on}}</1>": "don't split <1>{{on}}</1>"
+      "don't split {{on}}": "don't split {{on}}"
     }
 
     i18nextParser.on('data', file => {
@@ -698,7 +698,7 @@ describe('parser', () => {
         first: '',
         second: '',
         third: {
-          first: 'Hello <1><0>{{name}}</0></1>, you have <3>{{count}}</3> unread message. <5>Go to messages</5>.',
+          first: 'Hello <1>{{name}}</1>, you have {{count}} unread message. <5>Go to messages</5>.',
           second: ' <1>Hello,</1> this shouldn\'t be trimmed.',
           third: '<0>Hello,</0>this should be trimmed.<2> and this shoudln\'t</2>'
         },
@@ -707,7 +707,7 @@ describe('parser', () => {
         bar: '',
         foo: '',
         "This should be part of the value and the key": "This should be part of the value and the key",
-        "don't split <1>{{on}}</1>": "don't split <1>{{on}}</1>"
+        "don't split {{on}}": "don't split {{on}}"
       }
 
       i18nextParser.on('data', file => {
@@ -724,6 +724,56 @@ describe('parser', () => {
       i18nextParser.end(fakeFile)
     })
 
+    it('parses keeping basic elements if transSupportBasicHtmlNodes is true', (done) => {
+      let result
+      const i18nextParser = new i18nTransform({
+        lexers: {
+          jsx: [
+            {
+              lexer: 'JsxLexer',
+              transSupportBasicHtmlNodes: true,
+              transKeepBasicHtmlNodesFor: ['strong', 'b']
+            }
+          ]
+        }
+      })
+      const fakeFile = new Vinyl({
+        contents: fs.readFileSync(
+          path.resolve(__dirname, 'templating/react.jsx')
+        ),
+        path: 'react.jsx'
+      })
+      const expected = {
+        first: '',
+        second: '',
+        third: {
+          first: 'Hello <1>{{name}}</1>, you have {{count}} unread message. <5>Go to messages</5>.',
+          second: ' <b>Hello,</b> this shouldn\'t be trimmed.',
+          third: '<b>Hello,</b>this should be trimmed.<2> and this shoudln\'t</2>'
+        },
+        fourth: '',
+        fifth: '',
+        bar: '',
+        foo: '',
+        "This should be part of the value and the key": "This should be part of the value and the key",
+        "don't split {{on}}": "don't split {{on}}"
+      }
+
+      i18nextParser.on('data', file => {
+        // support for a default Namespace
+        if (file.relative.endsWith(path.normalize('en/react.json'))) {
+          result = JSON.parse(file.contents)
+        }
+      })
+      i18nextParser.on('end', () => {
+        assert.deepEqual(result, expected)
+        done()
+      })
+
+      i18nextParser.end(fakeFile)
+    })
+    
+    
     it('supports outputing to yml', (done) => {
       let result
       const i18nextParser = new i18nTransform({

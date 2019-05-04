@@ -80,7 +80,7 @@ describe('TypeScript lexer', () => {
       const Lexer = new TypescriptLexer()
       const content = '<Trans count={count}>{{ key: property }}</Trans>'
       assert.deepEqual(Lexer.extract(content), [
-        { key: '<0>{{key}}</0>', defaultValue: '<0>{{key}}</0>' }
+        { key: '{{key}}', defaultValue: '{{key}}' }
       ])
       done()
     })
@@ -109,7 +109,7 @@ describe('TypeScript lexer', () => {
     it('erases tags from content', (done) => {
       const Lexer = new TypescriptLexer()
       const content = '<Trans>a<b test={"</b>"}>c<c>z</c></b>{d}<br stuff={y}/></Trans>'
-      assert.equal(Lexer.extract(content)[0].defaultValue, 'a<1>c<1>z</1></1><2>{d}</2><3></3>')
+      assert.equal(Lexer.extract(content)[0].defaultValue, 'a<1>c<1>z</1></1>{d}<3></3>')
       done()
     })
 
