@@ -133,7 +133,7 @@ export default class JsxLexer extends JavascriptLexer {
       if (child.type === 'JSXText') {
         return {
           type: 'text',
-          content: child.value.replace(/^(?:\s*(\n|\r)\s*)?(.*)(?:\s*(\n|\r)\s*)?$/, '$2')
+          content: child.value.replace(/(^\n\s*)|(\n\s*$)/g, '').replace(/\n\s*/g, ' ')
         }
       }
       else if (child.type === 'JSXElement') {
