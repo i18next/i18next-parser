@@ -112,6 +112,13 @@ describe('JsxLexer', () => {
       ])
       done()
     })
+
+    it('interpolates literal string values', (done) => {
+      const Lexer = new JsxLexer()
+      const content = `<Trans>Some{' '}Interpolated {'Content'}</Trans>`
+      assert.equal(Lexer.extract(content)[0].defaultValue, 'Some Interpolated Content')
+      done()
+    })
   })
   describe('supports additional plugins via injector option', () => {
     it('provided injectors are called with acorn', (done) => {

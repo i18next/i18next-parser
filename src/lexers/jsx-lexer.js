@@ -150,11 +150,19 @@ export default class JsxLexer extends JavascriptLexer {
       }
       else if (child.type === 'JSXExpressionContainer') {
         // strip empty expressions
-        if (child.expression.type === 'JSXEmptyExpression')
+        if (child.expression.type === 'JSXEmptyExpression') {
           return {
             type: 'text',
             content: ''
           }
+        }
+        
+        else if (child.expression.type === 'Literal') {
+          return {
+            type: 'text',
+            content: child.expression.value
+          }
+        }
 
         // strip properties from ObjectExpressions
         // annoying (and who knows how many other exceptions we'll need to write) but necessary
