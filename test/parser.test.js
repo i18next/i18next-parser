@@ -833,7 +833,7 @@ describe('parser', () => {
       i18nextParser.end(fakeFile)
     })
 
-    it.only('supports useKeysAsDefaultValue', (done) => {
+    it('supports useKeysAsDefaultValue', (done) => {
       let result
       const i18nextParser = new i18nTransform({
         useKeysAsDefaultValue: true,
