@@ -2,14 +2,19 @@
  * Take an entry for the Parser and turn it into a hash,
  * turning the key path 'foo.bar' into an hash {foo: {bar: ""}}
  * The generated hash can be merged with an optional `target`.
- * @returns An `{ target, duplicate }` object. `target` is the hash that
- * was passed as an argument or a new hash if none was passed. `duplicate`
- * indicates whether the entry already existed in the `target` hash.
+ * @returns An `{ target, duplicate, conflict }` object. `target` is the hash
+ * that was passed as an argument or a new hash if none was passed. `duplicate`
+ * indicates whether the entry already existed in the `target` hash. `conflict`
+ * is `"key"` if a parent of the key was already mapped to a string (e.g. when
+ * merging entry {one: {two: "bla"}} with target {one: "bla"}) or the key was
+ * already mapped to a map (e.g. when merging entry {one: "bla"} with target
+ * {one: {two: "bla"}}), `"value"` if the same key already exists swith a
+ * different value, or `false`.
  */
 function dotPathToHash(entry, target = {}, options = {}) {
   let path = entry.key
   const separator = options.separator || '.'
-  let newValue = entry.defaultValue || entry.defaultValue || options.value || ''
+  let newValue = entry.defaultValue || options.value || ''
   if (options.useKeysAsDefaultValue) {
     newValue = entry.key.substring(entry.key.indexOf('.') + 1, entry.key.length)
   }
@@ -20,10 +25,14 @@ function dotPathToHash(entry, target = {}, options = {}) {
 
   const segments = path.split(separator)
   let inner = target
+  let conflict = false
   for (let i = 0; i < segments.length - 1; i += 1) {
     const segment = segments[i]
     if (segment) {
-      if (inner[segment] === undefined) {
+      if (typeof inner[segment] === 'string') {
+        conflict = 'key'
+      }
+      if (inner[segment] === undefined || conflict) {
         inner[segment] = {}
       }
       inner = inner[segment]
@@ -32,8 +41,10 @@ function dotPathToHash(entry, target = {}, options = {}) {
 
   const lastSegment = segments[segments.length - 1];
   const oldValue = inner[lastSegment];
-  const duplicate = oldValue !== undefined
-  const conflict = oldValue !== undefined && oldValue !== newValue
+  if (oldValue !== undefined && oldValue !== newValue) {
+    conflict = typeof oldValue !== typeof newValue ? 'key' : 'value';
+  }
+  const duplicate = oldValue !== undefined || conflict !== false
   inner[lastSegment] = newValue
 
   return { target, duplicate, conflict }

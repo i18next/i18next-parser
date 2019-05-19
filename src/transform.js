@@ -8,10 +8,6 @@ import VirtualFile from 'vinyl'
 import YAML from 'yamljs'
 import BaseLexer from './lexers/base-lexer'
 
-function warn(...args) {
-  console.warn('\x1b[33m%s\x1b[0m', ...args)
-}
-
 export default class i18nTransform extends Transform {
   constructor(options = {}) {
     options.objectMode = true
@@ -46,11 +42,25 @@ export default class i18nTransform extends Transform {
     this.entries = []
 
     this.parser = new Parser(this.options)
-    this.parser.on('error', error => this.emit('error', error))
-    this.parser.on('warning', warning => this.emit('warning', warning))
+    this.parser.on('error', error => this.error(error))
+    this.parser.on('warning', warning => this.warn(warning))
 
     this.localeRegex = /\$LOCALE/g
     this.namespaceRegex = /\$NAMESPACE/g
+  }
+
+  error(error) {
+    this.emit('error', error)
+    if (this.options.verbose) {
+      console.error('\x1b[31m%s\x1b[0m', error)
+    }
+  }
+
+  warn(warning) {
+    this.emit('warning', warning)
+    if (this.options.verbose) {
+      console.warn('\x1b[33m%s\x1b[0m', warning)
+    }
   }
 
   _transform(file, encoding, done) {
@@ -117,12 +127,13 @@ export default class i18nTransform extends Transform {
       )
       if (duplicate) {
         uniqueCount -= 1
-        if (conflict) {
+        if (conflict === 'key') {
+          const warning = `Found translation key already mapped to a map or parent of new key already mapped to a string: ${entry.key}`
+          this.warn(warning)
+        }
+        else if (conflict === 'value') {
           const warning = `Found same keys with different values: ${entry.key}`
-          this.emit('warning', warning)
-          if (this.options.verbose) {
-            warn(warning)
-          }
+          this.warn(warning)
         }
       }
     }

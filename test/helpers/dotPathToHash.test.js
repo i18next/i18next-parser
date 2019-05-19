@@ -75,7 +75,29 @@ describe('dotPathToHash helper function', () => {
     )
     assert.deepEqual(target, { one: { two: { three: 'new' } } })
     assert.equal(duplicate, true)
-    assert.equal(conflict, true)
+    assert.equal(conflict, 'value')
+    done()
+  })
+
+  it('overwrites keys already mapped to a string with an object value', (done) => {
+    const { target, duplicate, conflict } = dotPathToHash(
+      { key: 'one', defaultValue: 'bla' },
+      { one: { two: { three: 'bla' } } },
+    )
+    assert.deepEqual(target, { one: 'bla' })
+    assert.equal(duplicate, true)
+    assert.equal(conflict, 'key')
+    done()
+  })
+
+  it('overwrites keys already mapped to an object with a string value', (done) => {
+    const { target, duplicate, conflict } = dotPathToHash(
+      { key: 'one.two.three', defaultValue: 'bla' },
+      { one: 'bla' },
+    )
+    assert.deepEqual(target, { one: { two: { three: 'bla' } } })
+    assert.equal(duplicate, true)
+    assert.equal(conflict, 'key')
     done()
   })
 })

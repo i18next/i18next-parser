@@ -6,11 +6,7 @@ var _parser = require('./parser');var _parser2 = _interopRequireDefault(_parser)
 var _path = require('path');var _path2 = _interopRequireDefault(_path);
 var _vinyl = require('vinyl');var _vinyl2 = _interopRequireDefault(_vinyl);
 var _yamljs = require('yamljs');var _yamljs2 = _interopRequireDefault(_yamljs);
-var _baseLexer = require('./lexers/base-lexer');var _baseLexer2 = _interopRequireDefault(_baseLexer);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function _possibleConstructorReturn(self, call) {if (!self) {throw new ReferenceError("this hasn't been initialised - super() hasn't been called");}return call && (typeof call === "object" || typeof call === "function") ? call : self;}function _inherits(subClass, superClass) {if (typeof superClass !== "function" && superClass !== null) {throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);}subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;}
-
-function warn() {var _console;for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {args[_key] = arguments[_key];}
-  (_console = console).warn.apply(_console, ['\x1b[33m%s\x1b[0m'].concat(args));
-}var
+var _baseLexer = require('./lexers/base-lexer');var _baseLexer2 = _interopRequireDefault(_baseLexer);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function _possibleConstructorReturn(self, call) {if (!self) {throw new ReferenceError("this hasn't been initialised - super() hasn't been called");}return call && (typeof call === "object" || typeof call === "function") ? call : self;}function _inherits(subClass, superClass) {if (typeof superClass !== "function" && superClass !== null) {throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);}subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;}var
 
 i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
   function i18nTransform() {var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};_classCallCheck(this, i18nTransform);
@@ -46,12 +42,26 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
     _this.entries = [];
 
     _this.parser = new _parser2.default(_this.options);
-    _this.parser.on('error', function (error) {return _this.emit('error', error);});
-    _this.parser.on('warning', function (warning) {return _this.emit('warning', warning);});
+    _this.parser.on('error', function (error) {return _this.error(error);});
+    _this.parser.on('warning', function (warning) {return _this.warn(warning);});
 
     _this.localeRegex = /\$LOCALE/g;
     _this.namespaceRegex = /\$NAMESPACE/g;return _this;
-  }_createClass(i18nTransform, [{ key: '_transform', value: function _transform(
+  }_createClass(i18nTransform, [{ key: 'error', value: function error(
+
+    _error) {
+      this.emit('error', _error);
+      if (this.options.verbose) {
+        console.error('\x1b[31m%s\x1b[0m', _error);
+      }
+    } }, { key: 'warn', value: function warn(
+
+    warning) {
+      this.emit('warning', warning);
+      if (this.options.verbose) {
+        console.warn('\x1b[33m%s\x1b[0m', warning);
+      }
+    } }, { key: '_transform', value: function _transform(
 
     file, encoding, done) {
       var content = void 0;
@@ -117,12 +127,13 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
 
           if (duplicate) {
             uniqueCount -= 1;
-            if (conflict) {
-              var warning = 'Found same keys with different values: ' + entry.key;
-              this.emit('warning', warning);
-              if (this.options.verbose) {
-                warn(warning);
-              }
+            if (conflict === 'key') {
+              var warning = 'Found translation key already mapped to a map or parent of new key already mapped to a string: ' + entry.key;
+              this.warn(warning);
+            } else
+            if (conflict === 'value') {
+              var _warning = 'Found same keys with different values: ' + entry.key;
+              this.warn(_warning);
             }
           }
         }} catch (err) {_didIteratorError2 = true;_iteratorError2 = err;} finally {try {if (!_iteratorNormalCompletion2 && _iterator2.return) {_iterator2.return();}} finally {if (_didIteratorError2) {throw _iteratorError2;}}}
