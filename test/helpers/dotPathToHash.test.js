@@ -57,6 +57,45 @@ describe('dotPathToHash helper function', () => {
     done()
   })
 
+  it('handles falsey `useKeysAsDefaultValue` with `separator` option exist in key', (done) => {
+    const { target } = dotPathToHash(
+      { key: 'one_two_three.' },
+      {},
+      {
+        useKeysAsDefaultValue: false,
+        separator: '_',
+      },
+    )
+    assert.deepEqual(target, { one: { two: { 'three.': '' } } })
+    done()
+  })
+
+  it('handles falsey `useKeysAsDefaultValue` with `separator` option not exist in key', (done) => {
+    const { target } = dotPathToHash(
+      { key: 'one.two.three.' },
+      {},
+      {
+        useKeysAsDefaultValue: false,
+        separator: '_',
+      },
+    )
+    assert.deepEqual(target, { 'one.two.three.': '' })
+    done()
+  })
+
+  it('handles `useKeysAsDefaultValue` with `separator` option', (done) => {
+    const { target } = dotPathToHash(
+      { key: 'one.two.three.' },
+      {},
+      {
+        useKeysAsDefaultValue: true,
+        separator: '_',
+      },
+    )
+    assert.deepEqual(target, { 'one.two.three.': 'one.two.three.' })
+    done()
+  })
+
   it('detects duplicate keys with the same value', (done) => {
     const { target, duplicate, conflict } = dotPathToHash(
       { key: 'one.two.three' },
