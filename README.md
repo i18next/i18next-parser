@@ -266,7 +266,7 @@ The JSX lexer builds off of the Javascript lexer, and additionally requires the 
 ```bash
 npm install -D acorn-jsx
 # or
-yarn add -D acorn-jsx
+yarn add -D acorn-jsx@4.1.1
 ```
 
 Default configuration:
@@ -291,9 +291,9 @@ Default configuration:
 #### Ts(x)
 The Typescript lexer builds off of the JSX lexer, and additionally requires Typescript. To use it, add both `typescript` and `acorn-jsx` to your dev dependencies:
 ```bash
-npm install -D typescript acorn-jsx
+npm install -D typescript acorn-jsx@4.1.1
 # or
-yarn add -D typescript acorn-jsx
+yarn add -D typescript acorn-jsx@4.1.1
 ```
 If you need additional plugins, you can install them in the same way as described in the Javascript lexer configuration.
 
