@@ -66,7 +66,6 @@ describe('parser', () => {
     })
     i18nextParser.once('end', () => {
       assert.deepEqual(result, {
-        first: '',
         first_female: ''
       })
       done()
@@ -117,13 +116,9 @@ describe('parser', () => {
     })
     const expected = {
       first: '',
-      second: 'defaultValue',
       second_male: 'defaultValue',
-      third: 'defaultValue',
       third_female: 'defaultValue',
-      fourth: 'defaultValue',
       fourth_male: 'defaultValue',
-      fifth: '',
       fifth_male: '',
       sixth: '',
       seventh: 'defaultValue'
