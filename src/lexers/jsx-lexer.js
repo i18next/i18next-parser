@@ -109,7 +109,7 @@ export default class JsxLexer extends JavascriptLexer {
         case 'text': return child.content
         case 'js': return `<${index}>${child.content}</${index}>`
         case 'tag': return `<${index}>${elemsToString(child.children)}</${index}>`
-        default: throw new ParsingError('Unknown parsed content: ' + child.type)
+        default: throw new Error('Unknown parsed content: ' + child.type)
       }
     }).join('')
 
@@ -169,7 +169,7 @@ export default class JsxLexer extends JavascriptLexer {
         }
       }
       else {
-        throw new ParsingError('Unknown ast element when parsing jsx: ' + child.type)
+        throw new Error('Unknown ast element when parsing jsx: ' + child.type)
       }
     }).filter(child => child.type !== 'text' || child.content)
   }

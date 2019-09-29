@@ -139,16 +139,8 @@ function transferValues(source, target) {
   }
 }
 
-class ParsingError extends Error {
-  constructor(message) {
-    super(message);
-    this.name = 'ParsingError';
-  }
-}
-
 export {
   dotPathToHash,
   mergeHashes,
-  transferValues,
-  ParsingError
+  transferValues
 }
