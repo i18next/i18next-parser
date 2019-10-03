@@ -121,7 +121,7 @@ JsxLexer = function (_JavascriptLexer) {_inherits(JsxLexer, _JavascriptLexer);
               child.name :
               index;
               return '<' + elementName + '>' + elemsToString(child.children) + '</' + elementName + '>';
-            default:throw new ParsingError('Unknown parsed content: ' + child.type);}
+            default:throw new Error('Unknown parsed content: ' + child.type);}
 
         }).join('');};
 
@@ -195,7 +195,7 @@ JsxLexer = function (_JavascriptLexer) {_inherits(JsxLexer, _JavascriptLexer);
 
         } else
         {
-          throw new ParsingError('Unknown ast element when parsing jsx: ' + child.type);
+          throw new Error('Unknown ast element when parsing jsx: ' + child.type);
         }
       }).filter(function (child) {return child.type !== 'text' || child.content;});
     } }]);return JsxLexer;}(_javascriptLexer2.default);exports.default = JsxLexer;module.exports = exports['default'];
