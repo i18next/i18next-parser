@@ -32,7 +32,6 @@ export default class JsxLexer extends JavascriptLexer {
   constructor(options = {}) {
     super(options)
     
-    // TODO: this is default in react-i18next, so maybe here too?
     this.transSupportBasicHtmlNodes = options.transSupportBasicHtmlNodes || false;
     this.transKeepBasicHtmlNodesFor = options.transKeepBasicHtmlNodesFor || ['br', 'strong', 'i', 'p'];
 

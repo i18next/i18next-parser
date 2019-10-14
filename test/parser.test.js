@@ -724,7 +724,7 @@ describe('parser', () => {
       i18nextParser.end(fakeFile)
     })
 
-    it('parses keeping basic elements if transSupportBasicHtmlNodes is true', (done) => {
+    it('parses Trans, keeping tags without attributes inline, if transSupportBasicHtmlNodes is true', (done) => {
       let result
       const i18nextParser = new i18nTransform({
         lexers: {
