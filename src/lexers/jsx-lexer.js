@@ -31,6 +31,9 @@ const JSXParserExtension = {
 export default class JsxLexer extends JavascriptLexer {
   constructor(options = {}) {
     super(options)
+    
+    this.transSupportBasicHtmlNodes = options.transSupportBasicHtmlNodes || false;
+    this.transKeepBasicHtmlNodesFor = options.transKeepBasicHtmlNodesFor || ['br', 'strong', 'i', 'p'];
 
     // super will setup acornOptions, acorn and the walker, just add what we need
     this.acornOptions.plugins.jsx = true
@@ -106,9 +109,17 @@ export default class JsxLexer extends JavascriptLexer {
 
     const elemsToString = children => children.map((child, index) => {
       switch(child.type) {
-        case 'text': return child.content
-        case 'js': return `<${index}>${child.content}</${index}>`
-        case 'tag': return `<${index}>${elemsToString(child.children)}</${index}>`
+        case 'js':
+        case 'text':
+          return child.content
+        case 'tag':
+          const elementName =
+            child.isBasic &&
+            this.transSupportBasicHtmlNodes &&
+            this.transKeepBasicHtmlNodesFor.includes(child.name)
+              ? child.name
+              : index;
+          return `<${elementName}>${elemsToString(child.children)}</${elementName}>`
         default: throw new Error('Unknown parsed content: ' + child.type)
       }
     }).join('')
@@ -121,22 +132,36 @@ export default class JsxLexer extends JavascriptLexer {
       if (child.type === 'JSXText') {
         return {
           type: 'text',
-          content: child.value.replace(/^(?:\s*(\n|\r)\s*)?(.*)(?:\s*(\n|\r)\s*)?$/, '$2')
+          content: child.value.replace(/(^\n\s*)|(\n\s*$)/g, '').replace(/\n\s*/g, ' ')
         }
       }
       else if (child.type === 'JSXElement') {
+        const name = child.openingElement.name.name
+        const isBasic = 
+          (!child.openingElement.attributes || !child.openingElement.attributes.length) &&
+          (!child.closingElement.attributes || !child.closingElement.attributes.length);
         return {
           type: 'tag',
-          children: this.parseAcornPayload(child.children, originalString)
+          children: this.parseAcornPayload(child.children, originalString),
+          name,
+          isBasic
         }
       }
       else if (child.type === 'JSXExpressionContainer') {
         // strip empty expressions
-        if (child.expression.type === 'JSXEmptyExpression')
+        if (child.expression.type === 'JSXEmptyExpression') {
           return {
             type: 'text',
             content: ''
           }
+        }
+        
+        else if (child.expression.type === 'Literal') {
+          return {
+            type: 'text',
+            content: child.expression.value
+          }
+        }
 
         // strip properties from ObjectExpressions
         // annoying (and who knows how many other exceptions we'll need to write) but necessary

@@ -187,13 +187,15 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
     } }, { key: 'addEntry', value: function addEntry(
 
     entry) {
-      this.entries.push(entry);
-
       if (entry.context) {
         var contextEntry = Object.assign({}, entry);
         delete contextEntry.context;
         contextEntry.key += this.options.contextSeparator + entry.context;
-        this.addEntry(contextEntry);
+        this.entries.push(contextEntry);
+        // this.addEntry(contextEntry)
+      } else
+      {
+        this.entries.push(entry);
       }
     } }, { key: 'getCatalog', value: function getCatalog(
 

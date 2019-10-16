@@ -32,8 +32,12 @@ JsxLexer = function (_JavascriptLexer) {_inherits(JsxLexer, _JavascriptLexer);
   function JsxLexer() {var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};_classCallCheck(this, JsxLexer);
 
 
+    // TODO: this is default in react-i18next, so maybe here too?
+    var _this = _possibleConstructorReturn(this, (JsxLexer.__proto__ || Object.getPrototypeOf(JsxLexer)).call(this, options));_this.transSupportBasicHtmlNodes = options.transSupportBasicHtmlNodes || false;
+    _this.transKeepBasicHtmlNodesFor = options.transKeepBasicHtmlNodesFor || ['br', 'strong', 'i', 'p'];
+
     // super will setup acornOptions, acorn and the walker, just add what we need
-    var _this = _possibleConstructorReturn(this, (JsxLexer.__proto__ || Object.getPrototypeOf(JsxLexer)).call(this, options));_this.acornOptions.plugins.jsx = true;
+    _this.acornOptions.plugins.jsx = true;
     _this.WalkerBase = Object.assign({}, _this.WalkerBase, _extends({},
     JSXParserExtension));
 
@@ -101,66 +105,88 @@ JsxLexer = function (_JavascriptLexer) {_inherits(JsxLexer, _JavascriptLexer);
       return this.keys;
     } }, { key: 'nodeToString', value: function nodeToString(
 
-    ast, string) {
+    ast, string) {var _this2 = this;
       var children = this.parseAcornPayload(ast.children, string);
 
       var elemsToString = function elemsToString(children) {return children.map(function (child, index) {
           switch (child.type) {
-            case 'text':return child.content;
-            case 'js':return '<' + index + '>' + child.content + '</' + index + '>';
-            case 'tag':return '<' + index + '>' + elemsToString(child.children) + '</' + index + '>';
-            default:throw new ParsingError('Unknown parsed content: ' + child.type);}
+            case 'js':
+            case 'text':
+              return child.content;
+            case 'tag':
+              var elementName =
+              child.isBasic &&
+              _this2.transSupportBasicHtmlNodes &&
+              _this2.transKeepBasicHtmlNodesFor.includes(child.name) ?
+              child.name :
+              index;
+              return '<' + elementName + '>' + elemsToString(child.children) + '</' + elementName + '>';
+            default:throw new Error('Unknown parsed content: ' + child.type);}
 
         }).join('');};
 
       return elemsToString(children);
     } }, { key: 'parseAcornPayload', value: function parseAcornPayload(
 
-    children, originalString) {var _this2 = this;
+    children, originalString) {var _this3 = this;
       return children.map(function (child) {
         if (child.type === 'JSXText') {
           return {
             type: 'text',
-            content: child.value.replace(/^(?:\s*(\n|\r)\s*)?(.*)(?:\s*(\n|\r)\s*)?$/, '$2') };
+            content: child.value.replace(/(^\n\s*)|(\n\s*$)/g, '').replace(/\n\s*/g, ' ') };
 
         } else
         if (child.type === 'JSXElement') {
+          var name = child.openingElement.name.name;
+          var isBasic =
+          (!child.openingElement.attributes || !child.openingElement.attributes.length) && (
+          !child.closingElement.attributes || !child.closingElement.attributes.length);
           return {
             type: 'tag',
-            children: _this2.parseAcornPayload(child.children, originalString) };
+            children: _this3.parseAcornPayload(child.children, originalString),
+            name: name,
+            isBasic: isBasic };
 
         } else
         if (child.type === 'JSXExpressionContainer') {
           // strip empty expressions
-          if (child.expression.type === 'JSXEmptyExpression')
-          return {
-            type: 'text',
-            content: ''
-
-
-            // strip properties from ObjectExpressions
-            // annoying (and who knows how many other exceptions we'll need to write) but necessary
-          };else if (child.expression.type === 'ObjectExpression') {
-            // i18next-react only accepts two props, any random single prop, and a format prop
-            // for our purposes, format prop is always ignored
-
-            var nonFormatProperties = child.expression.properties.filter(function (prop) {return prop.key.name !== 'format';});
-
-            // more than one property throw a warning in i18next-react, but still works as a key
-            if (nonFormatProperties.length > 1) {
-              _this2.emit('warning', 'The passed in object contained more than one variable - the object should look like {{ value, format }} where format is optional.');
-
-              return {
-                type: 'text',
-                content: '' };
-
-            }
-
+          if (child.expression.type === 'JSXEmptyExpression') {
             return {
-              type: 'js',
-              content: '{{' + nonFormatProperties[0].key.name + '}}' };
+              type: 'text',
+              content: '' };
+
+          } else
+
+          if (child.expression.type === 'Literal') {
+            return {
+              type: 'text',
+              content: child.expression.value };
 
           }
+
+          // strip properties from ObjectExpressions
+          // annoying (and who knows how many other exceptions we'll need to write) but necessary
+          else if (child.expression.type === 'ObjectExpression') {
+              // i18next-react only accepts two props, any random single prop, and a format prop
+              // for our purposes, format prop is always ignored
+
+              var nonFormatProperties = child.expression.properties.filter(function (prop) {return prop.key.name !== 'format';});
+
+              // more than one property throw a warning in i18next-react, but still works as a key
+              if (nonFormatProperties.length > 1) {
+                _this3.emit('warning', 'The passed in object contained more than one variable - the object should look like {{ value, format }} where format is optional.');
+
+                return {
+                  type: 'text',
+                  content: '' };
+
+              }
+
+              return {
+                type: 'js',
+                content: '{{' + nonFormatProperties[0].key.name + '}}' };
+
+            }
 
           // slice on the expression so that we ignore comments around it
           return {
@@ -169,7 +195,7 @@ JsxLexer = function (_JavascriptLexer) {_inherits(JsxLexer, _JavascriptLexer);
 
         } else
         {
-          throw new ParsingError('Unknown ast element when parsing jsx: ' + child.type);
+          throw new Error('Unknown ast element when parsing jsx: ' + child.type);
         }
       }).filter(function (child) {return child.type !== 'text' || child.content;});
     } }]);return JsxLexer;}(_javascriptLexer2.default);exports.default = JsxLexer;module.exports = exports['default'];
