@@ -105,9 +105,7 @@ export default class JsxLexer extends JavascriptLexer {
       else if (child.kind === ts.SyntaxKind.JsxElement || child.kind === ts.SyntaxKind.JsxSelfClosingElement) {
         const element = child.openingElement || child
         const name = element.tagName.escapedText
-        const isBasic = 
-          (!element.attributes || !element.attributes.length) &&
-          (!child.closingElement || !child.closingElement.attributes || !child.closingElement.attributes.length)
+        const isBasic = !element.attributes.properties.length
         return {
           type: 'tag',
           children: this.parseChildren(child.children, sourceText),
