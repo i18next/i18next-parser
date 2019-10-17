@@ -747,7 +747,7 @@ describe('parser', () => {
         first: '',
         second: '',
         third: {
-          first: 'Hello <1>{{name}}</1>, you have {{count}} unread message. <5>Go to messages</5>.',
+          first: 'Hello <strong>{{name}}</strong>, you have {{count}} unread message. <5>Go to messages</5>.',
           second: ' <b>Hello,</b> this shouldn\'t be trimmed.',
           third: '<b>Hello,</b>this should be trimmed.<2> and this shoudln\'t</2>'
         },

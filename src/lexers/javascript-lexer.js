@@ -1,120 +1,105 @@
-import * as acorn from 'acorn'
-import * as walk from 'acorn/dist/walk'
 import BaseLexer from './base-lexer'
-
-const WalkerBase = Object.assign({}, walk.base, {
-  Import(node, st, c) {
-    // We need this catch, but we don't need the catch to do anything.
-  }
-})
+import * as ts from 'typescript'
 
 export default class JavascriptLexer extends BaseLexer {
   constructor(options = {}) {
     super(options)
 
-    this.acornOptions = {
-      sourceType: 'module',
-      ecmaVersion: 9,
-      injectors: [],
-      plugins: {},
-      ...options.acorn,
-    }
-
     this.functions = options.functions || ['t']
     this.attr = options.attr || 'i18nKey'
-
-    this.acorn = acorn
-    this.WalkerBase = WalkerBase
-
-    // Apply all injectors to the acorn instance
-    this.acornOptions.injectors.reduce(
-      (acornInstance, injector) => injector(acornInstance),
-      this.acorn
-    )
   }
 
-  extract(content) {
-    const that = this
+  extract(content, filename = '__default.js') {
+    const keys = []
+    
+    const parseTree = (node) => {
+      let entry
 
-    walk.simple(
-      this.acorn.parse(content, this.acornOptions),
-      {
-        CallExpression(node) {
-          that.expressionExtractor.call(that, node)
-        }
-      },
-      this.WalkerBase
-    )
+      if (node.kind === ts.SyntaxKind.CallExpression) {
+        entry = this.expressionExtractor.call(this, node)
+      }
+      
+      if (entry) {
+        keys.push(entry)
+      }
 
-    return this.keys
+      node.forEachChild(parseTree)
+    }
+    
+    const sourceFile = ts.createSourceFile(filename, content, ts.ScriptTarget.Latest)
+    parseTree(sourceFile)
+
+    return keys
   }
 
   expressionExtractor(node) {
     const entry = {}
-    const isTranslationFunction = (
-      node.callee && (
-        this.functions.includes(node.callee.name) ||
-        node.callee.property && this.functions.includes(node.callee.property.name)
-      )
-    )
+
+    const isTranslationFunction = 
+      (node.expression.text && this.functions.includes(node.expression.text)) || 
+      (node.expression.name && this.functions.includes(node.expression.name.text))
+    
+
     if (isTranslationFunction) {
       const keyArgument = node.arguments.shift()
 
-      if (keyArgument && keyArgument.type === 'Literal') {
-        entry.key = keyArgument.value
+      if (keyArgument && keyArgument.kind === ts.SyntaxKind.StringLiteral) {
+        entry.key = keyArgument.text
       }
-      else if (keyArgument && keyArgument.type === 'BinaryExpression') {
+      else if (keyArgument && keyArgument.kind === ts.SyntaxKind.BinaryExpression) {
         const concatenatedString = this.concatenateString(keyArgument)
         if (!concatenatedString) {
-          this.emit('warning', `Key is not a string literal: ${keyArgument.name}`)
-          return
+          this.emit('warning', `Key is not a string literal: ${keyArgument.text}`)
+          return null
         }
         entry.key = concatenatedString
       }
       else {
-        if (keyArgument.type === 'Identifier') {
-          this.emit('warning', `Key is not a string literal: ${keyArgument.name}`)
+        if (keyArgument.kind === ts.SyntaxKind.Identifier) {
+          this.emit('warning', `Key is not a string literal: ${keyArgument.text}`)
         }
 
-        return
+        return null
       }
 
 
       const optionsArgument = node.arguments.shift()
 
-      if (optionsArgument && optionsArgument.type === 'Literal') {
-        entry.defaultValue = optionsArgument.value
+      if (optionsArgument && optionsArgument.kind === ts.SyntaxKind.StringLiteral) {
+        entry.defaultValue = optionsArgument.text
       }
-      else if (optionsArgument && optionsArgument.type === 'ObjectExpression') {
+      else if (optionsArgument && optionsArgument.kind === ts.SyntaxKind.ObjectLiteralExpression) {
         for (const p of optionsArgument.properties) {
-          entry[p.key.name || p.key.value] = p.value.value
+          entry[p.name.text] = p.initializer.text
         }
       }
 
-      this.keys.push(entry)
+      return entry
     }
+
+    return null
   }
 
   concatenateString(binaryExpression, string = '') {
-    if (binaryExpression.operator !== '+') {
+    if (binaryExpression.operatorToken.kind !== ts.SyntaxKind.PlusToken) {
       return
     }
 
-    if (binaryExpression.left.type === 'BinaryExpression') {
+    if (binaryExpression.left.kind === ts.SyntaxKind.BinaryExpression) {
       string += this.concatenateString(binaryExpression.left, string)
     }
-    else if (binaryExpression.left.type === 'Literal') {
-      string += binaryExpression.left.value
+    else if (binaryExpression.left.kind === ts.SyntaxKind.StringLiteral) {
+      string += binaryExpression.left.text
     }
     else {
       return
     }
 
-    if (binaryExpression.right.type === 'BinaryExpression') {
+    if (binaryExpression.right.kind === ts.SyntaxKind.BinaryExpression) {
       string += this.concatenateString(binaryExpression.right, string)
     }
-    else if (binaryExpression.right.type === 'Literal') {
-      string += binaryExpression.right.value
+    else if (binaryExpression.right.kind === ts.SyntaxKind.StringLiteral) {
+      string += binaryExpression.right.text
     }
     else {
       return

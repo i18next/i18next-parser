@@ -1,112 +1,78 @@
-'use strict';Object.defineProperty(exports, "__esModule", { value: true });var _extends = Object.assign || function (target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i];for (var key in source) {if (Object.prototype.hasOwnProperty.call(source, key)) {target[key] = source[key];}}}return target;};var _createClass = function () {function defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);}}return function (Constructor, protoProps, staticProps) {if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;};}();var _javascriptLexer = require('./javascript-lexer');var _javascriptLexer2 = _interopRequireDefault(_javascriptLexer);
-var _walk = require('acorn/dist/walk');var walk = _interopRequireWildcard(_walk);function _interopRequireWildcard(obj) {if (obj && obj.__esModule) {return obj;} else {var newObj = {};if (obj != null) {for (var key in obj) {if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key];}}newObj.default = obj;return newObj;}}function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function _possibleConstructorReturn(self, call) {if (!self) {throw new ReferenceError("this hasn't been initialised - super() hasn't been called");}return call && (typeof call === "object" || typeof call === "function") ? call : self;}function _inherits(subClass, superClass) {if (typeof superClass !== "function" && superClass !== null) {throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);}subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;}
-
-var JSXParserExtension = {
-  JSXText: function JSXText(node, st, c) {
-    // We need this catch, but we don't need the catch to do anything.
-  },
-  JSXEmptyExpression: function JSXEmptyExpression(node, st, c) {
-    // We need this catch, but we don't need the catch to do anything.
-  },
-  JSXFragment: function JSXFragment(node, st, c) {
-    node.children.forEach(function (child) {return c(child, st, child.type);});
-  },
-  JSXElement: function JSXElement(node, st, c) {
-    node.openingElement.attributes.forEach(function (attr) {return c(attr, st, attr.type);});
-    node.children.forEach(function (child) {return c(child, st, child.type);});
-  },
-  JSXExpressionContainer: function JSXExpressionContainer(node, st, c) {
-    c(node.expression, st, node.expression.type);
-  },
-  JSXAttribute: function JSXAttribute(node, st, c) {
-    if (node.value !== null) {
-      c(node.value, st, node.value.type);
-    }
-  },
-  JSXSpreadAttribute: function JSXSpreadAttribute(node, st, c) {
-    c(node.argument, st, node.argument.type);
-  } };var
-
+'use strict';Object.defineProperty(exports, "__esModule", { value: true });var _createClass = function () {function defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);}}return function (Constructor, protoProps, staticProps) {if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;};}();var _javascriptLexer = require('./javascript-lexer');var _javascriptLexer2 = _interopRequireDefault(_javascriptLexer);
+var _typescript = require('typescript');var ts = _interopRequireWildcard(_typescript);function _interopRequireWildcard(obj) {if (obj && obj.__esModule) {return obj;} else {var newObj = {};if (obj != null) {for (var key in obj) {if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key];}}newObj.default = obj;return newObj;}}function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function _possibleConstructorReturn(self, call) {if (!self) {throw new ReferenceError("this hasn't been initialised - super() hasn't been called");}return call && (typeof call === "object" || typeof call === "function") ? call : self;}function _inherits(subClass, superClass) {if (typeof superClass !== "function" && superClass !== null) {throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);}subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;}var
 
 JsxLexer = function (_JavascriptLexer) {_inherits(JsxLexer, _JavascriptLexer);
-  function JsxLexer() {var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};_classCallCheck(this, JsxLexer);
+  function JsxLexer() {var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};_classCallCheck(this, JsxLexer);var _this = _possibleConstructorReturn(this, (JsxLexer.__proto__ || Object.getPrototypeOf(JsxLexer)).call(this,
+    options));
 
-
-    // TODO: this is default in react-i18next, so maybe here too?
-    var _this = _possibleConstructorReturn(this, (JsxLexer.__proto__ || Object.getPrototypeOf(JsxLexer)).call(this, options));_this.transSupportBasicHtmlNodes = options.transSupportBasicHtmlNodes || false;
-    _this.transKeepBasicHtmlNodesFor = options.transKeepBasicHtmlNodesFor || ['br', 'strong', 'i', 'p'];
-
-    // super will setup acornOptions, acorn and the walker, just add what we need
-    _this.acornOptions.plugins.jsx = true;
-    _this.WalkerBase = Object.assign({}, _this.WalkerBase, _extends({},
-    JSXParserExtension));
-
-
-    try {
-      var injectAcornJsx = require('acorn-jsx/inject');
-      _this.acorn = injectAcornJsx(_this.acorn);
-    } catch (e) {
-      throw new Error(
-      'You must install acorn-jsx to parse jsx files. ' +
-      'Try running "yarn add acorn-jsx" or "npm install acorn-jsx"');
-
-    }return _this;
+    _this.transSupportBasicHtmlNodes = options.transSupportBasicHtmlNodes || false;
+    _this.transKeepBasicHtmlNodesFor = options.transKeepBasicHtmlNodesFor || ['br', 'strong', 'i', 'p'];return _this;
   }_createClass(JsxLexer, [{ key: 'extract', value: function extract(
 
-    content) {
-      var that = this;
+    content) {var _this2 = this;var filename = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '__default.jsx';
+      var keys = [];
 
-      walk.simple(
-      this.acorn.parse(content, this.acornOptions),
-      {
-        CallExpression: function CallExpression(node) {
-          that.expressionExtractor.call(that, node);
-        },
-        JSXElement: function JSXElement(node) {
-          var element = node.openingElement;
-          if (element.name.name === "Trans") {
-            var entry = {};
-            var defaultValue = that.nodeToString.call(that, node, content);var _iteratorNormalCompletion = true;var _didIteratorError = false;var _iteratorError = undefined;try {
+      var parseTree = function parseTree(node) {
+        var entry = void 0;
 
-              for (var _iterator = element.attributes[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {var attr = _step.value;
-                if (attr.name.name === that.attr) {
-                  entry.key = attr.value.value;
-                }
-              }} catch (err) {_didIteratorError = true;_iteratorError = err;} finally {try {if (!_iteratorNormalCompletion && _iterator.return) {_iterator.return();}} finally {if (_didIteratorError) {throw _iteratorError;}}}
+        switch (node.kind) {
+          case ts.SyntaxKind.CallExpression:
+            entry = _this2.expressionExtractor.call(_this2, node);
+            break;
+          case ts.SyntaxKind.JsxElement:
+            entry = _this2.jsxExtractor.call(_this2, node, content);
+            break;
+          case ts.SyntaxKind.JsxSelfClosingElement:
+            entry = _this2.jsxExtractor.call(_this2, node, content);
+            break;}
 
-            if (defaultValue !== '') {
-              entry.defaultValue = defaultValue;
 
-              if (!entry.key)
-              entry.key = entry.defaultValue;
-            }
+        if (entry) {
+          keys.push(entry);
+        }
 
-            if (entry.key)
-            that.keys.push(entry);
-          } else
+        node.forEachChild(parseTree);
+      };
 
-          if (element.name.name === "Interpolate") {
-            var _entry = {};var _iteratorNormalCompletion2 = true;var _didIteratorError2 = false;var _iteratorError2 = undefined;try {
+      var sourceFile = ts.createSourceFile(filename, content, ts.ScriptTarget.Latest);
+      parseTree(sourceFile);
 
-              for (var _iterator2 = element.attributes[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {var _attr = _step2.value;
-                if (_attr.name.name === that.attr) {
-                  _entry.key = _attr.value.value;
-                }
-              }} catch (err) {_didIteratorError2 = true;_iteratorError2 = err;} finally {try {if (!_iteratorNormalCompletion2 && _iterator2.return) {_iterator2.return();}} finally {if (_didIteratorError2) {throw _iteratorError2;}}}
+      return keys;
+    } }, { key: 'jsxExtractor', value: function jsxExtractor(
 
-            if (_entry.key)
-            that.keys.push(_entry);
+    node, sourceText) {var _this3 = this;
+      var tagNode = node.openingElement || node;
+
+      var getKey = function getKey(node) {
+        var attribute = node.attributes.properties.find(function (attr) {return attr.name.text === _this3.attr;});
+        return attribute && attribute.initializer.text;
+      };
+
+      if (tagNode.tagName.text === "Trans") {
+        var entry = {};
+        entry.key = getKey(tagNode);
+
+        var defaultValue = this.nodeToString.call(this, node, sourceText);
+
+        if (defaultValue !== '') {
+          entry.defaultValue = defaultValue;
+
+          if (!entry.key) {
+            entry.key = entry.defaultValue;
           }
-        } },
+        }
 
-      this.WalkerBase);
-
-
-      return this.keys;
+        return entry.key ? entry : null;
+      } else
+      if (tagNode.tagName.text === "Interpolate") {
+        var _entry = {};
+        _entry.key = getKey(tagNode);
+        return _entry.key ? _entry : null;
+      }
     } }, { key: 'nodeToString', value: function nodeToString(
 
-    ast, string) {var _this2 = this;
-      var children = this.parseAcornPayload(ast.children, string);
+    node, sourceText) {var _this4 = this;
+      var children = this.parseChildren.call(this, node.children, sourceText);
 
       var elemsToString = function elemsToString(children) {return children.map(function (child, index) {
           switch (child.type) {
@@ -116,8 +82,8 @@ JsxLexer = function (_JavascriptLexer) {_inherits(JsxLexer, _JavascriptLexer);
             case 'tag':
               var elementName =
               child.isBasic &&
-              _this2.transSupportBasicHtmlNodes &&
-              _this2.transKeepBasicHtmlNodesFor.includes(child.name) ?
+              _this4.transSupportBasicHtmlNodes &&
+              _this4.transKeepBasicHtmlNodesFor.includes(child.name) ?
               child.name :
               index;
               return '<' + elementName + '>' + elemsToString(child.children) + '</' + elementName + '>';
@@ -126,55 +92,56 @@ JsxLexer = function (_JavascriptLexer) {_inherits(JsxLexer, _JavascriptLexer);
         }).join('');};
 
       return elemsToString(children);
-    } }, { key: 'parseAcornPayload', value: function parseAcornPayload(
+    } }, { key: 'parseChildren', value: function parseChildren()
 
-    children, originalString) {var _this3 = this;
+    {var _this5 = this;var children = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];var sourceText = arguments[1];
       return children.map(function (child) {
-        if (child.type === 'JSXText') {
+        if (child.kind === ts.SyntaxKind.JsxText) {
           return {
             type: 'text',
-            content: child.value.replace(/(^\n\s*)|(\n\s*$)/g, '').replace(/\n\s*/g, ' ') };
+            content: child.text.replace(/(^(\n|\r)\s*)|((\n|\r)\s*$)/g, '').replace(/(\n|\r)\s*/g, ' ') };
 
         } else
-        if (child.type === 'JSXElement') {
-          var name = child.openingElement.name.name;
+        if (child.kind === ts.SyntaxKind.JsxElement || child.kind === ts.SyntaxKind.JsxSelfClosingElement) {
+          var element = child.openingElement || child;
+          var name = element.tagName.escapedText;
           var isBasic =
-          (!child.openingElement.attributes || !child.openingElement.attributes.length) && (
-          !child.closingElement.attributes || !child.closingElement.attributes.length);
+          (!element.attributes || !element.attributes.length) && (
+          !child.closingElement || !child.closingElement.attributes || !child.closingElement.attributes.length);
           return {
             type: 'tag',
-            children: _this3.parseAcornPayload(child.children, originalString),
+            children: _this5.parseChildren(child.children, sourceText),
             name: name,
             isBasic: isBasic };
 
         } else
-        if (child.type === 'JSXExpressionContainer') {
+        if (child.kind === ts.SyntaxKind.JsxExpression) {
           // strip empty expressions
-          if (child.expression.type === 'JSXEmptyExpression') {
+          if (!child.expression) {
             return {
               type: 'text',
               content: '' };
 
           } else
 
-          if (child.expression.type === 'Literal') {
+          if (child.expression.kind === ts.SyntaxKind.StringLiteral) {
             return {
               type: 'text',
-              content: child.expression.value };
+              content: child.expression.text };
 
           }
 
           // strip properties from ObjectExpressions
           // annoying (and who knows how many other exceptions we'll need to write) but necessary
-          else if (child.expression.type === 'ObjectExpression') {
+          else if (child.expression.kind === ts.SyntaxKind.ObjectLiteralExpression) {
               // i18next-react only accepts two props, any random single prop, and a format prop
               // for our purposes, format prop is always ignored
 
-              var nonFormatProperties = child.expression.properties.filter(function (prop) {return prop.key.name !== 'format';});
+              var nonFormatProperties = child.expression.properties.filter(function (prop) {return prop.name.text !== 'format';});
 
               // more than one property throw a warning in i18next-react, but still works as a key
               if (nonFormatProperties.length > 1) {
-                _this3.emit('warning', 'The passed in object contained more than one variable - the object should look like {{ value, format }} where format is optional.');
+                _this5.emit('warning', 'The passed in object contained more than one variable - the object should look like {{ value, format }} where format is optional.');
 
                 return {
                   type: 'text',
@@ -184,18 +151,18 @@ JsxLexer = function (_JavascriptLexer) {_inherits(JsxLexer, _JavascriptLexer);
 
               return {
                 type: 'js',
-                content: '{{' + nonFormatProperties[0].key.name + '}}' };
+                content: '{{' + nonFormatProperties[0].name.text + '}}' };
 
             }
 
           // slice on the expression so that we ignore comments around it
           return {
             type: 'js',
-            content: '{' + originalString.slice(child.expression.start, child.expression.end) + '}' };
+            content: '{' + sourceText.slice(child.expression.pos, child.expression.end) + '}' };
 
         } else
         {
-          throw new Error('Unknown ast element when parsing jsx: ' + child.type);
+          throw new Error('Unknown ast element when parsing jsx: ' + child.kind);
         }
       }).filter(function (child) {return child.type !== 'text' || child.content;});
     } }]);return JsxLexer;}(_javascriptLexer2.default);exports.default = JsxLexer;module.exports = exports['default'];
