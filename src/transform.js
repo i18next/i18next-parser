@@ -67,8 +67,9 @@ export default class i18nTransform extends Transform {
       console.log(`Parsing ${file.path}`)
     }
 
-    const extension = path.extname(file.path).substring(1)
-    const entries = this.parser.parse(content, extension)
+    const filename = path.basename(file.path)
+    const entries = this.parser.parse(content, filename)
+    const extension = path.extname(filename).substr(1)
 
     for (const entry of entries) {
       let key = entry.key

@@ -143,12 +143,11 @@ module.exports = {
     htm: ['HTMLLexer'],
     html: ['HTMLLexer'],
 
-    js: ['JavascriptLexer'], // if you're writing jsx inside .js files, change this to JsxLexer
-    jsx: ['JsxLexer'],
     mjs: ['JavascriptLexer'],
-
-    ts: ['TypescriptLexer'],
-    tsx: ['TypescriptLexer'],
+    js: ['JavascriptLexer'], // if you're writing jsx inside .js files, change this to JsxLexer
+    ts: ['JavascriptLexer'],
+    jsx: ['JsxLexer'],
+    tsx: ['JsxLexer'],
 
     default: ['JavascriptLexer']
   },
@@ -193,8 +192,8 @@ module.exports = {
 The `lexers` option let you configure which Lexer to use for which extension. Here is the default:
 
 Note the presence of a `default` which will catch any extension that is not listed.
-There are 5 lexers available: `HandlebarsLexer`, `HTMLLexer`, `JavascriptLexer`,
-`JsxLexer`, and `TypescriptLexer`. Each has configurations of its own.
+There are 4 lexers available: `HandlebarsLexer`, `HTMLLexer`, `JavascriptLexer` and
+`JsxLexer`. Each has configurations of its own. Typescript is supported via `JavascriptLexer` and `JsxLexer`.
 If you need to change the defaults, you can do it like so:
 
 #### Javascript
@@ -289,33 +288,7 @@ Default configuration:
 }
 ```
 #### Ts(x)
-The Typescript lexer builds off of the JSX lexer, and additionally requires Typescript. To use it, add both `typescript` and `acorn-jsx` to your dev dependencies:
-```bash
-npm install -D typescript acorn-jsx@4.1.1
-# or
-yarn add -D typescript acorn-jsx@4.1.1
-```
-If you need additional plugins, you can install them in the same way as described in the Javascript lexer configuration.
-
-Default configuration:
-```js
-{
-  // TypescriptLexer default config (ts/x)
-  // TypescriptLexer can take all the options of the JsxLexer in addition to
-  // optional tsOptions to pass as compilerOptions to TypeScript.
-  ts: [{
-    lexer: 'TypescriptLexer',
-    attr: 'i18nKey', // Attribute for the keys
-
-    // compiler options (https://www.typescriptlang.org/docs/handbook/compiler-options.html)
-    // note that jsx MUST be set to Preserve, or your strings will not be extracted.
-    tsOptions: {
-      jsx: 'Preserve',
-      target: 'esnext'
-    },
-  }]
-}
-```
+Typescript is supported via Javascript and Jsx lexers. If you are using Javascript syntax (e.g. with React), follow the steps in Jsx section, otherwise Javascript section.
 
 #### Handlebars
 ```js

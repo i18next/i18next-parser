@@ -67,8 +67,9 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
         console.log('Parsing ' + file.path);
       }
 
-      var extension = _path2.default.extname(file.path).substring(1);
-      var entries = this.parser.parse(content, extension);var _iteratorNormalCompletion = true;var _didIteratorError = false;var _iteratorError = undefined;try {
+      var filename = _path2.default.basename(file.path);
+      var entries = this.parser.parse(content, filename);
+      var extension = _path2.default.extname(filename).substr(1);var _iteratorNormalCompletion = true;var _didIteratorError = false;var _iteratorError = undefined;try {
 
         for (var _iterator = entries[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {var entry = _step.value;
           var key = entry.key;

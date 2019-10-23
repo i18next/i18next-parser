@@ -10,14 +10,13 @@
   },
   "scripts": {
     "test": "mocha -r babel-register -r babel-polyfill --recursive test/**/*.test.js",
-    "watch": "./node_modules/babel-cli/bin/babel.js src -d dist -w"
+    "watch": "babel src -d dist -w"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/i18next/i18next-parser"
   },
   "dependencies": {
-    "acorn": "^5.5.3",
     "broccoli-plugin": "^1.3.0",
     "cheerio": "^1.0.0-rc.2",
     "colors": "~1.2.0-rc0",
@@ -28,6 +27,7 @@
     "gulp-sort": "^2.0.0",
     "rsvp": "^4.8.2",
     "through2": "~2.0.3",
+    "typescript": "^3.6.4",
     "vinyl": "~2.0.1",
     "vinyl-fs": "^3.0.2",
     "yamljs": "^0.3.0"
@@ -37,9 +37,6 @@
     "node": ">=0.10.22"
   },
   "devDependencies": {
-    "acorn-es7": "^0.1.0",
-    "acorn-jsx": "^4.1.1",
-    "acorn-stage3": "^0.6.0",
     "babel-cli": "^6.26.0",
     "babel-plugin-add-module-exports": "^0.2.1",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
@@ -51,8 +48,7 @@
     "chai": "^4.1.2",
     "gulp": "^4.0.0",
     "mocha": "^5.0.0",
-    "sinon": "^6.2.0",
-    "typescript": "^3.0.3"
+    "sinon": "^6.2.0"
   },
   "keywords": [
     "gulpplugin",

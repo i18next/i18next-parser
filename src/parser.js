@@ -1,10 +1,9 @@
+import path from 'path'
 import EventEmitter from 'events'
 import HandlebarsLexer from './lexers/handlebars-lexer'
 import HTMLLexer from './lexers/html-lexer'
 import JavascriptLexer from './lexers/javascript-lexer'
 import JsxLexer from './lexers/jsx-lexer'
-import TypescriptLexer from './lexers/typescript-lexer'
-import path from 'path'
 
 const lexers = {
   hbs: ['HandlebarsLexer'],
@@ -13,12 +12,11 @@ const lexers = {
   htm: ['HTMLLexer'],
   html: ['HTMLLexer'],
 
-  js: ['JavascriptLexer'],
-  jsx: ['JsxLexer'],
   mjs: ['JavascriptLexer'],
-
-  ts: ['TypescriptLexer'],
-  tsx: ['TypescriptLexer'],
+  js: ['JavascriptLexer'],
+  ts: ['JavascriptLexer'],
+  jsx: ['JsxLexer'],
+  tsx: ['JsxLexer'],
 
   default: ['JavascriptLexer']
 }
@@ -27,8 +25,7 @@ const lexersMap = {
   HandlebarsLexer,
   HTMLLexer,
   JavascriptLexer,
-  JsxLexer,
-  TypescriptLexer
+  JsxLexer
 }
 
 export default class Parser extends EventEmitter {
@@ -43,8 +40,9 @@ export default class Parser extends EventEmitter {
     this.lexers = { ...lexers, ...options.lexers }
   }
 
-  parse(content, extension) {
+  parse(content, filename) {
     let keys = []
+    const extension = path.extname(filename).substr(1)
     const lexers = this.lexers[extension] || this.lexers.default
 
     for (const lexerConfig of lexers) {
@@ -66,7 +64,7 @@ export default class Parser extends EventEmitter {
 
       const Lexer = new lexersMap[lexerName](lexerOptions)
       Lexer.on('warning', warning => this.emit('warning', warning))
-      keys = keys.concat(Lexer.extract(content, extension))
+      keys = keys.concat(Lexer.extract(content, filename))
     }
 
     return keys
