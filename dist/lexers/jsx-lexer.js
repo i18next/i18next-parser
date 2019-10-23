@@ -105,9 +105,7 @@ JsxLexer = function (_JavascriptLexer) {_inherits(JsxLexer, _JavascriptLexer);
         if (child.kind === ts.SyntaxKind.JsxElement || child.kind === ts.SyntaxKind.JsxSelfClosingElement) {
           var element = child.openingElement || child;
           var name = element.tagName.escapedText;
-          var isBasic =
-          (!element.attributes || !element.attributes.length) && (
-          !child.closingElement || !child.closingElement.attributes || !child.closingElement.attributes.length);
+          var isBasic = !element.attributes.properties.length;
           return {
             type: 'tag',
             children: _this5.parseChildren(child.children, sourceText),
