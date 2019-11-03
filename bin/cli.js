@@ -11,7 +11,7 @@ var vfs           = require('vinyl-fs')
 
 program
 .version(pkg.version)
-.option('-c, --config <path>', 'Path to the config file (default: i18next-parser.config.js)')
+.option('-c, --config <path>', 'Path to the config file (default: i18next-parser.config.js)', 'i18next-parser.config.js')
 .option('-o, --output <path>', 'Path to the output directory (default: locales/$LOCALE/$NAMESPACE.json)')
 .option('-s, --silent', 'Disable logging to stdout')
 
@@ -27,16 +27,14 @@ program.on('--help', function() {
 program.parse(process.argv)
 
 var config = {}
-if (program.config) {
-  try {
-    config = require(path.resolve(program.config))
-  } catch (err) {
-    console.log('  [error] '.red + 'Config file does not exist: ' + program.config)
-    return
-  }
+try {
+  config = require(path.resolve(program.config))
+} catch (err) {
+  console.log('  [error] '.red + 'Config file does not exist: ' + program.config)
+  return
 }
 
-config.output = program.output || config.output
+config.output = program.output || config.output || 'locales/$LOCALE/$NAMESPACE.json'
 
 var args = program.args || []
 var globs
@@ -68,12 +66,6 @@ else if (config.input) {
   globs = config.input.map(function (s) {
     return path.resolve(path.dirname(path.resolve(program.config)), s)
   })
-}
-
-if (!config.output) {
-  console.log('  [error] '.red + 'an `output` is required via --config or --output option')
-  program.help()
-  program.exit(1)
 }
 
 if (!globs.length) {
