@@ -772,8 +772,8 @@ describe('parser', () => {
 
       i18nextParser.end(fakeFile)
     })
-    
-    
+
+
     it('supports outputing to yml', (done) => {
       let result
       const i18nextParser = new i18nTransform({
@@ -896,9 +896,9 @@ describe('parser', () => {
         }
       })
       i18nextParser.on('end', () => {
-        assert.deepEqual(result, { 
-          first: 'first', 
-          'second and third': 'second and third', 
+        assert.deepEqual(result, {
+          first: 'first',
+          'second and third': 'second and third',
           '$fourth %fifth%': '$fourth %fifth%',
           six: {
             seven: 'six.seven'
@@ -906,6 +906,56 @@ describe('parser', () => {
         })
         done()
       })
+      i18nextParser.end(fakeFile)
+    })
+
+    it('generates plurals', (done) => {
+      let result
+      const i18nextParser = new i18nTransform()
+      const fakeFile = new Vinyl({
+        contents: Buffer.from("t('test {{count}}', { count: 1 })"),
+        path: 'file.js'
+      })
+
+      i18nextParser.on('data', file => {
+        if (file.relative.endsWith(enLibraryPath)) {
+          result = JSON.parse(file.contents)
+        }
+      })
+      i18nextParser.once('end', () => {
+        assert.deepEqual(result, {
+          'test {{count}}_plural_0': '',
+          'test {{count}}_plural_1': ''
+        })
+        done()
+      })
+
+      i18nextParser.end(fakeFile)
+    })
+
+    it('generates plurals with key as value', (done) => {
+      let result
+      const i18nextParser = new i18nTransform({
+        useKeysAsDefaultValue: true,
+      })
+      const fakeFile = new Vinyl({
+        contents: Buffer.from("t('test {{count}}', { count: 1 })"),
+        path: 'file.js'
+      })
+
+      i18nextParser.on('data', file => {
+        if (file.relative.endsWith(enLibraryPath)) {
+          result = JSON.parse(file.contents)
+        }
+      })
+      i18nextParser.once('end', () => {
+        assert.deepEqual(result, {
+          'test {{count}}_plural_0': 'test {{count}}',
+          'test {{count}}_plural_1': 'test {{count}}'
+        })
+        done()
+      })
+
       i18nextParser.end(fakeFile)
     })
 
@@ -1028,7 +1078,6 @@ describe('parser', () => {
     })
 
     it('emits an `error` if a lexer does not exist', (done) => {
-      const results = []
       const i18nextParser = new i18nTransform({ lexers: { js: ['fakeLexer'] } })
       const fakeFile = new Vinyl({
         contents: Buffer.from('content'),
