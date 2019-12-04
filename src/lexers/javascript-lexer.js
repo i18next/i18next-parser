@@ -11,21 +11,21 @@ export default class JavascriptLexer extends BaseLexer {
 
   extract(content, filename = '__default.js') {
     const keys = []
-    
+
     const parseTree = (node) => {
       let entry
 
       if (node.kind === ts.SyntaxKind.CallExpression) {
         entry = this.expressionExtractor.call(this, node)
       }
-      
+
       if (entry) {
         keys.push(entry)
       }
 
       node.forEachChild(parseTree)
     }
-    
+
     const sourceFile = ts.createSourceFile(filename, content, ts.ScriptTarget.Latest)
     parseTree(sourceFile)
 
@@ -35,10 +35,10 @@ export default class JavascriptLexer extends BaseLexer {
   expressionExtractor(node) {
     const entry = {}
 
-    const isTranslationFunction = 
-      (node.expression.text && this.functions.includes(node.expression.text)) || 
+    const isTranslationFunction =
+      (node.expression.text && this.functions.includes(node.expression.text)) ||
       (node.expression.name && this.functions.includes(node.expression.name.text))
-    
+
 
     if (isTranslationFunction) {
       const keyArgument = node.arguments.shift()
@@ -70,7 +70,7 @@ export default class JavascriptLexer extends BaseLexer {
       }
       else if (optionsArgument && optionsArgument.kind === ts.SyntaxKind.ObjectLiteralExpression) {
         for (const p of optionsArgument.properties) {
-          entry[p.name.text] = p.initializer.text
+          entry[p.name.text] = (p.initializer && p.initializer.text) || ''
         }
       }
 
