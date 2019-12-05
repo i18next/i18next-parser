@@ -496,8 +496,8 @@ describe('parser', () => {
       first: 'first',
       first_plural: 'first plural',
       second: 'second',
-      second_plural_0: 'second plural 0',
-      second_plural_12: 'second plural 12'
+      second_0: 'second plural 0',
+      second_12: 'second plural 12'
     }
 
     i18nextParser.on('data', file => {
@@ -524,7 +524,6 @@ describe('parser', () => {
     const expectedResult = {
       first: 'first',
       first_context1_plural: 'first context1 plural',
-      first_context2_plural_2: 'first context2 plural 2'
     }
 
     i18nextParser.on('data', file => {
@@ -924,8 +923,8 @@ describe('parser', () => {
       })
       i18nextParser.once('end', () => {
         assert.deepEqual(result, {
-          'test {{count}}_plural_0': '',
-          'test {{count}}_plural_1': ''
+          'test {{count}}': '',
+          'test {{count}}_plural': ''
         })
         done()
       })
@@ -950,8 +949,8 @@ describe('parser', () => {
       })
       i18nextParser.once('end', () => {
         assert.deepEqual(result, {
-          'test {{count}}_plural_0': 'test {{count}}',
-          'test {{count}}_plural_1': 'test {{count}}'
+          'test {{count}}': 'test {{count}}',
+          'test {{count}}_plural': 'test {{count}}'
         })
         done()
       })

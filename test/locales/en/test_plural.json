@@ -2,6 +2,6 @@
   "first": "first",
   "first_plural": "first plural",
   "second": "second",
-  "second_plural_0": "second plural 0",
-  "second_plural_12": "second plural 12"
+  "second_0": "second plural 0",
+  "second_12": "second plural 12"
 }

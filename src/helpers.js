@@ -7,7 +7,7 @@
  * indicates whether the entry already existed in the `target` hash.
  */
 function dotPathToHash(entry, target = {}, options = {}) {
-  let path = options.plural !== undefined ? `${entry.key}_plural_${options.plural}` : entry.key
+  let path = options.suffix ? `${entry.key}_${options.suffix}` : entry.key
   const separator = options.separator || '.'
   let newValue = entry.defaultValue || options.value || ''
   if (options.useKeysAsDefaultValue) {
@@ -89,7 +89,7 @@ function mergeHashes(source, target, keepRemoved = false) {
       }
       else {
         // support for plural in keys
-        const pluralRegex = /_plural(_\d+)?$/;
+        const pluralRegex = /(_plural)|(_\d+)$/;
         const pluralMatch = pluralRegex.test(key)
         const singularKey = key.replace(pluralRegex, '')
 

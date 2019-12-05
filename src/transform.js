@@ -113,12 +113,12 @@ export default class i18nTransform extends Transform {
       let countWithPlurals = 0
       let uniqueCount = this.entries.length
 
-      const transformEntry = (entry, plural) => {
+      const transformEntry = (entry, suffix) => {
         const { duplicate, conflict } = dotPathToHash(
           entry,
           catalog,
           {
-            plural,
+            suffix,
             separator: this.options.keySeparator,
             value: this.options.defaultValue,
             useKeysAsDefaultValue: this.options.useKeysAsDefaultValue
@@ -142,7 +142,10 @@ export default class i18nTransform extends Transform {
       for (const entry of this.entries) {
         if (typeof entry.count !== 'undefined') {
           numbers.forEach((_, i) => {
-            transformEntry(entry, i)
+            transformEntry(
+              entry,
+              numbers.length > 2 ? i : i ? 'plural' : ''
+            )
           })
         } else {
           transformEntry(entry)

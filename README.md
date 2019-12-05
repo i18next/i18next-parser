@@ -21,13 +21,12 @@ Finally, if you want to make this process even less painful, I invite you to che
 - Restores keys from the `_old` file if the one in the translation file is empty
 - Supports i18next features:
   - **Context**: keys of the form `key_context`
-  - **Plural**: keys of the form `key_plural` and `key_plural_0`
+  - **Plural**: keys of the form `key_plural` and `key_0`, `key_1` as described [here](https://www.i18next.com/translation-function/plurals)
 - Tested on Node 6+
 
 ## DISCLAIMER: `1.0.0-beta`
 
 `1.x` is currently in beta. You can follow the pre-releases [here](https://github.com/i18next/i18next-parser/releases). It is a deep rewrite of this package that solves many issues, the main one being that it was slowly becoming unmaintainable. The [migration](docs/migration.md) contains all the breaking changes. Everything that follows is related to `1.x`. If you rely on a `0.x.x` version, you can still find the old documentation on its dedicated [branch](https://github.com/i18next/i18next-parser/tree/0.x.x).
-
 
 ## Usage
 
@@ -61,15 +60,18 @@ npm install --save-dev i18next-parser@next
 [Gulp](http://gulpjs.com/) defines itself as the streaming build system. Put simply, it is like Grunt, but performant and elegant.
 
 ```javascript
-const i18nextParser = require('i18next-parser').gulp;
+const i18nextParser = require("i18next-parser").gulp;
 
-gulp.task('i18next', function() {
-  gulp.src('app/**')
-    .pipe(new i18nextParser({
-      locales: ['en', 'de'],
-      output: 'locales/$LOCALE/$NAMESPACE.json'
-    }))
-    .pipe(gulp.dest('./'));
+gulp.task("i18next", function() {
+  gulp
+    .src("app/**")
+    .pipe(
+      new i18nextParser({
+        locales: ["en", "de"],
+        output: "locales/$LOCALE/$NAMESPACE.json"
+      })
+    )
+    .pipe(gulp.dest("./"));
 });
 ```
 
@@ -87,22 +89,21 @@ npm install --save-dev i18next-parser@next
 [Broccoli.js](https://github.com/broccolijs/broccoli) defines itself as a fast, reliable asset pipeline, supporting constant-time rebuilds and compact build definitions.
 
 ```javascript
+const Funnel = require("broccoli-funnel");
+const i18nextParser = require("i18next-parser").broccoli;
 
-const Funnel = require('broccoli-funnel')
-const i18nextParser = require('i18next-parser').broccoli;
-
-const appRoot = 'broccoli'
+const appRoot = "broccoli";
 
 let i18n = new Funnel(appRoot, {
-  files: ['handlebars.hbs', 'javascript.js'],
-  annotation: 'i18next-parser'
-})
+  files: ["handlebars.hbs", "javascript.js"],
+  annotation: "i18next-parser"
+});
 
 i18n = new i18nextParser([i18n], {
-  output: 'broccoli/locales/$LOCALE/$NAMESPACE.json'
-})
+  output: "broccoli/locales/$LOCALE/$NAMESPACE.json"
+});
 
-module.exports = i18n
+module.exports = i18n;
 ```
 
 ## Options
@@ -113,16 +114,16 @@ Using a config file gives you fine-grained control over how i18next-parser treat
 // i18next-parser.config.js
 
 module.exports = {
-  contextSeparator: '_',
+  contextSeparator: "_",
   // Key separator used in your translation keys
 
   createOldCatalogs: true,
   // Save the \_old files
 
-  defaultNamespace: 'translation',
+  defaultNamespace: "translation",
   // Default namespace used in your i18next config
 
-  defaultValue: '',
+  defaultValue: "",
   // Default value to give to empty keys
 
   indentation: 2,
@@ -131,38 +132,38 @@ module.exports = {
   keepRemoved: false,
   // Keep keys from the catalog that are no longer in code
 
-  keySeparator: '.',
+  keySeparator: ".",
   // Key separator used in your translation keys
   // If you want to use plain english keys, separators such as `.` and `:` will conflict. You might want to set `keySeparator: false` and `namespaceSeparator: false`. That way, `t('Status: Loading...')` will not think that there are a namespace and three separator dots for instance.
 
   // see below for more details
   lexers: {
-    hbs: ['HandlebarsLexer'],
-    handlebars: ['HandlebarsLexer'],
+    hbs: ["HandlebarsLexer"],
+    handlebars: ["HandlebarsLexer"],
 
-    htm: ['HTMLLexer'],
-    html: ['HTMLLexer'],
+    htm: ["HTMLLexer"],
+    html: ["HTMLLexer"],
 
-    mjs: ['JavascriptLexer'],
-    js: ['JavascriptLexer'], // if you're writing jsx inside .js files, change this to JsxLexer
-    ts: ['JavascriptLexer'],
-    jsx: ['JsxLexer'],
-    tsx: ['JsxLexer'],
+    mjs: ["JavascriptLexer"],
+    js: ["JavascriptLexer"], // if you're writing jsx inside .js files, change this to JsxLexer
+    ts: ["JavascriptLexer"],
+    jsx: ["JsxLexer"],
+    tsx: ["JsxLexer"],
 
-    default: ['JavascriptLexer']
+    default: ["JavascriptLexer"]
   },
 
-  lineEnding: 'auto',
+  lineEnding: "auto",
   // Control the line ending. See options at https://github.com/ryanve/eol
 
-  locales: ['en', 'fr'],
+  locales: ["en", "fr"],
   // An array of the locales in your applications
 
-  namespaceSeparator: ':',
+  namespaceSeparator: ":",
   // Namespace separator used in your translation keys
   // If you want to use plain english keys, separators such as `.` and `:` will conflict. You might want to set `keySeparator: false` and `namespaceSeparator: false`. That way, `t('Status: Loading...')` will not think that there are a namespace and three separator dots for instance.
 
-  output: 'locales/$LOCALE/$NAMESPACE.json',
+  output: "locales/$LOCALE/$NAMESPACE.json",
   // Supports $LOCALE and $NAMESPACE injection
   // Supports JSON (.json) and YAML (.yml) file formats
   // Where to write the locale files relative to process.cwd()
@@ -184,7 +185,7 @@ module.exports = {
 
   verbose: false
   // Display info about the parsing including some stats
-}
+};
 ```
 
 ### Lexers
@@ -197,11 +198,13 @@ There are 4 lexers available: `HandlebarsLexer`, `HTMLLexer`, `JavascriptLexer` 
 If you need to change the defaults, you can do it like so:
 
 #### Javascript
+
 The Javascript lexer uses [Acorn](https://github.com/acornjs/acorn) to walk through your code and extract references
 translation functions. If your code uses features not supported natively by Acorn, you can enable support through
 `injectors` and `plugins` configuration. Note that you must install these additional dependencies yourself through
 `yarn` or `npm`; they are not included in this package. This is an example configuration that adds all non-jsx plugins supported by acorn
 at the time of writing:
+
 ```javascript
 const injectAcornStaticClassPropertyInitializer = require('acorn-static-class-property-initializer/inject');
 const injectAcornStage3 = require('acorn-stage3/inject');
@@ -233,10 +236,12 @@ const injectAcornEs7 = require('acorn-es7');
 ```
 
 If you receive an error that looks like this:
+
 ```bash
 TypeError: baseVisitor[type] is not a function
 # rest of stack trace...
 ```
+
 The problem is likely that you are missing a plugin that supports a feature that your code uses.
 
 The default configuration is below:
@@ -261,7 +266,9 @@ The default configuration is below:
 ```
 
 #### Jsx
+
 The JSX lexer builds off of the Javascript lexer, and additionally requires the `acorn-jsx` plugin. To use it, add `acorn-jsx` to your dev dependencies:
+
 ```bash
 npm install -D acorn-jsx
 # or
@@ -269,6 +276,7 @@ yarn add -D acorn-jsx@4.1.1
 ```
 
 Default configuration:
+
 ```js
 {
   // JsxLexer default config (jsx)
@@ -287,20 +295,27 @@ Default configuration:
   }],
 }
 ```
+
 #### Ts(x)
+
 Typescript is supported via Javascript and Jsx lexers. If you are using Javascript syntax (e.g. with React), follow the steps in Jsx section, otherwise Javascript section.
 
 #### Handlebars
+
 ```js
 {
   // HandlebarsLexer default config (hbs, handlebars)
-  handlebars: [{
-    lexer: 'HandlebarsLexer',
-    functions: ['t'] // Array of functions to match
-  }]
+  handlebars: [
+    {
+      lexer: "HandlebarsLexer",
+      functions: ["t"] // Array of functions to match
+    }
+  ];
 }
 ```
+
 #### Html
+
 ```js
 {
   // HtmlLexer default config (htm, html)
@@ -326,8 +341,6 @@ The transform emits a `warning:variable` event if the file has a key that contai
 
 `.pipe( i18next().on('warning:variable', (path, key) => {}) )`
 
-
-
 ## Contribute
 
 Any contribution is welcome. Please [read the guidelines](docs/development.md) first.
@@ -342,7 +355,7 @@ If you use this package and like it, supporting me on [Patreon](https://www.patr
   </a>
 </p>
 
---------------
+---
 
 ## Gold Sponsors
 

@@ -113,12 +113,12 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
         var countWithPlurals = 0;
         var uniqueCount = _this2.entries.length;
 
-        var transformEntry = function transformEntry(entry, plural) {var _dotPathToHash =
+        var transformEntry = function transformEntry(entry, suffix) {var _dotPathToHash =
           (0, _helpers.dotPathToHash)(
           entry,
           catalog,
           {
-            plural: plural,
+            suffix: suffix,
             separator: _this2.options.keySeparator,
             value: _this2.options.defaultValue,
             useKeysAsDefaultValue: _this2.options.useKeysAsDefaultValue }),duplicate = _dotPathToHash.duplicate,conflict = _dotPathToHash.conflict;
@@ -142,7 +142,10 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
         entry) {
           if (typeof entry.count !== 'undefined') {
             numbers.forEach(function (_, i) {
-              transformEntry(entry, i);
+              transformEntry(
+              entry,
+              numbers.length > 2 ? i : i ? 'plural' : '');
+
             });
           } else {
             transformEntry(entry);
