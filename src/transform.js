@@ -13,6 +13,15 @@ function warn(...args) {
   console.warn('\x1b[33m%s\x1b[0m', ...args)
 }
 
+function getPluralSuffix(numberOfPluralForms, nthForm) {
+  if (numberOfPluralForms.length > 2) {
+    return nthForm // key_0, key_1, etc.
+  } else if (nthForm === 1) {
+    return 'plural'
+  }
+  return ''
+}
+
 export default class i18nTransform extends Transform {
   constructor(options = {}) {
     options.objectMode = true
@@ -139,13 +148,11 @@ export default class i18nTransform extends Transform {
         }
       }
 
+      // generates plurals according to i18next rules: key, key_plural, key_0, key_1, etc.
       for (const entry of this.entries) {
-        if (typeof entry.count !== 'undefined') {
+        if (entry.count !== undefined) {
           numbers.forEach((_, i) => {
-            transformEntry(
-              entry,
-              numbers.length > 2 ? i : i ? 'plural' : ''
-            )
+            transformEntry(entry, getPluralSuffix(numbers, i))
           })
         } else {
           transformEntry(entry)

@@ -11,6 +11,15 @@ var _i18next = require('i18next');var _i18next2 = _interopRequireDefault(_i18nex
 
 function warn() {var _console;for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {args[_key] = arguments[_key];}
   (_console = console).warn.apply(_console, ['\x1b[33m%s\x1b[0m'].concat(args));
+}
+
+function getPluralSuffix(numberOfPluralForms, nthForm) {
+  if (numberOfPluralForms.length > 2) {
+    return nthForm; // key_0, key_1, etc.
+  } else if (nthForm === 1) {
+    return 'plural';
+  }
+  return '';
 }var
 
 i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
@@ -137,15 +146,13 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
           } else {
             countWithPlurals += 1;
           }
-        };var _loop2 = function _loop2(
+        };
 
-        entry) {
-          if (typeof entry.count !== 'undefined') {
+        // generates plurals according to i18next rules: key, key_plural, key_0, key_1, etc.
+        var _loop2 = function _loop2(entry) {
+          if (entry.count !== undefined) {
             numbers.forEach(function (_, i) {
-              transformEntry(
-              entry,
-              numbers.length > 2 ? i : i ? 'plural' : '');
-
+              transformEntry(entry, getPluralSuffix(numbers, i));
             });
           } else {
             transformEntry(entry);

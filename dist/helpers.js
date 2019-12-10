@@ -7,7 +7,11 @@
                                                                                                                                                                                                                                                                                                                                                       * indicates whether the entry already existed in the `target` hash.
                                                                                                                                                                                                                                                                                                                                                       */
 function dotPathToHash(entry) {var target = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-  var path = options.suffix ? entry.key + '_' + options.suffix : entry.key;
+  var path = entry.key;
+  if (options.suffix || options.suffix === 0) {
+    path += '_' + options.suffix;
+  }
+
   var separator = options.separator || '.';
   var newValue = entry.defaultValue || options.value || '';
   if (options.useKeysAsDefaultValue) {

@@ -7,7 +7,11 @@
  * indicates whether the entry already existed in the `target` hash.
  */
 function dotPathToHash(entry, target = {}, options = {}) {
-  let path = options.suffix ? `${entry.key}_${options.suffix}` : entry.key
+  let path = entry.key
+  if (options.suffix || options.suffix === 0) {
+    path += `_${options.suffix}`
+  }
+
   const separator = options.separator || '.'
   let newValue = entry.defaultValue || options.value || ''
   if (options.useKeysAsDefaultValue) {

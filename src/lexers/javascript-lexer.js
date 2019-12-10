@@ -70,7 +70,7 @@ export default class JavascriptLexer extends BaseLexer {
       }
       else if (optionsArgument && optionsArgument.kind === ts.SyntaxKind.ObjectLiteralExpression) {
         for (const p of optionsArgument.properties) {
-          entry[p.name.text] = (p.initializer && p.initializer.text) || ''
+          entry[p.name.text] = p.initializer && p.initializer.text || ''
         }
       }
 

@@ -5,6 +5,7 @@ import i18nTransform from '../src/transform'
 import path from 'path'
 
 const enLibraryPath = path.normalize('en/translation.json')
+const arLibraryPath = path.normalize('ar/translation.json')
 
 describe('parser', () => {
   it('parses globally on multiple lines', (done) => {
@@ -932,6 +933,34 @@ describe('parser', () => {
       i18nextParser.end(fakeFile)
     })
 
+    it('generates plurals for languages with multiple plural forms', (done) => {
+      let result
+      const i18nextParser = new i18nTransform({ locales: ['ar'] })
+      const fakeFile = new Vinyl({
+        contents: Buffer.from("t('test {{count}}', { count: 1 })"),
+        path: 'file.js'
+      })
+
+      i18nextParser.on('data', file => {
+        if (file.relative.endsWith(arLibraryPath)) {
+          result = JSON.parse(file.contents)
+        }
+      })
+      i18nextParser.once('end', () => {
+        assert.deepEqual(result, {
+          'test {{count}}_0': '',
+          'test {{count}}_1': '',
+          'test {{count}}_2': '',
+          'test {{count}}_3': '',
+          'test {{count}}_4': '',
+          'test {{count}}_5': '',
+        })
+        done()
+      })
+
+      i18nextParser.end(fakeFile)
+    })
+
     it('generates plurals with key as value', (done) => {
       let result
       const i18nextParser = new i18nTransform({
@@ -951,6 +980,37 @@ describe('parser', () => {
         assert.deepEqual(result, {
           'test {{count}}': 'test {{count}}',
           'test {{count}}_plural': 'test {{count}}'
+        })
+        done()
+      })
+
+      i18nextParser.end(fakeFile)
+    })
+
+    it('generates plurals with key as value for languages with multiple plural forms', (done) => {
+      let result
+      const i18nextParser = new i18nTransform({
+        useKeysAsDefaultValue: true,
+        locales: ['ar']
+      })
+      const fakeFile = new Vinyl({
+        contents: Buffer.from("t('test {{count}}', { count: 1 })"),
+        path: 'file.js'
+      })
+
+      i18nextParser.on('data', file => {
+        if (file.relative.endsWith(arLibraryPath)) {
+          result = JSON.parse(file.contents)
+        }
+      })
+      i18nextParser.once('end', () => {
+        assert.deepEqual(result, {
+          'test {{count}}_0': 'test {{count}}',
+          'test {{count}}_1': 'test {{count}}',
+          'test {{count}}_2': 'test {{count}}',
+          'test {{count}}_3': 'test {{count}}',
+          'test {{count}}_4': 'test {{count}}',
+          'test {{count}}_5': 'test {{count}}',
         })
         done()
       })
