@@ -7,9 +7,19 @@ import path from 'path'
 import VirtualFile from 'vinyl'
 import YAML from 'yamljs'
 import BaseLexer from './lexers/base-lexer'
+import i18next from 'i18next'
 
 function warn(...args) {
   console.warn('\x1b[33m%s\x1b[0m', ...args)
+}
+
+function getPluralSuffix(numberOfPluralForms, nthForm) {
+  if (numberOfPluralForms.length > 2) {
+    return nthForm // key_0, key_1, etc.
+  } else if (nthForm === 1) {
+    return 'plural'
+  }
+  return ''
 }
 
 export default class i18nTransform extends Transform {
@@ -51,6 +61,8 @@ export default class i18nTransform extends Transform {
 
     this.localeRegex = /\$LOCALE/g
     this.namespaceRegex = /\$NAMESPACE/g
+
+    i18next.init();
   }
 
   _transform(file, encoding, done) {
@@ -99,39 +111,54 @@ export default class i18nTransform extends Transform {
   }
 
   _flush(done) {
-    let catalog = {}
-
     if (this.options.sort) {
       this.entries = this.entries.sort((a, b) => a.key.localeCompare(b.key))
     }
 
-    let uniqueCount = this.entries.length
-    for (const entry of this.entries) {
-      const { duplicate, conflict } = dotPathToHash(
-        entry,
-        catalog,
-        {
-          separator: this.options.keySeparator,
-          value: this.options.defaultValue,
-          useKeysAsDefaultValue: this.options.useKeysAsDefaultValue
-        }
-      )
-      if (duplicate) {
-        uniqueCount -= 1
-        if (conflict) {
-          const warning = `Found same keys with different values: ${entry.key}`
-          this.emit('warning', warning)
-          if (this.options.verbose) {
-            warn(warning)
+    for (const locale of this.options.locales) {
+      const catalog = {}
+      const { numbers } = i18next.services.pluralResolver.getRule(locale)
+
+      let countWithPlurals = 0
+      let uniqueCount = this.entries.length
+
+      const transformEntry = (entry, suffix) => {
+        const { duplicate, conflict } = dotPathToHash(
+          entry,
+          catalog,
+          {
+            suffix,
+            separator: this.options.keySeparator,
+            value: this.options.defaultValue,
+            useKeysAsDefaultValue: this.options.useKeysAsDefaultValue
           }
+        )
+
+        if (duplicate) {
+          uniqueCount -= 1
+          if (conflict) {
+            const warning = `Found same keys with different values: ${entry.key}`
+            this.emit('warning', warning)
+            if (this.options.verbose) {
+              warn(warning)
+            }
+          }
+        } else {
+          countWithPlurals += 1
         }
       }
-    }
-    if (this.options.verbose) {
-      console.log(`\nParsed keys: ${uniqueCount}\n`)
-    }
 
-    for (const locale of this.options.locales) {
+      // generates plurals according to i18next rules: key, key_plural, key_0, key_1, etc.
+      for (const entry of this.entries) {
+        if (entry.count !== undefined) {
+          numbers.forEach((_, i) => {
+            transformEntry(entry, getPluralSuffix(numbers, i))
+          })
+        } else {
+          transformEntry(entry)
+        }
+      }
+
       const outputPath = path.resolve(this.options.output)
 
       for (const namespace in catalog) {
@@ -149,10 +176,10 @@ export default class i18nTransform extends Transform {
         // merges existing translations with the new ones
         const { new: newCatalog, old: oldKeys, mergeCount, oldCount } =
           mergeHashes(
-          existingCatalog,
-          catalog[namespace],
-          this.options.keepRemoved
-        )
+            existingCatalog,
+            catalog[namespace],
+            this.options.keepRemoved
+          )
 
         // restore old translations
         const { old: oldCatalog, mergeCount: restoreCount } = mergeHashes(existingOldCatalog, newCatalog)
@@ -162,7 +189,8 @@ export default class i18nTransform extends Transform {
 
         if (this.options.verbose) {
           console.log(`[${locale}] ${namespace}\n`)
-          const addCount = uniqueCount - mergeCount
+          console.log(`Unique keys: ${uniqueCount} (${countWithPlurals} with plurals)`)
+          const addCount = countWithPlurals - mergeCount
           console.log(`Added keys: ${addCount}`)
           console.log(`Restored keys: ${restoreCount}`)
           if (this.options.keepRemoved) {
@@ -193,7 +221,6 @@ export default class i18nTransform extends Transform {
       delete contextEntry.context
       contextEntry.key += this.options.contextSeparator + entry.context
       this.entries.push(contextEntry)
-      // this.addEntry(contextEntry)
     }
     else {
       this.entries.push(entry)

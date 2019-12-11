@@ -8,6 +8,10 @@
                                                                                                                                                                                                                                                                                                                                                       */
 function dotPathToHash(entry) {var target = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
   var path = entry.key;
+  if (options.suffix || options.suffix === 0) {
+    path += '_' + options.suffix;
+  }
+
   var separator = options.separator || '.';
   var newValue = entry.defaultValue || options.value || '';
   if (options.useKeysAsDefaultValue) {
@@ -89,7 +93,7 @@ function mergeHashes(source, target) {var keepRemoved = arguments.length > 2 && 
       } else
       {
         // support for plural in keys
-        var pluralRegex = /_plural(_\d+)?$/;
+        var pluralRegex = /(_plural)|(_\d+)$/;
         var pluralMatch = pluralRegex.test(key);
         var singularKey = key.replace(pluralRegex, '');
 

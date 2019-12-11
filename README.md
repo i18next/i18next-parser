@@ -21,7 +21,7 @@ Finally, if you want to make this process even less painful, I invite you to che
 - Restores keys from the `_old` file if the one in the translation file is empty
 - Supports i18next features:
   - **Context**: keys of the form `key_context`
-  - **Plural**: keys of the form `key_plural` and `key_plural_0`
+  - **Plural**: keys of the form `key_plural` and `key_0`, `key_1` as described [here](https://www.i18next.com/translation-function/plurals)
 - Tested on Node 6+
 
 ## DISCLAIMER: `1.0.0-beta`
