@@ -31,6 +31,7 @@
     "typescript": "^3.6.4",
     "vinyl": "~2.0.1",
     "vinyl-fs": "^3.0.2",
+    "vue-template-compiler": "^2.6.11",
     "yamljs": "^0.3.0"
   },
   "optionalDependencies": {},
