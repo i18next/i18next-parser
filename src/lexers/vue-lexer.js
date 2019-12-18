@@ -1,7 +1,7 @@
 import BaseLexer from './base-lexer'
 import JavascriptLexer from './javascript-lexer.js'
 
-export default class HandlebarsLexer extends BaseLexer {
+export default class VueLexer extends BaseLexer {
   constructor(options = {}) {
     super(options)
 
