@@ -123,4 +123,10 @@ describe('JavascriptLexer', () => {
     const content = 'i18n.t("first") as potato'
     assert.deepEqual(Lexer.extract(content), [{ key: 'first' }])
   })
+
+  it('extracts default namespace from useTranslation hook', () => {
+    const Lexer = new JavascriptLexer()
+    const content = 'const {t} = useTranslation("foo"); t("bar");'
+    assert.deepEqual(Lexer.extract(content), [{ namespace: 'foo', key: 'bar' }])
+  })
 })

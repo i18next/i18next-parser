@@ -74,7 +74,15 @@ JavascriptLexer = function (_BaseLexer) {_inherits(JavascriptLexer, _BaseLexer);
             }} catch (err) {_didIteratorError = true;_iteratorError = err;} finally {try {if (!_iteratorNormalCompletion && _iterator.return) {_iterator.return();}} finally {if (_didIteratorError) {throw _iteratorError;}}}
         }
 
+        if (this.defaultNamespace) {
+          entry.namespace = this.defaultNamespace;
+        }
+
         return entry;
+      }
+
+      if (node.expression.escapedText === 'useTranslation' && node.arguments.length) {
+        this.defaultNamespace = node.arguments[0].text;
       }
 
       return null;
