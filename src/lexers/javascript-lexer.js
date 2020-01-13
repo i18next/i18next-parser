@@ -75,7 +75,7 @@ export default class JavascriptLexer extends BaseLexer {
       }
 
       if (this.defaultNamespace) {
-        entry.namespace = this.defaultNamespace;
+        entry.namespace = this.defaultNamespace
       }
       
       return entry
