@@ -43,10 +43,12 @@ JsxLexer = function (_JavascriptLexer) {_inherits(JsxLexer, _JavascriptLexer);
     node, sourceText) {var _this3 = this;
       var tagNode = node.openingElement || node;
 
-      var getKey = function getKey(node) {
-        var attribute = node.attributes.properties.find(function (attr) {return attr.name.text === _this3.attr;});
+      var getPropValue = function getPropValue(node, tagName) {
+        var attribute = node.attributes.properties.find(function (attr) {return attr.name.text === tagName;});
         return attribute && attribute.initializer.text;
       };
+
+      var getKey = function getKey(node) {return getPropValue(node, _this3.attr);};
 
       if (tagNode.tagName.text === "Trans") {
         var entry = {};
@@ -60,6 +62,11 @@ JsxLexer = function (_JavascriptLexer) {_inherits(JsxLexer, _JavascriptLexer);
           if (!entry.key) {
             entry.key = entry.defaultValue;
           }
+        }
+
+        var namespace = getPropValue(tagNode, 'ns');
+        if (namespace) {
+          entry.namespace = namespace;
         }
 
         return entry.key ? entry : null;

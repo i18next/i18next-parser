@@ -119,6 +119,14 @@ describe('JsxLexer', () => {
       assert.equal(Lexer.extract(content)[0].defaultValue, 'Some Interpolated Content')
       done()
     })
+
+    it('uses the ns (namespace) prop', (done) => {
+      const Lexer = new JsxLexer()
+      const content = `<Trans ns="foo">bar</Trans>`
+      assert.deepEqual(Lexer.extract(content), [{ key: 'bar', defaultValue: 'bar', namespace: 'foo' }])
+      done()
+    })
+
   })
 
   describe('supports TypeScript', () => {

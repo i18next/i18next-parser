@@ -43,10 +43,12 @@ export default class JsxLexer extends JavascriptLexer {
   jsxExtractor(node, sourceText) {
     const tagNode = node.openingElement || node
 
-    const getKey = (node) => {
-      const attribute = node.attributes.properties.find(attr => attr.name.text === this.attr)
+    const getPropValue = (node, tagName) => {
+      const attribute = node.attributes.properties.find(attr => attr.name.text === tagName)
       return attribute && attribute.initializer.text
     }
+
+    const getKey = (node) => getPropValue(node, this.attr)
 
     if (tagNode.tagName.text === "Trans") {
       const entry = {}
@@ -60,6 +62,11 @@ export default class JsxLexer extends JavascriptLexer {
         if (!entry.key) {
           entry.key = entry.defaultValue
         }
+      }
+
+      const namespace = getPropValue(tagNode, 'ns')
+      if (namespace) {
+        entry.namespace = namespace
       }
 
       return entry.key ? entry : null
