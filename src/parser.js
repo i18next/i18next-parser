@@ -7,8 +7,6 @@ import JsxLexer from './lexers/jsx-lexer'
 import VueLexer from './lexers/vue-lexer'
 
 const lexers = {
-  vue: ['VueLexer'],
-
   hbs: ['HandlebarsLexer'],
   handlebars: ['HandlebarsLexer'],
 
@@ -20,6 +18,8 @@ const lexers = {
   ts: ['JavascriptLexer'],
   jsx: ['JsxLexer'],
   tsx: ['JsxLexer'],
+
+  vue: ['VueLexer'],
 
   default: ['JavascriptLexer']
 }
