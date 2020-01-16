@@ -36,8 +36,8 @@ Finally, if you want to make this process even less painful, I invite you to che
 You can use the CLI with the package installed locally but if you want to use it from anywhere, you better install it globally:
 
 ```
-yarn global add i18next-parser@next
-npm install -g i18next-parser@next
+yarn global add i18next-parser
+npm install -g i18next-parser
 i18next 'app/**/*.{js,hbs}' 'lib/**/*.{js,hbs}' [-oc]
 ```
 
@@ -54,8 +54,8 @@ Multiple globbing patterns are supported to specify complex file selections. You
 Save the package to your devDependencies:
 
 ```
-yarn add -D i18next-parser@next
-npm install --save-dev i18next-parser@next
+yarn add -D i18next-parser
+npm install --save-dev i18next-parser
 ```
 
 [Gulp](http://gulpjs.com/) defines itself as the streaming build system. Put simply, it is like Grunt, but performant and elegant.
@@ -80,8 +80,8 @@ gulp.task('i18next', function() {
 Save the package to your devDependencies:
 
 ```
-yarn add -D i18next-parser@next
-npm install --save-dev i18next-parser@next
+yarn add -D i18next-parser
+npm install --save-dev i18next-parser
 ```
 
 [Broccoli.js](https://github.com/broccolijs/broccoli) defines itself as a fast, reliable asset pipeline, supporting constant-time rebuilds and compact build definitions.
