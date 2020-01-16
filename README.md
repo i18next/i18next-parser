@@ -15,7 +15,7 @@ Finally, if you want to make this process even less painful, I invite you to che
 ## Features
 
 - Choose your weapon: A CLI, a standalone parser or a stream transform
-- 5 built in lexers: Javascript, JSX, HTML, Handlebars, and TypeScript+tsx
+- 6 built in lexers: Javascript, JSX, HTML, Handlebars, TypeScript+tsx and Vue
 - Creates one catalog file per locale and per namespace
 - Backs up the old keys your code doesn't use anymore in `namespace_old.json` catalog
 - Restores keys from the `_old` file if the one in the translation file is empty
