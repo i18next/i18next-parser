@@ -3,7 +3,8 @@ var _events = require('events');var _events2 = _interopRequireDefault(_events);
 var _handlebarsLexer = require('./lexers/handlebars-lexer');var _handlebarsLexer2 = _interopRequireDefault(_handlebarsLexer);
 var _htmlLexer = require('./lexers/html-lexer');var _htmlLexer2 = _interopRequireDefault(_htmlLexer);
 var _javascriptLexer = require('./lexers/javascript-lexer');var _javascriptLexer2 = _interopRequireDefault(_javascriptLexer);
-var _jsxLexer = require('./lexers/jsx-lexer');var _jsxLexer2 = _interopRequireDefault(_jsxLexer);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function _possibleConstructorReturn(self, call) {if (!self) {throw new ReferenceError("this hasn't been initialised - super() hasn't been called");}return call && (typeof call === "object" || typeof call === "function") ? call : self;}function _inherits(subClass, superClass) {if (typeof superClass !== "function" && superClass !== null) {throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);}subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;}
+var _jsxLexer = require('./lexers/jsx-lexer');var _jsxLexer2 = _interopRequireDefault(_jsxLexer);
+var _vueLexer = require('./lexers/vue-lexer');var _vueLexer2 = _interopRequireDefault(_vueLexer);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function _possibleConstructorReturn(self, call) {if (!self) {throw new ReferenceError("this hasn't been initialised - super() hasn't been called");}return call && (typeof call === "object" || typeof call === "function") ? call : self;}function _inherits(subClass, superClass) {if (typeof superClass !== "function" && superClass !== null) {throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);}subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;}
 
 var lexers = {
   hbs: ['HandlebarsLexer'],
@@ -18,6 +19,8 @@ var lexers = {
   jsx: ['JsxLexer'],
   tsx: ['JsxLexer'],
 
+  vue: ['VueLexer'],
+
   default: ['JavascriptLexer'] };
 
 
@@ -25,7 +28,8 @@ var lexersMap = {
   HandlebarsLexer: _handlebarsLexer2.default,
   HTMLLexer: _htmlLexer2.default,
   JavascriptLexer: _javascriptLexer2.default,
-  JsxLexer: _jsxLexer2.default };var
+  JsxLexer: _jsxLexer2.default,
+  VueLexer: _vueLexer2.default };var
 
 
 Parser = function (_EventEmitter) {_inherits(Parser, _EventEmitter);
