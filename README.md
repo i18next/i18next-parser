@@ -15,18 +15,18 @@ Finally, if you want to make this process even less painful, I invite you to che
 ## Features
 
 - Choose your weapon: A CLI, a standalone parser or a stream transform
-- 5 built in lexers: Javascript, JSX, HTML, Handlebars, and TypeScript+tsx
+- 6 built in lexers: Javascript, JSX, HTML, Handlebars, TypeScript+tsx and Vue
 - Creates one catalog file per locale and per namespace
 - Backs up the old keys your code doesn't use anymore in `namespace_old.json` catalog
 - Restores keys from the `_old` file if the one in the translation file is empty
 - Supports i18next features:
   - **Context**: keys of the form `key_context`
-  - **Plural**: keys of the form `key_plural` and `key_plural_0`
+  - **Plural**: keys of the form `key_plural` and `key_0`, `key_1` as described [here](https://www.i18next.com/translation-function/plurals)
 - Tested on Node 6+
 
-## DISCLAIMER: `1.0.0-beta`
+## Versions
 
-`1.x` is currently in beta. You can follow the pre-releases [here](https://github.com/i18next/i18next-parser/releases). It is a deep rewrite of this package that solves many issues, the main one being that it was slowly becoming unmaintainable. The [migration](docs/migration.md) contains all the breaking changes. Everything that follows is related to `1.x`. If you rely on a `0.x.x` version, you can still find the old documentation on its dedicated [branch](https://github.com/i18next/i18next-parser/tree/0.x.x).
+`1.x` has been in beta for a good while. You can follow the pre-releases [here](https://github.com/i18next/i18next-parser/releases). It is a deep rewrite of this package that solves many issues, the main one being that it was slowly becoming unmaintainable. The [migration](docs/migration.md) from `0.x` contains all the breaking changes. Everything that follows is related to `1.x`. You can still find the old `0.x` documentation on its dedicated [branch](https://github.com/i18next/i18next-parser/tree/0.x.x).
 
 
 ## Usage
@@ -36,8 +36,8 @@ Finally, if you want to make this process even less painful, I invite you to che
 You can use the CLI with the package installed locally but if you want to use it from anywhere, you better install it globally:
 
 ```
-yarn global add i18next-parser@next
-npm install -g i18next-parser@next
+yarn global add i18next-parser
+npm install -g i18next-parser
 i18next 'app/**/*.{js,hbs}' 'lib/**/*.{js,hbs}' [-oc]
 ```
 
@@ -54,8 +54,8 @@ Multiple globbing patterns are supported to specify complex file selections. You
 Save the package to your devDependencies:
 
 ```
-yarn add -D i18next-parser@next
-npm install --save-dev i18next-parser@next
+yarn add -D i18next-parser
+npm install --save-dev i18next-parser
 ```
 
 [Gulp](http://gulpjs.com/) defines itself as the streaming build system. Put simply, it is like Grunt, but performant and elegant.
@@ -80,8 +80,8 @@ gulp.task('i18next', function() {
 Save the package to your devDependencies:
 
 ```
-yarn add -D i18next-parser@next
-npm install --save-dev i18next-parser@next
+yarn add -D i18next-parser
+npm install --save-dev i18next-parser
 ```
 
 [Broccoli.js](https://github.com/broccolijs/broccoli) defines itself as a fast, reliable asset pipeline, supporting constant-time rebuilds and compact build definitions.
@@ -143,12 +143,11 @@ module.exports = {
     htm: ['HTMLLexer'],
     html: ['HTMLLexer'],
 
-    js: ['JavascriptLexer'], // if you're writing jsx inside .js files, change this to JsxLexer
-    jsx: ['JsxLexer'],
     mjs: ['JavascriptLexer'],
-
-    ts: ['TypescriptLexer'],
-    tsx: ['TypescriptLexer'],
+    js: ['JavascriptLexer'], // if you're writing jsx inside .js files, change this to JsxLexer
+    ts: ['JavascriptLexer'],
+    jsx: ['JsxLexer'],
+    tsx: ['JsxLexer'],
 
     default: ['JavascriptLexer']
   },
@@ -193,8 +192,8 @@ module.exports = {
 The `lexers` option let you configure which Lexer to use for which extension. Here is the default:
 
 Note the presence of a `default` which will catch any extension that is not listed.
-There are 5 lexers available: `HandlebarsLexer`, `HTMLLexer`, `JavascriptLexer`,
-`JsxLexer`, and `TypescriptLexer`. Each has configurations of its own.
+There are 4 lexers available: `HandlebarsLexer`, `HTMLLexer`, `JavascriptLexer` and
+`JsxLexer`. Each has configurations of its own. Typescript is supported via `JavascriptLexer` and `JsxLexer`.
 If you need to change the defaults, you can do it like so:
 
 #### Javascript
@@ -266,7 +265,7 @@ The JSX lexer builds off of the Javascript lexer, and additionally requires the 
 ```bash
 npm install -D acorn-jsx
 # or
-yarn add -D acorn-jsx
+yarn add -D acorn-jsx@4.1.1
 ```
 
 Default configuration:
@@ -289,33 +288,7 @@ Default configuration:
 }
 ```
 #### Ts(x)
-The Typescript lexer builds off of the JSX lexer, and additionally requires Typescript. To use it, add both `typescript` and `acorn-jsx` to your dev dependencies:
-```bash
-npm install -D typescript acorn-jsx
-# or
-yarn add -D typescript acorn-jsx
-```
-If you need additional plugins, you can install them in the same way as described in the Javascript lexer configuration.
-
-Default configuration:
-```js
-{
-  // TypescriptLexer default config (ts/x)
-  // TypescriptLexer can take all the options of the JsxLexer in addition to
-  // optional tsOptions to pass as compilerOptions to TypeScript.
-  ts: [{
-    lexer: 'TypescriptLexer',
-    attr: 'i18nKey', // Attribute for the keys
-
-    // compiler options (https://www.typescriptlang.org/docs/handbook/compiler-options.html)
-    // note that jsx MUST be set to Preserve, or your strings will not be extracted.
-    tsOptions: {
-      jsx: 'Preserve',
-      target: 'esnext'
-    },
-  }]
-}
-```
+Typescript is supported via Javascript and Jsx lexers. If you are using Javascript syntax (e.g. with React), follow the steps in Jsx section, otherwise Javascript section.
 
 #### Handlebars
 ```js

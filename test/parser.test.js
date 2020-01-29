@@ -5,6 +5,7 @@ import i18nTransform from '../src/transform'
 import path from 'path'
 
 const enLibraryPath = path.normalize('en/translation.json')
+const arLibraryPath = path.normalize('ar/translation.json')
 
 describe('parser', () => {
   it('parses globally on multiple lines', (done) => {
@@ -66,7 +67,6 @@ describe('parser', () => {
     })
     i18nextParser.once('end', () => {
       assert.deepEqual(result, {
-        first: '',
         first_female: ''
       })
       done()
@@ -117,13 +117,9 @@ describe('parser', () => {
     })
     const expected = {
       first: '',
-      second: 'defaultValue',
       second_male: 'defaultValue',
-      third: 'defaultValue',
       third_female: 'defaultValue',
-      fourth: 'defaultValue',
       fourth_male: 'defaultValue',
-      fifth: '',
       fifth_male: '',
       sixth: '',
       seventh: 'defaultValue'
@@ -184,7 +180,7 @@ describe('parser', () => {
       first: '',
       second: '',
       third: {
-        first: 'Hello <1><0>{{name}}</0></1>, you have <3>{{count}}</3> unread message. <5>Go to messages</5>.',
+        first: 'Hello <1>{{name}}</1>, you have {{count}} unread message. <5>Go to messages</5>.',
         second: ' <1>Hello,</1> this shouldn\'t be trimmed.',
         third: '<0>Hello,</0>this should be trimmed.<2> and this shoudln\'t</2>'
       },
@@ -193,7 +189,7 @@ describe('parser', () => {
       bar: '',
       foo: '',
       "This should be part of the value and the key": "This should be part of the value and the key",
-      "don't split <1>{{on}}</1>": "don't split <1>{{on}}</1>"
+      "don't split {{on}}": "don't split {{on}}"
     }
 
     i18nextParser.on('data', file => {
@@ -223,7 +219,7 @@ describe('parser', () => {
       first: '',
       second: '',
       third: {
-        first: 'Hello <1><0>{{name}}</0></1>, you have <3>{{count}}</3> unread message. <5>Go to messages</5>.',
+        first: 'Hello <1>{{name}}</1>, you have {{count}} unread message. <5>Go to messages</5>.',
         second: ' <1>Hello,</1> this shouldn\'t be trimmed.',
         third: '<0>Hello,</0>this should be trimmed.<2> and this shoudln\'t</2>'
       },
@@ -232,7 +228,7 @@ describe('parser', () => {
       bar: '',
       foo: '',
       "This should be part of the value and the key": "This should be part of the value and the key",
-      "don't split <1>{{on}}</1>": "don't split <1>{{on}}</1>"
+      "don't split {{on}}": "don't split {{on}}"
     }
 
     i18nextParser.on('data', file => {
@@ -501,8 +497,8 @@ describe('parser', () => {
       first: 'first',
       first_plural: 'first plural',
       second: 'second',
-      second_plural_0: 'second plural 0',
-      second_plural_12: 'second plural 12'
+      second_0: 'second plural 0',
+      second_12: 'second plural 12'
     }
 
     i18nextParser.on('data', file => {
@@ -529,7 +525,6 @@ describe('parser', () => {
     const expectedResult = {
       first: 'first',
       first_context1_plural: 'first context1 plural',
-      first_context2_plural_2: 'first context2 plural 2'
     }
 
     i18nextParser.on('data', file => {
@@ -703,7 +698,7 @@ describe('parser', () => {
         first: '',
         second: '',
         third: {
-          first: 'Hello <1><0>{{name}}</0></1>, you have <3>{{count}}</3> unread message. <5>Go to messages</5>.',
+          first: 'Hello <1>{{name}}</1>, you have {{count}} unread message. <5>Go to messages</5>.',
           second: ' <1>Hello,</1> this shouldn\'t be trimmed.',
           third: '<0>Hello,</0>this should be trimmed.<2> and this shoudln\'t</2>'
         },
@@ -712,7 +707,7 @@ describe('parser', () => {
         bar: '',
         foo: '',
         "This should be part of the value and the key": "This should be part of the value and the key",
-        "don't split <1>{{on}}</1>": "don't split <1>{{on}}</1>"
+        "don't split {{on}}": "don't split {{on}}"
       }
 
       i18nextParser.on('data', file => {
@@ -728,6 +723,56 @@ describe('parser', () => {
 
       i18nextParser.end(fakeFile)
     })
+
+    it('parses Trans, keeping tags without attributes inline, if transSupportBasicHtmlNodes is true', (done) => {
+      let result
+      const i18nextParser = new i18nTransform({
+        lexers: {
+          jsx: [
+            {
+              lexer: 'JsxLexer',
+              transSupportBasicHtmlNodes: true,
+              transKeepBasicHtmlNodesFor: ['strong', 'b']
+            }
+          ]
+        }
+      })
+      const fakeFile = new Vinyl({
+        contents: fs.readFileSync(
+          path.resolve(__dirname, 'templating/react.jsx')
+        ),
+        path: 'react.jsx'
+      })
+      const expected = {
+        first: '',
+        second: '',
+        third: {
+          first: 'Hello <1>{{name}}</1>, you have {{count}} unread message. <5>Go to messages</5>.',
+          second: ' <b>Hello,</b> this shouldn\'t be trimmed.',
+          third: '<b>Hello,</b>this should be trimmed.<2> and this shoudln\'t</2>'
+        },
+        fourth: '',
+        fifth: '',
+        bar: '',
+        foo: '',
+        "This should be part of the value and the key": "This should be part of the value and the key",
+        "don't split {{on}}": "don't split {{on}}"
+      }
+
+      i18nextParser.on('data', file => {
+        // support for a default Namespace
+        if (file.relative.endsWith(path.normalize('en/react.json'))) {
+          result = JSON.parse(file.contents)
+        }
+      })
+      i18nextParser.on('end', () => {
+        assert.deepEqual(result, expected)
+        done()
+      })
+
+      i18nextParser.end(fakeFile)
+    })
+
 
     it('supports outputing to yml', (done) => {
       let result
@@ -851,9 +896,9 @@ describe('parser', () => {
         }
       })
       i18nextParser.on('end', () => {
-        assert.deepEqual(result, { 
-          first: 'first', 
-          'second and third': 'second and third', 
+        assert.deepEqual(result, {
+          first: 'first',
+          'second and third': 'second and third',
           '$fourth %fifth%': '$fourth %fifth%',
           six: {
             seven: 'six.seven'
@@ -861,6 +906,115 @@ describe('parser', () => {
         })
         done()
       })
+      i18nextParser.end(fakeFile)
+    })
+
+    it('generates plurals', (done) => {
+      let result
+      const i18nextParser = new i18nTransform()
+      const fakeFile = new Vinyl({
+        contents: Buffer.from("t('test {{count}}', { count: 1 })"),
+        path: 'file.js'
+      })
+
+      i18nextParser.on('data', file => {
+        if (file.relative.endsWith(enLibraryPath)) {
+          result = JSON.parse(file.contents)
+        }
+      })
+      i18nextParser.once('end', () => {
+        assert.deepEqual(result, {
+          'test {{count}}': '',
+          'test {{count}}_plural': ''
+        })
+        done()
+      })
+
+      i18nextParser.end(fakeFile)
+    })
+
+    it('generates plurals for languages with multiple plural forms', (done) => {
+      let result
+      const i18nextParser = new i18nTransform({ locales: ['ar'] })
+      const fakeFile = new Vinyl({
+        contents: Buffer.from("t('test {{count}}', { count: 1 })"),
+        path: 'file.js'
+      })
+
+      i18nextParser.on('data', file => {
+        if (file.relative.endsWith(arLibraryPath)) {
+          result = JSON.parse(file.contents)
+        }
+      })
+      i18nextParser.once('end', () => {
+        assert.deepEqual(result, {
+          'test {{count}}_0': '',
+          'test {{count}}_1': '',
+          'test {{count}}_2': '',
+          'test {{count}}_3': '',
+          'test {{count}}_4': '',
+          'test {{count}}_5': '',
+        })
+        done()
+      })
+
+      i18nextParser.end(fakeFile)
+    })
+
+    it('generates plurals with key as value', (done) => {
+      let result
+      const i18nextParser = new i18nTransform({
+        useKeysAsDefaultValue: true,
+      })
+      const fakeFile = new Vinyl({
+        contents: Buffer.from("t('test {{count}}', { count: 1 })"),
+        path: 'file.js'
+      })
+
+      i18nextParser.on('data', file => {
+        if (file.relative.endsWith(enLibraryPath)) {
+          result = JSON.parse(file.contents)
+        }
+      })
+      i18nextParser.once('end', () => {
+        assert.deepEqual(result, {
+          'test {{count}}': 'test {{count}}',
+          'test {{count}}_plural': 'test {{count}}'
+        })
+        done()
+      })
+
+      i18nextParser.end(fakeFile)
+    })
+
+    it('generates plurals with key as value for languages with multiple plural forms', (done) => {
+      let result
+      const i18nextParser = new i18nTransform({
+        useKeysAsDefaultValue: true,
+        locales: ['ar']
+      })
+      const fakeFile = new Vinyl({
+        contents: Buffer.from("t('test {{count}}', { count: 1 })"),
+        path: 'file.js'
+      })
+
+      i18nextParser.on('data', file => {
+        if (file.relative.endsWith(arLibraryPath)) {
+          result = JSON.parse(file.contents)
+        }
+      })
+      i18nextParser.once('end', () => {
+        assert.deepEqual(result, {
+          'test {{count}}_0': 'test {{count}}',
+          'test {{count}}_1': 'test {{count}}',
+          'test {{count}}_2': 'test {{count}}',
+          'test {{count}}_3': 'test {{count}}',
+          'test {{count}}_4': 'test {{count}}',
+          'test {{count}}_5': 'test {{count}}',
+        })
+        done()
+      })
+
       i18nextParser.end(fakeFile)
     })
 
@@ -983,7 +1137,6 @@ describe('parser', () => {
     })
 
     it('emits an `error` if a lexer does not exist', (done) => {
-      const results = []
       const i18nextParser = new i18nTransform({ lexers: { js: ['fakeLexer'] } })
       const fakeFile = new Vinyl({
         contents: Buffer.from('content'),

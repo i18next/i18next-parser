@@ -27,6 +27,26 @@ describe('dotPathToHash helper function', () => {
     done()
   })
 
+  it('supports custom separator', (done) => {
+    const { target } = dotPathToHash(
+      { key: 'one-two' },
+      {},
+      { separator: '-' }
+    )
+    assert.deepEqual(target, { one: { two: '' } })
+    done()
+  })
+
+  it('supports custom separator when `useKeysAsDefaultValue` is true', (done) => {
+    const { target } = dotPathToHash(
+      { key: 'namespace-two-three' },
+      {},
+      { separator: '-', useKeysAsDefaultValue: true }
+    )
+    assert.deepEqual(target, { namespace: { two: { three: 'two-three' } } })
+    done()
+  })
+
   it('handles a target hash', (done) => {
     const { target, duplicate } = dotPathToHash(
       { key: 'one.two.three' },

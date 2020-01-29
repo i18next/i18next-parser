@@ -1,7 +1,4 @@
-import { assert, expect } from 'chai'
-import { spy } from 'sinon'
-import stage3Injector from 'acorn-stage3/inject'
-import es7Injector from 'acorn-es7'
+import { assert } from 'chai'
 
 import JavascriptLexer from '../../src/lexers/javascript-lexer'
 
@@ -90,14 +87,14 @@ describe('JavascriptLexer', () => {
   })
 
   it('supports async/await', (done) => {
-    const Lexer = new JavascriptLexer({ acorn: { ecmaVersion: 8 } })
+    const Lexer = new JavascriptLexer()
     const content = 'const data = async () => await Promise.resolve()'
     Lexer.extract(content)
     done()
   })
 
-  it('supports the spread operator in objects plugin', (done) => {
-    const Lexer = new JavascriptLexer({ acorn: { ecmaVersion: 9 } })
+  it('supports the spread operator', (done) => {
+    const Lexer = new JavascriptLexer()
     const content = 'const data = { text: t("foo"), ...rest }; const { text, ...more } = data;'
     assert.deepEqual(Lexer.extract(content), [
       { key: 'foo' }
@@ -105,21 +102,15 @@ describe('JavascriptLexer', () => {
     done()
   })
 
-  it('supports dynamic imports with acorn-stage3 plugin', (done) => {
-    const Lexer = new JavascriptLexer({
-      acorn: {
-        ecmaVersion: 6,
-        injectors: [stage3Injector],
-        plugins: { stage3: true }
-      }
-    })
+  it('supports dynamic imports', (done) => {
+    const Lexer = new JavascriptLexer()
     const content = 'import("path/to/some/file").then(doSomethingWithData)'
     Lexer.extract(content)
     done()
   })
 
-  it('supports the acorn-es7 plugin', (done) => {
-    const Lexer = new JavascriptLexer({ acorn: { injectors: [es7Injector], plugins: { es7: true } } })
+  it('supports the es7 syntax', (done) => {
+    const Lexer = new JavascriptLexer()
     const content = '@decorator() class Test { test() { t("foo") } }'
     assert.deepEqual(Lexer.extract(content), [
       { key: 'foo' }
@@ -127,12 +118,22 @@ describe('JavascriptLexer', () => {
     done()
   })
 
-  describe('supports additional plugins via injector option', () => {
-    it('calls provided injectors with acorn', (done) => {
-      const injector = spy(acorn => acorn)
-      const Lexer = new JavascriptLexer({ acorn: { ecmaVersion: 6, injectors: [injector] } })
-      expect(injector.calledOnce).to.be.true
-      done()
-    })
+  it('supports basic typescript syntax', () => {
+    const Lexer = new JavascriptLexer()
+    const content = 'i18n.t("first") as potato'
+    assert.deepEqual(Lexer.extract(content), [{ key: 'first' }])
   })
+
+  it('extracts default namespace from useTranslation hook', () => {
+    const Lexer = new JavascriptLexer()
+    const content = 'const {t} = useTranslation("foo"); t("bar");'
+    assert.deepEqual(Lexer.extract(content), [{ namespace: 'foo', key: 'bar' }])
+  })
+
+  it('uses namespace from t function with priority', () => {
+    const Lexer = new JavascriptLexer()
+    const content = 'const {t} = useTranslation("foo"); t("bar", {ns: "baz"});'
+    assert.deepEqual(Lexer.extract(content), [{ namespace: 'baz', key: 'bar', ns: 'baz' }])
+  })
+
 })

@@ -13,10 +13,14 @@
  */
 function dotPathToHash(entry, target = {}, options = {}) {
   let path = entry.key
+  if (options.suffix || options.suffix === 0) {
+    path += `_${options.suffix}`
+  }
+
   const separator = options.separator || '.'
   let newValue = entry.defaultValue || options.value || ''
   if (options.useKeysAsDefaultValue) {
-    newValue = entry.key.substring(entry.key.indexOf('.') + 1, entry.key.length)
+    newValue = entry.key.substring(entry.key.indexOf(separator) + separator.length, entry.key.length)
   }
 
   if (path.endsWith(separator)) {
@@ -100,7 +104,7 @@ function mergeHashes(source, target, keepRemoved = false) {
       }
       else {
         // support for plural in keys
-        const pluralRegex = /_plural(_\d+)?$/;
+        const pluralRegex = /(_plural)|(_\d+)$/;
         const pluralMatch = pluralRegex.test(key)
         const singularKey = key.replace(pluralRegex, '')
 
@@ -150,16 +154,8 @@ function transferValues(source, target) {
   }
 }
 
-class ParsingError extends Error {
-  constructor(message) {
-    super(message);
-    this.name = 'ParsingError';
-  }
-}
-
 export {
   dotPathToHash,
   mergeHashes,
-  transferValues,
-  ParsingError
+  transferValues
 }
