@@ -64,7 +64,12 @@ else if (config.input) {
   }
 
   globs = config.input.map(function (s) {
-    return path.resolve(path.dirname(path.resolve(program.config)), s)
+    var negate = ''
+    if (s.startsWith('!')) {
+      negate = '!'
+      s = s.substr(1)
+    }
+    return negate + path.resolve(path.dirname(path.resolve(program.config)), s)
   })
 }
 
