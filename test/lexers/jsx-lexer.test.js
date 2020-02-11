@@ -62,7 +62,7 @@ describe('JsxLexer', () => {
       const Lexer = new JsxLexer()
       const content = '<Trans count={count}>Yo</Trans>'
       assert.deepEqual(Lexer.extract(content), [
-        { key: 'Yo', defaultValue: 'Yo', count: '{count}' },
+        { key: 'Yo' }
       ])
       done()
     })
@@ -71,7 +71,7 @@ describe('JsxLexer', () => {
       const Lexer = new JsxLexer()
       const content = '<Trans count={count}>{{ key: property }}</Trans>'
       assert.deepEqual(Lexer.extract(content), [
-        { key: '{{key}}', defaultValue: '{{key}}', count: '{count}' },
+        { key: '{{key}}' }
       ])
       done()
     })
@@ -80,7 +80,7 @@ describe('JsxLexer', () => {
       const Lexer = new JsxLexer()
       const content = '<Trans count={count}>before{{ key1, key2 }}after</Trans>'
       assert.deepEqual(Lexer.extract(content), [
-        { key: 'beforeafter', defaultValue: 'beforeafter', count: '{count}' },
+        { key: 'beforeafter' }
       ])
       done()
     })
@@ -99,19 +99,15 @@ describe('JsxLexer', () => {
 
     it('erases tags from content', (done) => {
       const Lexer = new JsxLexer()
-      const content =
-        '<Trans>a<b test={"</b>"}>c<c>z</c></b>{d}<br stuff={y}/></Trans>'
-      assert.equal(
-        Lexer.extract(content)[0].defaultValue,
-        'a<1>c<1>z</1></1>{d}<3></3>'
-      )
+      const content = '<Trans>a<b test={"</b>"}>c<c>z</c></b>{d}<br stuff={y}/></Trans>'
+      assert.equal(Lexer.extract(content)[0].key, 'a<1>c<1>z</1></1>{d}<3></3>')
       done()
     })
 
     it('erases comment expressions', (done) => {
       const Lexer = new JsxLexer()
       const content = '<Trans>{/* some comment */}Some Content</Trans>'
-      assert.equal(Lexer.extract(content)[0].defaultValue, 'Some Content')
+      assert.equal(Lexer.extract(content)[0].key, 'Some Content')
       done()
     })
 
@@ -125,19 +121,14 @@ describe('JsxLexer', () => {
     it('interpolates literal string values', (done) => {
       const Lexer = new JsxLexer()
       const content = `<Trans>Some{' '}Interpolated {'Content'}</Trans>`
-      assert.equal(
-        Lexer.extract(content)[0].defaultValue,
-        'Some Interpolated Content'
-      )
+      assert.equal(Lexer.extract(content)[0].key, 'Some Interpolated Content')
       done()
     })
 
     it('uses the ns (namespace) prop', (done) => {
       const Lexer = new JsxLexer()
       const content = `<Trans ns="foo">bar</Trans>`
-      assert.deepEqual(Lexer.extract(content), [
-        { key: 'bar', defaultValue: 'bar', namespace: 'foo' },
-      ])
+      assert.deepEqual(Lexer.extract(content), [{ key: 'bar', namespace: 'foo' }])
       done()
     })
   })
@@ -199,7 +190,7 @@ describe('JsxLexer', () => {
         const Lexer = new JsxLexer()
         const content = '<Trans count={count}>Yo</Trans>'
         assert.deepEqual(Lexer.extract(content), [
-          { key: 'Yo', defaultValue: 'Yo', count: '{count}' },
+          { key: 'Yo' }
         ])
         done()
       })
@@ -208,7 +199,7 @@ describe('JsxLexer', () => {
         const Lexer = new JsxLexer()
         const content = '<Trans count={count}>{{ key: property }}</Trans>'
         assert.deepEqual(Lexer.extract(content), [
-          { key: '{{key}}', defaultValue: '{{key}}', count: '{count}' },
+          { key: '{{key}}' }
         ])
         done()
       })
@@ -218,7 +209,7 @@ describe('JsxLexer', () => {
         const content =
           '<Trans count={count}>before{{ key1, key2 }}after</Trans>'
         assert.deepEqual(Lexer.extract(content), [
-          { key: 'beforeafter', defaultValue: 'beforeafter', count: '{count}' },
+          { key: 'beforeafter' }
         ])
         done()
       })
@@ -237,19 +228,15 @@ describe('JsxLexer', () => {
 
       it('erases tags from content', (done) => {
         const Lexer = new JsxLexer()
-        const content =
-          '<Trans>a<b test={"</b>"}>c<c>z</c></b>{d}<br stuff={y}/></Trans>'
-        assert.equal(
-          Lexer.extract(content)[0].defaultValue,
-          'a<1>c<1>z</1></1>{d}<3></3>'
-        )
+        const content = '<Trans>a<b test={"</b>"}>c<c>z</c></b>{d}<br stuff={y}/></Trans>'
+        assert.equal(Lexer.extract(content)[0].key, 'a<1>c<1>z</1></1>{d}<3></3>')
         done()
       })
 
       it('erases comment expressions', (done) => {
         const Lexer = new JsxLexer()
         const content = '<Trans>{/* some comment */}Some Content</Trans>'
-        assert.equal(Lexer.extract(content)[0].defaultValue, 'Some Content')
+        assert.equal(Lexer.extract(content)[0].key, 'Some Content')
         done()
       })
     })
