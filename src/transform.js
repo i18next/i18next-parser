@@ -127,7 +127,6 @@ export default class i18nTransform extends Transform {
 
     for (const locale of this.options.locales) {
       const catalog = {}
-      const { numbers } = i18next.services.pluralResolver.getRule(locale)
 
       let countWithPlurals = 0
       let uniqueCount = this.entries.length
@@ -160,13 +159,17 @@ export default class i18nTransform extends Transform {
       }
 
       // generates plurals according to i18next rules: key, key_plural, key_0, key_1, etc.
-      for (const entry of this.entries) {
-        if (entry.count !== undefined) {
-          numbers.forEach((_, i) => {
-            transformEntry(entry, getPluralSuffix(numbers, i))
-          })
-        } else {
-          transformEntry(entry)
+      const pluralRule = i18next.services.pluralResolver.getRule(locale);
+      if (pluralRule) {
+        const { numbers } = pluralRule;
+        for (const entry of this.entries) {
+          if (entry.count !== undefined) {
+            numbers.forEach((_, i) => {
+              transformEntry(entry, getPluralSuffix(numbers, i))
+            })
+          } else {
+            transformEntry(entry)
+          }
         }
       }
 

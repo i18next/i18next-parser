@@ -126,8 +126,7 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
       }var _loop = function _loop(
 
       locale) {
-        var catalog = {};var _i18next$services$plu =
-        _i18next2.default.services.pluralResolver.getRule(locale),numbers = _i18next$services$plu.numbers;
+        var catalog = {};
 
         var countWithPlurals = 0;
         var uniqueCount = _this2.entries.length;
@@ -160,15 +159,19 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
         };
 
         // generates plurals according to i18next rules: key, key_plural, key_0, key_1, etc.
-        var _loop2 = function _loop2(entry) {
-          if (entry.count !== undefined) {
-            numbers.forEach(function (_, i) {
-              transformEntry(entry, getPluralSuffix(numbers, i));
-            });
-          } else {
-            transformEntry(entry);
-          }};var _iteratorNormalCompletion3 = true;var _didIteratorError3 = false;var _iteratorError3 = undefined;try {for (var _iterator3 = _this2.entries[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {var entry = _step3.value;_loop2(entry);
-          }} catch (err) {_didIteratorError3 = true;_iteratorError3 = err;} finally {try {if (!_iteratorNormalCompletion3 && _iterator3.return) {_iterator3.return();}} finally {if (_didIteratorError3) {throw _iteratorError3;}}}
+        var pluralRule = _i18next2.default.services.pluralResolver.getRule(locale);
+        if (pluralRule) {(function () {var
+            numbers = pluralRule.numbers;var _loop2 = function _loop2(
+            entry) {
+              if (entry.count !== undefined) {
+                numbers.forEach(function (_, i) {
+                  transformEntry(entry, getPluralSuffix(numbers, i));
+                });
+              } else {
+                transformEntry(entry);
+              }};var _iteratorNormalCompletion3 = true;var _didIteratorError3 = false;var _iteratorError3 = undefined;try {for (var _iterator3 = _this2.entries[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {var entry = _step3.value;_loop2(entry);
+              }} catch (err) {_didIteratorError3 = true;_iteratorError3 = err;} finally {try {if (!_iteratorNormalCompletion3 && _iterator3.return) {_iterator3.return();}} finally {if (_didIteratorError3) {throw _iteratorError3;}}}})();
+        }
 
         var outputPath = _path2.default.resolve(_this2.options.output);
 
