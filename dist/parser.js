@@ -53,7 +53,7 @@ Parser = function (_EventEmitter) {_inherits(Parser, _EventEmitter);
           var lexerName = void 0;
           var lexerOptions = void 0;
 
-          if (typeof lexerConfig === 'string') {
+          if (typeof lexerConfig === 'string' || typeof lexerConfig === 'function') {
             lexerName = lexerConfig;
             lexerOptions = {};
           } else
@@ -62,13 +62,21 @@ Parser = function (_EventEmitter) {_inherits(Parser, _EventEmitter);
             lexerOptions = lexerConfig;
           }
 
-          if (!lexersMap[lexerName]) {
-            this.emit('error', new Error('Lexer \'' + lexerName + '\' does not exist'));
+          var Lexer = void 0;
+          if (typeof lexerName === 'function') {
+            Lexer = lexerName;
+          } else
+          {
+            if (!lexersMap[lexerName]) {
+              this.emit('error', new Error('Lexer \'' + lexerName + '\' does not exist'));
+            }
+
+            Lexer = lexersMap[lexerName];
           }
 
-          var Lexer = new lexersMap[lexerName](lexerOptions);
-          Lexer.on('warning', function (warning) {return _this2.emit('warning', warning);});
-          keys = keys.concat(Lexer.extract(content, filename));
+          var lexer = new Lexer(lexerOptions);
+          lexer.on('warning', function (warning) {return _this2.emit('warning', warning);});
+          keys = keys.concat(lexer.extract(content, filename));
         }} catch (err) {_didIteratorError = true;_iteratorError = err;} finally {try {if (!_iteratorNormalCompletion && _iterator.return) {_iterator.return();}} finally {if (_didIteratorError) {throw _iteratorError;}}}
 
       return keys;

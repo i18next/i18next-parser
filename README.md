@@ -312,6 +312,22 @@ Typescript is supported via Javascript and Jsx lexers. If you are using Javascri
 }
 ```
 
+#### Custom lexers
+You can provide function instead of string as a custom lexer.
+```js
+const CustomJsLexer = require('./CustomJsLexer');
+
+// ...
+{
+  js: [CustomJsLexer],
+  jsx: [{
+    lexer: CustomJsLexer,
+    customOption: true // Custom attribute passed to CustomJsLexer class constructor
+  }]
+}
+// ...
+```
+
 ## Events
 
 The transform emits a `reading` event for each file it parses:

@@ -1048,6 +1048,81 @@ describe('parser', () => {
 
         i18nextParser.end(fakeFile)
       })
+
+      it('support function as custom lexer', (done) => {
+        class CustomLexer {
+          extract(content) {
+            return content.split(';').map(key => ({ key }))
+          }
+
+          on() {}
+        }
+
+        let result
+        const i18nextParser = new i18nTransform({
+          lexers: {
+            js: [CustomLexer]
+          }
+        })
+        const fakeFile = new Vinyl({
+          contents: Buffer.from("first;second"),
+          path: 'file.js'
+        })
+
+        i18nextParser.on('data', file => {
+          if (file.relative.endsWith(enLibraryPath)) {
+            result = JSON.parse(file.contents)
+          }
+        })
+        i18nextParser.once('end', () => {
+          assert.deepEqual(result, { first: '', second: '' })
+          done()
+        })
+
+        i18nextParser.end(fakeFile)
+      })
+
+      it('pass options to custom lexer', (done) => {
+        class CustomLexer {
+          constructor(options) {
+            this.delimiter = options.delimiter;
+          }
+
+          extract(content) {
+            return content.split(this.delimiter).map(key => ({ key }))
+          }
+
+          on() {}
+        }
+
+        let result
+        const i18nextParser = new i18nTransform({
+          lexers: {
+            js: [
+              {
+                lexer: CustomLexer,
+                delimiter: '@'
+              }
+            ]
+          }
+        })
+        const fakeFile = new Vinyl({
+          contents: Buffer.from("first@second"),
+          path: 'file.js'
+        })
+
+        i18nextParser.on('data', file => {
+          if (file.relative.endsWith(enLibraryPath)) {
+            result = JSON.parse(file.contents)
+          }
+        })
+        i18nextParser.once('end', () => {
+          assert.deepEqual(result, { first: '', second: '' })
+          done()
+        })
+
+        i18nextParser.end(fakeFile)
+      })
     })
 
     describe('sort', () => {
