@@ -1,6 +1,13 @@
 # Changelog
 
-## 1.0.0-beta - latest
+# 1.0.3 - latest
+
+- Add support for custom lexers #213
+- Fix CLI error obfuscation #193
+- Drop Node 8 support #208
+- Update dependencies
+
+## 1.0.0-beta
 
 - The changelog for the beta can be found in the [releases](https://github.com/i18next/i18next-parser/releases)
 
