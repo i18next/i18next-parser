@@ -30,8 +30,12 @@ var config = {}
 try {
   config = require(path.resolve(program.config))
 } catch (err) {
-  console.log('  [error] '.red + 'Config file does not exist: ' + program.config)
-  return
+  if (err.code === 'MODULE_NOT_FOUND') {
+    console.log('  [error] '.red + 'Config file does not exist: ' + program.config)
+  }
+  else {
+    throw err
+  }
 }
 
 config.output = program.output || config.output || 'locales/$LOCALE/$NAMESPACE.json'
