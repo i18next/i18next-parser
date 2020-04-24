@@ -53,7 +53,7 @@ export default class Parser extends EventEmitter {
       let lexerName
       let lexerOptions
 
-      if (typeof lexerConfig === 'string') {
+      if (typeof lexerConfig === 'string' || typeof lexerConfig === 'function') {
         lexerName = lexerConfig
         lexerOptions = {}
       }
@@ -62,13 +62,21 @@ export default class Parser extends EventEmitter {
         lexerOptions = lexerConfig
       }
 
-      if (!lexersMap[lexerName]) {
-        this.emit('error', new Error(`Lexer '${lexerName}' does not exist`))
+      let Lexer;
+      if(typeof lexerName === 'function') {
+        Lexer = lexerName
+      }
+      else {
+        if (!lexersMap[lexerName]) {
+          this.emit('error', new Error(`Lexer '${lexerName}' does not exist`))
+        }
+
+        Lexer = lexersMap[lexerName]
       }
 
-      const Lexer = new lexersMap[lexerName](lexerOptions)
-      Lexer.on('warning', warning => this.emit('warning', warning))
-      keys = keys.concat(Lexer.extract(content, filename))
+      const lexer = new Lexer(lexerOptions)
+      lexer.on('warning', warning => this.emit('warning', warning))
+      keys = keys.concat(lexer.extract(content, filename))
     }
 
     return keys
