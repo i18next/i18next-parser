@@ -1,6 +1,10 @@
 # Changelog
 
-# 1.0.3 - latest
+# 1.0.4 - latest
+
+- Revert support for node 6+
+
+# 1.0.3
 
 - Add support for custom lexers #213
 - Fix CLI error obfuscation #193
