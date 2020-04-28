@@ -40,6 +40,7 @@ export default class i18nTransform extends Transform {
       sort: false,
       useKeysAsDefaultValue: false,
       verbose: false,
+      skipDefaultValues: false
     }
 
     this.options = { ...this.defaults, ...options }
@@ -140,7 +141,8 @@ export default class i18nTransform extends Transform {
             suffix,
             separator: this.options.keySeparator,
             value: this.options.defaultValue,
-            useKeysAsDefaultValue: this.options.useKeysAsDefaultValue
+            useKeysAsDefaultValue: this.options.useKeysAsDefaultValue,
+            skipDefaultValues: this.options.skipDefaultValues,
           }
         )
 
