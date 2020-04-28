@@ -19,6 +19,11 @@ function dotPathToHash(entry, target = {}, options = {}) {
 
   const separator = options.separator || '.'
   let newValue = entry.defaultValue || options.value || ''
+
+  if (options.skipDefaultValues) {
+    newValue = ""
+  }
+
   if (options.useKeysAsDefaultValue) {
     newValue = entry.key.substring(entry.key.indexOf(separator) + separator.length, entry.key.length)
   }

@@ -1018,6 +1018,36 @@ describe('parser', () => {
       i18nextParser.end(fakeFile)
     })
 
+    it("supports skipDefaultValues option", (done) => {
+      let result
+      const i18nextParser = new i18nTransform({
+        skipDefaultValues: true
+      })
+
+      const fakeFile = new Vinyl({
+        contents: Buffer.from(
+          "t('headline1', 'There will be a headline here.') \n" +
+          "t('headline2', {defaultValue: 'Another Headline here'}})",
+        ),
+        path: 'file.js'
+      })
+
+      i18nextParser.on('data', file => {
+        result = JSON.parse(file.contents)
+      })
+
+      i18nextParser.on('end', () => {
+        assert.deepEqual(result, {
+          'headline1': '',
+          'headline2': '',
+        })
+
+        done()
+      })
+
+      i18nextParser.end(fakeFile)
+    });
+
     describe('lexers', () => {
       it('support custom lexers options', (done) => {
         let result
@@ -1055,7 +1085,7 @@ describe('parser', () => {
             return content.split(';').map(key => ({ key }))
           }
 
-          on() {}
+          on() { }
         }
 
         let result
@@ -1092,7 +1122,7 @@ describe('parser', () => {
             return content.split(this.delimiter).map(key => ({ key }))
           }
 
-          on() {}
+          on() { }
         }
 
         let result
