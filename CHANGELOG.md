@@ -1,6 +1,10 @@
 # Changelog
 
-# 1.0.4 - latest
+# 1.0.5 - latest
+
+- Add support for the `skipDefaultValues` option #216
+
+# 1.0.4
 
 - Revert support for node 6+
 
