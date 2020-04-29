@@ -127,6 +127,19 @@ describe('JsxLexer', () => {
       done()
     })
 
+    it('ensure custom options are getting extracted', (done) => {
+      const Lexer = new JsxLexer({
+        valueFormat: {
+          message: '${defaultValue}',
+          description: '${max}'
+        }
+      })
+      const content = '<Trans max="wow">Yo</Trans>'
+      assert.deepEqual(Lexer.extract(content), [
+        { key: 'Yo', defaultValue: 'Yo', max: 'wow' }
+      ])
+      done()
+    })
   })
 
   describe('supports TypeScript', () => {

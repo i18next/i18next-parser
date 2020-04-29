@@ -58,6 +58,15 @@ describe('HandlebarsLexer', () => {
     done()
   })
 
+  it('ensure custom options are getting extracted', (done) => {
+    const Lexer = new HandlebarsLexer()
+    const content = '<p>{{t "first" description="bla"}}</p>'
+    assert.deepEqual(Lexer.extract(content), [
+      { key: 'first', description: 'bla' }
+    ])
+    done()
+  })
+
   describe('parseArguments()', () => {
     it('matches string arguments', (done) => {
       const Lexer = new HandlebarsLexer()

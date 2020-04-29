@@ -136,4 +136,13 @@ describe('JavascriptLexer', () => {
     assert.deepEqual(Lexer.extract(content), [{ namespace: 'baz', key: 'bar', ns: 'baz' }])
   })
 
+  it('ensure custom options are getting extracted', () => {
+    const Lexer = new JavascriptLexer()
+
+    const content = 'i18n.t("headline", {description: "Fantastic key!"});'
+    assert.deepEqual(Lexer.extract(content), [{
+      key: 'headline',
+      description: 'Fantastic key!'
+    }])
+  })
 })

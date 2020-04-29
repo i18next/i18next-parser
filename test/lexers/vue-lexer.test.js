@@ -7,7 +7,7 @@ describe('VueLexer', () => {
     const content =
       "<template><p>{{ $t('first') }}</p><template><script>export default " +
       "{ mounted() { this.$i18n.t('second'); } }</script>"
-    assert.deepEqual(Lexer.extract(content), [{ key: 'second' },{ key: 'first' }])
+    assert.deepEqual(Lexer.extract(content), [{ key: 'second' }, { key: 'first' }])
     done()
   })
 
@@ -39,6 +39,15 @@ describe('VueLexer', () => {
       key: 'first',
       count: '5'
     }])
+    done()
+  })
+
+  it('ensure custom options are getting extracted', (done) => {
+    const Lexer = new VueLexer()
+    const content =
+      "<template><p>{{ $t('first', {description: 'test'}) }}</p><template><script>export default " +
+      "{ mounted() { this.$i18n.t('second'); } }</script>"
+    assert.deepEqual(Lexer.extract(content), [{ key: 'second' }, { key: 'first', description: 'test' }])
     done()
   })
 })

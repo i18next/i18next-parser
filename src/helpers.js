@@ -54,7 +54,27 @@ function dotPathToHash(entry, target = {}, options = {}) {
     conflict = typeof oldValue !== typeof newValue ? 'key' : 'value';
   }
   const duplicate = oldValue !== undefined || conflict !== false
-  inner[lastSegment] = newValue
+
+  if (options.valueFormat && options.valueFormat !== 'default') {
+    inner[lastSegment] = {}
+
+    const getKeyByValue = (object, value) => {
+      return Object.keys(object).find(k => object[k] === value);
+    }
+
+    inner[lastSegment][getKeyByValue(options.valueFormat, '${defaultValue}')] = newValue
+
+    Object.values(options.valueFormat).forEach((extractedKey) => {
+      if (extractedKey === '${defaultValue}') {
+        return
+      }
+
+      inner[lastSegment][getKeyByValue(options.valueFormat, extractedKey)] = entry[extractedKey.replace(/\${(\w+)}/, '$1')]
+    })
+
+  } else {
+    inner[lastSegment] = newValue
+  }
 
   return { target, duplicate, conflict }
 }

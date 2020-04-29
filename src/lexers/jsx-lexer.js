@@ -4,9 +4,10 @@ import * as ts from 'typescript'
 export default class JsxLexer extends JavascriptLexer {
   constructor(options = {}) {
     super(options)
-    
+
     this.transSupportBasicHtmlNodes = options.transSupportBasicHtmlNodes || false
     this.transKeepBasicHtmlNodesFor = options.transKeepBasicHtmlNodesFor || ['br', 'strong', 'i', 'p']
+    this.valueFormat = options.valueFormat || false
   }
 
   extract(content, filename = '__default.jsx') {
@@ -69,6 +70,34 @@ export default class JsxLexer extends JavascriptLexer {
         entry.namespace = namespace
       }
 
+      const getCustomAttrs = (node, opts) => {
+        const customAttrs = {}
+        let keys = Object.values(opts).map((value) => {
+          return value.replace(/\${(\w+)}/, '$1')
+        })
+
+        // ignore as we extract this key by default
+        keys.splice(keys.indexOf('defaultValue'), 1)
+
+        keys.forEach((key) => {
+          const attribute = node.attributes.properties.find(attr => attr.name.text === key)
+
+          if (attribute) {
+            customAttrs[attribute.name.text] = attribute.initializer.text
+          }
+        })
+
+        return customAttrs
+      }
+
+      if (this.valueFormat && this.valueFormat !== 'default') {
+        const customAttrs = getCustomAttrs(tagNode, this.valueFormat)
+
+        Object.keys(customAttrs).forEach((key) => {
+          entry[key] = customAttrs[key]
+        })
+      }
+
       return entry.key ? entry : null
     }
     else if (tagNode.tagName.text === "Interpolate") {
@@ -82,15 +111,15 @@ export default class JsxLexer extends JavascriptLexer {
     const children = this.parseChildren.call(this, node.children, sourceText)
 
     const elemsToString = (children) => children.map((child, index) => {
-      switch(child.type) {
+      switch (child.type) {
         case 'js':
         case 'text':
           return child.content
         case 'tag':
           const elementName =
             child.isBasic &&
-            this.transSupportBasicHtmlNodes &&
-            this.transKeepBasicHtmlNodesFor.includes(child.name)
+              this.transSupportBasicHtmlNodes &&
+              this.transKeepBasicHtmlNodesFor.includes(child.name)
               ? child.name
               : index
           return `<${elementName}>${elemsToString(child.children)}</${elementName}>`
@@ -128,7 +157,7 @@ export default class JsxLexer extends JavascriptLexer {
             content: ''
           }
         }
-        
+
         else if (child.expression.kind === ts.SyntaxKind.StringLiteral) {
           return {
             type: 'text',
