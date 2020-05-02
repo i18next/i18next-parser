@@ -1056,66 +1056,8 @@ describe('parser', () => {
       i18nextParser.end(fakeFile)
     });
 
-    it('custom JSON output', (done) => {
-      let result
-      const i18nextParser = new i18nTransform({
-        customValueTemplate: {
-          message: '${defaultValue}'
-        }
-      })
-
-      const fakeFile = new Vinyl({
-        contents: Buffer.from("t('test'); t('salt', 'salty'}"),
-        path: 'file.js'
-      })
-
-      i18nextParser.on('data', file => {
-        result = JSON.parse(file.contents)
-      })
-
-      i18nextParser.once('end', () => {
-        assert.deepEqual(result, {
-          'test': {
-            'message': ''
-          },
-          'salt': {
-            'message': 'salty'
-          }
-        })
-
-        done()
-      })
-
-      i18nextParser.end(fakeFile)
-    })
-
-    it('custom yml output', (done) => {
-      let result
-      const i18nextParser = new i18nTransform({
-        output: 'locales/$LOCALE/$NAMESPACE.yml',
-        customValueTemplate: {
-          message: '${defaultValue}'
-        }
-      })
-
-      const fakeFile = new Vinyl({
-        contents: Buffer.from("t('test'); t('salt', 'salty'}"),
-        path: 'file.js'
-      })
-
-      i18nextParser.on('data', file => {
-        result = file.contents.toString('utf8')
-      })
-
-      i18nextParser.once('end', () => {
-        assert.equal(result.replace(/\r\n/g, '\n'), 'test:\n  message: ""\nsalt:\n  message: salty\n')
-        done()
-      })
-
-      i18nextParser.end(fakeFile)
-    })
-
-    it('extract custom options', (done) => {
+    
+    it('supports customValueTemplate option', (done) => {
       let result
       const i18nextParser = new i18nTransform({
         customValueTemplate: {
@@ -1125,7 +1067,7 @@ describe('parser', () => {
       })
 
       const fakeFile = new Vinyl({
-        contents: Buffer.from("t('test', {max: 150}"),
+        contents: Buffer.from("t('test'); t('salt', {defaultValue: 'salty', max: 150})"),
         path: 'file.js'
       })
 
@@ -1137,6 +1079,10 @@ describe('parser', () => {
         assert.deepEqual(result, {
           'test': {
             'message': '',
+            'description': ''
+          },
+          'salt': {
+            'message': 'salty',
             'description': '150'
           }
         })

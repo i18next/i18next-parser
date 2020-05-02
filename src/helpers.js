@@ -64,7 +64,7 @@ function dotPathToHash(entry, target = {}, options = {}) {
         inner[lastSegment][valueEntry[0]] = newValue
       }
       else {
-        inner[lastSegment][valueEntry[0]] = entry[valueEntry[1].replace(/\${(\w+)}/, '$1')]
+        inner[lastSegment][valueEntry[0]] = entry[valueEntry[1].replace(/\${(\w+)}/, '$1')] || ""
       }
     })
   } else {
