@@ -18,7 +18,6 @@ describe('JsxLexer', () => {
     it('extracts keys from i18nKey attributes from closing tags', (done) => {
       const Lexer = new JsxLexer()
       const content = '<Trans i18nKey="first" count={count}>Yo</Trans>'
-      console.log(Lexer.extract(content))
       assert.deepEqual(Lexer.extract(content), [
         { key: 'first', defaultValue: 'Yo', count: '{count}' }
       ])
