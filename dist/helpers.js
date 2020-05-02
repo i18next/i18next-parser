@@ -19,6 +19,11 @@ function dotPathToHash(entry) {var target = arguments.length > 1 && arguments[1]
 
   var separator = options.separator || '.';
   var newValue = entry.defaultValue || options.value || '';
+
+  if (options.skipDefaultValues) {
+    newValue = "";
+  }
+
   if (options.useKeysAsDefaultValue) {
     newValue = entry.key.substring(entry.key.indexOf(separator) + separator.length, entry.key.length);
   }
@@ -49,7 +54,22 @@ function dotPathToHash(entry) {var target = arguments.length > 1 && arguments[1]
     conflict = (typeof oldValue === 'undefined' ? 'undefined' : _typeof(oldValue)) !== (typeof newValue === 'undefined' ? 'undefined' : _typeof(newValue)) ? 'key' : 'value';
   }
   var duplicate = oldValue !== undefined || conflict !== false;
-  inner[lastSegment] = newValue;
+
+  if (options.customValueTemplate) {
+    inner[lastSegment] = {};
+
+    var entries = Object.entries(options.customValueTemplate);
+    entries.forEach(function (valueEntry) {
+      if (valueEntry[1] === '${defaultValue}') {
+        inner[lastSegment][valueEntry[0]] = newValue;
+      } else
+      {
+        inner[lastSegment][valueEntry[0]] = entry[valueEntry[1].replace(/\${(\w+)}/, '$1')] || "";
+      }
+    });
+  } else {
+    inner[lastSegment] = newValue;
+  }
 
   return { target: target, duplicate: duplicate, conflict: conflict };
 }

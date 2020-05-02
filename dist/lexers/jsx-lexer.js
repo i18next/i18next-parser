@@ -69,6 +69,19 @@ JsxLexer = function (_JavascriptLexer) {_inherits(JsxLexer, _JavascriptLexer);
           entry.namespace = namespace;
         }
 
+        tagNode.attributes.properties.forEach(function (property) {
+          if ([_this3.attr, 'ns'].includes(property.name.text)) {
+            return;
+          }
+
+          if (property.initializer.expression) {
+            entry[property.name.text] = '{' + property.initializer.expression.text + '}';
+          } else
+          {
+            entry[property.name.text] = property.initializer.text;
+          }
+        });
+
         return entry.key ? entry : null;
       } else
       if (tagNode.tagName.text === "Interpolate") {

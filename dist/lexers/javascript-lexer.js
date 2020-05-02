@@ -62,7 +62,6 @@ JavascriptLexer = function (_BaseLexer) {_inherits(JavascriptLexer, _BaseLexer);
           return null;
         }
 
-
         var optionsArgument = node.arguments.shift();
 
         if (optionsArgument && optionsArgument.kind === ts.SyntaxKind.StringLiteral) {

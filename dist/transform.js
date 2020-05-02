@@ -39,7 +39,9 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
       reactNamespace: false,
       sort: false,
       useKeysAsDefaultValue: false,
-      verbose: false };
+      verbose: false,
+      skipDefaultValues: false,
+      customValueTemplate: null };
 
 
     _this.options = _extends({}, _this.defaults, options);
@@ -140,7 +142,9 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
             suffix: suffix,
             separator: _this2.options.keySeparator,
             value: _this2.options.defaultValue,
-            useKeysAsDefaultValue: _this2.options.useKeysAsDefaultValue }),duplicate = _dotPathToHash.duplicate,conflict = _dotPathToHash.conflict;
+            useKeysAsDefaultValue: _this2.options.useKeysAsDefaultValue,
+            skipDefaultValues: _this2.options.skipDefaultValues,
+            customValueTemplate: _this2.options.customValueTemplate }),duplicate = _dotPathToHash.duplicate,conflict = _dotPathToHash.conflict;
 
 
 
