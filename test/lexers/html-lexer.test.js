@@ -79,7 +79,7 @@ describe('HTMLLexer', () => {
     done()
   })
 
-  it('ensure custom options are getting extracted', (done) => {
+  it('extracts custom options', (done) => {
     const Lexer = new HTMLLexer()
     const content =
       '<p data-i18n="first" data-i18n-options=\'{"description": "bla"}\'>first</p>'

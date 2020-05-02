@@ -42,7 +42,7 @@ describe('VueLexer', () => {
     done()
   })
 
-  it('ensure custom options are getting extracted', (done) => {
+  it('extracts custom options', (done) => {
     const Lexer = new VueLexer()
     const content =
       "<template><p>{{ $t('first', {description: 'test'}) }}</p><template><script>export default " +

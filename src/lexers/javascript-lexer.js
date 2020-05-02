@@ -62,7 +62,6 @@ export default class JavascriptLexer extends BaseLexer {
         return null
       }
 
-
       const optionsArgument = node.arguments.shift()
 
       if (optionsArgument && optionsArgument.kind === ts.SyntaxKind.StringLiteral) {

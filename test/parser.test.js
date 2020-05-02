@@ -181,11 +181,13 @@ describe('parser', () => {
       second: '',
       third: {
         first: 'Hello <1>{{name}}</1>, you have {{count}} unread message. <5>Go to messages</5>.',
+        first_plural: 'Hello <1>{{name}}</1>, you have {{count}} unread message. <5>Go to messages</5>.',
         second: ' <1>Hello,</1> this shouldn\'t be trimmed.',
         third: '<0>Hello,</0>this should be trimmed.<2> and this shoudln\'t</2>'
       },
       fourth: '',
       fifth: '',
+      fifth_plural: '',
       bar: '',
       foo: '',
       "This should be part of the value and the key": "This should be part of the value and the key",
@@ -220,11 +222,13 @@ describe('parser', () => {
       second: '',
       third: {
         first: 'Hello <1>{{name}}</1>, you have {{count}} unread message. <5>Go to messages</5>.',
+        first_plural: 'Hello <1>{{name}}</1>, you have {{count}} unread message. <5>Go to messages</5>.',
         second: ' <1>Hello,</1> this shouldn\'t be trimmed.',
         third: '<0>Hello,</0>this should be trimmed.<2> and this shoudln\'t</2>'
       },
       fourth: '',
       fifth: '',
+      fifth_plural: '',
       bar: '',
       foo: '',
       "This should be part of the value and the key": "This should be part of the value and the key",
@@ -699,11 +703,13 @@ describe('parser', () => {
         second: '',
         third: {
           first: 'Hello <1>{{name}}</1>, you have {{count}} unread message. <5>Go to messages</5>.',
+          first_plural: 'Hello <1>{{name}}</1>, you have {{count}} unread message. <5>Go to messages</5>.',
           second: ' <1>Hello,</1> this shouldn\'t be trimmed.',
           third: '<0>Hello,</0>this should be trimmed.<2> and this shoudln\'t</2>'
         },
         fourth: '',
         fifth: '',
+        fifth_plural: '',
         bar: '',
         foo: '',
         "This should be part of the value and the key": "This should be part of the value and the key",
@@ -748,11 +754,13 @@ describe('parser', () => {
         second: '',
         third: {
           first: 'Hello <1>{{name}}</1>, you have {{count}} unread message. <5>Go to messages</5>.',
+          first_plural: 'Hello <1>{{name}}</1>, you have {{count}} unread message. <5>Go to messages</5>.',
           second: ' <b>Hello,</b> this shouldn\'t be trimmed.',
           third: '<b>Hello,</b>this should be trimmed.<2> and this shoudln\'t</2>'
         },
         fourth: '',
         fifth: '',
+        fifth_plural: '',
         bar: '',
         foo: '',
         "This should be part of the value and the key": "This should be part of the value and the key",
@@ -1048,76 +1056,18 @@ describe('parser', () => {
       i18nextParser.end(fakeFile)
     });
 
-    it('custom JSON output', (done) => {
+    
+    it('supports customValueTemplate option', (done) => {
       let result
       const i18nextParser = new i18nTransform({
-        valueFormat: {
-          message: '${defaultValue}'
-        }
-      })
-
-      const fakeFile = new Vinyl({
-        contents: Buffer.from("t('test'); t('salt', 'salty'}"),
-        path: 'file.js'
-      })
-
-      i18nextParser.on('data', file => {
-        result = JSON.parse(file.contents)
-      })
-
-      i18nextParser.once('end', () => {
-        assert.deepEqual(result, {
-          'test': {
-            'message': ''
-          },
-          'salt': {
-            'message': 'salty'
-          }
-        })
-
-        done()
-      })
-
-      i18nextParser.end(fakeFile)
-    })
-
-    it('custom yml output', (done) => {
-      let result
-      const i18nextParser = new i18nTransform({
-        output: 'locales/$LOCALE/$NAMESPACE.yml',
-        valueFormat: {
-          message: '${defaultValue}'
-        }
-      })
-
-      const fakeFile = new Vinyl({
-        contents: Buffer.from("t('test'); t('salt', 'salty'}"),
-        path: 'file.js'
-      })
-
-      i18nextParser.on('data', file => {
-        result = file.contents.toString('utf8')
-      })
-
-      i18nextParser.once('end', () => {
-        assert.equal(result.replace(/\r\n/g, '\n'), 'test:\n  message: ""\nsalt:\n  message: salty\n')
-        done()
-      })
-
-      i18nextParser.end(fakeFile)
-    })
-
-    it('extract custom options', (done) => {
-      let result
-      const i18nextParser = new i18nTransform({
-        valueFormat: {
+        customValueTemplate: {
           message: '${defaultValue}',
           description: '${max}'
         }
       })
 
       const fakeFile = new Vinyl({
-        contents: Buffer.from("t('test', {max: 150}"),
+        contents: Buffer.from("t('test'); t('salt', {defaultValue: 'salty', max: 150})"),
         path: 'file.js'
       })
 
@@ -1129,6 +1079,10 @@ describe('parser', () => {
         assert.deepEqual(result, {
           'test': {
             'message': '',
+            'description': ''
+          },
+          'salt': {
+            'message': 'salty',
             'description': '150'
           }
         })
