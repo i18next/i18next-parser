@@ -22,8 +22,8 @@ export default class HTMLLexer extends BaseLexer {
       if (options) {
         try {
           options = JSON.parse(options)
+        } finally {
         }
-        finally {}
       }
 
       for (let key of keys) {

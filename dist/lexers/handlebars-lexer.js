@@ -46,8 +46,7 @@ HandlebarsLexer = function (_BaseLexer) {_inherits(HandlebarsLexer, _BaseLexer);
 
       if (!isKeyString) {
         this.emit('warning', 'Key is not a string literal: ' + firstArgument);
-      } else
-      {
+      } else {
         var result = _extends({},
         args.options, {
           key: firstArgument.slice(1, -1) });
@@ -74,7 +73,9 @@ HandlebarsLexer = function (_BaseLexer) {_inherits(HandlebarsLexer, _BaseLexer);
       '(' +
       '(?:' +
       _baseLexer2.default.variablePattern +
-      '(?:=' + _baseLexer2.default.stringOrVariablePattern + ')?' +
+      '(?:=' +
+      _baseLexer2.default.stringOrVariablePattern +
+      ')?' +
       ')' +
       '|' +
       _baseLexer2.default.stringPattern +

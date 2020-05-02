@@ -35,10 +35,7 @@ export default class BaseLexer extends EventEmitter {
   static get stringPattern() {
     return (
       '(?:' +
-      [
-        BaseLexer.singleQuotePattern,
-        BaseLexer.doubleQuotePattern
-      ].join('|') +
+      [BaseLexer.singleQuotePattern, BaseLexer.doubleQuotePattern].join('|') +
       ')'
     )
   }
@@ -49,7 +46,7 @@ export default class BaseLexer extends EventEmitter {
       [
         BaseLexer.singleQuotePattern,
         BaseLexer.doubleQuotePattern,
-        BaseLexer.variablePattern
+        BaseLexer.variablePattern,
       ].join('|') +
       ')'
     )

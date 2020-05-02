@@ -41,7 +41,7 @@ export default class i18nTransform extends Transform {
       useKeysAsDefaultValue: false,
       verbose: false,
       skipDefaultValues: false,
-      customValueTemplate: null
+      customValueTemplate: null,
     }
 
     this.options = { ...this.defaults, ...options }
@@ -54,13 +54,13 @@ export default class i18nTransform extends Transform {
     this.entries = []
 
     this.parser = new Parser(this.options)
-    this.parser.on('error', error => this.error(error))
-    this.parser.on('warning', warning => this.warn(warning))
+    this.parser.on('error', (error) => this.error(error))
+    this.parser.on('warning', (warning) => this.warn(warning))
 
     this.localeRegex = /\$LOCALE/g
     this.namespaceRegex = /\$NAMESPACE/g
 
-    i18next.init();
+    i18next.init()
   }
 
   error(error) {
@@ -81,8 +81,7 @@ export default class i18nTransform extends Transform {
     let content
     if (file.isBuffer()) {
       content = file.contents.toString('utf8')
-    }
-    else {
+    } else {
       content = fs.readFileSync(file.path, encoding)
     }
 
@@ -102,8 +101,7 @@ export default class i18nTransform extends Transform {
       // make sure we're not pulling a 'namespace' out of a default value
       if (parts.length > 1 && key !== entry.defaultValue) {
         entry.namespace = parts.shift()
-      }
-      else if (extension === 'jsx' || this.options.reactNamespace) {
+      } else if (extension === 'jsx' || this.options.reactNamespace) {
         entry.namespace = this.grabReactNamespace(content)
       }
       entry.namespace = entry.namespace || this.options.defaultNamespace
@@ -135,26 +133,21 @@ export default class i18nTransform extends Transform {
       let uniqueCount = this.entries.length
 
       const transformEntry = (entry, suffix) => {
-        const { duplicate, conflict } = dotPathToHash(
-          entry,
-          catalog,
-          {
-            suffix,
-            separator: this.options.keySeparator,
-            value: this.options.defaultValue,
-            useKeysAsDefaultValue: this.options.useKeysAsDefaultValue,
-            skipDefaultValues: this.options.skipDefaultValues,
-            customValueTemplate: this.options.customValueTemplate
-          }
-        )
+        const { duplicate, conflict } = dotPathToHash(entry, catalog, {
+          suffix,
+          separator: this.options.keySeparator,
+          value: this.options.defaultValue,
+          useKeysAsDefaultValue: this.options.useKeysAsDefaultValue,
+          skipDefaultValues: this.options.skipDefaultValues,
+          customValueTemplate: this.options.customValueTemplate,
+        })
 
         if (duplicate) {
           uniqueCount -= 1
           if (conflict === 'key') {
             const warning = `Found translation key already mapped to a map or parent of new key already mapped to a string: ${entry.key}`
             this.warn(warning)
-          }
-          else if (conflict === 'value') {
+          } else if (conflict === 'value') {
             const warning = `Found same keys with different values: ${entry.key}`
             this.warn(warning)
           }
@@ -183,28 +176,40 @@ export default class i18nTransform extends Transform {
 
         let parsedNamespacePath = path.parse(namespacePath)
 
-        const namespaceOldPath = path.join(parsedNamespacePath.dir, `${parsedNamespacePath.name}_old${parsedNamespacePath.ext}`)
+        const namespaceOldPath = path.join(
+          parsedNamespacePath.dir,
+          `${parsedNamespacePath.name}_old${parsedNamespacePath.ext}`
+        )
 
         let existingCatalog = this.getCatalog(namespacePath)
         let existingOldCatalog = this.getCatalog(namespaceOldPath)
 
         // merges existing translations with the new ones
-        const { new: newCatalog, old: oldKeys, mergeCount, oldCount } =
-          mergeHashes(
-            existingCatalog,
-            catalog[namespace],
-            this.options.keepRemoved
-          )
+        const {
+          new: newCatalog,
+          old: oldKeys,
+          mergeCount,
+          oldCount,
+        } = mergeHashes(
+          existingCatalog,
+          catalog[namespace],
+          this.options.keepRemoved
+        )
 
         // restore old translations
-        const { old: oldCatalog, mergeCount: restoreCount } = mergeHashes(existingOldCatalog, newCatalog)
+        const { old: oldCatalog, mergeCount: restoreCount } = mergeHashes(
+          existingOldCatalog,
+          newCatalog
+        )
 
         // backup unused translations
         transferValues(oldKeys, oldCatalog)
 
         if (this.options.verbose) {
           console.log(`[${locale}] ${namespace}\n`)
-          console.log(`Unique keys: ${uniqueCount} (${countWithPlurals} with plurals)`)
+          console.log(
+            `Unique keys: ${uniqueCount} (${countWithPlurals} with plurals)`
+          )
           const addCount = countWithPlurals - mergeCount
           console.log(`Added keys: ${addCount}`)
           console.log(`Restored keys: ${restoreCount}`)
@@ -236,8 +241,7 @@ export default class i18nTransform extends Transform {
       delete contextEntry.context
       contextEntry.key += this.options.contextSeparator + entry.context
       this.entries.push(contextEntry)
-    }
-    else {
+    } else {
       this.entries.push(entry)
     }
   }
@@ -247,13 +251,11 @@ export default class i18nTransform extends Transform {
       let content
       if (path.endsWith('yml')) {
         content = YAML.parse(fs.readFileSync(path).toString())
-      }
-      else {
+      } else {
         content = JSON.parse(fs.readFileSync(path))
       }
       return content
-    }
-    catch (error) {
+    } catch (error) {
       if (error.code !== 'ENOENT') {
         this.emit('error', error)
       }
@@ -266,28 +268,30 @@ export default class i18nTransform extends Transform {
     let text
     if (path.endsWith('yml')) {
       text = YAML.stringify(contents, null, this.options.indentation)
-    }
-    else {
+    } else {
       text = JSON.stringify(contents, null, this.options.indentation) + '\n'
     }
 
     if (this.options.lineEnding === 'auto') {
       text = eol.auto(text)
-    }
-    else if (this.options.lineEnding === '\r\n' || this.options.lineEnding === 'crlf') {
+    } else if (
+      this.options.lineEnding === '\r\n' ||
+      this.options.lineEnding === 'crlf'
+    ) {
       text = eol.crlf(text)
-    }
-    else if (this.options.lineEnding === '\r' || this.options.lineEnding === 'cr') {
+    } else if (
+      this.options.lineEnding === '\r' ||
+      this.options.lineEnding === 'cr'
+    ) {
       text = eol.cr(text)
-    }
-    else {
+    } else {
       // Defaults to LF, aka \n
       text = eol.lf(text)
     }
 
     const file = new VirtualFile({
       path,
-      contents: Buffer.from(text)
+      contents: Buffer.from(text),
     })
     this.push(file)
   }

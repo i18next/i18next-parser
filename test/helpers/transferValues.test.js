@@ -25,7 +25,11 @@ describe('transferValues helper function', () => {
     const target = { key0: 'value0', key2: { key20: 'value20_old' } }
     transferValues(source, target)
 
-    assert.deepEqual(target, { key0: 'value0', key1: 'value1', key2: { key20: 'value20_old', key21: 'value21' } })
+    assert.deepEqual(target, {
+      key0: 'value0',
+      key1: 'value1',
+      key2: { key20: 'value20_old', key21: 'value21' },
+    })
     done()
   })
 })

@@ -13,7 +13,7 @@ export default class HandlebarsLexer extends BaseLexer {
   extract(content) {
     let matches
 
-    while (matches = this.functionRegex.exec(content)) {
+    while ((matches = this.functionRegex.exec(content))) {
       const args = this.parseArguments(matches[1] || matches[2])
       this.populateKeysFromArguments(args)
     }
@@ -25,9 +25,9 @@ export default class HandlebarsLexer extends BaseLexer {
     let matches
     const result = {
       arguments: [],
-      options: {}
+      options: {},
     }
-    while (matches = this.argumentsRegex.exec(args)) {
+    while ((matches = this.argumentsRegex.exec(args))) {
       const arg = matches[1]
       const parts = arg.split('=')
       result.arguments.push(arg)
@@ -46,11 +46,10 @@ export default class HandlebarsLexer extends BaseLexer {
 
     if (!isKeyString) {
       this.emit('warning', `Key is not a string literal: ${firstArgument}`)
-    }
-    else {
+    } else {
       const result = {
         ...args.options,
-        key: firstArgument.slice(1, -1)
+        key: firstArgument.slice(1, -1),
       }
       if (isDefaultValueString) {
         result.defaultValue = secondArgument.slice(1, -1)
@@ -72,12 +71,14 @@ export default class HandlebarsLexer extends BaseLexer {
     const pattern =
       '(?:\\s+|^)' +
       '(' +
-        '(?:' +
-          BaseLexer.variablePattern +
-          '(?:=' + BaseLexer.stringOrVariablePattern + ')?' +
-        ')' +
-        '|' +
-        BaseLexer.stringPattern +
+      '(?:' +
+      BaseLexer.variablePattern +
+      '(?:=' +
+      BaseLexer.stringOrVariablePattern +
+      ')?' +
+      ')' +
+      '|' +
+      BaseLexer.stringPattern +
       ')'
     this.argumentsRegex = new RegExp(pattern, 'gi')
     return this.argumentsRegex

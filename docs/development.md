@@ -62,6 +62,13 @@ cd test
 rm -rf dist && broccoli build dist
 ```
 
+## Deploy
+
+- `yarn build`
+- update `package.json` version
+- create commit and add version tag
+- `npm publish`
+
 
 ## `0.x` vs `1.x`
 
@@ -71,11 +78,3 @@ rm -rf dist && broccoli build dist
 - `0.x.x` for the old version
 
 I will not maintain the old version but will welcome bug fixes as PRs.
-
-## Deploy
-
-- `yarn watch`
-- update `package.json` version
-- create commit and add version tag
-- `npm publish --tag next` (skip next tag if not in beta)
-- create a github release

@@ -5,8 +5,14 @@ export default class JsxLexer extends JavascriptLexer {
   constructor(options = {}) {
     super(options)
 
-    this.transSupportBasicHtmlNodes = options.transSupportBasicHtmlNodes || false
-    this.transKeepBasicHtmlNodesFor = options.transKeepBasicHtmlNodesFor || ['br', 'strong', 'i', 'p']
+    this.transSupportBasicHtmlNodes =
+      options.transSupportBasicHtmlNodes || false
+    this.transKeepBasicHtmlNodesFor = options.transKeepBasicHtmlNodesFor || [
+      'br',
+      'strong',
+      'i',
+      'p',
+    ]
   }
 
   extract(content, filename = '__default.jsx') {
@@ -34,7 +40,11 @@ export default class JsxLexer extends JavascriptLexer {
       node.forEachChild(parseTree)
     }
 
-    const sourceFile = ts.createSourceFile(filename, content, ts.ScriptTarget.Latest)
+    const sourceFile = ts.createSourceFile(
+      filename,
+      content,
+      ts.ScriptTarget.Latest
+    )
     parseTree(sourceFile)
 
     return keys
@@ -44,13 +54,15 @@ export default class JsxLexer extends JavascriptLexer {
     const tagNode = node.openingElement || node
 
     const getPropValue = (node, tagName) => {
-      const attribute = node.attributes.properties.find(attr => attr.name.text === tagName)
+      const attribute = node.attributes.properties.find(
+        (attr) => attr.name.text === tagName
+      )
       return attribute && attribute.initializer.text
     }
 
     const getKey = (node) => getPropValue(node, this.attr)
 
-    if (tagNode.tagName.text === "Trans") {
+    if (tagNode.tagName.text === 'Trans') {
       const entry = {}
       entry.key = getKey(tagNode)
 
@@ -69,22 +81,22 @@ export default class JsxLexer extends JavascriptLexer {
         entry.namespace = namespace
       }
 
-      tagNode.attributes.properties.forEach(property => {
+      tagNode.attributes.properties.forEach((property) => {
         if ([this.attr, 'ns'].includes(property.name.text)) {
           return
         }
-        
+
         if (property.initializer.expression) {
-          entry[property.name.text] = `{${property.initializer.expression.text}}`
-        }
-        else {
+          entry[
+            property.name.text
+          ] = `{${property.initializer.expression.text}}`
+        } else {
           entry[property.name.text] = property.initializer.text
         }
       })
 
       return entry.key ? entry : null
-    }
-    else if (tagNode.tagName.text === "Interpolate") {
+    } else if (tagNode.tagName.text === 'Interpolate') {
       const entry = {}
       entry.key = getKey(tagNode)
       return entry.key ? entry : null
@@ -94,94 +106,112 @@ export default class JsxLexer extends JavascriptLexer {
   nodeToString(node, sourceText) {
     const children = this.parseChildren.call(this, node.children, sourceText)
 
-    const elemsToString = (children) => children.map((child, index) => {
-      switch (child.type) {
-        case 'js':
-        case 'text':
-          return child.content
-        case 'tag':
-          const elementName =
-            child.isBasic &&
-              this.transSupportBasicHtmlNodes &&
-              this.transKeepBasicHtmlNodesFor.includes(child.name)
-              ? child.name
-              : index
-          return `<${elementName}>${elemsToString(child.children)}</${elementName}>`
-        default: throw new Error('Unknown parsed content: ' + child.type)
-      }
-    }).join('')
+    const elemsToString = (children) =>
+      children
+        .map((child, index) => {
+          switch (child.type) {
+            case 'js':
+            case 'text':
+              return child.content
+            case 'tag':
+              const elementName =
+                child.isBasic &&
+                this.transSupportBasicHtmlNodes &&
+                this.transKeepBasicHtmlNodesFor.includes(child.name)
+                  ? child.name
+                  : index
+              return `<${elementName}>${elemsToString(
+                child.children
+              )}</${elementName}>`
+            default:
+              throw new Error('Unknown parsed content: ' + child.type)
+          }
+        })
+        .join('')
 
     return elemsToString(children)
   }
 
   parseChildren(children = [], sourceText) {
-    return children.map(child => {
-      if (child.kind === ts.SyntaxKind.JsxText) {
-        return {
-          type: 'text',
-          content: child.text.replace(/(^(\n|\r)\s*)|((\n|\r)\s*$)/g, '').replace(/(\n|\r)\s*/g, ' ')
-        }
-      }
-      else if (child.kind === ts.SyntaxKind.JsxElement || child.kind === ts.SyntaxKind.JsxSelfClosingElement) {
-        const element = child.openingElement || child
-        const name = element.tagName.escapedText
-        const isBasic = !element.attributes.properties.length
-        return {
-          type: 'tag',
-          children: this.parseChildren(child.children, sourceText),
-          name,
-          isBasic
-        }
-      }
-      else if (child.kind === ts.SyntaxKind.JsxExpression) {
-        // strip empty expressions
-        if (!child.expression) {
+    return children
+      .map((child) => {
+        if (child.kind === ts.SyntaxKind.JsxText) {
           return {
             type: 'text',
-            content: ''
+            content: child.text
+              .replace(/(^(\n|\r)\s*)|((\n|\r)\s*$)/g, '')
+              .replace(/(\n|\r)\s*/g, ' '),
           }
-        }
-
-        else if (child.expression.kind === ts.SyntaxKind.StringLiteral) {
+        } else if (
+          child.kind === ts.SyntaxKind.JsxElement ||
+          child.kind === ts.SyntaxKind.JsxSelfClosingElement
+        ) {
+          const element = child.openingElement || child
+          const name = element.tagName.escapedText
+          const isBasic = !element.attributes.properties.length
           return {
-            type: 'text',
-            content: child.expression.text
+            type: 'tag',
+            children: this.parseChildren(child.children, sourceText),
+            name,
+            isBasic,
           }
-        }
-
-        // strip properties from ObjectExpressions
-        // annoying (and who knows how many other exceptions we'll need to write) but necessary
-        else if (child.expression.kind === ts.SyntaxKind.ObjectLiteralExpression) {
-          // i18next-react only accepts two props, any random single prop, and a format prop
-          // for our purposes, format prop is always ignored
-
-          let nonFormatProperties = child.expression.properties.filter(prop => prop.name.text !== 'format')
-
-          // more than one property throw a warning in i18next-react, but still works as a key
-          if (nonFormatProperties.length > 1) {
-            this.emit('warning', `The passed in object contained more than one variable - the object should look like {{ value, format }} where format is optional.`)
-
+        } else if (child.kind === ts.SyntaxKind.JsxExpression) {
+          // strip empty expressions
+          if (!child.expression) {
             return {
               type: 'text',
-              content: ''
+              content: '',
+            }
+          } else if (child.expression.kind === ts.SyntaxKind.StringLiteral) {
+            return {
+              type: 'text',
+              content: child.expression.text,
             }
           }
 
+          // strip properties from ObjectExpressions
+          // annoying (and who knows how many other exceptions we'll need to write) but necessary
+          else if (
+            child.expression.kind === ts.SyntaxKind.ObjectLiteralExpression
+          ) {
+            // i18next-react only accepts two props, any random single prop, and a format prop
+            // for our purposes, format prop is always ignored
+
+            let nonFormatProperties = child.expression.properties.filter(
+              (prop) => prop.name.text !== 'format'
+            )
+
+            // more than one property throw a warning in i18next-react, but still works as a key
+            if (nonFormatProperties.length > 1) {
+              this.emit(
+                'warning',
+                `The passed in object contained more than one variable - the object should look like {{ value, format }} where format is optional.`
+              )
+
+              return {
+                type: 'text',
+                content: '',
+              }
+            }
+
+            return {
+              type: 'js',
+              content: `{{${nonFormatProperties[0].name.text}}}`,
+            }
+          }
+
+          // slice on the expression so that we ignore comments around it
           return {
             type: 'js',
-            content: `{{${nonFormatProperties[0].name.text}}}`
+            content: `{${sourceText.slice(
+              child.expression.pos,
+              child.expression.end
+            )}}`,
           }
+        } else {
+          throw new Error('Unknown ast element when parsing jsx: ' + child.kind)
         }
-
-        // slice on the expression so that we ignore comments around it
-        return {
-          type: 'js',
-          content: `{${sourceText.slice(child.expression.pos, child.expression.end)}}`
-        }
-      }
-      else {
-        throw new Error('Unknown ast element when parsing jsx: ' + child.kind)
-      }
-    }).filter(child => child.type !== 'text' || child.content)
+      })
+      .filter((child) => child.type !== 'text' || child.content)
   }
 }

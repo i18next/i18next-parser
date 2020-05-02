@@ -7,7 +7,7 @@ describe('HTMLLexer', () => {
     const content = '<p data-i18n="first;second"></p>'
     assert.deepEqual(Lexer.extract(content), [
       { key: 'first' },
-      { key: 'second' }
+      { key: 'second' },
     ])
     done()
   })
@@ -17,7 +17,7 @@ describe('HTMLLexer', () => {
     const content = '<p data-i18n="[title]first;[prepend]second"></p>'
     assert.deepEqual(Lexer.extract(content), [
       { key: 'first' },
-      { key: 'second' }
+      { key: 'second' },
     ])
     done()
   })
@@ -27,7 +27,7 @@ describe('HTMLLexer', () => {
     const content =
       '<p data-i18n="first" data-i18n-options=\'{"defaultValue": "bla"}\'>first</p>'
     assert.deepEqual(Lexer.extract(content), [
-      { key: 'first', defaultValue: 'bla' }
+      { key: 'first', defaultValue: 'bla' },
     ])
     done()
   })
@@ -47,7 +47,7 @@ describe('HTMLLexer', () => {
     assert.deepEqual(Lexer.extract(content), [
       { key: 'third' },
       { key: 'fourth' },
-      { key: 'first', defaultValue: 'bar' }
+      { key: 'first', defaultValue: 'bar' },
     ])
     done()
   })
@@ -64,7 +64,7 @@ describe('HTMLLexer', () => {
     const content = '<p data-other="first;second"></p>'
     assert.deepEqual(Lexer.extract(content), [
       { key: 'first' },
-      { key: 'second' }
+      { key: 'second' },
     ])
     done()
   })
@@ -74,7 +74,7 @@ describe('HTMLLexer', () => {
     const content =
       '<p data-i18n="first" data-other-options=\'{"defaultValue": "bar"}\'></p>'
     assert.deepEqual(Lexer.extract(content), [
-      { key: 'first', defaultValue: 'bar' }
+      { key: 'first', defaultValue: 'bar' },
     ])
     done()
   })
@@ -84,7 +84,7 @@ describe('HTMLLexer', () => {
     const content =
       '<p data-i18n="first" data-i18n-options=\'{"description": "bla"}\'>first</p>'
     assert.deepEqual(Lexer.extract(content), [
-      { key: 'first', description: 'bla' }
+      { key: 'first', description: 'bla' },
     ])
     done()
   })

@@ -12,7 +12,10 @@ describe('HandlebarsLexer', () => {
   it('extracts multiple keys on a single line', (done) => {
     const Lexer = new HandlebarsLexer()
     const content = '<p>{{t "first"}} {{t "second"}}</p>'
-    assert.deepEqual(Lexer.extract(content), [{ key: 'first' }, { key: 'second' }])
+    assert.deepEqual(Lexer.extract(content), [
+      { key: 'first' },
+      { key: 'second' },
+    ])
     done()
   })
 
@@ -20,7 +23,7 @@ describe('HandlebarsLexer', () => {
     const Lexer = new HandlebarsLexer()
     const content = '<p>{{t "first" "bla"}}</p>'
     assert.deepEqual(Lexer.extract(content), [
-      { key: 'first', defaultValue: 'bla' }
+      { key: 'first', defaultValue: 'bla' },
     ])
     done()
   })
@@ -29,7 +32,7 @@ describe('HandlebarsLexer', () => {
     const Lexer = new HandlebarsLexer()
     const content = '<p>{{t "first" defaultValue="bla"}}</p>'
     assert.deepEqual(Lexer.extract(content), [
-      { key: 'first', defaultValue: 'bla' }
+      { key: 'first', defaultValue: 'bla' },
     ])
     done()
   })
@@ -53,7 +56,7 @@ describe('HandlebarsLexer', () => {
     const content = '<p>{{link-to (tt "first") "foo"}}: {{_e "second"}}</p>'
     assert.deepEqual(Lexer.extract(content), [
       { key: 'first' },
-      { key: 'second' }
+      { key: 'second' },
     ])
     done()
   })
@@ -62,7 +65,7 @@ describe('HandlebarsLexer', () => {
     const Lexer = new HandlebarsLexer()
     const content = '<p>{{t "first" description="bla"}}</p>'
     assert.deepEqual(Lexer.extract(content), [
-      { key: 'first', description: 'bla' }
+      { key: 'first', description: 'bla' },
     ])
     done()
   })
@@ -73,7 +76,7 @@ describe('HandlebarsLexer', () => {
       const args = '"first" "bla"'
       assert.deepEqual(Lexer.parseArguments(args), {
         arguments: ['"first"', '"bla"'],
-        options: {}
+        options: {},
       })
       done()
     })
@@ -83,7 +86,7 @@ describe('HandlebarsLexer', () => {
       const args = 'first bla'
       assert.deepEqual(Lexer.parseArguments(args), {
         arguments: ['first', 'bla'],
-        options: {}
+        options: {},
       })
       done()
     })
@@ -94,8 +97,8 @@ describe('HandlebarsLexer', () => {
       assert.deepEqual(Lexer.parseArguments(args), {
         arguments: ['first="bla"'],
         options: {
-          first: 'bla'
-        }
+          first: 'bla',
+        },
       })
       done()
     })
@@ -107,7 +110,7 @@ describe('HandlebarsLexer', () => {
         arguments: ['second=bla'],
         options: {
           // empty!
-        }
+        },
       })
       done()
     })
@@ -123,12 +126,12 @@ describe('HandlebarsLexer', () => {
           'third-one="bla bla"',
           'fourth',
           "fifth='bla'",
-          '"sixth"'
+          '"sixth"',
         ],
         options: {
           'third-one': 'bla bla',
-          fifth: 'bla'
-        }
+          fifth: 'bla',
+        },
       })
       done()
     })

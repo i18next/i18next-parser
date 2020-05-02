@@ -5,8 +5,14 @@ JsxLexer = function (_JavascriptLexer) {_inherits(JsxLexer, _JavascriptLexer);
   function JsxLexer() {var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};_classCallCheck(this, JsxLexer);var _this = _possibleConstructorReturn(this, (JsxLexer.__proto__ || Object.getPrototypeOf(JsxLexer)).call(this,
     options));
 
-    _this.transSupportBasicHtmlNodes = options.transSupportBasicHtmlNodes || false;
-    _this.transKeepBasicHtmlNodesFor = options.transKeepBasicHtmlNodesFor || ['br', 'strong', 'i', 'p'];return _this;
+    _this.transSupportBasicHtmlNodes =
+    options.transSupportBasicHtmlNodes || false;
+    _this.transKeepBasicHtmlNodesFor = options.transKeepBasicHtmlNodesFor || [
+    'br',
+    'strong',
+    'i',
+    'p'];return _this;
+
   }_createClass(JsxLexer, [{ key: 'extract', value: function extract(
 
     content) {var _this2 = this;var filename = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '__default.jsx';
@@ -34,7 +40,11 @@ JsxLexer = function (_JavascriptLexer) {_inherits(JsxLexer, _JavascriptLexer);
         node.forEachChild(parseTree);
       };
 
-      var sourceFile = ts.createSourceFile(filename, content, ts.ScriptTarget.Latest);
+      var sourceFile = ts.createSourceFile(
+      filename,
+      content,
+      ts.ScriptTarget.Latest);
+
       parseTree(sourceFile);
 
       return keys;
@@ -44,13 +54,15 @@ JsxLexer = function (_JavascriptLexer) {_inherits(JsxLexer, _JavascriptLexer);
       var tagNode = node.openingElement || node;
 
       var getPropValue = function getPropValue(node, tagName) {
-        var attribute = node.attributes.properties.find(function (attr) {return attr.name.text === tagName;});
+        var attribute = node.attributes.properties.find(
+        function (attr) {return attr.name.text === tagName;});
+
         return attribute && attribute.initializer.text;
       };
 
       var getKey = function getKey(node) {return getPropValue(node, _this3.attr);};
 
-      if (tagNode.tagName.text === "Trans") {
+      if (tagNode.tagName.text === 'Trans') {
         var entry = {};
         entry.key = getKey(tagNode);
 
@@ -75,16 +87,16 @@ JsxLexer = function (_JavascriptLexer) {_inherits(JsxLexer, _JavascriptLexer);
           }
 
           if (property.initializer.expression) {
-            entry[property.name.text] = '{' + property.initializer.expression.text + '}';
-          } else
-          {
+            entry[
+            property.name.text] = '{' +
+            property.initializer.expression.text + '}';
+          } else {
             entry[property.name.text] = property.initializer.text;
           }
         });
 
         return entry.key ? entry : null;
-      } else
-      if (tagNode.tagName.text === "Interpolate") {
+      } else if (tagNode.tagName.text === 'Interpolate') {
         var _entry = {};
         _entry.key = getKey(tagNode);
         return _entry.key ? _entry : null;
@@ -94,35 +106,46 @@ JsxLexer = function (_JavascriptLexer) {_inherits(JsxLexer, _JavascriptLexer);
     node, sourceText) {var _this4 = this;
       var children = this.parseChildren.call(this, node.children, sourceText);
 
-      var elemsToString = function elemsToString(children) {return children.map(function (child, index) {
-          switch (child.type) {
-            case 'js':
-            case 'text':
-              return child.content;
-            case 'tag':
-              var elementName =
-              child.isBasic &&
-              _this4.transSupportBasicHtmlNodes &&
-              _this4.transKeepBasicHtmlNodesFor.includes(child.name) ?
-              child.name :
-              index;
-              return '<' + elementName + '>' + elemsToString(child.children) + '</' + elementName + '>';
-            default:throw new Error('Unknown parsed content: ' + child.type);}
+      var elemsToString = function elemsToString(children) {return (
+          children.
+          map(function (child, index) {
+            switch (child.type) {
+              case 'js':
+              case 'text':
+                return child.content;
+              case 'tag':
+                var elementName =
+                child.isBasic &&
+                _this4.transSupportBasicHtmlNodes &&
+                _this4.transKeepBasicHtmlNodesFor.includes(child.name) ?
+                child.name :
+                index;
+                return '<' + elementName + '>' + elemsToString(
+                child.children) + '</' +
+                elementName + '>';
+              default:
+                throw new Error('Unknown parsed content: ' + child.type);}
 
-        }).join('');};
+          }).
+          join(''));};
 
       return elemsToString(children);
     } }, { key: 'parseChildren', value: function parseChildren()
 
     {var _this5 = this;var children = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];var sourceText = arguments[1];
-      return children.map(function (child) {
+      return children.
+      map(function (child) {
         if (child.kind === ts.SyntaxKind.JsxText) {
           return {
             type: 'text',
-            content: child.text.replace(/(^(\n|\r)\s*)|((\n|\r)\s*$)/g, '').replace(/(\n|\r)\s*/g, ' ') };
+            content: child.text.
+            replace(/(^(\n|\r)\s*)|((\n|\r)\s*$)/g, '').
+            replace(/(\n|\r)\s*/g, ' ') };
 
-        } else
-        if (child.kind === ts.SyntaxKind.JsxElement || child.kind === ts.SyntaxKind.JsxSelfClosingElement) {
+        } else if (
+        child.kind === ts.SyntaxKind.JsxElement ||
+        child.kind === ts.SyntaxKind.JsxSelfClosingElement)
+        {
           var element = child.openingElement || child;
           var name = element.tagName.escapedText;
           var isBasic = !element.attributes.properties.length;
@@ -132,17 +155,14 @@ JsxLexer = function (_JavascriptLexer) {_inherits(JsxLexer, _JavascriptLexer);
             name: name,
             isBasic: isBasic };
 
-        } else
-        if (child.kind === ts.SyntaxKind.JsxExpression) {
+        } else if (child.kind === ts.SyntaxKind.JsxExpression) {
           // strip empty expressions
           if (!child.expression) {
             return {
               type: 'text',
               content: '' };
 
-          } else
-
-          if (child.expression.kind === ts.SyntaxKind.StringLiteral) {
+          } else if (child.expression.kind === ts.SyntaxKind.StringLiteral) {
             return {
               type: 'text',
               content: child.expression.text };
@@ -151,15 +171,22 @@ JsxLexer = function (_JavascriptLexer) {_inherits(JsxLexer, _JavascriptLexer);
 
           // strip properties from ObjectExpressions
           // annoying (and who knows how many other exceptions we'll need to write) but necessary
-          else if (child.expression.kind === ts.SyntaxKind.ObjectLiteralExpression) {
+          else if (
+            child.expression.kind === ts.SyntaxKind.ObjectLiteralExpression)
+            {
               // i18next-react only accepts two props, any random single prop, and a format prop
               // for our purposes, format prop is always ignored
 
-              var nonFormatProperties = child.expression.properties.filter(function (prop) {return prop.name.text !== 'format';});
+              var nonFormatProperties = child.expression.properties.filter(
+              function (prop) {return prop.name.text !== 'format';});
+
 
               // more than one property throw a warning in i18next-react, but still works as a key
               if (nonFormatProperties.length > 1) {
-                _this5.emit('warning', 'The passed in object contained more than one variable - the object should look like {{ value, format }} where format is optional.');
+                _this5.emit(
+                'warning', 'The passed in object contained more than one variable - the object should look like {{ value, format }} where format is optional.');
+
+
 
                 return {
                   type: 'text',
@@ -176,11 +203,14 @@ JsxLexer = function (_JavascriptLexer) {_inherits(JsxLexer, _JavascriptLexer);
           // slice on the expression so that we ignore comments around it
           return {
             type: 'js',
-            content: '{' + sourceText.slice(child.expression.pos, child.expression.end) + '}' };
+            content: '{' + sourceText.slice(
+            child.expression.pos,
+            child.expression.end) + '}' };
 
-        } else
-        {
+
+        } else {
           throw new Error('Unknown ast element when parsing jsx: ' + child.kind);
         }
-      }).filter(function (child) {return child.type !== 'text' || child.content;});
+      }).
+      filter(function (child) {return child.type !== 'text' || child.content;});
     } }]);return JsxLexer;}(_javascriptLexer2.default);exports.default = JsxLexer;module.exports = exports['default'];

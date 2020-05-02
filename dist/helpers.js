@@ -21,11 +21,14 @@ function dotPathToHash(entry) {var target = arguments.length > 1 && arguments[1]
   var newValue = entry.defaultValue || options.value || '';
 
   if (options.skipDefaultValues) {
-    newValue = "";
+    newValue = '';
   }
 
   if (options.useKeysAsDefaultValue) {
-    newValue = entry.key.substring(entry.key.indexOf(separator) + separator.length, entry.key.length);
+    newValue = entry.key.substring(
+    entry.key.indexOf(separator) + separator.length,
+    entry.key.length);
+
   }
 
   if (path.endsWith(separator)) {
@@ -62,9 +65,9 @@ function dotPathToHash(entry) {var target = arguments.length > 1 && arguments[1]
     entries.forEach(function (valueEntry) {
       if (valueEntry[1] === '${defaultValue}') {
         inner[lastSegment][valueEntry[0]] = newValue;
-      } else
-      {
-        inner[lastSegment][valueEntry[0]] = entry[valueEntry[1].replace(/\${(\w+)}/, '$1')] || "";
+      } else {
+        inner[lastSegment][valueEntry[0]] =
+        entry[valueEntry[1].replace(/\${(\w+)}/, '$1')] || '';
       }
     });
   } else {
@@ -108,21 +111,16 @@ function mergeHashes(source, target) {var keepRemoved = arguments.length > 2 && 
         old[key] = nested.old;
         oldCount += nested.oldCount;
       }
-    } else
-    {
+    } else {
       if (target[key] !== undefined) {
-        if (
-        typeof source[key] === 'string' ||
-        Array.isArray(source[key]))
-        {
+        if (typeof source[key] === 'string' || Array.isArray(source[key])) {
           target[key] = source[key];
           mergeCount += 1;
         } else {
           old[key] = source[key];
           oldCount += 1;
         }
-      } else
-      {
+      } else {
         // support for plural in keys
         var pluralRegex = /(_plural)|(_\d+)$/;
         var pluralMatch = pluralRegex.test(key);
@@ -167,14 +165,10 @@ function transferValues(source, target) {
     !Array.isArray(sourceValue))
     {
       transferValues(sourceValue, targetValue);
-    } else
-    {
+    } else {
       target[key] = sourceValue;
     }
   }
 }exports.
 
-
-dotPathToHash = dotPathToHash;exports.
-mergeHashes = mergeHashes;exports.
-transferValues = transferValues;
+dotPathToHash = dotPathToHash;exports.mergeHashes = mergeHashes;exports.transferValues = transferValues;

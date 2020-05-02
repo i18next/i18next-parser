@@ -35,10 +35,7 @@ BaseLexer = function (_EventEmitter) {_inherits(BaseLexer, _EventEmitter);
     {
       return (
         '(?:' +
-        [
-        BaseLexer.singleQuotePattern,
-        BaseLexer.doubleQuotePattern].
-        join('|') +
+        [BaseLexer.singleQuotePattern, BaseLexer.doubleQuotePattern].join('|') +
         ')');
 
     } }, { key: 'stringOrVariablePattern', get: function get()

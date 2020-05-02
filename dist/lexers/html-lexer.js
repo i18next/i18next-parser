@@ -22,8 +22,8 @@ HTMLLexer = function (_BaseLexer) {_inherits(HTMLLexer, _BaseLexer);
         if (options) {
           try {
             options = JSON.parse(options);
-          } finally
-          {}
+          } finally {
+          }
         }var _iteratorNormalCompletion = true;var _didIteratorError = false;var _iteratorError = undefined;try {
 
           for (var _iterator = keys[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {var key = _step.value;

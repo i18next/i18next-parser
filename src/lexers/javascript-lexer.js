@@ -26,7 +26,11 @@ export default class JavascriptLexer extends BaseLexer {
       node.forEachChild(parseTree)
     }
 
-    const sourceFile = ts.createSourceFile(filename, content, ts.ScriptTarget.Latest)
+    const sourceFile = ts.createSourceFile(
+      filename,
+      content,
+      ts.ScriptTarget.Latest
+    )
     parseTree(sourceFile)
 
     return keys
@@ -37,26 +41,33 @@ export default class JavascriptLexer extends BaseLexer {
 
     const isTranslationFunction =
       (node.expression.text && this.functions.includes(node.expression.text)) ||
-      (node.expression.name && this.functions.includes(node.expression.name.text))
-
+      (node.expression.name &&
+        this.functions.includes(node.expression.name.text))
 
     if (isTranslationFunction) {
       const keyArgument = node.arguments.shift()
 
       if (keyArgument && keyArgument.kind === ts.SyntaxKind.StringLiteral) {
         entry.key = keyArgument.text
-      }
-      else if (keyArgument && keyArgument.kind === ts.SyntaxKind.BinaryExpression) {
+      } else if (
+        keyArgument &&
+        keyArgument.kind === ts.SyntaxKind.BinaryExpression
+      ) {
         const concatenatedString = this.concatenateString(keyArgument)
         if (!concatenatedString) {
-          this.emit('warning', `Key is not a string literal: ${keyArgument.text}`)
+          this.emit(
+            'warning',
+            `Key is not a string literal: ${keyArgument.text}`
+          )
           return null
         }
         entry.key = concatenatedString
-      }
-      else {
+      } else {
         if (keyArgument.kind === ts.SyntaxKind.Identifier) {
-          this.emit('warning', `Key is not a string literal: ${keyArgument.text}`)
+          this.emit(
+            'warning',
+            `Key is not a string literal: ${keyArgument.text}`
+          )
         }
 
         return null
@@ -64,12 +75,17 @@ export default class JavascriptLexer extends BaseLexer {
 
       const optionsArgument = node.arguments.shift()
 
-      if (optionsArgument && optionsArgument.kind === ts.SyntaxKind.StringLiteral) {
+      if (
+        optionsArgument &&
+        optionsArgument.kind === ts.SyntaxKind.StringLiteral
+      ) {
         entry.defaultValue = optionsArgument.text
-      }
-      else if (optionsArgument && optionsArgument.kind === ts.SyntaxKind.ObjectLiteralExpression) {
+      } else if (
+        optionsArgument &&
+        optionsArgument.kind === ts.SyntaxKind.ObjectLiteralExpression
+      ) {
         for (const p of optionsArgument.properties) {
-          entry[p.name.text] = p.initializer && p.initializer.text || ''
+          entry[p.name.text] = (p.initializer && p.initializer.text) || ''
         }
       }
 
@@ -86,7 +102,10 @@ export default class JavascriptLexer extends BaseLexer {
       return entry
     }
 
-    if(node.expression.escapedText === 'useTranslation' && node.arguments.length) {
+    if (
+      node.expression.escapedText === 'useTranslation' &&
+      node.arguments.length
+    ) {
       this.defaultNamespace = node.arguments[0].text
     }
 
@@ -100,21 +119,17 @@ export default class JavascriptLexer extends BaseLexer {
 
     if (binaryExpression.left.kind === ts.SyntaxKind.BinaryExpression) {
       string += this.concatenateString(binaryExpression.left, string)
-    }
-    else if (binaryExpression.left.kind === ts.SyntaxKind.StringLiteral) {
+    } else if (binaryExpression.left.kind === ts.SyntaxKind.StringLiteral) {
       string += binaryExpression.left.text
-    }
-    else {
+    } else {
       return
     }
 
     if (binaryExpression.right.kind === ts.SyntaxKind.BinaryExpression) {
       string += this.concatenateString(binaryExpression.right, string)
-    }
-    else if (binaryExpression.right.kind === ts.SyntaxKind.StringLiteral) {
+    } else if (binaryExpression.right.kind === ts.SyntaxKind.StringLiteral) {
       string += binaryExpression.right.text
-    }
-    else {
+    } else {
       return
     }
 

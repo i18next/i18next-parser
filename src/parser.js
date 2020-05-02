@@ -21,7 +21,7 @@ const lexers = {
 
   vue: ['VueLexer'],
 
-  default: ['JavascriptLexer']
+  default: ['JavascriptLexer'],
 }
 
 const lexersMap = {
@@ -29,7 +29,7 @@ const lexersMap = {
   HTMLLexer,
   JavascriptLexer,
   JsxLexer,
-  VueLexer
+  VueLexer,
 }
 
 export default class Parser extends EventEmitter {
@@ -53,20 +53,21 @@ export default class Parser extends EventEmitter {
       let lexerName
       let lexerOptions
 
-      if (typeof lexerConfig === 'string' || typeof lexerConfig === 'function') {
+      if (
+        typeof lexerConfig === 'string' ||
+        typeof lexerConfig === 'function'
+      ) {
         lexerName = lexerConfig
         lexerOptions = {}
-      }
-      else {
+      } else {
         lexerName = lexerConfig.lexer
         lexerOptions = lexerConfig
       }
 
-      let Lexer;
-      if(typeof lexerName === 'function') {
+      let Lexer
+      if (typeof lexerName === 'function') {
         Lexer = lexerName
-      }
-      else {
+      } else {
         if (!lexersMap[lexerName]) {
           this.emit('error', new Error(`Lexer '${lexerName}' does not exist`))
         }
@@ -75,7 +76,7 @@ export default class Parser extends EventEmitter {
       }
 
       const lexer = new Lexer(lexerOptions)
-      lexer.on('warning', warning => this.emit('warning', warning))
+      lexer.on('warning', (warning) => this.emit('warning', warning))
       keys = keys.concat(lexer.extract(content, filename))
     }
 

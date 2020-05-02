@@ -15,7 +15,8 @@ VueLexer = function (_BaseLexer) {_inherits(VueLexer, _BaseLexer);
       Lexer.on('warning', function (warning) {return _this2.emit('warning', warning);});
       keys = keys.concat(Lexer.extract(content));
 
-      var compiledTemplate = require('vue-template-compiler').compile(content).render;
+      var compiledTemplate = require('vue-template-compiler').compile(content).
+      render;
       var Lexer2 = new _javascriptLexer2.default({ functions: this.functions });
       Lexer2.on('warning', function (warning) {return _this2.emit('warning', warning);});
       keys = keys.concat(Lexer2.extract(compiledTemplate));

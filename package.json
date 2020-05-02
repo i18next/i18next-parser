@@ -10,7 +10,8 @@
   },
   "scripts": {
     "test": "mocha -r babel-register -r babel-polyfill --recursive test/*.test.js test/**/*.test.js",
-    "watch": "babel src -d dist -w"
+    "watch": "babel src -d dist -w",
+    "build": "prettier --write --no-semi --single-quote \"{src,test}/**/*.js\" && babel src -d dist"
   },
   "repository": {
     "type": "git",
@@ -52,6 +53,7 @@
     "chai": "^4.1.2",
     "gulp": "^4.0.0",
     "mocha": "^5.0.0",
+    "prettier": "2.0.5",
     "sinon": "^6.2.0"
   },
   "keywords": [

@@ -7,7 +7,10 @@ describe('VueLexer', () => {
     const content =
       "<template><p>{{ $t('first') }}</p><template><script>export default " +
       "{ mounted() { this.$i18n.t('second'); } }</script>"
-    assert.deepEqual(Lexer.extract(content), [{ key: 'second' }, { key: 'first' }])
+    assert.deepEqual(Lexer.extract(content), [
+      { key: 'second' },
+      { key: 'first' },
+    ])
     done()
   })
 
@@ -17,13 +20,16 @@ describe('VueLexer', () => {
       "<template><p>{{ $t('first {test}', {test: 'station'}) }}</p><template>" +
       "<script>export default { mounted() { this.$i18n.t('second {test}', " +
       "{test: 'interpol'}); } }</script>"
-    assert.deepEqual(Lexer.extract(content), [{
-      key: 'second {test}',
-      test: 'interpol'
-    }, {
-      key: 'first {test}',
-      test: 'station'
-    }])
+    assert.deepEqual(Lexer.extract(content), [
+      {
+        key: 'second {test}',
+        test: 'interpol',
+      },
+      {
+        key: 'first {test}',
+        test: 'station',
+      },
+    ])
     done()
   })
 
@@ -32,13 +38,16 @@ describe('VueLexer', () => {
     const content =
       "<template><p>{{ $t('first', {count: 5}) }}</p><template><script>export default " +
       "{ mounted() { this.$i18n.t('second', {count: 2}); } }</script>"
-    assert.deepEqual(Lexer.extract(content), [{
-      key: 'second',
-      count: '2'
-    }, {
-      key: 'first',
-      count: '5'
-    }])
+    assert.deepEqual(Lexer.extract(content), [
+      {
+        key: 'second',
+        count: '2',
+      },
+      {
+        key: 'first',
+        count: '5',
+      },
+    ])
     done()
   })
 
@@ -47,7 +56,10 @@ describe('VueLexer', () => {
     const content =
       "<template><p>{{ $t('first', {description: 'test'}) }}</p><template><script>export default " +
       "{ mounted() { this.$i18n.t('second'); } }</script>"
-    assert.deepEqual(Lexer.extract(content), [{ key: 'second' }, { key: 'first', description: 'test' }])
+    assert.deepEqual(Lexer.extract(content), [
+      { key: 'second' },
+      { key: 'first', description: 'test' },
+    ])
     done()
   })
 })

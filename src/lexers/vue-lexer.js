@@ -12,12 +12,13 @@ export default class VueLexer extends BaseLexer {
     let keys = []
 
     const Lexer = new JavascriptLexer()
-    Lexer.on('warning', warning => this.emit('warning', warning))
+    Lexer.on('warning', (warning) => this.emit('warning', warning))
     keys = keys.concat(Lexer.extract(content))
 
-    const compiledTemplate = require('vue-template-compiler').compile(content).render
+    const compiledTemplate = require('vue-template-compiler').compile(content)
+      .render
     const Lexer2 = new JavascriptLexer({ functions: this.functions })
-    Lexer2.on('warning', warning => this.emit('warning', warning))
+    Lexer2.on('warning', (warning) => this.emit('warning', warning))
     keys = keys.concat(Lexer2.extract(compiledTemplate))
 
     return keys

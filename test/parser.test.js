@@ -15,9 +15,9 @@ describe('parser', () => {
       contents: Buffer.from(
         "t('first'); t('second') \n t('third'); t('fourth');"
       ),
-      path: 'file.js'
+      path: 'file.js',
     })
-    i18nextParser.once('data', file => {
+    i18nextParser.once('data', (file) => {
       if (file.relative.endsWith(enLibraryPath)) {
         result = JSON.parse(file.contents)
       }
@@ -33,13 +33,11 @@ describe('parser', () => {
     let result
     const i18nextParser = new i18nTransform()
     const fakeFile = new Vinyl({
-      contents: Buffer.from(
-        "t(\n  'first'\n)\n t('second'); t(\n\n'third')"
-      ),
-      path: 'file.js'
+      contents: Buffer.from("t(\n  'first'\n)\n t('second'); t(\n\n'third')"),
+      path: 'file.js',
     })
 
-    i18nextParser.on('data', file => {
+    i18nextParser.on('data', (file) => {
       if (file.relative.endsWith(enLibraryPath)) {
         result = JSON.parse(file.contents)
       }
@@ -57,17 +55,17 @@ describe('parser', () => {
     const i18nextParser = new i18nTransform()
     const fakeFile = new Vinyl({
       contents: Buffer.from("t('first', {context: 'female'})"),
-      path: 'file.js'
+      path: 'file.js',
     })
 
-    i18nextParser.on('data', file => {
+    i18nextParser.on('data', (file) => {
       if (file.relative.endsWith(enLibraryPath)) {
         result = JSON.parse(file.contents)
       }
     })
     i18nextParser.once('end', () => {
       assert.deepEqual(result, {
-        first_female: ''
+        first_female: '',
       })
       done()
     })
@@ -82,7 +80,7 @@ describe('parser', () => {
       contents: fs.readFileSync(
         path.resolve(__dirname, 'templating/html.html')
       ),
-      path: 'file.html'
+      path: 'file.html',
     })
     const expected = {
       first: '',
@@ -91,10 +89,10 @@ describe('parser', () => {
       fourth: '',
       fifth: 'bar',
       sixth: '',
-      selfClosing: ''
+      selfClosing: '',
     }
 
-    i18nextParser.on('data', file => {
+    i18nextParser.on('data', (file) => {
       if (file.relative.endsWith(enLibraryPath)) {
         result = JSON.parse(file.contents)
       }
@@ -113,7 +111,7 @@ describe('parser', () => {
       contents: fs.readFileSync(
         path.resolve(__dirname, 'templating/handlebars.hbs')
       ),
-      path: 'file.hbs'
+      path: 'file.hbs',
     })
     const expected = {
       first: '',
@@ -122,10 +120,10 @@ describe('parser', () => {
       fourth_male: 'defaultValue',
       fifth_male: '',
       sixth: '',
-      seventh: 'defaultValue'
+      seventh: 'defaultValue',
     }
 
-    i18nextParser.on('data', file => {
+    i18nextParser.on('data', (file) => {
       if (file.relative.endsWith(enLibraryPath)) {
         result = JSON.parse(file.contents)
       }
@@ -145,16 +143,16 @@ describe('parser', () => {
       contents: fs.readFileSync(
         path.resolve(__dirname, 'templating/javascript.js')
       ),
-      path: 'file.js'
+      path: 'file.js',
     })
     const expected = {
       first: '',
       second: 'defaultValue',
       third: '{{var}} defaultValue',
-      fourth: ''
+      fourth: '',
     }
 
-    i18nextParser.on('data', file => {
+    i18nextParser.on('data', (file) => {
       if (file.relative.endsWith(enLibraryPath)) {
         result = JSON.parse(file.contents)
       }
@@ -174,27 +172,30 @@ describe('parser', () => {
       contents: fs.readFileSync(
         path.resolve(__dirname, 'templating/react.jsx')
       ),
-      path: 'react.jsx'
+      path: 'react.jsx',
     })
     const expected = {
       first: '',
       second: '',
       third: {
-        first: 'Hello <1>{{name}}</1>, you have {{count}} unread message. <5>Go to messages</5>.',
-        first_plural: 'Hello <1>{{name}}</1>, you have {{count}} unread message. <5>Go to messages</5>.',
-        second: ' <1>Hello,</1> this shouldn\'t be trimmed.',
-        third: '<0>Hello,</0>this should be trimmed.<2> and this shoudln\'t</2>'
+        first:
+          'Hello <1>{{name}}</1>, you have {{count}} unread message. <5>Go to messages</5>.',
+        first_plural:
+          'Hello <1>{{name}}</1>, you have {{count}} unread message. <5>Go to messages</5>.',
+        second: " <1>Hello,</1> this shouldn't be trimmed.",
+        third: "<0>Hello,</0>this should be trimmed.<2> and this shoudln't</2>",
       },
       fourth: '',
       fifth: '',
       fifth_plural: '',
       bar: '',
       foo: '',
-      "This should be part of the value and the key": "This should be part of the value and the key",
-      "don't split {{on}}": "don't split {{on}}"
+      'This should be part of the value and the key':
+        'This should be part of the value and the key',
+      "don't split {{on}}": "don't split {{on}}",
     }
 
-    i18nextParser.on('data', file => {
+    i18nextParser.on('data', (file) => {
       // support for a default Namespace
       if (file.relative.endsWith(path.normalize('en/react.json'))) {
         result = JSON.parse(file.contents)
@@ -215,27 +216,30 @@ describe('parser', () => {
       contents: fs.readFileSync(
         path.resolve(__dirname, 'templating/typescript.tsx')
       ),
-      path: 'typescript.tsx'
+      path: 'typescript.tsx',
     })
     const expected = {
       first: '',
       second: '',
       third: {
-        first: 'Hello <1>{{name}}</1>, you have {{count}} unread message. <5>Go to messages</5>.',
-        first_plural: 'Hello <1>{{name}}</1>, you have {{count}} unread message. <5>Go to messages</5>.',
-        second: ' <1>Hello,</1> this shouldn\'t be trimmed.',
-        third: '<0>Hello,</0>this should be trimmed.<2> and this shoudln\'t</2>'
+        first:
+          'Hello <1>{{name}}</1>, you have {{count}} unread message. <5>Go to messages</5>.',
+        first_plural:
+          'Hello <1>{{name}}</1>, you have {{count}} unread message. <5>Go to messages</5>.',
+        second: " <1>Hello,</1> this shouldn't be trimmed.",
+        third: "<0>Hello,</0>this should be trimmed.<2> and this shoudln't</2>",
       },
       fourth: '',
       fifth: '',
       fifth_plural: '',
       bar: '',
       foo: '',
-      "This should be part of the value and the key": "This should be part of the value and the key",
-      "don't split {{on}}": "don't split {{on}}"
+      'This should be part of the value and the key':
+        'This should be part of the value and the key',
+      "don't split {{on}}": "don't split {{on}}",
     }
 
-    i18nextParser.on('data', file => {
+    i18nextParser.on('data', (file) => {
       if (file.relative.endsWith(enLibraryPath)) {
         result = JSON.parse(file.contents)
       }
@@ -252,16 +256,16 @@ describe('parser', () => {
     let results = []
     const i18nextParser = new i18nTransform({
       locales: ['en', 'de', 'fr'],
-      defaultNamespace: 'default'
+      defaultNamespace: 'default',
     })
     const fakeFile = new Vinyl({
       contents: Buffer.from(
         "t('ns1:first'); t('second') \n t('ns2:third'); t('fourth')"
       ),
-      path: 'file.js'
+      path: 'file.js',
     })
 
-    i18nextParser.on('data', file => {
+    i18nextParser.on('data', (file) => {
       results.push(file.relative.replace(/locales[\//\\]/, ''))
     })
     i18nextParser.on('end', () => {
@@ -274,7 +278,7 @@ describe('parser', () => {
         'de/ns2.json',
         'fr/default.json',
         'fr/ns1.json',
-        'fr/ns2.json'
+        'fr/ns2.json',
       ]
       let length = expectedFiles.length
 
@@ -294,10 +298,10 @@ describe('parser', () => {
       contents: Buffer.from(
         't(\'escaped \\\'single quotes\\\'\'); t("escaped \\"double quotes\\"")'
       ),
-      path: 'file.js'
+      path: 'file.js',
     })
 
-    i18nextParser.on('data', file => {
+    i18nextParser.on('data', (file) => {
       if (file.relative.endsWith(enLibraryPath)) {
         result = JSON.parse(file.contents)
       }
@@ -316,13 +320,11 @@ describe('parser', () => {
     let result
     const i18nextParser = new i18nTransform()
     const fakeFile = new Vinyl({
-      contents: Buffer.from(
-        "t('escaped backslash\\\\ newline\\n\\r tab\\t')"
-      ),
-      path: 'file.js'
+      contents: Buffer.from("t('escaped backslash\\\\ newline\\n\\r tab\\t')"),
+      path: 'file.js',
     })
 
-    i18nextParser.on('data', file => {
+    i18nextParser.on('data', (file) => {
       if (file.relative.endsWith(enLibraryPath)) {
         result = JSON.parse(file.contents)
       }
@@ -339,13 +341,11 @@ describe('parser', () => {
   it('returns buffers', (done) => {
     const i18nextParser = new i18nTransform()
     const fakeFile = new Vinyl({
-      contents: Buffer.from(
-        "t('first')"
-      ),
-      path: 'file.js'
+      contents: Buffer.from("t('first')"),
+      path: 'file.js',
     })
 
-    i18nextParser.once('data', file => {
+    i18nextParser.once('data', (file) => {
       assert(file.isBuffer())
       done()
     })
@@ -355,17 +355,20 @@ describe('parser', () => {
 
   it('retrieves values in existing catalog and creates old catalog', (done) => {
     let result, resultOld
-    const i18nextParser = new i18nTransform({ output: 'test/locales/$LOCALE/$NAMESPACE.json' })
+    const i18nextParser = new i18nTransform({
+      output: 'test/locales/$LOCALE/$NAMESPACE.json',
+    })
     const fakeFile = new Vinyl({
       contents: Buffer.from("t('test_merge:first'); t('test_merge:second')"),
-      path: 'file.js'
+      path: 'file.js',
     })
 
-    i18nextParser.on('data', file => {
+    i18nextParser.on('data', (file) => {
       if (file.relative.endsWith(path.normalize('en/test_merge.json'))) {
         result = JSON.parse(file.contents)
-      }
-      else if (file.relative.endsWith(path.normalize('en/test_merge_old.json'))) {
+      } else if (
+        file.relative.endsWith(path.normalize('en/test_merge_old.json'))
+      ) {
         resultOld = JSON.parse(file.contents)
       }
     })
@@ -381,13 +384,15 @@ describe('parser', () => {
   it('does not leak values between locales', (done) => {
     let resultEN
     let resultFR
-    const i18nextParser = new i18nTransform({ output: 'test/locales/$LOCALE/$NAMESPACE.json' })
+    const i18nextParser = new i18nTransform({
+      output: 'test/locales/$LOCALE/$NAMESPACE.json',
+    })
     const fakeFile = new Vinyl({
       contents: Buffer.from("t('test_leak:first'); t('test_leak:second')"),
-      path: 'file.js'
+      path: 'file.js',
     })
 
-    i18nextParser.on('data', file => {
+    i18nextParser.on('data', (file) => {
       if (file.relative.endsWith(path.normalize('en/test_leak.json'))) {
         resultEN = JSON.parse(file.contents)
       }
@@ -406,19 +411,21 @@ describe('parser', () => {
 
   it('retrieves context values in existing catalog', (done) => {
     let result
-    const i18nextParser = new i18nTransform({ output: 'test/locales/$LOCALE/$NAMESPACE.json' })
+    const i18nextParser = new i18nTransform({
+      output: 'test/locales/$LOCALE/$NAMESPACE.json',
+    })
     const fakeFile = new Vinyl({
       contents: Buffer.from("t('test_context:first')"),
-      path: 'file.js'
+      path: 'file.js',
     })
 
     const expectedResult = {
       first: 'first',
       first_context1: 'first context1',
-      first_context2: ''
+      first_context2: '',
     }
 
-    i18nextParser.on('data', file => {
+    i18nextParser.on('data', (file) => {
       if (file.relative.endsWith(path.normalize('en/test_context.json'))) {
         result = JSON.parse(file.contents)
       }
@@ -432,21 +439,30 @@ describe('parser', () => {
   })
 
   it('saves unused translations in the old catalog', (done) => {
-    const i18nextParser = new i18nTransform({ output: 'test/locales/$LOCALE/$NAMESPACE.json' })
+    const i18nextParser = new i18nTransform({
+      output: 'test/locales/$LOCALE/$NAMESPACE.json',
+    })
     const fakeFile = new Vinyl({
-      contents: Buffer.from("t('test_old:parent.third', 'third'), t('test_old:fourth', 'fourth')"),
-      path: 'file.js'
+      contents: Buffer.from(
+        "t('test_old:parent.third', 'third'), t('test_old:fourth', 'fourth')"
+      ),
+      path: 'file.js',
     })
 
     const expectedResult = { parent: { third: 'third' }, fourth: 'fourth' }
-    const expectedResultOld = { parent: { first: 'first', some: 'some' }, second: 'second', other: 'other' }
+    const expectedResultOld = {
+      parent: { first: 'first', some: 'some' },
+      second: 'second',
+      other: 'other',
+    }
 
-    let result, resultOld;
-    i18nextParser.on('data', file => {
+    let result, resultOld
+    i18nextParser.on('data', (file) => {
       if (file.relative.endsWith(path.normalize('en/test_old.json'))) {
         result = JSON.parse(file.contents)
-      }
-      else if (file.relative.endsWith(path.normalize('en/test_old_old.json'))) {
+      } else if (
+        file.relative.endsWith(path.normalize('en/test_old_old.json'))
+      ) {
         resultOld = JSON.parse(file.contents)
       }
     })
@@ -460,21 +476,26 @@ describe('parser', () => {
   })
 
   it('restores translations from the old catalog', (done) => {
-    const i18nextParser = new i18nTransform({ output: 'test/locales/$LOCALE/$NAMESPACE.json' })
+    const i18nextParser = new i18nTransform({
+      output: 'test/locales/$LOCALE/$NAMESPACE.json',
+    })
     const fakeFile = new Vinyl({
-      contents: Buffer.from("t('test_old:parent.some', 'random'), t('test_old:other', 'random')"),
-      path: 'file.js'
+      contents: Buffer.from(
+        "t('test_old:parent.some', 'random'), t('test_old:other', 'random')"
+      ),
+      path: 'file.js',
     })
 
     const expectedResult = { parent: { some: 'some' }, other: 'other' }
     const expectedResultOld = { parent: { first: 'first' }, second: 'second' }
 
-    let result, resultOld;
-    i18nextParser.on('data', file => {
+    let result, resultOld
+    i18nextParser.on('data', (file) => {
       if (file.relative.endsWith(path.normalize('en/test_old.json'))) {
         result = JSON.parse(file.contents)
-      }
-      else if (file.relative.endsWith(path.normalize('en/test_old_old.json'))) {
+      } else if (
+        file.relative.endsWith(path.normalize('en/test_old_old.json'))
+      ) {
         resultOld = JSON.parse(file.contents)
       }
     })
@@ -489,12 +510,12 @@ describe('parser', () => {
 
   it('retrieves plural values in existing catalog', (done) => {
     let result
-    const i18nextParser = new i18nTransform({ output: 'test/locales/$LOCALE/$NAMESPACE.json' })
+    const i18nextParser = new i18nTransform({
+      output: 'test/locales/$LOCALE/$NAMESPACE.json',
+    })
     const fakeFile = new Vinyl({
-      contents: Buffer.from(
-        "t('test_plural:first'); t('test_plural:second')"
-      ),
-      path: 'file.js'
+      contents: Buffer.from("t('test_plural:first'); t('test_plural:second')"),
+      path: 'file.js',
     })
 
     const expectedResult = {
@@ -502,10 +523,10 @@ describe('parser', () => {
       first_plural: 'first plural',
       second: 'second',
       second_0: 'second plural 0',
-      second_12: 'second plural 12'
+      second_12: 'second plural 12',
     }
 
-    i18nextParser.on('data', file => {
+    i18nextParser.on('data', (file) => {
       if (file.relative.endsWith(path.normalize('en/test_plural.json'))) {
         result = JSON.parse(file.contents)
       }
@@ -520,10 +541,12 @@ describe('parser', () => {
 
   it('retrieves plural and context values in existing catalog', (done) => {
     let result
-    const i18nextParser = new i18nTransform({ output: 'test/locales/$LOCALE/$NAMESPACE.json' })
+    const i18nextParser = new i18nTransform({
+      output: 'test/locales/$LOCALE/$NAMESPACE.json',
+    })
     const fakeFile = new Vinyl({
       contents: Buffer.from("t('test_context_plural:first')"),
-      path: 'file.js'
+      path: 'file.js',
     })
 
     const expectedResult = {
@@ -531,8 +554,10 @@ describe('parser', () => {
       first_context1_plural: 'first context1 plural',
     }
 
-    i18nextParser.on('data', file => {
-      if (file.relative.endsWith(path.normalize('en/test_context_plural.json'))) {
+    i18nextParser.on('data', (file) => {
+      if (
+        file.relative.endsWith(path.normalize('en/test_context_plural.json'))
+      ) {
         result = JSON.parse(file.contents)
       }
     })
@@ -550,14 +575,14 @@ describe('parser', () => {
       const i18nextParser = new i18nTransform({
         locales: ['en'],
         defaultNamespace: 'default',
-        output: 'locales/$LOCALE/p-$LOCALE-$NAMESPACE.$LOCALE.i18n'
+        output: 'locales/$LOCALE/p-$LOCALE-$NAMESPACE.$LOCALE.i18n',
       })
       const fakeFile = new Vinyl({
         contents: Buffer.from("t('fourth')"),
-        path: 'file.js'
+        path: 'file.js',
       })
 
-      i18nextParser.on('data', file => {
+      i18nextParser.on('data', (file) => {
         result = file.relative.replace(/locales[\\\/]/, '')
       })
       i18nextParser.on('end', () => {
@@ -572,16 +597,16 @@ describe('parser', () => {
       let result
       const i18nextParser = new i18nTransform({
         namespaceSeparator: '?',
-        keySeparator: '-'
+        keySeparator: '-',
       })
       const fakeFile = new Vinyl({
         contents: Buffer.from(
           "t('test_separators?first'); t('test_separators?second-third')"
         ),
-        path: 'file.js'
+        path: 'file.js',
       })
 
-      i18nextParser.on('data', file => {
+      i18nextParser.on('data', (file) => {
         if (file.relative.endsWith(path.normalize('en/test_separators.json'))) {
           result = JSON.parse(file.contents)
         }
@@ -598,14 +623,14 @@ describe('parser', () => {
       let result
       const i18nextParser = new i18nTransform({
         namespaceSeparator: false,
-        keySeparator: false
+        keySeparator: false,
       })
       const fakeFile = new Vinyl({
         contents: Buffer.from("t('Status: loading...')"),
-        path: 'file.js'
+        path: 'file.js',
       })
 
-      i18nextParser.on('data', file => {
+      i18nextParser.on('data', (file) => {
         if (file.relative.endsWith(enLibraryPath)) {
           result = JSON.parse(file.contents)
         }
@@ -621,14 +646,14 @@ describe('parser', () => {
     it('supports a defaultValue', (done) => {
       let result
       const i18nextParser = new i18nTransform({
-        defaultValue: 'NOT_TRANSLATED'
+        defaultValue: 'NOT_TRANSLATED',
       })
       const fakeFile = new Vinyl({
         contents: Buffer.from("t('first')"),
-        path: 'file.js'
+        path: 'file.js',
       })
 
-      i18nextParser.on('data', file => {
+      i18nextParser.on('data', (file) => {
         if (file.relative.endsWith(enLibraryPath)) {
           result = JSON.parse(file.contents)
         }
@@ -644,14 +669,14 @@ describe('parser', () => {
     it('supports a lineEnding', (done) => {
       let result
       const i18nextParser = new i18nTransform({
-        lineEnding: '\r\n'
+        lineEnding: '\r\n',
       })
       const fakeFile = new Vinyl({
         contents: Buffer.from("t('first')"),
-        path: 'file.js'
+        path: 'file.js',
       })
 
-      i18nextParser.on('data', file => {
+      i18nextParser.on('data', (file) => {
         if (file.relative.endsWith(enLibraryPath)) {
           result = file.contents.toString()
         }
@@ -667,14 +692,14 @@ describe('parser', () => {
     it('supports a lineEnding', (done) => {
       let result
       const i18nextParser = new i18nTransform({
-        lineEnding: '\r\n'
+        lineEnding: '\r\n',
       })
       const fakeFile = new Vinyl({
         contents: Buffer.from("t('first')"),
-        path: 'file.js'
+        path: 'file.js',
       })
 
-      i18nextParser.on('data', file => {
+      i18nextParser.on('data', (file) => {
         if (file.relative.endsWith(enLibraryPath)) {
           result = file.contents.toString()
         }
@@ -690,33 +715,37 @@ describe('parser', () => {
     it('parses Trans if reactNamespace is true', (done) => {
       let result
       const i18nextParser = new i18nTransform({
-        reactNamespace: true
+        reactNamespace: true,
       })
       const fakeFile = new Vinyl({
         contents: fs.readFileSync(
           path.resolve(__dirname, 'templating/react.jsx')
         ),
-        path: 'react.js'
+        path: 'react.js',
       })
       const expected = {
         first: '',
         second: '',
         third: {
-          first: 'Hello <1>{{name}}</1>, you have {{count}} unread message. <5>Go to messages</5>.',
-          first_plural: 'Hello <1>{{name}}</1>, you have {{count}} unread message. <5>Go to messages</5>.',
-          second: ' <1>Hello,</1> this shouldn\'t be trimmed.',
-          third: '<0>Hello,</0>this should be trimmed.<2> and this shoudln\'t</2>'
+          first:
+            'Hello <1>{{name}}</1>, you have {{count}} unread message. <5>Go to messages</5>.',
+          first_plural:
+            'Hello <1>{{name}}</1>, you have {{count}} unread message. <5>Go to messages</5>.',
+          second: " <1>Hello,</1> this shouldn't be trimmed.",
+          third:
+            "<0>Hello,</0>this should be trimmed.<2> and this shoudln't</2>",
         },
         fourth: '',
         fifth: '',
         fifth_plural: '',
         bar: '',
         foo: '',
-        "This should be part of the value and the key": "This should be part of the value and the key",
-        "don't split {{on}}": "don't split {{on}}"
+        'This should be part of the value and the key':
+          'This should be part of the value and the key',
+        "don't split {{on}}": "don't split {{on}}",
       }
 
-      i18nextParser.on('data', file => {
+      i18nextParser.on('data', (file) => {
         // support for a default Namespace
         if (file.relative.endsWith(path.normalize('en/react.json'))) {
           result = JSON.parse(file.contents)
@@ -738,36 +767,40 @@ describe('parser', () => {
             {
               lexer: 'JsxLexer',
               transSupportBasicHtmlNodes: true,
-              transKeepBasicHtmlNodesFor: ['strong', 'b']
-            }
-          ]
-        }
+              transKeepBasicHtmlNodesFor: ['strong', 'b'],
+            },
+          ],
+        },
       })
       const fakeFile = new Vinyl({
         contents: fs.readFileSync(
           path.resolve(__dirname, 'templating/react.jsx')
         ),
-        path: 'react.jsx'
+        path: 'react.jsx',
       })
       const expected = {
         first: '',
         second: '',
         third: {
-          first: 'Hello <1>{{name}}</1>, you have {{count}} unread message. <5>Go to messages</5>.',
-          first_plural: 'Hello <1>{{name}}</1>, you have {{count}} unread message. <5>Go to messages</5>.',
-          second: ' <b>Hello,</b> this shouldn\'t be trimmed.',
-          third: '<b>Hello,</b>this should be trimmed.<2> and this shoudln\'t</2>'
+          first:
+            'Hello <1>{{name}}</1>, you have {{count}} unread message. <5>Go to messages</5>.',
+          first_plural:
+            'Hello <1>{{name}}</1>, you have {{count}} unread message. <5>Go to messages</5>.',
+          second: " <b>Hello,</b> this shouldn't be trimmed.",
+          third:
+            "<b>Hello,</b>this should be trimmed.<2> and this shoudln't</2>",
         },
         fourth: '',
         fifth: '',
         fifth_plural: '',
         bar: '',
         foo: '',
-        "This should be part of the value and the key": "This should be part of the value and the key",
-        "don't split {{on}}": "don't split {{on}}"
+        'This should be part of the value and the key':
+          'This should be part of the value and the key',
+        "don't split {{on}}": "don't split {{on}}",
       }
 
-      i18nextParser.on('data', file => {
+      i18nextParser.on('data', (file) => {
         // support for a default Namespace
         if (file.relative.endsWith(path.normalize('en/react.json'))) {
           result = JSON.parse(file.contents)
@@ -781,18 +814,17 @@ describe('parser', () => {
       i18nextParser.end(fakeFile)
     })
 
-
     it('supports outputing to yml', (done) => {
       let result
       const i18nextParser = new i18nTransform({
-        output: 'locales/$LOCALE/$NAMESPACE.yml'
+        output: 'locales/$LOCALE/$NAMESPACE.yml',
       })
       const fakeFile = new Vinyl({
         contents: Buffer.from("t('first')"),
-        path: 'file.js'
+        path: 'file.js',
       })
 
-      i18nextParser.on('data', file => {
+      i18nextParser.on('data', (file) => {
         if (file.relative.endsWith(path.normalize('en/translation.yml'))) {
           result = file.contents.toString('utf8')
         }
@@ -808,14 +840,14 @@ describe('parser', () => {
     it('reads existing yml catalog', (done) => {
       let result
       const i18nextParser = new i18nTransform({
-        output: 'test/locales/$LOCALE/test.yml'
+        output: 'test/locales/$LOCALE/test.yml',
       })
       const fakeFile = new Vinyl({
         contents: Buffer.from("t('first')"),
-        path: 'file.js'
+        path: 'file.js',
       })
 
-      i18nextParser.on('data', file => {
+      i18nextParser.on('data', (file) => {
         if (file.relative.endsWith(path.normalize('en/test.yml'))) {
           result = file.contents.toString('utf8')
         }
@@ -831,20 +863,23 @@ describe('parser', () => {
     it('supports an indentation option', (done) => {
       let result
       const i18nextParser = new i18nTransform({
-        indentation: 6
+        indentation: 6,
       })
       const fakeFile = new Vinyl({
         contents: Buffer.from("t('first')"),
-        path: 'file.js'
+        path: 'file.js',
       })
 
-      i18nextParser.on('data', file => {
+      i18nextParser.on('data', (file) => {
         if (file.relative.endsWith(enLibraryPath)) {
           result = file.contents.toString('utf8')
         }
       })
       i18nextParser.once('end', () => {
-        assert.deepEqual(result.replace(/\r\n/g, '\n').split('\n')[1], '      "first": ""')
+        assert.deepEqual(
+          result.replace(/\r\n/g, '\n').split('\n')[1],
+          '      "first": ""'
+        )
         done()
       })
 
@@ -855,16 +890,14 @@ describe('parser', () => {
       let results = []
       const i18nextParser = new i18nTransform({
         defaultNamespace: 'default',
-        createOldCatalogs: false
+        createOldCatalogs: false,
       })
       const fakeFile = new Vinyl({
-        contents: Buffer.from(
-          "t('ns1:first'); t('second') \n t('fourth')"
-        ),
-        path: 'file.js'
+        contents: Buffer.from("t('ns1:first'); t('second') \n t('fourth')"),
+        path: 'file.js',
       })
 
-      i18nextParser.on('data', file => {
+      i18nextParser.on('data', (file) => {
         results.push(file.relative.replace(/locales[\\\/]/, ''))
       })
       i18nextParser.on('end', () => {
@@ -872,7 +905,7 @@ describe('parser', () => {
           'en/default.json',
           'en/ns1.json',
           'fr/default.json',
-          'fr/ns1.json'
+          'fr/ns1.json',
         ]
         let length = expectedFiles.length
 
@@ -895,10 +928,10 @@ describe('parser', () => {
         contents: Buffer.from(
           "t('first'); \n t('second and third'); t('$fourth %fifth%'); t('six.seven');"
         ),
-        path: 'file.js'
+        path: 'file.js',
       })
 
-      i18nextParser.once('data', file => {
+      i18nextParser.once('data', (file) => {
         if (file.relative.endsWith(enLibraryPath)) {
           result = JSON.parse(file.contents)
         }
@@ -909,8 +942,8 @@ describe('parser', () => {
           'second and third': 'second and third',
           '$fourth %fifth%': '$fourth %fifth%',
           six: {
-            seven: 'six.seven'
-          }
+            seven: 'six.seven',
+          },
         })
         done()
       })
@@ -922,10 +955,10 @@ describe('parser', () => {
       const i18nextParser = new i18nTransform()
       const fakeFile = new Vinyl({
         contents: Buffer.from("t('test {{count}}', { count: 1 })"),
-        path: 'file.js'
+        path: 'file.js',
       })
 
-      i18nextParser.on('data', file => {
+      i18nextParser.on('data', (file) => {
         if (file.relative.endsWith(enLibraryPath)) {
           result = JSON.parse(file.contents)
         }
@@ -933,7 +966,7 @@ describe('parser', () => {
       i18nextParser.once('end', () => {
         assert.deepEqual(result, {
           'test {{count}}': '',
-          'test {{count}}_plural': ''
+          'test {{count}}_plural': '',
         })
         done()
       })
@@ -946,10 +979,10 @@ describe('parser', () => {
       const i18nextParser = new i18nTransform({ locales: ['ar'] })
       const fakeFile = new Vinyl({
         contents: Buffer.from("t('test {{count}}', { count: 1 })"),
-        path: 'file.js'
+        path: 'file.js',
       })
 
-      i18nextParser.on('data', file => {
+      i18nextParser.on('data', (file) => {
         if (file.relative.endsWith(arLibraryPath)) {
           result = JSON.parse(file.contents)
         }
@@ -976,10 +1009,10 @@ describe('parser', () => {
       })
       const fakeFile = new Vinyl({
         contents: Buffer.from("t('test {{count}}', { count: 1 })"),
-        path: 'file.js'
+        path: 'file.js',
       })
 
-      i18nextParser.on('data', file => {
+      i18nextParser.on('data', (file) => {
         if (file.relative.endsWith(enLibraryPath)) {
           result = JSON.parse(file.contents)
         }
@@ -987,7 +1020,7 @@ describe('parser', () => {
       i18nextParser.once('end', () => {
         assert.deepEqual(result, {
           'test {{count}}': 'test {{count}}',
-          'test {{count}}_plural': 'test {{count}}'
+          'test {{count}}_plural': 'test {{count}}',
         })
         done()
       })
@@ -999,14 +1032,14 @@ describe('parser', () => {
       let result
       const i18nextParser = new i18nTransform({
         useKeysAsDefaultValue: true,
-        locales: ['ar']
+        locales: ['ar'],
       })
       const fakeFile = new Vinyl({
         contents: Buffer.from("t('test {{count}}', { count: 1 })"),
-        path: 'file.js'
+        path: 'file.js',
       })
 
-      i18nextParser.on('data', file => {
+      i18nextParser.on('data', (file) => {
         if (file.relative.endsWith(arLibraryPath)) {
           result = JSON.parse(file.contents)
         }
@@ -1026,65 +1059,66 @@ describe('parser', () => {
       i18nextParser.end(fakeFile)
     })
 
-    it("supports skipDefaultValues option", (done) => {
+    it('supports skipDefaultValues option', (done) => {
       let result
       const i18nextParser = new i18nTransform({
-        skipDefaultValues: true
+        skipDefaultValues: true,
       })
 
       const fakeFile = new Vinyl({
         contents: Buffer.from(
           "t('headline1', 'There will be a headline here.') \n" +
-          "t('headline2', {defaultValue: 'Another Headline here'}})",
+            "t('headline2', {defaultValue: 'Another Headline here'}})"
         ),
-        path: 'file.js'
+        path: 'file.js',
       })
 
-      i18nextParser.on('data', file => {
+      i18nextParser.on('data', (file) => {
         result = JSON.parse(file.contents)
       })
 
       i18nextParser.on('end', () => {
         assert.deepEqual(result, {
-          'headline1': '',
-          'headline2': '',
+          headline1: '',
+          headline2: '',
         })
 
         done()
       })
 
       i18nextParser.end(fakeFile)
-    });
+    })
 
-    
     it('supports customValueTemplate option', (done) => {
       let result
       const i18nextParser = new i18nTransform({
         customValueTemplate: {
           message: '${defaultValue}',
-          description: '${max}'
-        }
+          description: '${max}',
+        },
       })
 
       const fakeFile = new Vinyl({
-        contents: Buffer.from("t('test'); t('salt', {defaultValue: 'salty', max: 150})"),
-        path: 'file.js'
+        contents: Buffer.from(
+          "t('test'); t('salt', {defaultValue: 'salty', max: 150})"
+        ),
+        path: 'file.js',
       })
 
-      i18nextParser.on('data', file => {
+      i18nextParser.on('data', (file) => {
         result = JSON.parse(file.contents)
       })
 
       i18nextParser.once('end', () => {
         assert.deepEqual(result, {
-          'test': {
-            'message': '',
-            'description': ''
+          test: {
+            message: '',
+            description: '',
           },
-          'salt': {
-            'message': 'salty',
-            'description': '150'
-          }
+          salt: {
+            message: 'salty',
+            description: '150',
+          },
         })
 
         done()
@@ -1101,17 +1135,17 @@ describe('parser', () => {
             js: [
               {
                 lexer: 'JavascriptLexer',
-                functions: ['bla', '_e']
-              }
-            ]
-          }
+                functions: ['bla', '_e'],
+              },
+            ],
+          },
         })
         const fakeFile = new Vinyl({
           contents: Buffer.from("bla('first'); _e('second')"),
-          path: 'file.js'
+          path: 'file.js',
         })
 
-        i18nextParser.on('data', file => {
+        i18nextParser.on('data', (file) => {
           if (file.relative.endsWith(enLibraryPath)) {
             result = JSON.parse(file.contents)
           }
@@ -1127,24 +1161,24 @@ describe('parser', () => {
       it('support function as custom lexer', (done) => {
         class CustomLexer {
           extract(content) {
-            return content.split(';').map(key => ({ key }))
+            return content.split(';').map((key) => ({ key }))
           }
 
-          on() { }
+          on() {}
         }
 
         let result
         const i18nextParser = new i18nTransform({
           lexers: {
-            js: [CustomLexer]
-          }
+            js: [CustomLexer],
+          },
         })
         const fakeFile = new Vinyl({
-          contents: Buffer.from("first;second"),
-          path: 'file.js'
+          contents: Buffer.from('first;second'),
+          path: 'file.js',
         })
 
-        i18nextParser.on('data', file => {
+        i18nextParser.on('data', (file) => {
           if (file.relative.endsWith(enLibraryPath)) {
             result = JSON.parse(file.contents)
           }
@@ -1160,14 +1194,14 @@ describe('parser', () => {
       it('pass options to custom lexer', (done) => {
         class CustomLexer {
           constructor(options) {
-            this.delimiter = options.delimiter;
+            this.delimiter = options.delimiter
           }
 
           extract(content) {
-            return content.split(this.delimiter).map(key => ({ key }))
+            return content.split(this.delimiter).map((key) => ({ key }))
           }
 
-          on() { }
+          on() {}
         }
 
         let result
@@ -1176,17 +1210,17 @@ describe('parser', () => {
             js: [
               {
                 lexer: CustomLexer,
-                delimiter: '@'
-              }
-            ]
-          }
+                delimiter: '@',
+              },
+            ],
+          },
         })
         const fakeFile = new Vinyl({
-          contents: Buffer.from("first@second"),
-          path: 'file.js'
+          contents: Buffer.from('first@second'),
+          path: 'file.js',
         })
 
-        i18nextParser.on('data', file => {
+        i18nextParser.on('data', (file) => {
           if (file.relative.endsWith(enLibraryPath)) {
             result = JSON.parse(file.contents)
           }
@@ -1208,10 +1242,10 @@ describe('parser', () => {
           contents: Buffer.from(
             "t('ccc'); t('aaa'); t('bbb.bbb'); t('bbb.aaa')"
           ),
-          path: 'file.js'
+          path: 'file.js',
         })
 
-        i18nextParser.on('data', file => {
+        i18nextParser.on('data', (file) => {
           if (file.relative.endsWith(enLibraryPath)) {
             result = JSON.parse(file.contents)
           }
@@ -1228,16 +1262,16 @@ describe('parser', () => {
       it('supports sort as an option', (done) => {
         let result
         const i18nextParser = new i18nTransform({
-          sort: true
+          sort: true,
         })
         const fakeFile = new Vinyl({
           contents: Buffer.from(
             "t('ccc'); t('aaa'); t('bbb.bbb'); t('bbb.aaa')"
           ),
-          path: 'file.js'
+          path: 'file.js',
         })
 
-        i18nextParser.on('data', file => {
+        i18nextParser.on('data', (file) => {
           if (file.relative.endsWith(enLibraryPath)) {
             result = JSON.parse(file.contents)
           }
@@ -1259,10 +1293,10 @@ describe('parser', () => {
       const i18nextParser = new i18nTransform()
       const fakeFile = new Vinyl({
         contents: Buffer.from('content'),
-        path: 'file.js'
+        path: 'file.js',
       })
 
-      i18nextParser.on('reading', file => {
+      i18nextParser.on('reading', (file) => {
         result = file.path
       })
       i18nextParser.on('finish', () => {
@@ -1273,13 +1307,15 @@ describe('parser', () => {
     })
 
     it('emits a `error` event if the catalog is not valid json', (done) => {
-      const i18nextParser = new i18nTransform({ output: 'test/locales/$LOCALE/$NAMESPACE.json' })
+      const i18nextParser = new i18nTransform({
+        output: 'test/locales/$LOCALE/$NAMESPACE.json',
+      })
       const fakeFile = new Vinyl({
         contents: Buffer.from("t('test_invalid:content')"),
-        path: 'file.js'
+        path: 'file.js',
       })
 
-      i18nextParser.on('error', error => {
+      i18nextParser.on('error', (error) => {
         assert.equal(error.message.startsWith('Unexpected token /'), true)
         done()
       })
@@ -1290,10 +1326,10 @@ describe('parser', () => {
       const i18nextParser = new i18nTransform({ lexers: { js: ['fakeLexer'] } })
       const fakeFile = new Vinyl({
         contents: Buffer.from('content'),
-        path: 'file.js'
+        path: 'file.js',
       })
 
-      i18nextParser.on('error', error => {
+      i18nextParser.on('error', (error) => {
         assert.equal(error.message, "Lexer 'fakeLexer' does not exist")
         done()
       })
@@ -1301,13 +1337,15 @@ describe('parser', () => {
     })
 
     it('emits a `warning` event if a key contains a variable', (done) => {
-      const i18nextParser = new i18nTransform({ output: 'test/locales/$LOCALE/$NAMESPACE.json' })
+      const i18nextParser = new i18nTransform({
+        output: 'test/locales/$LOCALE/$NAMESPACE.json',
+      })
       const fakeFile = new Vinyl({
         contents: Buffer.from('t(variable)'),
-        path: 'file.js'
+        path: 'file.js',
       })
 
-      i18nextParser.on('warning', message => {
+      i18nextParser.on('warning', (message) => {
         assert.equal(message, 'Key is not a string literal: variable')
         done()
       })
@@ -1315,14 +1353,19 @@ describe('parser', () => {
     })
 
     it('emits a `warning` event if a react value contains two variables', (done) => {
-      const i18nextParser = new i18nTransform({ output: 'test/locales/$LOCALE/$NAMESPACE.json' })
+      const i18nextParser = new i18nTransform({
+        output: 'test/locales/$LOCALE/$NAMESPACE.json',
+      })
       const fakeFile = new Vinyl({
         contents: Buffer.from('<Trans>{{ key1, key2 }}</Trans>'),
-        path: 'file.js'
+        path: 'file.js',
       })
 
-      i18nextParser.on('warning', message => {
-        assert.equal(message, 'The passed in object contained more than one variable - the object should look like {{ value, format }} where format is optional.')
+      i18nextParser.on('warning', (message) => {
+        assert.equal(
+          message,
+          'The passed in object contained more than one variable - the object should look like {{ value, format }} where format is optional.'
+        )
         done()
       })
       i18nextParser.end(fakeFile)

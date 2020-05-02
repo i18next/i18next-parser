@@ -81,8 +81,7 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
       var content = void 0;
       if (file.isBuffer()) {
         content = file.contents.toString('utf8');
-      } else
-      {
+      } else {
         content = _fs2.default.readFileSync(file.path, encoding);
       }
 
@@ -102,8 +101,7 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
           // make sure we're not pulling a 'namespace' out of a default value
           if (parts.length > 1 && key !== entry.defaultValue) {
             entry.namespace = parts.shift();
-          } else
-          if (extension === 'jsx' || this.options.reactNamespace) {
+          } else if (extension === 'jsx' || this.options.reactNamespace) {
             entry.namespace = this.grabReactNamespace(content);
           }
           entry.namespace = entry.namespace || this.options.defaultNamespace;
@@ -135,10 +133,7 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
         var uniqueCount = _this2.entries.length;
 
         var transformEntry = function transformEntry(entry, suffix) {var _dotPathToHash =
-          (0, _helpers.dotPathToHash)(
-          entry,
-          catalog,
-          {
+          (0, _helpers.dotPathToHash)(entry, catalog, {
             suffix: suffix,
             separator: _this2.options.keySeparator,
             value: _this2.options.defaultValue,
@@ -147,14 +142,12 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
             customValueTemplate: _this2.options.customValueTemplate }),duplicate = _dotPathToHash.duplicate,conflict = _dotPathToHash.conflict;
 
 
-
           if (duplicate) {
             uniqueCount -= 1;
             if (conflict === 'key') {
               var warning = 'Found translation key already mapped to a map or parent of new key already mapped to a string: ' + entry.key;
               _this2.warn(warning);
-            } else
-            if (conflict === 'value') {
+            } else if (conflict === 'value') {
               var _warning = 'Found same keys with different values: ' + entry.key;
               _this2.warn(_warning);
             }
@@ -183,13 +176,20 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
 
           var parsedNamespacePath = _path2.default.parse(namespacePath);
 
-          var namespaceOldPath = _path2.default.join(parsedNamespacePath.dir, parsedNamespacePath.name + '_old' + parsedNamespacePath.ext);
+          var namespaceOldPath = _path2.default.join(
+          parsedNamespacePath.dir,
+          parsedNamespacePath.name + '_old' + parsedNamespacePath.ext);
+
 
           var existingCatalog = _this2.getCatalog(namespacePath);
           var existingOldCatalog = _this2.getCatalog(namespaceOldPath);
 
           // merges existing translations with the new ones
           var _mergeHashes =
+
+
+
+
           (0, _helpers.mergeHashes)(
           existingCatalog,
           catalog[namespace],
@@ -197,14 +197,19 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
 
 
           // restore old translations
-          var _mergeHashes2 = (0, _helpers.mergeHashes)(existingOldCatalog, newCatalog),oldCatalog = _mergeHashes2.old,restoreCount = _mergeHashes2.mergeCount;
+          var _mergeHashes2 = (0, _helpers.mergeHashes)(
+          existingOldCatalog,
+          newCatalog),oldCatalog = _mergeHashes2.old,restoreCount = _mergeHashes2.mergeCount;
+
 
           // backup unused translations
           (0, _helpers.transferValues)(oldKeys, oldCatalog);
 
           if (_this2.options.verbose) {
             console.log('[' + locale + '] ' + namespace + '\n');
-            console.log('Unique keys: ' + uniqueCount + ' (' + countWithPlurals + ' with plurals)');
+            console.log('Unique keys: ' +
+            uniqueCount + ' (' + countWithPlurals + ' with plurals)');
+
             var addCount = countWithPlurals - mergeCount;
             console.log('Added keys: ' + addCount);
             console.log('Restored keys: ' + restoreCount);
@@ -236,8 +241,7 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
         delete contextEntry.context;
         contextEntry.key += this.options.contextSeparator + entry.context;
         this.entries.push(contextEntry);
-      } else
-      {
+      } else {
         this.entries.push(entry);
       }
     } }, { key: 'getCatalog', value: function getCatalog(
@@ -247,13 +251,11 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
         var content = void 0;
         if (path.endsWith('yml')) {
           content = _yamljs2.default.parse(_fs2.default.readFileSync(path).toString());
-        } else
-        {
+        } else {
           content = JSON.parse(_fs2.default.readFileSync(path));
         }
         return content;
-      }
-      catch (error) {
+      } catch (error) {
         if (error.code !== 'ENOENT') {
           this.emit('error', error);
         }
@@ -266,21 +268,23 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
       var text = void 0;
       if (path.endsWith('yml')) {
         text = _yamljs2.default.stringify(contents, null, this.options.indentation);
-      } else
-      {
+      } else {
         text = JSON.stringify(contents, null, this.options.indentation) + '\n';
       }
 
       if (this.options.lineEnding === 'auto') {
         text = _eol2.default.auto(text);
-      } else
-      if (this.options.lineEnding === '\r\n' || this.options.lineEnding === 'crlf') {
-        text = _eol2.default.crlf(text);
-      } else
-      if (this.options.lineEnding === '\r' || this.options.lineEnding === 'cr') {
-        text = _eol2.default.cr(text);
-      } else
+      } else if (
+      this.options.lineEnding === '\r\n' ||
+      this.options.lineEnding === 'crlf')
       {
+        text = _eol2.default.crlf(text);
+      } else if (
+      this.options.lineEnding === '\r' ||
+      this.options.lineEnding === 'cr')
+      {
+        text = _eol2.default.cr(text);
+      } else {
         // Defaults to LF, aka \n
         text = _eol2.default.lf(text);
       }

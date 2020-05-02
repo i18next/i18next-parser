@@ -14,7 +14,7 @@ describe('JavascriptLexer', () => {
     const Lexer = new JavascriptLexer()
     const content = 'i18n.t("first", "bla")'
     assert.deepEqual(Lexer.extract(content), [
-      { key: 'first', defaultValue: 'bla' }
+      { key: 'first', defaultValue: 'bla' },
     ])
     done()
   })
@@ -23,16 +23,17 @@ describe('JavascriptLexer', () => {
     const Lexer = new JavascriptLexer()
     const content = 'i18n.t("first", {defaultValue: "foo", context: \'bar\'})'
     assert.deepEqual(Lexer.extract(content), [
-      { key: 'first', defaultValue: 'foo', context: 'bar' }
+      { key: 'first', defaultValue: 'foo', context: 'bar' },
     ])
     done()
   })
 
   it('extracts the defaultValue/context on multiple lines', (done) => {
     const Lexer = new JavascriptLexer()
-    const content = 'i18n.t("first", {\ndefaultValue: "foo",\n context: \'bar\'})'
+    const content =
+      'i18n.t("first", {\ndefaultValue: "foo",\n context: \'bar\'})'
     assert.deepEqual(Lexer.extract(content), [
-      { key: 'first', defaultValue: 'foo', context: 'bar' }
+      { key: 'first', defaultValue: 'foo', context: 'bar' },
     ])
     done()
   })
@@ -41,16 +42,17 @@ describe('JavascriptLexer', () => {
     const Lexer = new JavascriptLexer()
     const content = 'i18n.t("first", {context: "foo", "defaultValue": \'bla\'})'
     assert.deepEqual(Lexer.extract(content), [
-      { key: 'first', defaultValue: 'bla', context: 'foo' }
+      { key: 'first', defaultValue: 'bla', context: 'foo' },
     ])
     done()
   })
 
   it('extracts the defaultValue/context options with interpolated value', (done) => {
     const Lexer = new JavascriptLexer()
-    const content = 'i18n.t("first", {context: "foo", "defaultValue": \'{{var}} bla\'})'
+    const content =
+      'i18n.t("first", {context: "foo", "defaultValue": \'{{var}} bla\'})'
     assert.deepEqual(Lexer.extract(content), [
-      { key: 'first', defaultValue: '{{var}} bla', context: 'foo' }
+      { key: 'first', defaultValue: '{{var}} bla', context: 'foo' },
     ])
     done()
   })
@@ -64,7 +66,8 @@ describe('JavascriptLexer', () => {
 
   it("does not parse text with `doesn't` or isolated `t` in it", (done) => {
     const Lexer = new JavascriptLexer()
-    const js = "// FIX this doesn't work and this t is all alone\nt('first')\nt = () => {}"
+    const js =
+      "// FIX this doesn't work and this t is all alone\nt('first')\nt = () => {}"
     assert.deepEqual(Lexer.extract(js), [{ key: 'first' }])
     done()
   })
@@ -81,7 +84,7 @@ describe('JavascriptLexer', () => {
     const content = 'tt("first") + _e("second")'
     assert.deepEqual(Lexer.extract(content), [
       { key: 'first' },
-      { key: 'second' }
+      { key: 'second' },
     ])
     done()
   })
@@ -95,10 +98,9 @@ describe('JavascriptLexer', () => {
 
   it('supports the spread operator', (done) => {
     const Lexer = new JavascriptLexer()
-    const content = 'const data = { text: t("foo"), ...rest }; const { text, ...more } = data;'
-    assert.deepEqual(Lexer.extract(content), [
-      { key: 'foo' }
-    ])
+    const content =
+      'const data = { text: t("foo"), ...rest }; const { text, ...more } = data;'
+    assert.deepEqual(Lexer.extract(content), [{ key: 'foo' }])
     done()
   })
 
@@ -112,9 +114,7 @@ describe('JavascriptLexer', () => {
   it('supports the es7 syntax', (done) => {
     const Lexer = new JavascriptLexer()
     const content = '@decorator() class Test { test() { t("foo") } }'
-    assert.deepEqual(Lexer.extract(content), [
-      { key: 'foo' }
-    ])
+    assert.deepEqual(Lexer.extract(content), [{ key: 'foo' }])
     done()
   })
 
@@ -133,16 +133,20 @@ describe('JavascriptLexer', () => {
   it('uses namespace from t function with priority', () => {
     const Lexer = new JavascriptLexer()
     const content = 'const {t} = useTranslation("foo"); t("bar", {ns: "baz"});'
-    assert.deepEqual(Lexer.extract(content), [{ namespace: 'baz', key: 'bar', ns: 'baz' }])
+    assert.deepEqual(Lexer.extract(content), [
+      { namespace: 'baz', key: 'bar', ns: 'baz' },
+    ])
   })
 
   it('extracts custom options', () => {
     const Lexer = new JavascriptLexer()
 
     const content = 'i18n.t("headline", {description: "Fantastic key!"});'
-    assert.deepEqual(Lexer.extract(content), [{
-      key: 'headline',
-      description: 'Fantastic key!'
-    }])
+    assert.deepEqual(Lexer.extract(content), [
+      {
+        key: 'headline',
+        description: 'Fantastic key!',
+      },
+    ])
   })
 })

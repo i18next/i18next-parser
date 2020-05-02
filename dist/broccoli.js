@@ -21,7 +21,8 @@ i18nextParser = function (_Plugin) {_inherits(i18nextParser, _Plugin);
         var files = [];
         var count = 0;
 
-        _vinylFs2.default.src(_this2.inputPaths.map(function (x) {return x + '/**/*.{js,hbs}';})).
+        _vinylFs2.default.
+        src(_this2.inputPaths.map(function (x) {return x + '/**/*.{js,hbs}';})).
         pipe((0, _gulpSort2.default)()).
         pipe(
         new _transform2.default(_this2.options).
@@ -32,9 +33,7 @@ i18nextParser = function (_Plugin) {_inherits(i18nextParser, _Plugin);
           count++;
         }).
         on('data', function (file) {
-          files.push(
-          _fsExtra2.default.outputFile(file.path, file.contents));
-
+          files.push(_fsExtra2.default.outputFile(file.path, file.contents));
           if (!this.options.silent) {
             console.log('  [write] '.green + file.path);
           }

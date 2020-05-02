@@ -53,11 +53,13 @@ Parser = function (_EventEmitter) {_inherits(Parser, _EventEmitter);
           var lexerName = void 0;
           var lexerOptions = void 0;
 
-          if (typeof lexerConfig === 'string' || typeof lexerConfig === 'function') {
+          if (
+          typeof lexerConfig === 'string' ||
+          typeof lexerConfig === 'function')
+          {
             lexerName = lexerConfig;
             lexerOptions = {};
-          } else
-          {
+          } else {
             lexerName = lexerConfig.lexer;
             lexerOptions = lexerConfig;
           }
@@ -65,8 +67,7 @@ Parser = function (_EventEmitter) {_inherits(Parser, _EventEmitter);
           var Lexer = void 0;
           if (typeof lexerName === 'function') {
             Lexer = lexerName;
-          } else
-          {
+          } else {
             if (!lexersMap[lexerName]) {
               this.emit('error', new Error('Lexer \'' + lexerName + '\' does not exist'));
             }
