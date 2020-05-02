@@ -7,7 +7,6 @@ export default class JsxLexer extends JavascriptLexer {
 
     this.transSupportBasicHtmlNodes = options.transSupportBasicHtmlNodes || false
     this.transKeepBasicHtmlNodesFor = options.transKeepBasicHtmlNodesFor || ['br', 'strong', 'i', 'p']
-    this.valueFormat = options.valueFormat || false
   }
 
   extract(content, filename = '__default.jsx') {
@@ -70,33 +69,18 @@ export default class JsxLexer extends JavascriptLexer {
         entry.namespace = namespace
       }
 
-      const getCustomAttrs = (node, opts) => {
-        const customAttrs = {}
-        let keys = Object.values(opts).map((value) => {
-          return value.replace(/\${(\w+)}/, '$1')
-        })
-
-        // ignore as we extract this key by default
-        keys.splice(keys.indexOf('defaultValue'), 1)
-
-        keys.forEach((key) => {
-          const attribute = node.attributes.properties.find(attr => attr.name.text === key)
-
-          if (attribute) {
-            customAttrs[attribute.name.text] = attribute.initializer.text
-          }
-        })
-
-        return customAttrs
-      }
-
-      if (this.valueFormat && this.valueFormat !== 'default') {
-        const customAttrs = getCustomAttrs(tagNode, this.valueFormat)
-
-        Object.keys(customAttrs).forEach((key) => {
-          entry[key] = customAttrs[key]
-        })
-      }
+      tagNode.attributes.properties.forEach(property => {
+        if ([this.attr, 'ns'].includes(property.name.text)) {
+          return
+        }
+        
+        if (property.initializer.expression) {
+          entry[property.name.text] = `{${property.initializer.expression.text}}`
+        }
+        else {
+          entry[property.name.text] = property.initializer.text
+        }
+      })
 
       return entry.key ? entry : null
     }

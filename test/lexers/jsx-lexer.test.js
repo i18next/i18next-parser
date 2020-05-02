@@ -18,8 +18,9 @@ describe('JsxLexer', () => {
     it('extracts keys from i18nKey attributes from closing tags', (done) => {
       const Lexer = new JsxLexer()
       const content = '<Trans i18nKey="first" count={count}>Yo</Trans>'
+      console.log(Lexer.extract(content))
       assert.deepEqual(Lexer.extract(content), [
-        { key: 'first', defaultValue: 'Yo' }
+        { key: 'first', defaultValue: 'Yo', count: '{count}' }
       ])
       done()
     })
@@ -28,7 +29,7 @@ describe('JsxLexer', () => {
       const Lexer = new JsxLexer({ attr: "myIntlKey" })
       const content = '<Trans myIntlKey="first" count={count}>Yo</Trans>'
       assert.deepEqual(Lexer.extract(content), [
-        { key: 'first', defaultValue: 'Yo' }
+        { key: 'first', defaultValue: 'Yo', count: '{count}' }
       ])
       done()
     })
@@ -37,7 +38,7 @@ describe('JsxLexer', () => {
       const Lexer = new JsxLexer()
       const content = '<Trans i18nKey="first" count={count} />'
       assert.deepEqual(Lexer.extract(content), [
-        { key: 'first' }
+        { key: 'first', count: '{count}' }
       ])
       done()
     })
@@ -46,16 +47,25 @@ describe('JsxLexer', () => {
       const Lexer = new JsxLexer({ attr: "myIntlKey" })
       const content = '<Trans myIntlKey="first" count={count} />'
       assert.deepEqual(Lexer.extract(content), [
-        { key: 'first' }
+        { key: 'first', count: '{count}' }
       ])
       done()
     })
 
+    it('extracts custom attributes', (done) => {
+      const Lexer = new JsxLexer()
+      const content = '<Trans customAttribute="Youpi">Yo</Trans>'
+      assert.deepEqual(Lexer.extract(content), [
+        { key: 'Yo', defaultValue: 'Yo', customAttribute: 'Youpi' }
+      ])
+      done()
+    })
+    
     it('extracts keys from Trans elements without an i18nKey', (done) => {
       const Lexer = new JsxLexer()
       const content = '<Trans count={count}>Yo</Trans>'
       assert.deepEqual(Lexer.extract(content), [
-        { key: 'Yo', defaultValue: 'Yo' }
+        { key: 'Yo', defaultValue: 'Yo', count: '{count}' }
       ])
       done()
     })
@@ -64,7 +74,7 @@ describe('JsxLexer', () => {
       const Lexer = new JsxLexer()
       const content = '<Trans count={count}>{{ key: property }}</Trans>'
       assert.deepEqual(Lexer.extract(content), [
-        { key: '{{key}}', defaultValue: '{{key}}' }
+        { key: '{{key}}', defaultValue: '{{key}}', count: '{count}' }
       ])
       done()
     })
@@ -73,7 +83,7 @@ describe('JsxLexer', () => {
       const Lexer = new JsxLexer()
       const content = '<Trans count={count}>before{{ key1, key2 }}after</Trans>'
       assert.deepEqual(Lexer.extract(content), [
-        { key: 'beforeafter', defaultValue: 'beforeafter' }
+        { key: 'beforeafter', defaultValue: 'beforeafter', count: '{count}' }
       ])
       done()
     })
@@ -126,20 +136,6 @@ describe('JsxLexer', () => {
       assert.deepEqual(Lexer.extract(content), [{ key: 'bar', defaultValue: 'bar', namespace: 'foo' }])
       done()
     })
-
-    it('ensure custom options are getting extracted', (done) => {
-      const Lexer = new JsxLexer({
-        valueFormat: {
-          message: '${defaultValue}',
-          description: '${max}'
-        }
-      })
-      const content = '<Trans max="wow">Yo</Trans>'
-      assert.deepEqual(Lexer.extract(content), [
-        { key: 'Yo', defaultValue: 'Yo', max: 'wow' }
-      ])
-      done()
-    })
   })
 
   describe('supports TypeScript', () => {
@@ -167,7 +163,7 @@ describe('JsxLexer', () => {
         const Lexer = new JsxLexer()
         const content = '<Trans i18nKey="first" count={count}>Yo</Trans>'
         assert.deepEqual(Lexer.extract(content), [
-          { key: 'first', defaultValue: 'Yo' }
+          { key: 'first', defaultValue: 'Yo', count: '{count}' }
         ])
         done()
       })
@@ -176,7 +172,7 @@ describe('JsxLexer', () => {
         const Lexer = new JsxLexer({ attr: "myIntlKey" })
         const content = '<Trans myIntlKey="first" count={count}>Yo</Trans>'
         assert.deepEqual(Lexer.extract(content), [
-          { key: 'first', defaultValue: 'Yo' }
+          { key: 'first', defaultValue: 'Yo', count: '{count}' }
         ])
         done()
       })
@@ -185,7 +181,7 @@ describe('JsxLexer', () => {
         const Lexer = new JsxLexer()
         const content = '<Trans i18nKey="first" count={count} />'
         assert.deepEqual(Lexer.extract(content), [
-          { key: 'first' }
+          { key: 'first', count: '{count}' }
         ])
         done()
       })
@@ -194,7 +190,7 @@ describe('JsxLexer', () => {
         const Lexer = new JsxLexer({ attr: "myIntlKey" })
         const content = '<Trans myIntlKey="first" count={count} />'
         assert.deepEqual(Lexer.extract(content), [
-          { key: 'first' }
+          { key: 'first', count: '{count}' }
         ])
         done()
       })
@@ -203,7 +199,7 @@ describe('JsxLexer', () => {
         const Lexer = new JsxLexer()
         const content = '<Trans count={count}>Yo</Trans>'
         assert.deepEqual(Lexer.extract(content), [
-          { key: 'Yo', defaultValue: 'Yo' }
+          { key: 'Yo', defaultValue: 'Yo', count: '{count}' }
         ])
         done()
       })
@@ -212,7 +208,7 @@ describe('JsxLexer', () => {
         const Lexer = new JsxLexer()
         const content = '<Trans count={count}>{{ key: property }}</Trans>'
         assert.deepEqual(Lexer.extract(content), [
-          { key: '{{key}}', defaultValue: '{{key}}' }
+          { key: '{{key}}', defaultValue: '{{key}}', count: '{count}' }
         ])
         done()
       })
@@ -221,7 +217,7 @@ describe('JsxLexer', () => {
         const Lexer = new JsxLexer()
         const content = '<Trans count={count}>before{{ key1, key2 }}after</Trans>'
         assert.deepEqual(Lexer.extract(content), [
-          { key: 'beforeafter', defaultValue: 'beforeafter' }
+          { key: 'beforeafter', defaultValue: 'beforeafter', count: '{count}' }
         ])
         done()
       })

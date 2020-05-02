@@ -41,7 +41,7 @@ export default class i18nTransform extends Transform {
       useKeysAsDefaultValue: false,
       verbose: false,
       skipDefaultValues: false,
-      valueFormat: 'default'
+      customValueTemplate: null
     }
 
     this.options = { ...this.defaults, ...options }
@@ -144,7 +144,7 @@ export default class i18nTransform extends Transform {
             value: this.options.defaultValue,
             useKeysAsDefaultValue: this.options.useKeysAsDefaultValue,
             skipDefaultValues: this.options.skipDefaultValues,
-            valueFormat: this.options.valueFormat
+            customValueTemplate: this.options.customValueTemplate
           }
         )
 

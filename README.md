@@ -188,9 +188,8 @@ module.exports = {
   verbose: false,
   // Display info about the parsing including some stats
 
-  valueFormat: 'default',
-  // Default value format is key: value
-  // If you wish to output the value as an object, you can set your own format.
+  customValueTemplate: null,
+  // If you wish to customize the value output the value as an object, you can set your own format.
   // ${defaultValue} is the default value you set in your translation function.
   // Any other custom property will be automatically extracted.
   //
