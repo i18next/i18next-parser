@@ -1,6 +1,11 @@
 # Changelog
 
-# 1.0.5 - latest
+# 1.0.6 - latest
+
+- Add support for `customValueTemplate` #211
+- Add Prettier
+
+# 1.0.5
 
 - Add support for the `skipDefaultValues` option #216
 
