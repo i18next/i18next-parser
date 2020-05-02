@@ -187,6 +187,17 @@ module.exports = {
 
   verbose: false,
   // Display info about the parsing including some stats
+
+  customValueTemplate: null,
+  // If you wish to customize the value output the value as an object, you can set your own format.
+  // ${defaultValue} is the default value you set in your translation function.
+  // Any other custom property will be automatically extracted.
+  //
+  // Example:
+  // {
+  //   message: "${defaultValue}",
+  //   description: "${maxLength}", // t('my-key', {maxLength: 150})
+  // }
 }
 ```
 

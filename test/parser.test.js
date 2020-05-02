@@ -181,11 +181,13 @@ describe('parser', () => {
       second: '',
       third: {
         first: 'Hello <1>{{name}}</1>, you have {{count}} unread message. <5>Go to messages</5>.',
+        first_plural: 'Hello <1>{{name}}</1>, you have {{count}} unread message. <5>Go to messages</5>.',
         second: ' <1>Hello,</1> this shouldn\'t be trimmed.',
         third: '<0>Hello,</0>this should be trimmed.<2> and this shoudln\'t</2>'
       },
       fourth: '',
       fifth: '',
+      fifth_plural: '',
       bar: '',
       foo: '',
       "This should be part of the value and the key": "This should be part of the value and the key",
@@ -220,11 +222,13 @@ describe('parser', () => {
       second: '',
       third: {
         first: 'Hello <1>{{name}}</1>, you have {{count}} unread message. <5>Go to messages</5>.',
+        first_plural: 'Hello <1>{{name}}</1>, you have {{count}} unread message. <5>Go to messages</5>.',
         second: ' <1>Hello,</1> this shouldn\'t be trimmed.',
         third: '<0>Hello,</0>this should be trimmed.<2> and this shoudln\'t</2>'
       },
       fourth: '',
       fifth: '',
+      fifth_plural: '',
       bar: '',
       foo: '',
       "This should be part of the value and the key": "This should be part of the value and the key",
@@ -699,11 +703,13 @@ describe('parser', () => {
         second: '',
         third: {
           first: 'Hello <1>{{name}}</1>, you have {{count}} unread message. <5>Go to messages</5>.',
+          first_plural: 'Hello <1>{{name}}</1>, you have {{count}} unread message. <5>Go to messages</5>.',
           second: ' <1>Hello,</1> this shouldn\'t be trimmed.',
           third: '<0>Hello,</0>this should be trimmed.<2> and this shoudln\'t</2>'
         },
         fourth: '',
         fifth: '',
+        fifth_plural: '',
         bar: '',
         foo: '',
         "This should be part of the value and the key": "This should be part of the value and the key",
@@ -748,11 +754,13 @@ describe('parser', () => {
         second: '',
         third: {
           first: 'Hello <1>{{name}}</1>, you have {{count}} unread message. <5>Go to messages</5>.',
+          first_plural: 'Hello <1>{{name}}</1>, you have {{count}} unread message. <5>Go to messages</5>.',
           second: ' <b>Hello,</b> this shouldn\'t be trimmed.',
           third: '<b>Hello,</b>this should be trimmed.<2> and this shoudln\'t</2>'
         },
         fourth: '',
         fifth: '',
+        fifth_plural: '',
         bar: '',
         foo: '',
         "This should be part of the value and the key": "This should be part of the value and the key",
@@ -1047,6 +1055,43 @@ describe('parser', () => {
 
       i18nextParser.end(fakeFile)
     });
+
+    
+    it('supports customValueTemplate option', (done) => {
+      let result
+      const i18nextParser = new i18nTransform({
+        customValueTemplate: {
+          message: '${defaultValue}',
+          description: '${max}'
+        }
+      })
+
+      const fakeFile = new Vinyl({
+        contents: Buffer.from("t('test'); t('salt', {defaultValue: 'salty', max: 150})"),
+        path: 'file.js'
+      })
+
+      i18nextParser.on('data', file => {
+        result = JSON.parse(file.contents)
+      })
+
+      i18nextParser.once('end', () => {
+        assert.deepEqual(result, {
+          'test': {
+            'message': '',
+            'description': ''
+          },
+          'salt': {
+            'message': 'salty',
+            'description': '150'
+          }
+        })
+
+        done()
+      })
+
+      i18nextParser.end(fakeFile)
+    })
 
     describe('lexers', () => {
       it('support custom lexers options', (done) => {

@@ -78,4 +78,14 @@ describe('HTMLLexer', () => {
     ])
     done()
   })
+
+  it('extracts custom options', (done) => {
+    const Lexer = new HTMLLexer()
+    const content =
+      '<p data-i18n="first" data-i18n-options=\'{"description": "bla"}\'>first</p>'
+    assert.deepEqual(Lexer.extract(content), [
+      { key: 'first', description: 'bla' }
+    ])
+    done()
+  })
 })
