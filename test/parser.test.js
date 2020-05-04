@@ -191,8 +191,8 @@ describe('parser', () => {
       bar: '',
       foo: '',
       'This should be part of the value and the key':
-        'This should be part of the value and the key',
-      "don't split {{on}}": "don't split {{on}}",
+        '',
+      "don't split {{on}}": "",
     }
 
     i18nextParser.on('data', (file) => {
@@ -235,8 +235,8 @@ describe('parser', () => {
       bar: '',
       foo: '',
       'This should be part of the value and the key':
-        'This should be part of the value and the key',
-      "don't split {{on}}": "don't split {{on}}",
+        '',
+      "don't split {{on}}": "",
     }
 
     i18nextParser.on('data', (file) => {
@@ -741,8 +741,8 @@ describe('parser', () => {
         bar: '',
         foo: '',
         'This should be part of the value and the key':
-          'This should be part of the value and the key',
-        "don't split {{on}}": "don't split {{on}}",
+          '',
+        "don't split {{on}}": "",
       }
 
       i18nextParser.on('data', (file) => {
@@ -796,8 +796,8 @@ describe('parser', () => {
         bar: '',
         foo: '',
         'This should be part of the value and the key':
-          'This should be part of the value and the key',
-        "don't split {{on}}": "don't split {{on}}",
+          '',
+        "don't split {{on}}": "",
       }
 
       i18nextParser.on('data', (file) => {
