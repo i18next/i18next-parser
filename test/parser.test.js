@@ -190,9 +190,8 @@ describe('parser', () => {
       fifth_plural: '',
       bar: '',
       foo: '',
-      'This should be part of the value and the key':
-        '',
-      "don't split {{on}}": "",
+      'This should be part of the value and the key': '',
+      "don't split {{on}}": '',
     }
 
     i18nextParser.on('data', (file) => {
@@ -234,9 +233,8 @@ describe('parser', () => {
       fifth_plural: '',
       bar: '',
       foo: '',
-      'This should be part of the value and the key':
-        '',
-      "don't split {{on}}": "",
+      'This should be part of the value and the key': '',
+      "don't split {{on}}": '',
     }
 
     i18nextParser.on('data', (file) => {
@@ -740,9 +738,8 @@ describe('parser', () => {
         fifth_plural: '',
         bar: '',
         foo: '',
-        'This should be part of the value and the key':
-          '',
-        "don't split {{on}}": "",
+        'This should be part of the value and the key': '',
+        "don't split {{on}}": '',
       }
 
       i18nextParser.on('data', (file) => {
@@ -795,9 +792,8 @@ describe('parser', () => {
         fifth_plural: '',
         bar: '',
         foo: '',
-        'This should be part of the value and the key':
-          '',
-        "don't split {{on}}": "",
+        'This should be part of the value and the key': '',
+        "don't split {{on}}": '',
       }
 
       i18nextParser.on('data', (file) => {

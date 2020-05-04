@@ -66,13 +66,17 @@ JsxLexer = function (_JavascriptLexer) {_inherits(JsxLexer, _JavascriptLexer);
         var entry = {};
         entry.key = getKey(tagNode);
 
-        var defaultValue = this.nodeToString.call(this, node, sourceText);
+        if (!entry.key) {
+          entry.key = this.nodeToString.call(this, node, sourceText);
+        } else {
+          var defaultValue = this.nodeToString.call(this, node, sourceText);
 
-        if (defaultValue !== '') {
-          entry.defaultValue = defaultValue;
+          if (defaultValue !== '') {
+            entry.defaultValue = defaultValue;
 
-          if (!entry.key) {
-            entry.key = entry.defaultValue;
+            if (!entry.key) {
+              entry.key = entry.defaultValue;
+            }
           }
         }
 

@@ -66,8 +66,8 @@ export default class JsxLexer extends JavascriptLexer {
       const entry = {}
       entry.key = getKey(tagNode)
 
-      if(!entry.key) {
-        entry.key = this.nodeToString.call(this, node, sourceText);
+      if (!entry.key) {
+        entry.key = this.nodeToString.call(this, node, sourceText)
       } else {
         const defaultValue = this.nodeToString.call(this, node, sourceText)
 
@@ -79,7 +79,6 @@ export default class JsxLexer extends JavascriptLexer {
           }
         }
       }
-
 
       const namespace = getPropValue(tagNode, 'ns')
       if (namespace) {
