@@ -130,6 +130,12 @@ describe('JavascriptLexer', () => {
     assert.deepEqual(Lexer.extract(content), [{ namespace: 'foo', key: 'bar' }])
   })
 
+  it('extracts default namespace from useTranslation hook with ns array', () => {
+    const Lexer = new JavascriptLexer()
+    const content = 'const {t} = useTranslation(["foo", "other"]); t("bar");'
+    assert.deepEqual(Lexer.extract(content), [{ namespace: 'foo', key: 'bar' }])
+  })
+
   it('uses namespace from t function with priority', () => {
     const Lexer = new JavascriptLexer()
     const content = 'const {t} = useTranslation("foo"); t("bar", {ns: "baz"});'
