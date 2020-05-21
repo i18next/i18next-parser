@@ -1,6 +1,10 @@
 # Changelog
 
-# 1.0.7 - latest
+# 2.0.0 - latest
+
+- Drop support for node 6 and 8 (EOL) #208
+
+# 1.0.7
 
 - Add support for `withTranslation`
 
