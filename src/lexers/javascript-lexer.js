@@ -109,6 +109,18 @@ export default class JavascriptLexer extends BaseLexer {
       this.defaultNamespace = node.arguments[0].text
     }
 
+    if (
+      node.expression.escapedText === 'withTranslation' &&
+      node.arguments.length
+    ) {
+      const { text, elements } = node.arguments[0]
+      if (text) {
+        this.defaultNamespace = text
+      } else if (elements && elements.length) {
+        this.defaultNamespace = elements[0].text
+      }
+    }
+
     return null
   }
 

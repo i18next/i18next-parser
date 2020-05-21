@@ -172,7 +172,7 @@ module.exports = {
   // relative to the location of the configuration file
 
   reactNamespace: false,
-  // For react file, extract the defaultNamespace - https://react.i18next.com/components/translate-hoc.html
+  // For react file, extract the defaultNamespace - https://react.i18next.com/latest/withtranslation-hoc
   // Ignored when parsing a `.jsx` file and namespace is extracted from that file.
 
   sort: false,

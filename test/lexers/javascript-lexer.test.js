@@ -124,18 +124,52 @@ describe('JavascriptLexer', () => {
     assert.deepEqual(Lexer.extract(content), [{ key: 'first' }])
   })
 
-  it('extracts default namespace from useTranslation hook', () => {
-    const Lexer = new JavascriptLexer()
-    const content = 'const {t} = useTranslation("foo"); t("bar");'
-    assert.deepEqual(Lexer.extract(content), [{ namespace: 'foo', key: 'bar' }])
+  describe('useTranslation', () => {
+    it('extracts default namespace', () => {
+      const Lexer = new JavascriptLexer()
+      const content = 'const {t} = useTranslation("foo"); t("bar");'
+      assert.deepEqual(Lexer.extract(content), [
+        { namespace: 'foo', key: 'bar' },
+      ])
+    })
+
+    it('uses namespace from t function with priority', () => {
+      const Lexer = new JavascriptLexer()
+      const content =
+        'const {t} = useTranslation("foo"); t("bar", {ns: "baz"});'
+      assert.deepEqual(Lexer.extract(content), [
+        { namespace: 'baz', key: 'bar', ns: 'baz' },
+      ])
+    })
   })
 
-  it('uses namespace from t function with priority', () => {
-    const Lexer = new JavascriptLexer()
-    const content = 'const {t} = useTranslation("foo"); t("bar", {ns: "baz"});'
-    assert.deepEqual(Lexer.extract(content), [
-      { namespace: 'baz', key: 'bar', ns: 'baz' },
-    ])
+  describe('withTranslation', () => {
+    it('extracts default namespace when it is a string', () => {
+      const Lexer = new JavascriptLexer()
+      const content =
+        'const ExtendedComponent = withTranslation("foo")(MyComponent); t("bar");'
+      assert.deepEqual(Lexer.extract(content), [
+        { namespace: 'foo', key: 'bar' },
+      ])
+    })
+
+    it('extracts first namespace when it is an array', () => {
+      const Lexer = new JavascriptLexer()
+      const content =
+        'const ExtendedComponent = withTranslation(["foo", "baz"])(MyComponent); t("bar");'
+      assert.deepEqual(Lexer.extract(content), [
+        { namespace: 'foo', key: 'bar' },
+      ])
+    })
+
+    it('uses namespace from t function with priority', () => {
+      const Lexer = new JavascriptLexer()
+      const content =
+        'const ExtendedComponent = withTranslation("foo")(MyComponent); t("bar", {ns: "baz"});'
+      assert.deepEqual(Lexer.extract(content), [
+        { namespace: 'baz', key: 'bar', ns: 'baz' },
+      ])
+    })
   })
 
   it('extracts custom options', () => {
