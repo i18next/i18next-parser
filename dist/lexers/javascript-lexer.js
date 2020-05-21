@@ -109,6 +109,18 @@ JavascriptLexer = function (_BaseLexer) {_inherits(JavascriptLexer, _BaseLexer);
         this.defaultNamespace = node.arguments[0].text;
       }
 
+      if (
+      node.expression.escapedText === 'withTranslation' &&
+      node.arguments.length)
+      {var _node$arguments$ =
+        node.arguments[0],text = _node$arguments$.text,elements = _node$arguments$.elements;
+        if (text) {
+          this.defaultNamespace = text;
+        } else if (elements && elements.length) {
+          this.defaultNamespace = elements[0].text;
+        }
+      }
+
       return null;
     } }, { key: 'concatenateString', value: function concatenateString(
 
