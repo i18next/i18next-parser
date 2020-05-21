@@ -1,6 +1,10 @@
 # Changelog
 
-# 1.0.6 - latest
+# 1.0.7 - latest
+
+- Add support for `withTranslation`
+
+# 1.0.6
 
 - Add support for `customValueTemplate` #211
 - Add Prettier
