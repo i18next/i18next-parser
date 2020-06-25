@@ -71,6 +71,42 @@ describe('JavascriptLexer', () => {
     done()
   })
 
+  it('extracts keys from single line comments', (done) => {
+    const Lexer = new JavascriptLexer()
+    const content = `
+    // i18n.t('commentKey1')
+    // i18n.t('commentKey2')
+    i18n.t(\`commentKey\${i}\`)
+    // Irrelevant comment
+    // i18n.t('commentKey3')
+    `
+    assert.deepEqual(Lexer.extract(content), [
+      { key: 'commentKey1' },
+      { key: 'commentKey2' },
+      { key: 'commentKey3' },
+    ])
+    done()
+  })
+
+  it('extracts keys from multiline comments', (done) => {
+    const Lexer = new JavascriptLexer()
+    const content = `
+    /*
+      i18n.t('commentKey1')
+      i18n.t('commentKey2')
+    */
+    i18n.t(\`commentKey\${i}\`)
+    // Irrelevant comment
+    /* i18n.t('commentKey3') */
+    `
+    assert.deepEqual(Lexer.extract(content), [
+      { key: 'commentKey1' },
+      { key: 'commentKey2' },
+      { key: 'commentKey3' },
+    ])
+    done()
+  })
+
   it("does not parse text with `doesn't` or isolated `t` in it", (done) => {
     const Lexer = new JavascriptLexer()
     const js =

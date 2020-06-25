@@ -1,19 +1,41 @@
 'use strict';Object.defineProperty(exports, "__esModule", { value: true });var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {return typeof obj;} : function (obj) {return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;};var _createClass = function () {function defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);}}return function (Constructor, protoProps, staticProps) {if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;};}();var _baseLexer = require('./base-lexer');var _baseLexer2 = _interopRequireDefault(_baseLexer);
-var _typescript = require('typescript');var ts = _interopRequireWildcard(_typescript);function _interopRequireWildcard(obj) {if (obj && obj.__esModule) {return obj;} else {var newObj = {};if (obj != null) {for (var key in obj) {if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key];}}newObj.default = obj;return newObj;}}function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function _possibleConstructorReturn(self, call) {if (!self) {throw new ReferenceError("this hasn't been initialised - super() hasn't been called");}return call && (typeof call === "object" || typeof call === "function") ? call : self;}function _inherits(subClass, superClass) {if (typeof superClass !== "function" && superClass !== null) {throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);}subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;}var
+var _typescript = require('typescript');var ts = _interopRequireWildcard(_typescript);function _interopRequireWildcard(obj) {if (obj && obj.__esModule) {return obj;} else {var newObj = {};if (obj != null) {for (var key in obj) {if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key];}}newObj.default = obj;return newObj;}}function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function _toConsumableArray(arr) {if (Array.isArray(arr)) {for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) {arr2[i] = arr[i];}return arr2;} else {return Array.from(arr);}}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function _possibleConstructorReturn(self, call) {if (!self) {throw new ReferenceError("this hasn't been initialised - super() hasn't been called");}return call && (typeof call === "object" || typeof call === "function") ? call : self;}function _inherits(subClass, superClass) {if (typeof superClass !== "function" && superClass !== null) {throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);}subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;}var
 
 JavascriptLexer = function (_BaseLexer) {_inherits(JavascriptLexer, _BaseLexer);
   function JavascriptLexer() {var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};_classCallCheck(this, JavascriptLexer);var _this = _possibleConstructorReturn(this, (JavascriptLexer.__proto__ || Object.getPrototypeOf(JavascriptLexer)).call(this,
     options));
 
+    _this.callPattern = '(?<=^|\\s|\\.)' + _this.functionPattern() + '\\(.*\\)';
     _this.functions = options.functions || ['t'];
     _this.attr = options.attr || 'i18nKey';return _this;
   }_createClass(JavascriptLexer, [{ key: 'extract', value: function extract(
 
     content) {var _this2 = this;var filename = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '__default.js';
+      var visitedComments = new Set();
       var keys = [];
 
       var parseTree = function parseTree(node) {
         var entry = void 0;
+
+        ts.forEachLeadingCommentRange(
+        content,
+        node.getFullStart(),
+        function (pos, end, kind) {
+          var commentId = pos + '_' + end;
+          if (
+          (kind === ts.SyntaxKind.MultiLineCommentTrivia ||
+          kind === ts.SyntaxKind.SingleLineCommentTrivia) &&
+          !visitedComments.has(commentId))
+          {
+            visitedComments.add(commentId);
+            var text = content.slice(pos, end);
+            var commentKeys = _this2.commentExtractor.call(_this2, text);
+            if (commentKeys) {
+              keys.push.apply(keys, _toConsumableArray(commentKeys));
+            }
+          }
+        });
+
 
         if (node.kind === ts.SyntaxKind.CallExpression) {
           entry = _this2.expressionExtractor.call(_this2, node);
@@ -125,6 +147,24 @@ JavascriptLexer = function (_BaseLexer) {_inherits(JavascriptLexer, _BaseLexer);
       }
 
       return null;
+    } }, { key: 'commentExtractor', value: function commentExtractor(
+
+    commentText) {var _this3 = this;
+      var regexp = new RegExp(this.callPattern, 'g');
+      var expressions = commentText.match(regexp);
+
+      if (!expressions) {
+        return null;
+      }
+
+      var keys = [];
+      expressions.forEach(function (expression) {
+        var expressionKeys = _this3.extract(expression);
+        if (expressionKeys) {
+          keys.push.apply(keys, _toConsumableArray(expressionKeys));
+        }
+      });
+      return keys;
     } }, { key: 'concatenateString', value: function concatenateString(
 
     binaryExpression) {var string = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';

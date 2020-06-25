@@ -5,15 +5,37 @@ export default class JavascriptLexer extends BaseLexer {
   constructor(options = {}) {
     super(options)
 
+    this.callPattern = '(?<=^|\\s|\\.)' + this.functionPattern() + '\\(.*\\)'
     this.functions = options.functions || ['t']
     this.attr = options.attr || 'i18nKey'
   }
 
   extract(content, filename = '__default.js') {
+    const visitedComments = new Set()
     const keys = []
 
     const parseTree = (node) => {
       let entry
+
+      ts.forEachLeadingCommentRange(
+        content,
+        node.getFullStart(),
+        (pos, end, kind) => {
+          const commentId = `${pos}_${end}`
+          if (
+            (kind === ts.SyntaxKind.MultiLineCommentTrivia ||
+              kind === ts.SyntaxKind.SingleLineCommentTrivia) &&
+            !visitedComments.has(commentId)
+          ) {
+            visitedComments.add(commentId)
+            const text = content.slice(pos, end)
+            const commentKeys = this.commentExtractor.call(this, text)
+            if (commentKeys) {
+              keys.push(...commentKeys)
+            }
+          }
+        }
+      )
 
       if (node.kind === ts.SyntaxKind.CallExpression) {
         entry = this.expressionExtractor.call(this, node)
@@ -125,6 +147,24 @@ export default class JavascriptLexer extends BaseLexer {
     }
 
     return null
+  }
+
+  commentExtractor(commentText) {
+    const regexp = new RegExp(this.callPattern, 'g')
+    const expressions = commentText.match(regexp)
+
+    if (!expressions) {
+      return null
+    }
+
+    const keys = []
+    expressions.forEach((expression) => {
+      const expressionKeys = this.extract(expression)
+      if (expressionKeys) {
+        keys.push(...expressionKeys)
+      }
+    })
+    return keys
   }
 
   concatenateString(binaryExpression, string = '') {
