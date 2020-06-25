@@ -75,6 +75,7 @@ describe('JavascriptLexer', () => {
     const Lexer = new JavascriptLexer()
     const content = `
     // i18n.t('commentKey1')
+    i18n.t('commentKey' + i)
     // i18n.t('commentKey2')
     i18n.t(\`commentKey\${i}\`)
     // Irrelevant comment
