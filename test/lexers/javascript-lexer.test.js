@@ -64,6 +64,13 @@ describe('JavascriptLexer', () => {
     done()
   })
 
+  it('supports multiline template literal keys', (done) => {
+    const Lexer = new JavascriptLexer()
+    const content = 'i18n.t(`foo\nbar`)'
+    assert.deepEqual(Lexer.extract(content), [{ key: 'foo\nbar' }])
+    done()
+  })
+
   it("does not parse text with `doesn't` or isolated `t` in it", (done) => {
     const Lexer = new JavascriptLexer()
     const js =
