@@ -47,12 +47,16 @@ export default class JavascriptLexer extends BaseLexer {
     if (isTranslationFunction) {
       const keyArgument = node.arguments.shift()
 
-      if (keyArgument && keyArgument.kind === ts.SyntaxKind.StringLiteral) {
-        entry.key = keyArgument.text
-      } else if (
-        keyArgument &&
-        keyArgument.kind === ts.SyntaxKind.BinaryExpression
+      if (!keyArgument) {
+        return null
+      }
+
+      if (
+        keyArgument.kind === ts.SyntaxKind.StringLiteral ||
+        keyArgument.kind === ts.SyntaxKind.NoSubstitutionTemplateLiteral
       ) {
+        entry.key = keyArgument.text
+      } else if (keyArgument.kind === ts.SyntaxKind.BinaryExpression) {
         const concatenatedString = this.concatenateString(keyArgument)
         if (!concatenatedString) {
           this.emit(
@@ -69,7 +73,6 @@ export default class JavascriptLexer extends BaseLexer {
             `Key is not a string literal: ${keyArgument.text}`
           )
         }
-
         return null
       }
 

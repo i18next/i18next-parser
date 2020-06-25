@@ -47,12 +47,16 @@ JavascriptLexer = function (_BaseLexer) {_inherits(JavascriptLexer, _BaseLexer);
       if (isTranslationFunction) {
         var keyArgument = node.arguments.shift();
 
-        if (keyArgument && keyArgument.kind === ts.SyntaxKind.StringLiteral) {
-          entry.key = keyArgument.text;
-        } else if (
-        keyArgument &&
-        keyArgument.kind === ts.SyntaxKind.BinaryExpression)
+        if (!keyArgument) {
+          return null;
+        }
+
+        if (
+        keyArgument.kind === ts.SyntaxKind.StringLiteral ||
+        keyArgument.kind === ts.SyntaxKind.NoSubstitutionTemplateLiteral)
         {
+          entry.key = keyArgument.text;
+        } else if (keyArgument.kind === ts.SyntaxKind.BinaryExpression) {
           var concatenatedString = this.concatenateString(keyArgument);
           if (!concatenatedString) {
             this.emit(
@@ -69,7 +73,6 @@ JavascriptLexer = function (_BaseLexer) {_inherits(JavascriptLexer, _BaseLexer);
             keyArgument.text);
 
           }
-
           return null;
         }
 
