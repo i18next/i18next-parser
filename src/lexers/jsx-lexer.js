@@ -13,6 +13,8 @@ export default class JsxLexer extends JavascriptLexer {
       'i',
       'p',
     ]
+    this.transUseDefaultValueFromOptions =
+      options.transUseDefaultValueFromOptions || false
   }
 
   extract(content, filename = '__default.jsx') {
@@ -69,10 +71,12 @@ export default class JsxLexer extends JavascriptLexer {
       const defaultValue = this.nodeToString.call(this, node, sourceText)
 
       if (defaultValue !== '') {
-        entry.defaultValue = defaultValue
+        if (!this.transUseDefaultValueFromOptions) {
+          entry.defaultValue = defaultValue
+        }
 
         if (!entry.key) {
-          entry.key = entry.defaultValue
+          entry.key = defaultValue
         }
       }
 

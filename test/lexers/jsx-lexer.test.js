@@ -252,6 +252,13 @@ describe('JsxLexer', () => {
         assert.equal(Lexer.extract(content)[0].defaultValue, 'Some Content')
         done()
       })
+
+      it('refrains from setting the defaultValue if transUseDefaultValueFromOptions is true', (done) => {
+        const Lexer = new JsxLexer({ transUseDefaultValueFromOptions: true })
+        const content = '<Trans>Some Content</Trans>'
+        assert.isUndefined(Lexer.extract(content)[0].defaultValue)
+        done()
+      })
     })
   })
 })

@@ -11,8 +11,10 @@ JsxLexer = function (_JavascriptLexer) {_inherits(JsxLexer, _JavascriptLexer);
     'br',
     'strong',
     'i',
-    'p'];return _this;
+    'p'];
 
+    _this.transUseDefaultValueFromOptions =
+    options.transUseDefaultValueFromOptions || false;return _this;
   }_createClass(JsxLexer, [{ key: 'extract', value: function extract(
 
     content) {var _this2 = this;var filename = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '__default.jsx';
@@ -69,10 +71,12 @@ JsxLexer = function (_JavascriptLexer) {_inherits(JsxLexer, _JavascriptLexer);
         var defaultValue = this.nodeToString.call(this, node, sourceText);
 
         if (defaultValue !== '') {
-          entry.defaultValue = defaultValue;
+          if (!this.transUseDefaultValueFromOptions) {
+            entry.defaultValue = defaultValue;
+          }
 
           if (!entry.key) {
-            entry.key = entry.defaultValue;
+            entry.key = defaultValue;
           }
         }
 
