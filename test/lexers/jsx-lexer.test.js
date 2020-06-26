@@ -1,5 +1,4 @@
-import { assert, expect } from 'chai'
-import { spy } from 'sinon'
+import { assert } from 'chai'
 import JsxLexer from '../../src/lexers/jsx-lexer'
 
 describe('JsxLexer', () => {
