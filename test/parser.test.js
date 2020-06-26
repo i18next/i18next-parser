@@ -666,6 +666,86 @@ describe('parser', () => {
       i18nextParser.end(fakeFile)
     })
 
+    it('supports a defaultValue function', (done) => {
+      let result
+      const i18nextParser = new i18nTransform({
+        defaultValue: (locale, namespace, key) =>
+          `${locale}:${namespace}:${key}`,
+      })
+      const fakeFile = new Vinyl({
+        contents: Buffer.from("t('first')"),
+        path: 'file.js',
+      })
+
+      i18nextParser.on('data', (file) => {
+        if (file.relative.endsWith(enLibraryPath)) {
+          result = JSON.parse(file.contents)
+        }
+      })
+      i18nextParser.once('end', () => {
+        assert.deepEqual(result, { first: 'en:translation:first' })
+        done()
+      })
+
+      i18nextParser.end(fakeFile)
+    })
+
+    it('supports a useKeysAsDefaultValue function', (done) => {
+      let enResult
+      let arResult
+      const i18nextParser = new i18nTransform({
+        locales: ['en', 'ar'],
+        useKeysAsDefaultValue: (locale, namespace) => locale === 'en',
+      })
+      const fakeFile = new Vinyl({
+        contents: Buffer.from("t('first')"),
+        path: 'file.js',
+      })
+
+      i18nextParser.on('data', (file) => {
+        if (file.relative.endsWith(enLibraryPath)) {
+          enResult = JSON.parse(file.contents)
+        } else if (file.relative.endsWith(arLibraryPath)) {
+          arResult = JSON.parse(file.contents)
+        }
+      })
+      i18nextParser.once('end', () => {
+        assert.deepEqual(enResult, { first: 'first' })
+        assert.deepEqual(arResult, { first: '' })
+        done()
+      })
+
+      i18nextParser.end(fakeFile)
+    })
+
+    it('supports a skipDefaultValues function', (done) => {
+      let enResult
+      let arResult
+      const i18nextParser = new i18nTransform({
+        locales: ['en', 'ar'],
+        skipDefaultValues: (locale, namespace) => locale === 'en',
+      })
+      const fakeFile = new Vinyl({
+        contents: Buffer.from("t('first', { defaultValue: 'default' })"),
+        path: 'file.js',
+      })
+
+      i18nextParser.on('data', (file) => {
+        if (file.relative.endsWith(enLibraryPath)) {
+          enResult = JSON.parse(file.contents)
+        } else if (file.relative.endsWith(arLibraryPath)) {
+          arResult = JSON.parse(file.contents)
+        }
+      })
+      i18nextParser.once('end', () => {
+        assert.deepEqual(enResult, { first: '' })
+        assert.deepEqual(arResult, { first: 'default' })
+        done()
+      })
+
+      i18nextParser.end(fakeFile)
+    })
+
     it('supports a lineEnding', (done) => {
       let result
       const i18nextParser = new i18nTransform({

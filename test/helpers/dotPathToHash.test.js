@@ -3,32 +3,43 @@ import { dotPathToHash } from '../../src/helpers'
 
 describe('dotPathToHash helper function', () => {
   it('creates an object from a string path', (done) => {
-    const { target, duplicate } = dotPathToHash({ key: 'one' })
+    const { target, duplicate } = dotPathToHash('en', { key: 'one' })
     assert.deepEqual(target, { one: '' })
     assert.equal(duplicate, false)
     done()
   })
 
   it('ignores trailing separator', (done) => {
-    const { target } = dotPathToHash({ key: 'one.' }, {}, { separator: '.' })
+    const { target } = dotPathToHash(
+      'en',
+      { key: 'one.' },
+      {},
+      { separator: '.' }
+    )
     assert.deepEqual(target, { one: '' })
     done()
   })
 
   it('ignores duplicated separator', (done) => {
-    const { target } = dotPathToHash({ key: 'one..two' })
+    const { target } = dotPathToHash('en', { key: 'one..two' })
     assert.deepEqual(target, { one: { two: '' } })
     done()
   })
 
   it('supports custom separator', (done) => {
-    const { target } = dotPathToHash({ key: 'one-two' }, {}, { separator: '-' })
+    const { target } = dotPathToHash(
+      'en',
+      { key: 'one-two' },
+      {},
+      { separator: '-' }
+    )
     assert.deepEqual(target, { one: { two: '' } })
     done()
   })
 
   it('supports custom separator when `useKeysAsDefaultValue` is true', (done) => {
     const { target } = dotPathToHash(
+      'en',
       { key: 'namespace-two-three' },
       {},
       { separator: '-', useKeysAsDefaultValue: true }
@@ -39,6 +50,7 @@ describe('dotPathToHash helper function', () => {
 
   it('handles a target hash', (done) => {
     const { target, duplicate } = dotPathToHash(
+      'en',
       { key: 'one.two.three' },
       { one: { twenty: '' } }
     )
@@ -49,6 +61,7 @@ describe('dotPathToHash helper function', () => {
 
   it('handles a `defaultValue` option', (done) => {
     const { target } = dotPathToHash(
+      'en',
       { key: 'one' },
       {},
       { value: 'myDefaultValue' }
@@ -59,6 +72,7 @@ describe('dotPathToHash helper function', () => {
 
   it('handles a `separator` option', (done) => {
     const { target } = dotPathToHash(
+      'en',
       { key: 'one_two_three.' },
       {},
       { separator: '_' }
@@ -69,6 +83,7 @@ describe('dotPathToHash helper function', () => {
 
   it('detects duplicate keys with the same value', (done) => {
     const { target, duplicate, conflict } = dotPathToHash(
+      'en',
       { key: 'one.two.three' },
       { one: { two: { three: '' } } }
     )
@@ -80,6 +95,7 @@ describe('dotPathToHash helper function', () => {
 
   it('detects and overwrites duplicate keys with different values', (done) => {
     const { target, duplicate, conflict } = dotPathToHash(
+      'en',
       { key: 'one.two.three', defaultValue: 'new' },
       { one: { two: { three: 'old' } } }
     )
@@ -91,6 +107,7 @@ describe('dotPathToHash helper function', () => {
 
   it('overwrites keys already mapped to a string with an object value', (done) => {
     const { target, duplicate, conflict } = dotPathToHash(
+      'en',
       { key: 'one', defaultValue: 'bla' },
       { one: { two: { three: 'bla' } } }
     )
@@ -102,6 +119,7 @@ describe('dotPathToHash helper function', () => {
 
   it('overwrites keys already mapped to an object with a string value', (done) => {
     const { target, duplicate, conflict } = dotPathToHash(
+      'en',
       { key: 'one.two.three', defaultValue: 'bla' },
       { one: 'bla' }
     )

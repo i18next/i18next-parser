@@ -11,24 +11,39 @@
  * {one: {two: "bla"}}), `"value"` if the same key already exists swith a
  * different value, or `false`.
  */
-function dotPathToHash(entry, target = {}, options = {}) {
+function dotPathToHash(locale, entry, target = {}, options = {}) {
   let path = entry.key
   if (options.suffix || options.suffix === 0) {
     path += `_${options.suffix}`
   }
 
   const separator = options.separator || '.'
-  let newValue = entry.defaultValue || options.value || ''
+  const key = entry.key.substring(
+    entry.key.indexOf(separator) + separator.length,
+    entry.key.length
+  )
+  const useKeysAsDefaultValue =
+    typeof options.useKeysAsDefaultValue === 'function'
+      ? options.useKeysAsDefaultValue(locale, entry.namespace)
+      : options.useKeysAsDefaultValue
+  const skipDefaultValues =
+    typeof options.skipDefaultValues === 'function'
+      ? options.skipDefaultValues(locale, entry.namespace)
+      : options.skipDefaultValues
+  const defaultValue =
+    typeof options.value === 'function'
+      ? options.value(locale, entry.namespace, key)
+      : options.value
 
-  if (options.skipDefaultValues) {
+  let newValue
+  if (useKeysAsDefaultValue) {
+    newValue = key
+  } else if (skipDefaultValues) {
     newValue = ''
-  }
-
-  if (options.useKeysAsDefaultValue) {
-    newValue = entry.key.substring(
-      entry.key.indexOf(separator) + separator.length,
-      entry.key.length
-    )
+  } else if (entry.defaultValue) {
+    newValue = entry.defaultValue
+  } else {
+    newValue = defaultValue || ''
   }
 
   if (path.endsWith(separator)) {
