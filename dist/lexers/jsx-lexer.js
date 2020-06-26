@@ -18,6 +18,12 @@ JsxLexer = function (_JavascriptLexer) {_inherits(JsxLexer, _JavascriptLexer);
     content) {var _this2 = this;var filename = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '__default.jsx';
       var keys = [];
 
+      var sourceFile = ts.createSourceFile(
+      filename,
+      content,
+      ts.ScriptTarget.Latest);
+
+
       var parseTree = function parseTree(node) {
         var entry = void 0;
 
@@ -33,17 +39,33 @@ JsxLexer = function (_JavascriptLexer) {_inherits(JsxLexer, _JavascriptLexer);
             break;}
 
 
+        var comments = ts.getLeadingCommentRanges(
+        sourceFile.getText(),
+        node.getFullStart());
+
+        if (comments) {
+          comments.map(function (comment) {
+            var commentEntry = sourceFile.
+            getFullText().
+            slice(comment.pos, comment.end);
+
+            if (comment.kind === ts.SyntaxKind.SingleLineCommentTrivia) {
+              var regExp = / t\(([^)]+)\)/;
+              var matches = regExp.exec(commentEntry);
+              if (matches) {
+                var key = matches[1].replace(/['"\\]+/g, '');
+                keys.push({ key: key });
+              }
+            }
+          });
+        }
+
         if (entry) {
           keys.push(entry);
         }
 
         node.forEachChild(parseTree);
       };
-
-      var sourceFile = ts.createSourceFile(
-      filename,
-      content,
-      ts.ScriptTarget.Latest);
 
       parseTree(sourceFile);
 

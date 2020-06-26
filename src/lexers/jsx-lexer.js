@@ -18,6 +18,12 @@ export default class JsxLexer extends JavascriptLexer {
   extract(content, filename = '__default.jsx') {
     const keys = []
 
+    const sourceFile = ts.createSourceFile(
+      filename,
+      content,
+      ts.ScriptTarget.Latest
+    )
+
     const parseTree = (node) => {
       let entry
 
@@ -33,6 +39,27 @@ export default class JsxLexer extends JavascriptLexer {
           break
       }
 
+      const comments = ts.getLeadingCommentRanges(
+        sourceFile.getText(),
+        node.getFullStart()
+      )
+      if (comments) {
+        comments.map((comment) => {
+          const commentEntry = sourceFile
+            .getFullText()
+            .slice(comment.pos, comment.end)
+
+          if (comment.kind === ts.SyntaxKind.SingleLineCommentTrivia) {
+            const regExp = / t\(([^)]+)\)/
+            var matches = regExp.exec(commentEntry)
+            if (matches) {
+              const key = matches[1].replace(/['"\\]+/g, '')
+              keys.push({ key })
+            }
+          }
+        })
+      }
+
       if (entry) {
         keys.push(entry)
       }
@@ -40,11 +67,6 @@ export default class JsxLexer extends JavascriptLexer {
       node.forEachChild(parseTree)
     }
 
-    const sourceFile = ts.createSourceFile(
-      filename,
-      content,
-      ts.ScriptTarget.Latest
-    )
     parseTree(sourceFile)
 
     return keys
