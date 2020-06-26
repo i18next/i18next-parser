@@ -76,6 +76,43 @@ describe('JsxLexer', () => {
       done()
     })
 
+    it('extracts keys from single line comments', (done) => {
+      const Lexer = new JsxLexer()
+      const content = `
+      // i18n.t('commentKey1')
+      i18n.t('commentKey' + i)
+      // i18n.t('commentKey2')
+      i18n.t(\`commentKey\${i}\`)
+      // Irrelevant comment
+      // i18n.t('commentKey3')
+      `
+      assert.deepEqual(Lexer.extract(content), [
+        { key: 'commentKey1' },
+        { key: 'commentKey2' },
+        { key: 'commentKey3' },
+      ])
+      done()
+    })
+
+    it('extracts keys from multiline comments', (done) => {
+      const Lexer = new JsxLexer()
+      const content = `
+      /*
+        i18n.t('commentKey1')
+        i18n.t('commentKey2')
+      */
+      i18n.t(\`commentKey\${i}\`)
+      // Irrelevant comment
+      /* i18n.t('commentKey3') */
+      `
+      assert.deepEqual(Lexer.extract(content), [
+        { key: 'commentKey1' },
+        { key: 'commentKey2' },
+        { key: 'commentKey3' },
+      ])
+      done()
+    })
+
     it('invalid interpolation gets stripped', (done) => {
       const Lexer = new JsxLexer()
       const content = '<Trans count={count}>before{{ key1, key2 }}after</Trans>'
