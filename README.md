@@ -19,6 +19,7 @@ Finally, if you want to make this process even less painful, I invite you to che
 - Creates one catalog file per locale and per namespace
 - Backs up the old keys your code doesn't use anymore in `namespace_old.json` catalog
 - Restores keys from the `_old` file if the one in the translation file is empty
+- Parses comments for static keys to support dynamic key translations.
 - Supports i18next features:
   - **Context**: keys of the form `key_context`
   - **Plural**: keys of the form `key_plural` and `key_0`, `key_1` as described [here](https://www.i18next.com/translation-function/plurals)
@@ -27,7 +28,6 @@ Finally, if you want to make this process even less painful, I invite you to che
 ## Versions
 
 `1.x` has been in beta for a good while. You can follow the pre-releases [here](https://github.com/i18next/i18next-parser/releases). It is a deep rewrite of this package that solves many issues, the main one being that it was slowly becoming unmaintainable. The [migration](docs/migration.md) from `0.x` contains all the breaking changes. Everything that follows is related to `1.x`. You can still find the old `0.x` documentation on its dedicated [branch](https://github.com/i18next/i18next-parser/tree/0.x.x).
-
 
 ## Usage
 
@@ -87,9 +87,8 @@ npm install --save-dev i18next-parser
 [Broccoli.js](https://github.com/broccolijs/broccoli) defines itself as a fast, reliable asset pipeline, supporting constant-time rebuilds and compact build definitions.
 
 ```javascript
-
 const Funnel = require('broccoli-funnel')
-const i18nextParser = require('i18next-parser').broccoli;
+const i18nextParser = require('i18next-parser').broccoli
 
 const appRoot = 'broccoli'
 
@@ -188,7 +187,7 @@ module.exports = {
   verbose: false,
   // Display info about the parsing including some stats
 
-  customValueTemplate: null,
+  customValueTemplate: null
   // If you wish to customize the value output the value as an object, you can set your own format.
   // ${defaultValue} is the default value you set in your translation function.
   // Any other custom property will be automatically extracted.
@@ -211,47 +210,8 @@ There are 4 lexers available: `HandlebarsLexer`, `HTMLLexer`, `JavascriptLexer` 
 If you need to change the defaults, you can do it like so:
 
 #### Javascript
-The Javascript lexer uses [Acorn](https://github.com/acornjs/acorn) to walk through your code and extract references
-translation functions. If your code uses features not supported natively by Acorn, you can enable support through
-`injectors` and `plugins` configuration. Note that you must install these additional dependencies yourself through
-`yarn` or `npm`; they are not included in this package. This is an example configuration that adds all non-jsx plugins supported by acorn
-at the time of writing:
-```javascript
-const injectAcornStaticClassPropertyInitializer = require('acorn-static-class-property-initializer/inject');
-const injectAcornStage3 = require('acorn-stage3/inject');
-const injectAcornEs7 = require('acorn-es7');
 
-// ...
-  js: [{
-    lexer: 'JavascriptLexer'
-    functions: ['t'], // Array of functions to match
-
-    // acorn config (for more information on the acorn options, see here: https://github.com/acornjs/acorn#main-parser)
-    acorn: {
-      injectors: [
-          injectAcornStaticClassPropertyInitializer,
-          injectAcornStage3,
-          injectAcornEs7,
-        ],
-      plugins: {
-        // The presence of these plugin options is important -
-        // without them, the plugins will be available but not
-        // enabled.
-        staticClassPropertyInitializer: true,
-        stage3: true,
-        es7: true,
-      }
-    }
-  }],
-// ...
-```
-
-If you receive an error that looks like this:
-```bash
-TypeError: baseVisitor[type] is not a function
-# rest of stack trace...
-```
-The problem is likely that you are missing a plugin that supports a feature that your code uses.
+The Javascript lexer uses [Typescript compiler](https://github.com/microsoft/TypeScript/wiki/Using-the-Compiler-API) to walk through your code and extract translation functions.
 
 The default configuration is below:
 
@@ -262,27 +222,16 @@ The default configuration is below:
     lexer: 'JavascriptLexer'
     functions: ['t'], // Array of functions to match
 
-    // acorn config (for more information on the acorn options, see here: https://github.com/acornjs/acorn#main-parser)
-    acorn: {
-      sourceType: 'module',
-      ecmaVersion: 9, // forward compatibility
-      // Allows additional acorn plugins via the exported injector functions
-      injectors: [],
-      plugins: {},
-    }
   }],
 }
 ```
 
 #### Jsx
-The JSX lexer builds off of the Javascript lexer, and additionally requires the `acorn-jsx` plugin. To use it, add `acorn-jsx` to your dev dependencies:
-```bash
-npm install -D acorn-jsx
-# or
-yarn add -D acorn-jsx@4.1.1
-```
+
+The JSX lexer builds off of the Javascript lexer and extends it with support for JSX syntax.
 
 Default configuration:
+
 ```js
 {
   // JsxLexer default config (jsx)
@@ -290,31 +239,30 @@ Default configuration:
   jsx: [{
     lexer: 'JsxLexer',
     attr: 'i18nKey', // Attribute for the keys
-
-    // acorn config (for more information on the acorn options, see here: https://github.com/acornjs/acorn#main-parser)
-    acorn: {
-      sourceType: 'module',
-      ecmaVersion: 9, // forward compatibility
-      injectors: [],
-      plugins: {},
-    }
   }],
 }
 ```
+
 #### Ts(x)
+
 Typescript is supported via Javascript and Jsx lexers. If you are using Javascript syntax (e.g. with React), follow the steps in Jsx section, otherwise Javascript section.
 
 #### Handlebars
+
 ```js
 {
   // HandlebarsLexer default config (hbs, handlebars)
-  handlebars: [{
-    lexer: 'HandlebarsLexer',
-    functions: ['t'] // Array of functions to match
-  }]
+  handlebars: [
+    {
+      lexer: 'HandlebarsLexer',
+      functions: ['t'] // Array of functions to match
+    }
+  ]
 }
 ```
+
 #### Html
+
 ```js
 {
   // HtmlLexer default config (htm, html)
@@ -327,7 +275,9 @@ Typescript is supported via Javascript and Jsx lexers. If you are using Javascri
 ```
 
 #### Custom lexers
+
 You can provide function instead of string as a custom lexer.
+
 ```js
 const CustomJsLexer = require('./CustomJsLexer');
 
@@ -340,6 +290,30 @@ const CustomJsLexer = require('./CustomJsLexer');
   }]
 }
 // ...
+```
+
+### Caveats
+
+While i18next extracts translation keys in runtime, i18next-parser doesn't run the code, so it can't interpolate values in these expressions:
+
+```
+t(key)
+t('key' + id)
+t(`key${id}`)
+```
+
+As a workaround you should specify possible static values in comments anywhere in your file:
+
+```
+// t('key_1')
+// t('key_2')
+t(key)
+
+/*
+t('key1')
+t('key2')
+*/
+t('key' + id)
 ```
 
 ## Events
@@ -356,8 +330,6 @@ The transform emits a `warning:variable` event if the file has a key that contai
 
 `.pipe( i18next().on('warning:variable', (path, key) => {}) )`
 
-
-
 ## Contribute
 
 Any contribution is welcome. Please [read the guidelines](docs/development.md) first.
@@ -372,7 +344,7 @@ If you use this package and like it, supporting me on [Patreon](https://www.patr
   </a>
 </p>
 
---------------
+---
 
 ## Gold Sponsors
 
