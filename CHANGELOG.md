@@ -1,6 +1,11 @@
 # Changelog
 
-# 2.0.0 - latest
+# 2.1.0 - latest
+
+- Support multiline literals #83
+- Parse comments in js #215
+
+# 2.0.0
 
 - Drop support for node 6 and 8 (EOL) #208
 
