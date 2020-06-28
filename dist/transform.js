@@ -133,8 +133,9 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
         var uniqueCount = _this2.entries.length;
 
         var transformEntry = function transformEntry(entry, suffix) {var _dotPathToHash =
-          (0, _helpers.dotPathToHash)(locale, entry, catalog, {
+          (0, _helpers.dotPathToHash)(entry, catalog, {
             suffix: suffix,
+            locale: locale,
             separator: _this2.options.keySeparator,
             value: _this2.options.defaultValue,
             useKeysAsDefaultValue: _this2.options.useKeysAsDefaultValue,

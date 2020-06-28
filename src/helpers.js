@@ -11,7 +11,7 @@
  * {one: {two: "bla"}}), `"value"` if the same key already exists swith a
  * different value, or `false`.
  */
-function dotPathToHash(locale, entry, target = {}, options = {}) {
+function dotPathToHash(entry, target = {}, options = {}) {
   let path = entry.key
   if (options.suffix || options.suffix === 0) {
     path += `_${options.suffix}`
@@ -24,15 +24,15 @@ function dotPathToHash(locale, entry, target = {}, options = {}) {
   )
   const useKeysAsDefaultValue =
     typeof options.useKeysAsDefaultValue === 'function'
-      ? options.useKeysAsDefaultValue(locale, entry.namespace)
+      ? options.useKeysAsDefaultValue(options.locale, entry.namespace)
       : options.useKeysAsDefaultValue
   const skipDefaultValues =
     typeof options.skipDefaultValues === 'function'
-      ? options.skipDefaultValues(locale, entry.namespace)
+      ? options.skipDefaultValues(options.locale, entry.namespace)
       : options.skipDefaultValues
   const defaultValue =
     typeof options.value === 'function'
-      ? options.value(locale, entry.namespace, key)
+      ? options.value(options.locale, entry.namespace, key)
       : options.value
 
   let newValue

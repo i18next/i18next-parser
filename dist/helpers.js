@@ -11,7 +11,7 @@
                                                                                                                                                                                                                                                                                                                                                       * {one: {two: "bla"}}), `"value"` if the same key already exists swith a
                                                                                                                                                                                                                                                                                                                                                       * different value, or `false`.
                                                                                                                                                                                                                                                                                                                                                       */
-function dotPathToHash(locale, entry) {var target = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};var options = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+function dotPathToHash(entry) {var target = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
   var path = entry.key;
   if (options.suffix || options.suffix === 0) {
     path += '_' + options.suffix;
@@ -24,15 +24,15 @@ function dotPathToHash(locale, entry) {var target = arguments.length > 2 && argu
 
   var useKeysAsDefaultValue =
   typeof options.useKeysAsDefaultValue === 'function' ?
-  options.useKeysAsDefaultValue(locale, entry.namespace) :
+  options.useKeysAsDefaultValue(options.locale, entry.namespace) :
   options.useKeysAsDefaultValue;
   var skipDefaultValues =
   typeof options.skipDefaultValues === 'function' ?
-  options.skipDefaultValues(locale, entry.namespace) :
+  options.skipDefaultValues(options.locale, entry.namespace) :
   options.skipDefaultValues;
   var defaultValue =
   typeof options.value === 'function' ?
-  options.value(locale, entry.namespace, key) :
+  options.value(options.locale, entry.namespace, key) :
   options.value;
 
   var newValue = void 0;
