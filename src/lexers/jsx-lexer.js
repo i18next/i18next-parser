@@ -16,31 +16,14 @@ export default class JsxLexer extends JavascriptLexer {
   }
 
   extract(content, filename = '__default.jsx') {
-    const visitedComments = new Set()
     const keys = []
+
+    const parseCommentNode = this.createCommentNodeParser()
 
     const parseTree = (node) => {
       let entry
 
-      ts.forEachLeadingCommentRange(
-        content,
-        node.getFullStart(),
-        (pos, end, kind) => {
-          const commentId = `${pos}_${end}`
-          if (
-            (kind === ts.SyntaxKind.MultiLineCommentTrivia ||
-              kind === ts.SyntaxKind.SingleLineCommentTrivia) &&
-            !visitedComments.has(commentId)
-          ) {
-            visitedComments.add(commentId)
-            const text = content.slice(pos, end)
-            const commentKeys = this.commentExtractor.call(this, text)
-            if (commentKeys) {
-              keys.push(...commentKeys)
-            }
-          }
-        }
-      )
+      parseCommentNode(keys, node, content)
 
       switch (node.kind) {
         case ts.SyntaxKind.CallExpression:
