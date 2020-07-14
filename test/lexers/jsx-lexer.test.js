@@ -1,5 +1,4 @@
-import { assert, expect } from 'chai'
-import { spy } from 'sinon'
+import { assert } from 'chai'
 import JsxLexer from '../../src/lexers/jsx-lexer'
 
 describe('JsxLexer', () => {
@@ -72,6 +71,43 @@ describe('JsxLexer', () => {
       const content = '<Trans count={count}>{{ key: property }}</Trans>'
       assert.deepEqual(Lexer.extract(content), [
         { key: '{{key}}', defaultValue: '{{key}}', count: '{count}' },
+      ])
+      done()
+    })
+
+    it('extracts keys from single line comments', (done) => {
+      const Lexer = new JsxLexer()
+      const content = `
+      // i18n.t('commentKey1')
+      i18n.t('commentKey' + i)
+      // i18n.t('commentKey2')
+      i18n.t(\`commentKey\${i}\`)
+      // Irrelevant comment
+      // i18n.t('commentKey3')
+      `
+      assert.deepEqual(Lexer.extract(content), [
+        { key: 'commentKey1' },
+        { key: 'commentKey2' },
+        { key: 'commentKey3' },
+      ])
+      done()
+    })
+
+    it('extracts keys from multiline comments', (done) => {
+      const Lexer = new JsxLexer()
+      const content = `
+      /*
+        i18n.t('commentKey1')
+        i18n.t('commentKey2')
+      */
+      i18n.t(\`commentKey\${i}\`)
+      // Irrelevant comment
+      /* i18n.t('commentKey3') */
+      `
+      assert.deepEqual(Lexer.extract(content), [
+        { key: 'commentKey1' },
+        { key: 'commentKey2' },
+        { key: 'commentKey3' },
       ])
       done()
     })

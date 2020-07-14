@@ -18,8 +18,12 @@ export default class JsxLexer extends JavascriptLexer {
   extract(content, filename = '__default.jsx') {
     const keys = []
 
+    const parseCommentNode = this.createCommentNodeParser()
+
     const parseTree = (node) => {
       let entry
+
+      parseCommentNode(keys, node, content)
 
       switch (node.kind) {
         case ts.SyntaxKind.CallExpression:

@@ -8,15 +8,12 @@ JavascriptLexer = function (_BaseLexer) {_inherits(JavascriptLexer, _BaseLexer);
     _this.callPattern = '(?<=^|\\s|\\.)' + _this.functionPattern() + '\\(.*\\)';
     _this.functions = options.functions || ['t'];
     _this.attr = options.attr || 'i18nKey';return _this;
-  }_createClass(JavascriptLexer, [{ key: 'extract', value: function extract(
+  }_createClass(JavascriptLexer, [{ key: 'createCommentNodeParser', value: function createCommentNodeParser()
 
-    content) {var _this2 = this;var filename = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '__default.js';
+    {var _this2 = this;
       var visitedComments = new Set();
-      var keys = [];
 
-      var parseTree = function parseTree(node) {
-        var entry = void 0;
-
+      return function (keys, node, content) {
         ts.forEachLeadingCommentRange(
         content,
         node.getFullStart(),
@@ -36,9 +33,21 @@ JavascriptLexer = function (_BaseLexer) {_inherits(JavascriptLexer, _BaseLexer);
           }
         });
 
+      };
+    } }, { key: 'extract', value: function extract(
+
+    content) {var _this3 = this;var filename = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '__default.js';
+      var keys = [];
+
+      var parseCommentNode = this.createCommentNodeParser();
+
+      var parseTree = function parseTree(node) {
+        var entry = void 0;
+
+        parseCommentNode(keys, node, content);
 
         if (node.kind === ts.SyntaxKind.CallExpression) {
-          entry = _this2.expressionExtractor.call(_this2, node);
+          entry = _this3.expressionExtractor.call(_this3, node);
         }
 
         if (entry) {
@@ -149,7 +158,7 @@ JavascriptLexer = function (_BaseLexer) {_inherits(JavascriptLexer, _BaseLexer);
       return null;
     } }, { key: 'commentExtractor', value: function commentExtractor(
 
-    commentText) {var _this3 = this;
+    commentText) {var _this4 = this;
       var regexp = new RegExp(this.callPattern, 'g');
       var expressions = commentText.match(regexp);
 
@@ -159,7 +168,7 @@ JavascriptLexer = function (_BaseLexer) {_inherits(JavascriptLexer, _BaseLexer);
 
       var keys = [];
       expressions.forEach(function (expression) {
-        var expressionKeys = _this3.extract(expression);
+        var expressionKeys = _this4.extract(expression);
         if (expressionKeys) {
           keys.push.apply(keys, _toConsumableArray(expressionKeys));
         }

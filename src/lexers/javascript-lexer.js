@@ -10,13 +10,10 @@ export default class JavascriptLexer extends BaseLexer {
     this.attr = options.attr || 'i18nKey'
   }
 
-  extract(content, filename = '__default.js') {
+  createCommentNodeParser() {
     const visitedComments = new Set()
-    const keys = []
 
-    const parseTree = (node) => {
-      let entry
-
+    return (keys, node, content) => {
       ts.forEachLeadingCommentRange(
         content,
         node.getFullStart(),
@@ -36,6 +33,18 @@ export default class JavascriptLexer extends BaseLexer {
           }
         }
       )
+    }
+  }
+
+  extract(content, filename = '__default.js') {
+    const keys = []
+
+    const parseCommentNode = this.createCommentNodeParser()
+
+    const parseTree = (node) => {
+      let entry
+
+      parseCommentNode(keys, node, content)
 
       if (node.kind === ts.SyntaxKind.CallExpression) {
         entry = this.expressionExtractor.call(this, node)

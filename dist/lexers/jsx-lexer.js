@@ -18,8 +18,12 @@ JsxLexer = function (_JavascriptLexer) {_inherits(JsxLexer, _JavascriptLexer);
     content) {var _this2 = this;var filename = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '__default.jsx';
       var keys = [];
 
+      var parseCommentNode = this.createCommentNodeParser();
+
       var parseTree = function parseTree(node) {
         var entry = void 0;
+
+        parseCommentNode(keys, node, content);
 
         switch (node.kind) {
           case ts.SyntaxKind.CallExpression:
