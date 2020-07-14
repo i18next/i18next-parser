@@ -1,6 +1,10 @@
 # Changelog
 
-# 2.1.0 - latest
+# 2.1.1 - latest
+
+- Extract translation from comment in jsx #166 #223
+
+# 2.1.0
 
 - Support multiline literals #83
 - Parse comments in js #215
