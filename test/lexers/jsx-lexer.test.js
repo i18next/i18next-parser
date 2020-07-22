@@ -176,6 +176,15 @@ describe('JsxLexer', () => {
       ])
       done()
     })
+
+    it('uses the ns (namespace) prop with curly braces syntax', (done) => {
+      const Lexer = new JsxLexer()
+      const content = `<Trans ns={'foo'}>bar</Trans>`
+      assert.deepEqual(Lexer.extract(content), [
+        { key: 'bar', defaultValue: 'bar', namespace: 'foo' },
+      ])
+      done()
+    })
   })
 
   describe('supports TypeScript', () => {
