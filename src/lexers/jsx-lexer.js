@@ -61,7 +61,12 @@ export default class JsxLexer extends JavascriptLexer {
       const attribute = node.attributes.properties.find(
         (attr) => attr.name.text === tagName
       )
-      return attribute && attribute.initializer.text
+      if (!attribute) {
+        return undefined
+      }
+      return attribute.initializer.expression
+        ? attribute.initializer.expression.text
+        : attribute.initializer.text
     }
 
     const getKey = (node) => getPropValue(node, this.attr)
