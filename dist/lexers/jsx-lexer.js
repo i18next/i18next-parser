@@ -61,7 +61,12 @@ JsxLexer = function (_JavascriptLexer) {_inherits(JsxLexer, _JavascriptLexer);
         var attribute = node.attributes.properties.find(
         function (attr) {return attr.name.text === tagName;});
 
-        return attribute && attribute.initializer.text;
+        if (!attribute) {
+          return undefined;
+        }
+        return attribute.initializer.expression ?
+        attribute.initializer.expression.text :
+        attribute.initializer.text;
       };
 
       var getKey = function getKey(node) {return getPropValue(node, _this3.attr);};

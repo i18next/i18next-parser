@@ -1,6 +1,10 @@
 # Changelog
 
-# 2.1.1 - latest
+# 2.1.2 - latest
+
+- Support curly braces in jsx Trans elements #229
+
+# 2.1.1
 
 - Extract translation from comment in jsx #166 #223
 
