@@ -1,6 +1,10 @@
 # Changelog
 
-# 2.1.2 - latest
+# 2.1.3 - latest
+
+- Support unknow languages #230
+
+# 2.1.2
 
 - Support curly braces in jsx Trans elements #229
 
