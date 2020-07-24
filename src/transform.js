@@ -127,7 +127,8 @@ export default class i18nTransform extends Transform {
 
     for (const locale of this.options.locales) {
       const catalog = {}
-      const { numbers } = i18next.services.pluralResolver.getRule(locale)
+      const pluralRule = i18next.services.pluralResolver.getRule(locale)
+      const numbers = (pluralRule && pluralRule.numbers) || [1, 2]
 
       let countWithPlurals = 0
       let uniqueCount = this.entries.length

@@ -126,8 +126,9 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
       }var _loop = function _loop(
 
       locale) {
-        var catalog = {};var _i18next$services$plu =
-        _i18next2.default.services.pluralResolver.getRule(locale),numbers = _i18next$services$plu.numbers;
+        var catalog = {};
+        var pluralRule = _i18next2.default.services.pluralResolver.getRule(locale);
+        var numbers = pluralRule && pluralRule.numbers || [1, 2];
 
         var countWithPlurals = 0;
         var uniqueCount = _this2.entries.length;

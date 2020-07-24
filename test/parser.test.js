@@ -974,6 +974,32 @@ describe('parser', () => {
       i18nextParser.end(fakeFile)
     })
 
+    it('generates one plural key for unknow languages', (done) => {
+      let result
+      const i18nextParser = new i18nTransform({ locales: ['unknown'] })
+      const fakeFile = new Vinyl({
+        contents: Buffer.from("t('test {{count}}', { count: 1 })"),
+        path: 'file.js',
+      })
+
+      i18nextParser.on('data', (file) => {
+        if (
+          file.relative.endsWith(path.normalize('unknown/translation.json'))
+        ) {
+          result = JSON.parse(file.contents)
+        }
+      })
+      i18nextParser.once('end', () => {
+        assert.deepEqual(result, {
+          'test {{count}}': '',
+          'test {{count}}_plural': '',
+        })
+        done()
+      })
+
+      i18nextParser.end(fakeFile)
+    })
+
     it('generates plurals for languages with multiple plural forms', (done) => {
       let result
       const i18nextParser = new i18nTransform({ locales: ['ar'] })
