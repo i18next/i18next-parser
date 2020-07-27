@@ -299,7 +299,7 @@ export default class i18nTransform extends Transform {
 
   grabReactNamespace(content) {
     const reactTranslateRegex = new RegExp(
-      'translate\\((?:\\s*\\[?\\s*)(' + BaseLexer.stringPattern + ')'
+      'withTranslation\\((?:\\s*\\[?\\s*)(' + BaseLexer.stringPattern + ')'
     )
     const translateMatches = content.match(reactTranslateRegex)
     if (translateMatches) {

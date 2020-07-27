@@ -1,5 +1,5 @@
 import React from 'react'
-import { translate, Trans, Interpolate } from 'react-i18next'
+import { withTranslation, Trans, Interpolate } from 'react-i18next'
 
 const bar = () => (
   <div>
@@ -42,4 +42,4 @@ class Test extends React.Component {
   }
 }
 
-export default translate('react')(Test)
+export default withTranslation('react')(Test)

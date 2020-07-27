@@ -299,7 +299,7 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
 
     content) {
       var reactTranslateRegex = new RegExp(
-      'translate\\((?:\\s*\\[?\\s*)(' + _baseLexer2.default.stringPattern + ')');
+      'withTranslation\\((?:\\s*\\[?\\s*)(' + _baseLexer2.default.stringPattern + ')');
 
       var translateMatches = content.match(reactTranslateRegex);
       if (translateMatches) {
