@@ -6,7 +6,6 @@ import Parser from './parser'
 import path from 'path'
 import VirtualFile from 'vinyl'
 import YAML from 'yamljs'
-import BaseLexer from './lexers/base-lexer'
 import i18next from 'i18next'
 
 function getPluralSuffix(numberOfPluralForms, nthForm) {
@@ -92,7 +91,6 @@ export default class i18nTransform extends Transform {
 
     const filename = path.basename(file.path)
     const entries = this.parser.parse(content, filename)
-    const extension = path.extname(filename).substr(1)
 
     for (const entry of entries) {
       let key = entry.key
@@ -101,8 +99,6 @@ export default class i18nTransform extends Transform {
       // make sure we're not pulling a 'namespace' out of a default value
       if (parts.length > 1 && key !== entry.defaultValue) {
         entry.namespace = parts.shift()
-      } else if (extension === 'jsx' || this.options.reactNamespace) {
-        entry.namespace = this.grabReactNamespace(content)
       }
       entry.namespace = entry.namespace || this.options.defaultNamespace
 
@@ -295,15 +291,5 @@ export default class i18nTransform extends Transform {
       contents: Buffer.from(text),
     })
     this.push(file)
-  }
-
-  grabReactNamespace(content) {
-    const reactTranslateRegex = new RegExp(
-      'translate\\((?:\\s*\\[?\\s*)(' + BaseLexer.stringPattern + ')'
-    )
-    const translateMatches = content.match(reactTranslateRegex)
-    if (translateMatches) {
-      return translateMatches[1].slice(1, -1)
-    }
   }
 }

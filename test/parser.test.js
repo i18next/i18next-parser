@@ -240,7 +240,7 @@ describe('parser', () => {
     }
 
     i18nextParser.on('data', (file) => {
-      if (file.relative.endsWith(enLibraryPath)) {
+      if (file.relative.endsWith(path.normalize('en/react.json'))) {
         result = JSON.parse(file.contents)
       }
     })
