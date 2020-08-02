@@ -34,6 +34,32 @@ JavascriptLexer = function (_BaseLexer) {_inherits(JavascriptLexer, _BaseLexer);
         });
 
       };
+    } }, { key: 'parseVariables', value: function parseVariables(
+
+    node) {
+      var variables = new Map();
+
+      var parseTree = function parseTree(node) {
+        switch (node.kind) {
+          case ts.SyntaxKind.VariableDeclarationList:{
+              if ((ts.NodeFlags.Const & node.flags) !== ts.NodeFlags.Const) break;
+
+              node.declarations.forEach(function (declaration) {
+                if (declaration.initializer.kind == ts.SyntaxKind.StringLiteral) {
+                  variables.set(declaration.name.text, declaration.initializer.text);
+                }
+              });
+            }
+          default:{
+              node.forEachChild(parseTree);
+              break;
+            }}
+
+      };
+
+      node.forEachChild(parseTree);
+
+      return variables;
     } }, { key: 'extract', value: function extract(
 
     content) {var _this3 = this;var filename = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '__default.js';
@@ -44,10 +70,12 @@ JavascriptLexer = function (_BaseLexer) {_inherits(JavascriptLexer, _BaseLexer);
       var parseTree = function parseTree(node) {
         var entry = void 0;
 
+        var variables = _this3.parseVariables(sourceFile);
+
         parseCommentNode(keys, node, content);
 
         if (node.kind === ts.SyntaxKind.CallExpression) {
-          entry = _this3.expressionExtractor.call(_this3, node);
+          entry = _this3.expressionExtractor.call(_this3, node, variables);
         }
 
         if (entry) {
@@ -62,12 +90,13 @@ JavascriptLexer = function (_BaseLexer) {_inherits(JavascriptLexer, _BaseLexer);
       content,
       ts.ScriptTarget.Latest);
 
+
       parseTree(sourceFile);
 
       return keys;
     } }, { key: 'expressionExtractor', value: function expressionExtractor(
 
-    node) {
+    node, variables) {
       var entry = {};
 
       var isTranslationFunction =
@@ -97,13 +126,19 @@ JavascriptLexer = function (_BaseLexer) {_inherits(JavascriptLexer, _BaseLexer);
             return null;
           }
           entry.key = concatenatedString;
-        } else {
-          if (keyArgument.kind === ts.SyntaxKind.Identifier) {
+        } else if (keyArgument.kind === ts.SyntaxKind.Identifier) {
+          var variable = variables.get(keyArgument.text);
+
+          if (variable) {
+            entry.key = variable;
+          } else {
             this.emit(
-            'warning', 'Key is not a string literal: ' +
+            'warning', 'Key is not a string literal or a constant variable declaration: ' +
             keyArgument.text);
 
+            return null;
           }
+        } else {
           return null;
         }
 

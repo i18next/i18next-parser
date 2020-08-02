@@ -36,6 +36,32 @@ export default class JavascriptLexer extends BaseLexer {
     }
   }
 
+  parseVariables(node) {
+    const variables = new Map()
+
+    const parseTree = (node) => {
+      switch (node.kind) {
+        case ts.SyntaxKind.VariableDeclarationList: {
+          if ((ts.NodeFlags.Const & node.flags) !== ts.NodeFlags.Const) break
+
+          node.declarations.forEach((declaration) => {
+            if (declaration.initializer.kind == ts.SyntaxKind.StringLiteral) {
+              variables.set(declaration.name.text, declaration.initializer.text)
+            }
+          })
+        }
+        default: {
+          node.forEachChild(parseTree)
+          break
+        }
+      }
+    }
+
+    node.forEachChild(parseTree)
+
+    return variables
+  }
+
   extract(content, filename = '__default.js') {
     const keys = []
 
@@ -44,10 +70,12 @@ export default class JavascriptLexer extends BaseLexer {
     const parseTree = (node) => {
       let entry
 
+      const variables = this.parseVariables(sourceFile)
+
       parseCommentNode(keys, node, content)
 
       if (node.kind === ts.SyntaxKind.CallExpression) {
-        entry = this.expressionExtractor.call(this, node)
+        entry = this.expressionExtractor.call(this, node, variables)
       }
 
       if (entry) {
@@ -62,12 +90,13 @@ export default class JavascriptLexer extends BaseLexer {
       content,
       ts.ScriptTarget.Latest
     )
+
     parseTree(sourceFile)
 
     return keys
   }
 
-  expressionExtractor(node) {
+  expressionExtractor(node, variables) {
     const entry = {}
 
     const isTranslationFunction =
@@ -97,13 +126,19 @@ export default class JavascriptLexer extends BaseLexer {
           return null
         }
         entry.key = concatenatedString
-      } else {
-        if (keyArgument.kind === ts.SyntaxKind.Identifier) {
+      } else if (keyArgument.kind === ts.SyntaxKind.Identifier) {
+        const variable = variables.get(keyArgument.text)
+
+        if (variable) {
+          entry.key = variable
+        } else {
           this.emit(
             'warning',
-            `Key is not a string literal: ${keyArgument.text}`
+            `Key is not a string literal or a constant variable declaration: ${keyArgument.text}`
           )
+          return null
         }
+      } else {
         return null
       }
 
