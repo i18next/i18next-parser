@@ -1,6 +1,10 @@
 # Changelog
 
-# 2.1.3 - latest
+# 2.2.0 - latest
+
+- Fix namespace parsing #233 #161
+
+# 2.1.3
 
 - Support unknow languages #230
 
