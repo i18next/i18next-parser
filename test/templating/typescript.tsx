@@ -1,6 +1,8 @@
 import React from 'react'
-import { translate, Trans, Interpolate } from 'react-i18next'
+import { withTranslation, Trans, Interpolate } from 'react-i18next'
 
+
+// These will have namespace "react" even though it comes before withtranslation during parsing
 const bar = (): React.ReactElement<any> => (
   <div>
     <span><Trans i18nKey="bar"></Trans></span>
@@ -42,4 +44,4 @@ class Test extends React.Component<{ t: any }, {}> {
   }
 }
 
-export default translate('react')(Test)
+export default withTranslation('react')(Test)

@@ -51,7 +51,7 @@ JsxLexer = function (_JavascriptLexer) {_inherits(JsxLexer, _JavascriptLexer);
 
       parseTree(sourceFile);
 
-      return keys;
+      return this.setNamespaces(keys);
     } }, { key: 'jsxExtractor', value: function jsxExtractor(
 
     node, sourceText) {var _this3 = this;

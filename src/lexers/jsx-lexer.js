@@ -51,7 +51,7 @@ export default class JsxLexer extends JavascriptLexer {
     )
     parseTree(sourceFile)
 
-    return keys
+    return this.setNamespaces(keys)
   }
 
   jsxExtractor(node, sourceText) {

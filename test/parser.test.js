@@ -240,7 +240,7 @@ describe('parser', () => {
     }
 
     i18nextParser.on('data', (file) => {
-      if (file.relative.endsWith(enLibraryPath)) {
+      if (file.relative.endsWith(path.normalize('en/react.json'))) {
         result = JSON.parse(file.contents)
       }
     })
@@ -286,6 +286,60 @@ describe('parser', () => {
         assert.include(results, path.normalize(filename))
         if (!--length) done()
       }
+    })
+
+    i18nextParser.end(fakeFile)
+  })
+
+  it('applies withTranslation namespace globally', (done) => {
+    let result
+    const i18nextParser = new i18nTransform()
+    const fakeFile = new Vinyl({
+      contents: fs.readFileSync(
+        path.resolve(__dirname, 'templating/namespace-hoc.jsx')
+      ),
+      path: 'functional.jsx',
+    })
+    const expected = {
+      'test-1': '',
+      'test-2': '',
+    }
+
+    i18nextParser.on('data', (file) => {
+      if (file.relative.endsWith(path.normalize('en/test-namespace.json'))) {
+        result = JSON.parse(file.contents)
+      }
+    })
+    i18nextParser.on('end', () => {
+      assert.deepEqual(result, expected)
+      done()
+    })
+
+    i18nextParser.end(fakeFile)
+  })
+
+  it('applies useTranslation namespace globally', (done) => {
+    let result
+    const i18nextParser = new i18nTransform()
+    const fakeFile = new Vinyl({
+      contents: fs.readFileSync(
+        path.resolve(__dirname, 'templating/namespace-hook.jsx')
+      ),
+      path: 'functional.jsx',
+    })
+    const expected = {
+      'test-1': '',
+      'test-2': '',
+    }
+
+    i18nextParser.on('data', (file) => {
+      if (file.relative.endsWith(path.normalize('en/test-namespace.json'))) {
+        result = JSON.parse(file.contents)
+      }
+    })
+    i18nextParser.on('end', () => {
+      assert.deepEqual(result, expected)
+      done()
     })
 
     i18nextParser.end(fakeFile)
