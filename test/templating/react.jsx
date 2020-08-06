@@ -1,6 +1,7 @@
 import React from 'react'
 import { withTranslation, Trans, Interpolate } from 'react-i18next'
 
+// These will have namespace "react" even though it comes before withtranslation during parsing
 const bar = () => (
   <div>
     <span><Trans i18nKey="bar"></Trans></span>
