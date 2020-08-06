@@ -37,12 +37,14 @@ JavascriptLexer = function (_BaseLexer) {_inherits(JavascriptLexer, _BaseLexer);
     } }, { key: 'setNamespaces', value: function setNamespaces(
 
     keys) {var _this3 = this;
-      return this.defaultNamespace ?
-      keys.map(function (entry) {return _extends({},
-        entry, {
-          namespace: entry.namespace || _this3.defaultNamespace });}) :
+      if (this.defaultNamespace) {
+        return keys.map(function (entry) {return _extends({},
+          entry, {
+            namespace: entry.namespace || _this3.defaultNamespace });});
 
-      keys;
+      }
+
+      return keys;
     } }, { key: 'extract', value: function extract(
 
     content) {var _this4 = this;var filename = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '__default.js';

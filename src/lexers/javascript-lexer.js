@@ -37,12 +37,14 @@ export default class JavascriptLexer extends BaseLexer {
   }
 
   setNamespaces(keys) {
-    return this.defaultNamespace
-      ? keys.map((entry) => ({
-          ...entry,
-          namespace: entry.namespace || this.defaultNamespace,
-        }))
-      : keys
+    if (this.defaultNamespace) {
+      return keys.map((entry) => ({
+        ...entry,
+        namespace: entry.namespace || this.defaultNamespace,
+      }))
+    }
+
+    return keys
   }
 
   extract(content, filename = '__default.js') {
