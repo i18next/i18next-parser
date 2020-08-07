@@ -35,7 +35,6 @@ export default class i18nTransform extends Transform {
       locales: ['en', 'fr'],
       namespaceSeparator: ':',
       output: 'locales/$LOCALE/$NAMESPACE.json',
-      reactNamespace: false,
       sort: false,
       useKeysAsDefaultValue: false,
       verbose: false,

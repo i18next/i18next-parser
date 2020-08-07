@@ -170,10 +170,6 @@ module.exports = {
   // An array of globs that describe where to look for source files
   // relative to the location of the configuration file
 
-  reactNamespace: false,
-  // For react file, extract the defaultNamespace - https://react.i18next.com/latest/withtranslation-hoc
-  // Ignored when parsing a `.jsx` file and namespace is extracted from that file.
-
   sort: false,
   // Whether or not to sort the catalog
 
@@ -221,7 +217,6 @@ The default configuration is below:
   js: [{
     lexer: 'JavascriptLexer'
     functions: ['t'], // Array of functions to match
-
   }],
 }
 ```
@@ -239,6 +234,16 @@ Default configuration:
   jsx: [{
     lexer: 'JsxLexer',
     attr: 'i18nKey', // Attribute for the keys
+  }],
+}
+```
+
+If your JSX files have `.js` extension you should override the default `js` lexer with `JsxLexer` to enable jsx parsing from js files:
+
+```js
+{
+  js: [{
+    lexer: 'JsxLexer'
   }],
 }
 ```
