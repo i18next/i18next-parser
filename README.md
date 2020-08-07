@@ -238,7 +238,7 @@ Default configuration:
 }
 ```
 
-If your JSX files have `.js` extension you should override the default `js` lexer with `JsxLexer` to enable jsx parsing from js files:
+If your JSX files have `.js` extension (e.g. create-react-app projects) you should override the default `js` lexer with `JsxLexer` to enable jsx parsing from js files:
 
 ```js
 {
