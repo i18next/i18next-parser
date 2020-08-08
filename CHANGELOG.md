@@ -1,6 +1,10 @@
 # Changelog
 
-# 3.0.0 - latest
+# 3.0.1 - latest
+
+- Add a `failOnWarnings` option and improve cli output #236
+
+# 3.0.0
 
 - `reactNamespace` option is gone #235
 
