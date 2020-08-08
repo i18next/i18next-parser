@@ -40,7 +40,8 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
       useKeysAsDefaultValue: false,
       verbose: false,
       skipDefaultValues: false,
-      customValueTemplate: null };
+      customValueTemplate: null,
+      failOnWarnings: false };
 
 
     _this.options = _extends({}, _this.defaults, options);
@@ -52,6 +53,7 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
     }
     _this.entries = [];
 
+    _this.parserHadWarnings = false;
     _this.parser = new _parser2.default(_this.options);
     _this.parser.on('error', function (error) {return _this.error(error);});
     _this.parser.on('warning', function (warning) {return _this.warn(warning);});
@@ -71,6 +73,7 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
 
     warning) {
       this.emit('warning', warning);
+      this.parserHadWarnings = true;
       if (this.options.verbose) {
         console.warn('\x1b[33m%s\x1b[0m', warning);
       }
@@ -218,6 +221,10 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
             console.log();
           }
 
+          if (_this2.options.failOnWarnings && _this2.parserHadWarnings) {
+            continue;
+          }
+
           // push files back to the stream
           _this2.pushFile(namespacePath, newCatalog);
           if (
@@ -228,6 +235,12 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
           }
         }};var _iteratorNormalCompletion2 = true;var _didIteratorError2 = false;var _iteratorError2 = undefined;try {for (var _iterator2 = this.options.locales[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {var locale = _step2.value;_loop(locale);
         }} catch (err) {_didIteratorError2 = true;_iteratorError2 = err;} finally {try {if (!_iteratorNormalCompletion2 && _iterator2.return) {_iterator2.return();}} finally {if (_didIteratorError2) {throw _iteratorError2;}}}
+
+      if (this.options.failOnWarnings && this.parserHadWarnings) {
+        console.log();
+        console.log('  Saw warnings with failOnWarnings set. Exiting.'.red);
+        process.exit(1);
+      }
 
       done();
     } }, { key: 'addEntry', value: function addEntry(

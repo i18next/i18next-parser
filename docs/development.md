@@ -43,7 +43,8 @@ To test the CLI:
 ```
 yarn link
 cd test
-i18next test/**/*.html  -c i18next-parser.config.js
+i18next manual/**/*.html  -c i18next-parser.config.js
+i18next manual/**/*.html  -c i18next-parser.config.js --fail-on-warnings
 ```
 
 To test gulp:

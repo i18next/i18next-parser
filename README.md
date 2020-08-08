@@ -48,6 +48,7 @@ Multiple globbing patterns are supported to specify complex file selections. You
 - **-c, --config <path>**: Path to the config file (default: i18next-parser.config.js).
 - **-o, --output <path>**: Path to the output directory (default: locales/$LOCALE/$NAMESPACE.json).
 - **-S, --silent**: Disable logging to stdout.
+- **--fail-on-warnings**: Exit with an exit code of 1 on warnings
 
 ### Gulp
 
@@ -186,6 +187,9 @@ module.exports = {
 
   verbose: false,
   // Display info about the parsing including some stats
+
+  failOnWarnings: false,
+  // Exit with an exit code of 1 on warnings
 
   customValueTemplate: null
   // If you wish to customize the value output the value as an object, you can set your own format.

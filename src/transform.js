@@ -41,6 +41,7 @@ export default class i18nTransform extends Transform {
       verbose: false,
       skipDefaultValues: false,
       customValueTemplate: null,
+      failOnWarnings: false,
     }
 
     this.options = { ...this.defaults, ...options }
@@ -52,6 +53,7 @@ export default class i18nTransform extends Transform {
     }
     this.entries = []
 
+    this.parserHadWarnings = false
     this.parser = new Parser(this.options)
     this.parser.on('error', (error) => this.error(error))
     this.parser.on('warning', (warning) => this.warn(warning))
@@ -71,6 +73,7 @@ export default class i18nTransform extends Transform {
 
   warn(warning) {
     this.emit('warning', warning)
+    this.parserHadWarnings = true
     if (this.options.verbose) {
       console.warn('\x1b[33m%s\x1b[0m', warning)
     }
@@ -218,6 +221,10 @@ export default class i18nTransform extends Transform {
           console.log()
         }
 
+        if (this.options.failOnWarnings && this.parserHadWarnings) {
+          continue
+        }
+
         // push files back to the stream
         this.pushFile(namespacePath, newCatalog)
         if (
@@ -227,6 +234,12 @@ export default class i18nTransform extends Transform {
           this.pushFile(namespaceOldPath, oldCatalog)
         }
       }
+    }
+
+    if (this.options.failOnWarnings && this.parserHadWarnings) {
+      console.log()
+      console.log('  Saw warnings with failOnWarnings set. Exiting.'.red)
+      process.exit(1)
     }
 
     done()
