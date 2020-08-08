@@ -1,6 +1,10 @@
 # Changelog
 
-# 2.2.0 - latest
+# 3.0.0 - latest
+
+- `reactNamespace` option is gone #235
+
+# 2.2.0
 
 - Fix namespace parsing #233 #161
 
