@@ -236,8 +236,7 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
         }} catch (err) {_didIteratorError2 = true;_iteratorError2 = err;} finally {try {if (!_iteratorNormalCompletion2 && _iterator2.return) {_iterator2.return();}} finally {if (_didIteratorError2) {throw _iteratorError2;}}}
 
       if (this.options.failOnWarnings && this.parserHadWarnings) {
-        console.log();
-        console.log('  Saw warnings with failOnWarnings set. Exiting.'.red);
+        this.emit('error', 'Warnings were triggered and failOnWarnings option is enabled. Exiting...');
         process.exit(1);
       }
 

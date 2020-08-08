@@ -236,8 +236,7 @@ export default class i18nTransform extends Transform {
     }
 
     if (this.options.failOnWarnings && this.parserHadWarnings) {
-      console.log()
-      console.log('  Saw warnings with failOnWarnings set. Exiting.'.red)
+      this.emit('error', 'Warnings were triggered and failOnWarnings option is enabled. Exiting...')
       process.exit(1)
     }
 
