@@ -36,11 +36,6 @@ Parser = function (_EventEmitter) {_inherits(Parser, _EventEmitter);
   function Parser() {var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};_classCallCheck(this, Parser);var _this = _possibleConstructorReturn(this, (Parser.__proto__ || Object.getPrototypeOf(Parser)).call(this,
     options));
     _this.options = options;
-
-    if (options.reactNamespace) {
-      lexers.js = lexers.jsx;
-    }
-
     _this.lexers = _extends({}, lexers, options.lexers);return _this;
   }_createClass(Parser, [{ key: 'parse', value: function parse(
 

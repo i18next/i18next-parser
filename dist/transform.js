@@ -35,7 +35,6 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
       locales: ['en', 'fr'],
       namespaceSeparator: ':',
       output: 'locales/$LOCALE/$NAMESPACE.json',
-      reactNamespace: false,
       sort: false,
       useKeysAsDefaultValue: false,
       verbose: false,

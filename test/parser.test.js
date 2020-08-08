@@ -766,10 +766,16 @@ describe('parser', () => {
       i18nextParser.end(fakeFile)
     })
 
-    it('parses Trans if reactNamespace is true', (done) => {
+    it('parses Trans from js file with lexer override to JsxLexer', (done) => {
       let result
       const i18nextParser = new i18nTransform({
-        reactNamespace: true,
+        lexers: {
+          js: [
+            {
+              lexer: 'JsxLexer',
+            },
+          ],
+        },
       })
       const fakeFile = new Vinyl({
         contents: fs.readFileSync(
@@ -1438,7 +1444,7 @@ describe('parser', () => {
       })
       const fakeFile = new Vinyl({
         contents: Buffer.from('<Trans>{{ key1, key2 }}</Trans>'),
-        path: 'file.js',
+        path: 'file.jsx',
       })
 
       i18nextParser.on('warning', (message) => {
