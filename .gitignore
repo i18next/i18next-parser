@@ -26,3 +26,7 @@ npm-debug.log
 
 # project files
 .idea/
+
+# manual test files
+test/manual/en
+test/manual/fr

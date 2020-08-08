@@ -14,6 +14,7 @@ program
 .option('-c, --config <path>', 'Path to the config file (default: i18next-parser.config.js)', 'i18next-parser.config.js')
 .option('-o, --output <path>', 'Path to the output directory (default: locales/$LOCALE/$NAMESPACE.json)')
 .option('-s, --silent', 'Disable logging to stdout')
+.option('--fail-on-warnings', 'Exit with an exit code of 1 on warnings')
 
 program.on('--help', function() {
   console.log('  Examples:')
@@ -39,6 +40,7 @@ try {
 }
 
 config.output = program.output || config.output || 'locales/$LOCALE/$NAMESPACE.json'
+config.failOnWarnings = program.failOnWarnings || config.failOnWarnings || false
 
 var args = program.args || []
 var globs
@@ -85,10 +87,10 @@ if (!globs.length) {
 
 // Welcome message
 console.log()
-console.log('  i18next Parser'.yellow)
-console.log('  --------------'.yellow)
-console.log('  Input:  '.yellow + args.join(', '))
-console.log('  Output: '.yellow + config.output)
+console.log('  i18next Parser'.blue)
+console.log('  --------------'.blue)
+console.log('  Input:  '.blue + args.join(', '))
+console.log('  Output: '.blue + config.output)
 if (!program.silent) {
   console.log()
 }
@@ -117,11 +119,16 @@ vfs.src(globs)
     }
     console.log('  [error] '.red + message)
   })
+  .on('warning', function (message) {
+    if (!program.silent) {
+      console.log('  [warning] '.yellow + message)
+    }
+  })
   .on('finish', function () {
     if (!program.silent) {
       console.log()
     }
-    console.log('  Stats:  '.yellow + count + ' files were parsed')
+    console.log('  Stats:  '.blue + count + ' files were parsed')
   })
 )
 .pipe(vfs.dest(process.cwd()))
