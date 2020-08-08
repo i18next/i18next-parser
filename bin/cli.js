@@ -63,7 +63,7 @@ else if (config.input) {
       config.input = [config.input]
     }
     else {
-      console.log('  [error] '.red + '`input` must be an array when specified in the config')
+      console.log('  [error]   '.red + '`input` must be an array when specified in the config')
       program.help()
       program.exit(1)
     }
@@ -87,14 +87,13 @@ if (!globs.length) {
 
 // Welcome message
 console.log()
-console.log('  i18next Parser'.blue)
-console.log('  --------------'.blue)
-console.log('  Input:  '.blue + args.join(', '))
-console.log('  Output: '.blue + config.output)
+console.log('  i18next Parser'.cyan)
+console.log('  --------------'.cyan)
+console.log('  Input:  '.cyan + args.join(', '))
+console.log('  Output: '.cyan + config.output)
 if (!program.silent) {
   console.log()
 }
-
 
 var count = 0
 
@@ -104,20 +103,20 @@ vfs.src(globs)
   new i18nTransform(config)
   .on('reading', function (file) {
     if (!program.silent) {
-      console.log('  [read]  '.green + file.path)
+      console.log('  [read]    '.green + file.path)
     }
     count++
   })
   .on('data', function (file) {
     if (!program.silent) {
-      console.log('  [write] '.green + file.path)
+      console.log('  [write]   '.green + file.path)
     }
   })
   .on('error', function (message, region) {
     if (typeof region === 'string') {
       message += ': ' + region.trim()
     }
-    console.log('  [error] '.red + message)
+    console.log('  [error]   '.red + message)
   })
   .on('warning', function (message) {
     if (!program.silent) {
@@ -128,7 +127,7 @@ vfs.src(globs)
     if (!program.silent) {
       console.log()
     }
-    console.log('  Stats:  '.blue + count + ' files were parsed')
+    console.log('  Stats:  '.cyan + count + ' files were parsed')
   })
 )
 .pipe(vfs.dest(process.cwd()))
