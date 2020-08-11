@@ -193,6 +193,7 @@ describe('parser', () => {
       'This should be part of the value and the key':
         'This should be part of the value and the key',
       "don't split {{on}}": "don't split {{on}}",
+      'override-default': 'default override',
     }
 
     i18nextParser.on('data', (file) => {
@@ -803,6 +804,7 @@ describe('parser', () => {
         'This should be part of the value and the key':
           'This should be part of the value and the key',
         "don't split {{on}}": "don't split {{on}}",
+        'override-default': 'default override',
       }
 
       i18nextParser.on('data', (file) => {
@@ -858,6 +860,7 @@ describe('parser', () => {
         'This should be part of the value and the key':
           'This should be part of the value and the key',
         "don't split {{on}}": "don't split {{on}}",
+        'override-default': 'default override',
       }
 
       i18nextParser.on('data', (file) => {

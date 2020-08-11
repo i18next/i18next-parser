@@ -38,6 +38,7 @@ class Test extends React.Component {
         <Trans>
           don't split {{ on: this }}
         </Trans>
+        <Trans i18nKey="override-default" defaults="default override">ignore me</Trans>
       </div>
     )
   }

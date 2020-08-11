@@ -11,8 +11,9 @@ JsxLexer = function (_JavascriptLexer) {_inherits(JsxLexer, _JavascriptLexer);
     'br',
     'strong',
     'i',
-    'p'];return _this;
+    'p'];
 
+    _this.omitAttributes = [_this.attr, 'ns', 'defaults'];return _this;
   }_createClass(JsxLexer, [{ key: 'extract', value: function extract(
 
     content) {var _this2 = this;var filename = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '__default.jsx';
@@ -75,7 +76,9 @@ JsxLexer = function (_JavascriptLexer) {_inherits(JsxLexer, _JavascriptLexer);
         var entry = {};
         entry.key = getKey(tagNode);
 
-        var defaultValue = this.nodeToString.call(this, node, sourceText);
+        var defaultsProp = getPropValue(tagNode, 'defaults');
+        var defaultValue =
+        defaultsProp || this.nodeToString.call(this, node, sourceText);
 
         if (defaultValue !== '') {
           entry.defaultValue = defaultValue;
@@ -91,7 +94,7 @@ JsxLexer = function (_JavascriptLexer) {_inherits(JsxLexer, _JavascriptLexer);
         }
 
         tagNode.attributes.properties.forEach(function (property) {
-          if ([_this3.attr, 'ns'].includes(property.name.text)) {
+          if (_this3.omitAttributes.includes(property.name.text)) {
             return;
           }
 
