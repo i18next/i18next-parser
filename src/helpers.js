@@ -102,7 +102,6 @@ function mergeHashes(source, target, keepRemoved = false) {
       const nested = mergeHashes(
         source[key],
         target[key],
-        old[key],
         keepRemoved
       )
       mergeCount += nested.mergeCount
