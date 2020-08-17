@@ -55,15 +55,15 @@ describe('mergeHashes helper function', () => {
   })
 
   it('copies `source` keys to `target` regardless of presence when `keepRemoved` is enabled', (done) => {
-    const source = { key1: 'value1', key2: 'value2' }
+    const source = { key1: 'value1', key2: 'value2', key4: { key41: 'value41' } }
     const target = { key1: '', key3: '' }
     const res = mergeHashes(source, target, true)
 
-    assert.deepEqual(res.new, { key1: 'value1', key2: 'value2', key3: '' })
+    assert.deepEqual(res.new, { key1: 'value1', key2: 'value2', key3: '', key4: { key41: 'value41' } })
     assert.deepEqual(res.old, {})
     assert.strictEqual(res.mergeCount, 1)
     assert.strictEqual(res.pullCount, 0)
-    assert.strictEqual(res.oldCount, 1)
+    assert.strictEqual(res.oldCount, 2)
     done()
   })
 
