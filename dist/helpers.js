@@ -99,12 +99,7 @@ function mergeHashes(source, target) {var keepRemoved = arguments.length > 2 && 
     _typeof(target[key]) === 'object' && !Array.isArray(target[key]);
 
     if (hasNestedEntries) {
-      var nested = mergeHashes(
-      source[key],
-      target[key],
-      old[key],
-      keepRemoved);
-
+      var nested = mergeHashes(source[key], target[key], keepRemoved);
       mergeCount += nested.mergeCount;
       pullCount += nested.pullCount;
       if (Object.keys(nested.old).length) {
