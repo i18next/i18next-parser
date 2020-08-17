@@ -1,6 +1,11 @@
 # Changelog
 
-# 3.0.1 - latest
+# 3.1.0 - latest
+
+- Parse default value from 'defaults' prop in Trans #238 #231 #206
+- Fix mergeHashes keepRemoved option #237
+
+# 3.0.1
 
 - Add a `failOnWarnings` option and improve cli output #236
 
