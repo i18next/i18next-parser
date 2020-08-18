@@ -57,6 +57,24 @@ describe('JavascriptLexer', () => {
     done()
   })
 
+  it('extracts the pluralised defaultValue options', (done) => {
+    const Lexer = new JavascriptLexer()
+    const content = 'i18n.t("first", {defaultValue: "foo", defaultValue_plural: "foos"})'
+    assert.deepEqual(Lexer.extract(content), [
+      { key: 'first', defaultValue: 'foo', defaultValue_plural: 'foos' },
+    ])
+    done()
+  })
+
+  it('extracts the pluralised defaultValue options', (done) => {
+    const Lexer = new JavascriptLexer()
+    const content = 'i18n.t("first", {defaultValue: "foo", defaultValue_plural: "foos"})'
+    assert.deepEqual(Lexer.extract(content), [
+      { key: 'first', defaultValue: 'foo', defaultValue_plural: 'foos' },
+    ])
+    done()
+  })
+
   it('supports multiline and concatenation', (done) => {
     const Lexer = new JavascriptLexer()
     const content = 'i18n.t("foo" + \n "bar")'
