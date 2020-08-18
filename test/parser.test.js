@@ -193,6 +193,7 @@ describe('parser', () => {
       'This should be part of the value and the key':
         'This should be part of the value and the key',
       "don't split {{on}}": "don't split {{on}}",
+      'override-default': 'default override',
     }
 
     i18nextParser.on('data', (file) => {
@@ -240,7 +241,7 @@ describe('parser', () => {
     }
 
     i18nextParser.on('data', (file) => {
-      if (file.relative.endsWith(enLibraryPath)) {
+      if (file.relative.endsWith(path.normalize('en/react.json'))) {
         result = JSON.parse(file.contents)
       }
     })
@@ -286,6 +287,60 @@ describe('parser', () => {
         assert.include(results, path.normalize(filename))
         if (!--length) done()
       }
+    })
+
+    i18nextParser.end(fakeFile)
+  })
+
+  it('applies withTranslation namespace globally', (done) => {
+    let result
+    const i18nextParser = new i18nTransform()
+    const fakeFile = new Vinyl({
+      contents: fs.readFileSync(
+        path.resolve(__dirname, 'templating/namespace-hoc.jsx')
+      ),
+      path: 'functional.jsx',
+    })
+    const expected = {
+      'test-1': '',
+      'test-2': '',
+    }
+
+    i18nextParser.on('data', (file) => {
+      if (file.relative.endsWith(path.normalize('en/test-namespace.json'))) {
+        result = JSON.parse(file.contents)
+      }
+    })
+    i18nextParser.on('end', () => {
+      assert.deepEqual(result, expected)
+      done()
+    })
+
+    i18nextParser.end(fakeFile)
+  })
+
+  it('applies useTranslation namespace globally', (done) => {
+    let result
+    const i18nextParser = new i18nTransform()
+    const fakeFile = new Vinyl({
+      contents: fs.readFileSync(
+        path.resolve(__dirname, 'templating/namespace-hook.jsx')
+      ),
+      path: 'functional.jsx',
+    })
+    const expected = {
+      'test-1': '',
+      'test-2': '',
+    }
+
+    i18nextParser.on('data', (file) => {
+      if (file.relative.endsWith(path.normalize('en/test-namespace.json'))) {
+        result = JSON.parse(file.contents)
+      }
+    })
+    i18nextParser.on('end', () => {
+      assert.deepEqual(result, expected)
+      done()
     })
 
     i18nextParser.end(fakeFile)
@@ -712,10 +767,16 @@ describe('parser', () => {
       i18nextParser.end(fakeFile)
     })
 
-    it('parses Trans if reactNamespace is true', (done) => {
+    it('parses Trans from js file with lexer override to JsxLexer', (done) => {
       let result
       const i18nextParser = new i18nTransform({
-        reactNamespace: true,
+        lexers: {
+          js: [
+            {
+              lexer: 'JsxLexer',
+            },
+          ],
+        },
       })
       const fakeFile = new Vinyl({
         contents: fs.readFileSync(
@@ -743,6 +804,7 @@ describe('parser', () => {
         'This should be part of the value and the key':
           'This should be part of the value and the key',
         "don't split {{on}}": "don't split {{on}}",
+        'override-default': 'default override',
       }
 
       i18nextParser.on('data', (file) => {
@@ -798,6 +860,7 @@ describe('parser', () => {
         'This should be part of the value and the key':
           'This should be part of the value and the key',
         "don't split {{on}}": "don't split {{on}}",
+        'override-default': 'default override',
       }
 
       i18nextParser.on('data', (file) => {
@@ -1384,7 +1447,7 @@ describe('parser', () => {
       })
       const fakeFile = new Vinyl({
         contents: Buffer.from('<Trans>{{ key1, key2 }}</Trans>'),
-        path: 'file.js',
+        path: 'file.jsx',
       })
 
       i18nextParser.on('warning', (message) => {

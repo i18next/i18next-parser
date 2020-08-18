@@ -13,6 +13,7 @@ export default class JsxLexer extends JavascriptLexer {
       'i',
       'p',
     ]
+    this.omitAttributes = [this.attr, 'ns', 'defaults']
   }
 
   extract(content, filename = '__default.jsx') {
@@ -51,7 +52,7 @@ export default class JsxLexer extends JavascriptLexer {
     )
     parseTree(sourceFile)
 
-    return keys
+    return this.setNamespaces(keys)
   }
 
   jsxExtractor(node, sourceText) {
@@ -75,7 +76,9 @@ export default class JsxLexer extends JavascriptLexer {
       const entry = {}
       entry.key = getKey(tagNode)
 
-      const defaultValue = this.nodeToString.call(this, node, sourceText)
+      const defaultsProp = getPropValue(tagNode, 'defaults')
+      const defaultValue =
+        defaultsProp || this.nodeToString.call(this, node, sourceText)
 
       if (defaultValue !== '') {
         entry.defaultValue = defaultValue
@@ -91,7 +94,7 @@ export default class JsxLexer extends JavascriptLexer {
       }
 
       tagNode.attributes.properties.forEach((property) => {
-        if ([this.attr, 'ns'].includes(property.name.text)) {
+        if (this.omitAttributes.includes(property.name.text)) {
           return
         }
 

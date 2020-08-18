@@ -36,6 +36,17 @@ export default class JavascriptLexer extends BaseLexer {
     }
   }
 
+  setNamespaces(keys) {
+    if (this.defaultNamespace) {
+      return keys.map((entry) => ({
+        ...entry,
+        namespace: entry.namespace || this.defaultNamespace,
+      }))
+    }
+
+    return keys
+  }
+
   extract(content, filename = '__default.js') {
     const keys = []
 
@@ -64,11 +75,30 @@ export default class JavascriptLexer extends BaseLexer {
     )
     parseTree(sourceFile)
 
-    return keys
+    return this.setNamespaces(keys)
   }
 
   expressionExtractor(node) {
     const entry = {}
+
+    if (
+      node.expression.escapedText === 'useTranslation' &&
+      node.arguments.length
+    ) {
+      this.defaultNamespace = node.arguments[0].text
+    }
+
+    if (
+      node.expression.escapedText === 'withTranslation' &&
+      node.arguments.length
+    ) {
+      const { text, elements } = node.arguments[0]
+      if (text) {
+        this.defaultNamespace = text
+      } else if (elements && elements.length) {
+        this.defaultNamespace = elements[0].text
+      }
+    }
 
     const isTranslationFunction =
       (node.expression.text && this.functions.includes(node.expression.text)) ||
@@ -129,30 +159,9 @@ export default class JavascriptLexer extends BaseLexer {
         } else if (typeof entry.ns === 'object' && entry.ns.length) {
           entry.namespace = entry.ns[0]
         }
-      } else if (this.defaultNamespace) {
-        entry.namespace = this.defaultNamespace
       }
 
       return entry
-    }
-
-    if (
-      node.expression.escapedText === 'useTranslation' &&
-      node.arguments.length
-    ) {
-      this.defaultNamespace = node.arguments[0].text
-    }
-
-    if (
-      node.expression.escapedText === 'withTranslation' &&
-      node.arguments.length
-    ) {
-      const { text, elements } = node.arguments[0]
-      if (text) {
-        this.defaultNamespace = text
-      } else if (elements && elements.length) {
-        this.defaultNamespace = elements[0].text
-      }
     }
 
     return null

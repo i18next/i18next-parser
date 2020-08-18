@@ -1,6 +1,23 @@
 # Changelog
 
-# 2.1.3 - latest
+# 3.1.0 - latest
+
+- Parse default value from 'defaults' prop in Trans #238 #231 #206
+- Fix mergeHashes keepRemoved option #237
+
+# 3.0.1
+
+- Add a `failOnWarnings` option and improve cli output #236
+
+# 3.0.0
+
+- `reactNamespace` option is gone #235
+
+# 2.2.0
+
+- Fix namespace parsing #233 #161
+
+# 2.1.3
 
 - Support unknow languages #230
 

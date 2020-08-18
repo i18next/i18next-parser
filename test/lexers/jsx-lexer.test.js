@@ -21,6 +21,26 @@ describe('JsxLexer', () => {
       done()
     })
 
+    it('extracts default value from string literal `defaults` prop', (done) => {
+      const Lexer = new JsxLexer()
+      const content =
+        '<Trans i18nKey="first" defaults="test-value">should be ignored</Trans>'
+      assert.deepEqual(Lexer.extract(content), [
+        { key: 'first', defaultValue: 'test-value' },
+      ])
+      done()
+    })
+
+    it('extracts default value from interpolated expression statement `defaults` prop', (done) => {
+      const Lexer = new JsxLexer()
+      const content =
+        '<Trans i18nKey="first" defaults={"test-value"}>should be ignored</Trans>'
+      assert.deepEqual(Lexer.extract(content), [
+        { key: 'first', defaultValue: 'test-value' },
+      ])
+      done()
+    })
+
     it('extracts keys from user-defined key attributes from closing tags', (done) => {
       const Lexer = new JsxLexer({ attr: 'myIntlKey' })
       const content = '<Trans myIntlKey="first" count={count}>Yo</Trans>'

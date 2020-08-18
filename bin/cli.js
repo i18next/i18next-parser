@@ -14,6 +14,7 @@ program
 .option('-c, --config <path>', 'Path to the config file (default: i18next-parser.config.js)', 'i18next-parser.config.js')
 .option('-o, --output <path>', 'Path to the output directory (default: locales/$LOCALE/$NAMESPACE.json)')
 .option('-s, --silent', 'Disable logging to stdout')
+.option('--fail-on-warnings', 'Exit with an exit code of 1 on warnings')
 
 program.on('--help', function() {
   console.log('  Examples:')
@@ -39,6 +40,7 @@ try {
 }
 
 config.output = program.output || config.output || 'locales/$LOCALE/$NAMESPACE.json'
+config.failOnWarnings = program.failOnWarnings || config.failOnWarnings || false
 
 var args = program.args || []
 var globs
@@ -61,7 +63,7 @@ else if (config.input) {
       config.input = [config.input]
     }
     else {
-      console.log('  [error] '.red + '`input` must be an array when specified in the config')
+      console.log('  [error]   '.red + '`input` must be an array when specified in the config')
       program.help()
       program.exit(1)
     }
@@ -85,14 +87,13 @@ if (!globs.length) {
 
 // Welcome message
 console.log()
-console.log('  i18next Parser'.yellow)
-console.log('  --------------'.yellow)
-console.log('  Input:  '.yellow + args.join(', '))
-console.log('  Output: '.yellow + config.output)
+console.log('  i18next Parser'.cyan)
+console.log('  --------------'.cyan)
+console.log('  Input:  '.cyan + args.join(', '))
+console.log('  Output: '.cyan + config.output)
 if (!program.silent) {
   console.log()
 }
-
 
 var count = 0
 
@@ -102,26 +103,31 @@ vfs.src(globs)
   new i18nTransform(config)
   .on('reading', function (file) {
     if (!program.silent) {
-      console.log('  [read]  '.green + file.path)
+      console.log('  [read]    '.green + file.path)
     }
     count++
   })
   .on('data', function (file) {
     if (!program.silent) {
-      console.log('  [write] '.green + file.path)
+      console.log('  [write]   '.green + file.path)
     }
   })
   .on('error', function (message, region) {
     if (typeof region === 'string') {
       message += ': ' + region.trim()
     }
-    console.log('  [error] '.red + message)
+    console.log('  [error]   '.red + message)
+  })
+  .on('warning', function (message) {
+    if (!program.silent) {
+      console.log('  [warning] '.yellow + message)
+    }
   })
   .on('finish', function () {
     if (!program.silent) {
       console.log()
     }
-    console.log('  Stats:  '.yellow + count + ' files were parsed')
+    console.log('  Stats:  '.cyan + count + ' files were parsed')
   })
 )
 .pipe(vfs.dest(process.cwd()))

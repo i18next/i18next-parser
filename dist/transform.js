@@ -6,7 +6,6 @@ var _parser = require('./parser');var _parser2 = _interopRequireDefault(_parser)
 var _path = require('path');var _path2 = _interopRequireDefault(_path);
 var _vinyl = require('vinyl');var _vinyl2 = _interopRequireDefault(_vinyl);
 var _yamljs = require('yamljs');var _yamljs2 = _interopRequireDefault(_yamljs);
-var _baseLexer = require('./lexers/base-lexer');var _baseLexer2 = _interopRequireDefault(_baseLexer);
 var _i18next = require('i18next');var _i18next2 = _interopRequireDefault(_i18next);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function _possibleConstructorReturn(self, call) {if (!self) {throw new ReferenceError("this hasn't been initialised - super() hasn't been called");}return call && (typeof call === "object" || typeof call === "function") ? call : self;}function _inherits(subClass, superClass) {if (typeof superClass !== "function" && superClass !== null) {throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);}subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;}
 
 function getPluralSuffix(numberOfPluralForms, nthForm) {
@@ -36,12 +35,12 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
       locales: ['en', 'fr'],
       namespaceSeparator: ':',
       output: 'locales/$LOCALE/$NAMESPACE.json',
-      reactNamespace: false,
       sort: false,
       useKeysAsDefaultValue: false,
       verbose: false,
       skipDefaultValues: false,
-      customValueTemplate: null };
+      customValueTemplate: null,
+      failOnWarnings: false };
 
 
     _this.options = _extends({}, _this.defaults, options);
@@ -53,6 +52,7 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
     }
     _this.entries = [];
 
+    _this.parserHadWarnings = false;
     _this.parser = new _parser2.default(_this.options);
     _this.parser.on('error', function (error) {return _this.error(error);});
     _this.parser.on('warning', function (warning) {return _this.warn(warning);});
@@ -72,6 +72,7 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
 
     warning) {
       this.emit('warning', warning);
+      this.parserHadWarnings = true;
       if (this.options.verbose) {
         console.warn('\x1b[33m%s\x1b[0m', warning);
       }
@@ -91,8 +92,7 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
       }
 
       var filename = _path2.default.basename(file.path);
-      var entries = this.parser.parse(content, filename);
-      var extension = _path2.default.extname(filename).substr(1);var _iteratorNormalCompletion = true;var _didIteratorError = false;var _iteratorError = undefined;try {
+      var entries = this.parser.parse(content, filename);var _iteratorNormalCompletion = true;var _didIteratorError = false;var _iteratorError = undefined;try {
 
         for (var _iterator = entries[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {var entry = _step.value;
           var key = entry.key;
@@ -101,8 +101,6 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
           // make sure we're not pulling a 'namespace' out of a default value
           if (parts.length > 1 && key !== entry.defaultValue) {
             entry.namespace = parts.shift();
-          } else if (extension === 'jsx' || this.options.reactNamespace) {
-            entry.namespace = this.grabReactNamespace(content);
           }
           entry.namespace = entry.namespace || this.options.defaultNamespace;
 
@@ -222,6 +220,10 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
             console.log();
           }
 
+          if (_this2.options.failOnWarnings && _this2.parserHadWarnings) {
+            continue;
+          }
+
           // push files back to the stream
           _this2.pushFile(namespacePath, newCatalog);
           if (
@@ -232,6 +234,14 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
           }
         }};var _iteratorNormalCompletion2 = true;var _didIteratorError2 = false;var _iteratorError2 = undefined;try {for (var _iterator2 = this.options.locales[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {var locale = _step2.value;_loop(locale);
         }} catch (err) {_didIteratorError2 = true;_iteratorError2 = err;} finally {try {if (!_iteratorNormalCompletion2 && _iterator2.return) {_iterator2.return();}} finally {if (_didIteratorError2) {throw _iteratorError2;}}}
+
+      if (this.options.failOnWarnings && this.parserHadWarnings) {
+        this.emit(
+        'error',
+        'Warnings were triggered and failOnWarnings option is enabled. Exiting...');
+
+        process.exit(1);
+      }
 
       done();
     } }, { key: 'addEntry', value: function addEntry(
@@ -295,14 +305,4 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
         contents: Buffer.from(text) });
 
       this.push(file);
-    } }, { key: 'grabReactNamespace', value: function grabReactNamespace(
-
-    content) {
-      var reactTranslateRegex = new RegExp(
-      'withTranslation\\((?:\\s*\\[?\\s*)(' + _baseLexer2.default.stringPattern + ')');
-
-      var translateMatches = content.match(reactTranslateRegex);
-      if (translateMatches) {
-        return translateMatches[1].slice(1, -1);
-      }
     } }]);return i18nTransform;}(_stream.Transform);exports.default = i18nTransform;module.exports = exports['default'];

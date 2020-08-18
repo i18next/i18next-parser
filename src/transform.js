@@ -6,7 +6,6 @@ import Parser from './parser'
 import path from 'path'
 import VirtualFile from 'vinyl'
 import YAML from 'yamljs'
-import BaseLexer from './lexers/base-lexer'
 import i18next from 'i18next'
 
 function getPluralSuffix(numberOfPluralForms, nthForm) {
@@ -36,12 +35,12 @@ export default class i18nTransform extends Transform {
       locales: ['en', 'fr'],
       namespaceSeparator: ':',
       output: 'locales/$LOCALE/$NAMESPACE.json',
-      reactNamespace: false,
       sort: false,
       useKeysAsDefaultValue: false,
       verbose: false,
       skipDefaultValues: false,
       customValueTemplate: null,
+      failOnWarnings: false,
     }
 
     this.options = { ...this.defaults, ...options }
@@ -53,6 +52,7 @@ export default class i18nTransform extends Transform {
     }
     this.entries = []
 
+    this.parserHadWarnings = false
     this.parser = new Parser(this.options)
     this.parser.on('error', (error) => this.error(error))
     this.parser.on('warning', (warning) => this.warn(warning))
@@ -72,6 +72,7 @@ export default class i18nTransform extends Transform {
 
   warn(warning) {
     this.emit('warning', warning)
+    this.parserHadWarnings = true
     if (this.options.verbose) {
       console.warn('\x1b[33m%s\x1b[0m', warning)
     }
@@ -92,7 +93,6 @@ export default class i18nTransform extends Transform {
 
     const filename = path.basename(file.path)
     const entries = this.parser.parse(content, filename)
-    const extension = path.extname(filename).substr(1)
 
     for (const entry of entries) {
       let key = entry.key
@@ -101,8 +101,6 @@ export default class i18nTransform extends Transform {
       // make sure we're not pulling a 'namespace' out of a default value
       if (parts.length > 1 && key !== entry.defaultValue) {
         entry.namespace = parts.shift()
-      } else if (extension === 'jsx' || this.options.reactNamespace) {
-        entry.namespace = this.grabReactNamespace(content)
       }
       entry.namespace = entry.namespace || this.options.defaultNamespace
 
@@ -222,6 +220,10 @@ export default class i18nTransform extends Transform {
           console.log()
         }
 
+        if (this.options.failOnWarnings && this.parserHadWarnings) {
+          continue
+        }
+
         // push files back to the stream
         this.pushFile(namespacePath, newCatalog)
         if (
@@ -231,6 +233,14 @@ export default class i18nTransform extends Transform {
           this.pushFile(namespaceOldPath, oldCatalog)
         }
       }
+    }
+
+    if (this.options.failOnWarnings && this.parserHadWarnings) {
+      this.emit(
+        'error',
+        'Warnings were triggered and failOnWarnings option is enabled. Exiting...'
+      )
+      process.exit(1)
     }
 
     done()
@@ -295,15 +305,5 @@ export default class i18nTransform extends Transform {
       contents: Buffer.from(text),
     })
     this.push(file)
-  }
-
-  grabReactNamespace(content) {
-    const reactTranslateRegex = new RegExp(
-      'withTranslation\\((?:\\s*\\[?\\s*)(' + BaseLexer.stringPattern + ')'
-    )
-    const translateMatches = content.match(reactTranslateRegex)
-    if (translateMatches) {
-      return translateMatches[1].slice(1, -1)
-    }
   }
 }

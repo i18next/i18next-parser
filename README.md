@@ -48,6 +48,7 @@ Multiple globbing patterns are supported to specify complex file selections. You
 - **-c, --config <path>**: Path to the config file (default: i18next-parser.config.js).
 - **-o, --output <path>**: Path to the output directory (default: locales/$LOCALE/$NAMESPACE.json).
 - **-S, --silent**: Disable logging to stdout.
+- **--fail-on-warnings**: Exit with an exit code of 1 on warnings
 
 ### Gulp
 
@@ -170,10 +171,6 @@ module.exports = {
   // An array of globs that describe where to look for source files
   // relative to the location of the configuration file
 
-  reactNamespace: false,
-  // For react file, extract the defaultNamespace - https://react.i18next.com/latest/withtranslation-hoc
-  // Ignored when parsing a `.jsx` file and namespace is extracted from that file.
-
   sort: false,
   // Whether or not to sort the catalog
 
@@ -186,6 +183,9 @@ module.exports = {
 
   verbose: false,
   // Display info about the parsing including some stats
+
+  failOnWarnings: false,
+  // Exit with an exit code of 1 on warnings
 
   customValueTemplate: null
   // If you wish to customize the value output the value as an object, you can set your own format.
@@ -221,7 +221,6 @@ The default configuration is below:
   js: [{
     lexer: 'JavascriptLexer'
     functions: ['t'], // Array of functions to match
-
   }],
 }
 ```
@@ -239,6 +238,16 @@ Default configuration:
   jsx: [{
     lexer: 'JsxLexer',
     attr: 'i18nKey', // Attribute for the keys
+  }],
+}
+```
+
+If your JSX files have `.js` extension (e.g. create-react-app projects) you should override the default `js` lexer with `JsxLexer` to enable jsx parsing from js files:
+
+```js
+{
+  js: [{
+    lexer: 'JsxLexer'
   }],
 }
 ```

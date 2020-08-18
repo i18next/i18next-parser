@@ -1,4 +1,4 @@
-'use strict';Object.defineProperty(exports, "__esModule", { value: true });var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {return typeof obj;} : function (obj) {return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;};var _createClass = function () {function defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);}}return function (Constructor, protoProps, staticProps) {if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;};}();var _baseLexer = require('./base-lexer');var _baseLexer2 = _interopRequireDefault(_baseLexer);
+'use strict';Object.defineProperty(exports, "__esModule", { value: true });var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {return typeof obj;} : function (obj) {return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;};var _extends = Object.assign || function (target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i];for (var key in source) {if (Object.prototype.hasOwnProperty.call(source, key)) {target[key] = source[key];}}}return target;};var _createClass = function () {function defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);}}return function (Constructor, protoProps, staticProps) {if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;};}();var _baseLexer = require('./base-lexer');var _baseLexer2 = _interopRequireDefault(_baseLexer);
 var _typescript = require('typescript');var ts = _interopRequireWildcard(_typescript);function _interopRequireWildcard(obj) {if (obj && obj.__esModule) {return obj;} else {var newObj = {};if (obj != null) {for (var key in obj) {if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key];}}newObj.default = obj;return newObj;}}function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function _toConsumableArray(arr) {if (Array.isArray(arr)) {for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) {arr2[i] = arr[i];}return arr2;} else {return Array.from(arr);}}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function _possibleConstructorReturn(self, call) {if (!self) {throw new ReferenceError("this hasn't been initialised - super() hasn't been called");}return call && (typeof call === "object" || typeof call === "function") ? call : self;}function _inherits(subClass, superClass) {if (typeof superClass !== "function" && superClass !== null) {throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);}subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;}var
 
 JavascriptLexer = function (_BaseLexer) {_inherits(JavascriptLexer, _BaseLexer);
@@ -34,9 +34,20 @@ JavascriptLexer = function (_BaseLexer) {_inherits(JavascriptLexer, _BaseLexer);
         });
 
       };
+    } }, { key: 'setNamespaces', value: function setNamespaces(
+
+    keys) {var _this3 = this;
+      if (this.defaultNamespace) {
+        return keys.map(function (entry) {return _extends({},
+          entry, {
+            namespace: entry.namespace || _this3.defaultNamespace });});
+
+      }
+
+      return keys;
     } }, { key: 'extract', value: function extract(
 
-    content) {var _this3 = this;var filename = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '__default.js';
+    content) {var _this4 = this;var filename = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '__default.js';
       var keys = [];
 
       var parseCommentNode = this.createCommentNodeParser();
@@ -47,7 +58,7 @@ JavascriptLexer = function (_BaseLexer) {_inherits(JavascriptLexer, _BaseLexer);
         parseCommentNode(keys, node, content);
 
         if (node.kind === ts.SyntaxKind.CallExpression) {
-          entry = _this3.expressionExtractor.call(_this3, node);
+          entry = _this4.expressionExtractor.call(_this4, node);
         }
 
         if (entry) {
@@ -64,11 +75,30 @@ JavascriptLexer = function (_BaseLexer) {_inherits(JavascriptLexer, _BaseLexer);
 
       parseTree(sourceFile);
 
-      return keys;
+      return this.setNamespaces(keys);
     } }, { key: 'expressionExtractor', value: function expressionExtractor(
 
     node) {
       var entry = {};
+
+      if (
+      node.expression.escapedText === 'useTranslation' &&
+      node.arguments.length)
+      {
+        this.defaultNamespace = node.arguments[0].text;
+      }
+
+      if (
+      node.expression.escapedText === 'withTranslation' &&
+      node.arguments.length)
+      {var _node$arguments$ =
+        node.arguments[0],text = _node$arguments$.text,elements = _node$arguments$.elements;
+        if (text) {
+          this.defaultNamespace = text;
+        } else if (elements && elements.length) {
+          this.defaultNamespace = elements[0].text;
+        }
+      }
 
       var isTranslationFunction =
       node.expression.text && this.functions.includes(node.expression.text) ||
@@ -129,36 +159,15 @@ JavascriptLexer = function (_BaseLexer) {_inherits(JavascriptLexer, _BaseLexer);
           } else if (_typeof(entry.ns) === 'object' && entry.ns.length) {
             entry.namespace = entry.ns[0];
           }
-        } else if (this.defaultNamespace) {
-          entry.namespace = this.defaultNamespace;
         }
 
         return entry;
       }
 
-      if (
-      node.expression.escapedText === 'useTranslation' &&
-      node.arguments.length)
-      {
-        this.defaultNamespace = node.arguments[0].text;
-      }
-
-      if (
-      node.expression.escapedText === 'withTranslation' &&
-      node.arguments.length)
-      {var _node$arguments$ =
-        node.arguments[0],text = _node$arguments$.text,elements = _node$arguments$.elements;
-        if (text) {
-          this.defaultNamespace = text;
-        } else if (elements && elements.length) {
-          this.defaultNamespace = elements[0].text;
-        }
-      }
-
       return null;
     } }, { key: 'commentExtractor', value: function commentExtractor(
 
-    commentText) {var _this4 = this;
+    commentText) {var _this5 = this;
       var regexp = new RegExp(this.callPattern, 'g');
       var expressions = commentText.match(regexp);
 
@@ -168,7 +177,7 @@ JavascriptLexer = function (_BaseLexer) {_inherits(JavascriptLexer, _BaseLexer);
 
       var keys = [];
       expressions.forEach(function (expression) {
-        var expressionKeys = _this4.extract(expression);
+        var expressionKeys = _this5.extract(expression);
         if (expressionKeys) {
           keys.push.apply(keys, _toConsumableArray(expressionKeys));
         }

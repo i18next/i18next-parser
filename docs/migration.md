@@ -1,3 +1,19 @@
+# Migrating from `2.x` to `3.x`
+
+## Breaking change
+
+- `reactNamespace` option is gone. To use jsx in js file, [overwrite the lexer](https://github.com/i18next/i18next-parser#jsx).
+
+---
+
+# Migrating from `1.x` to `2.x`
+
+## Breaking change
+
+- Drop support for Node 6 and 8 (EOL)
+
+---
+
 # Migrating from `0.x` to `1.x`
 
 ## Breaking changes
