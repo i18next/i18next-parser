@@ -1119,9 +1119,7 @@ describe('parser', () => {
 
     it('generates plurals with correct defaultValue', (done) => {
       let result
-      const i18nextParser = new i18nTransform({
-        useKeysAsDefaultValue: false,
-      })
+      const i18nextParser = new i18nTransform()
       const fakeFile = new Vinyl({
         contents: Buffer.from("t('key', { count: 1, defaultValue: 'test {{count}}', defaultValues: 'tests {{count}}' })"),
         path: 'file.js',
