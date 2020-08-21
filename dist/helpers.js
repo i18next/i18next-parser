@@ -18,7 +18,11 @@ function dotPathToHash(entry) {var target = arguments.length > 1 && arguments[1]
   }
 
   var separator = options.separator || '.';
-  var newValue = entry.defaultValue || options.value || '';
+  var newValue =
+  entry['defaultValue_' + options.suffix] ||
+  entry.defaultValue ||
+  options.value ||
+  '';
 
   if (options.skipDefaultValues) {
     newValue = '';
