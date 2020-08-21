@@ -1,6 +1,10 @@
 # Changelog
 
-# 3.1.0 - latest
+# 3.2.0 - latest
+
+- Fix defaultValue for plural forms #240 #212
+
+# 3.1.0
 
 - Parse default value from 'defaults' prop in Trans #238 #231 #206
 - Fix mergeHashes keepRemoved option #237
