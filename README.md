@@ -27,7 +27,9 @@ Finally, if you want to make this process even less painful, I invite you to che
 
 ## Versions
 
-`1.x` has been in beta for a good while. You can follow the pre-releases [here](https://github.com/i18next/i18next-parser/releases). It is a deep rewrite of this package that solves many issues, the main one being that it was slowly becoming unmaintainable. The [migration](docs/migration.md) from `0.x` contains all the breaking changes. Everything that follows is related to `1.x`. You can still find the old `0.x` documentation on its dedicated [branch](https://github.com/i18next/i18next-parser/tree/0.x.x).
+You can find information about major releases on the [dedicated page](https://github.com/i18next/i18next-parser/releases). The [migration documentation](docs/migration.md) will help you figure out the breaking changes between versions.
+
+For legacy user on `0.x`, the code has since been entirely rewritten and there is a dedicated [branch](https://github.com/i18next/i18next-parser/tree/0.x.x) for it. You are hihgly encouraged to upgrade!
 
 ## Usage
 
