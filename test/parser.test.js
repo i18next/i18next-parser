@@ -1117,6 +1117,72 @@ describe('parser', () => {
       i18nextParser.end(fakeFile)
     })
 
+    it('generates plurals for different defaultValue in singular and plural form', (done) => {
+      let result
+      const i18nextParser = new i18nTransform()
+      const fakeFile = new Vinyl({
+        contents: Buffer.from(
+          "t('key', { count, defaultValue: 'singular {{count}}', defaultValue_plural: 'plural {{count}}' })"
+        ),
+        path: 'file.js',
+      })
+
+      i18nextParser.on('data', (file) => {
+        if (file.relative.endsWith(enLibraryPath)) {
+          result = JSON.parse(file.contents)
+        }
+      })
+      i18nextParser.once('end', () => {
+        assert.deepEqual(result, {
+          key: 'singular {{count}}',
+          key_plural: 'plural {{count}}',
+        })
+        done()
+      })
+
+      i18nextParser.end(fakeFile)
+    })
+
+    it('generates plurals for different defaultValue in singular plural forms with fallback', (done) => {
+      let result
+      const i18nextParser = new i18nTransform({
+        locales: ['ar'],
+      })
+      const fakeFile = new Vinyl({
+        contents: Buffer.from(
+          `t('key', {
+            count,
+            defaultValue: 'default for missing',
+            defaultValue_0: 'zero {{count}}',
+            defaultValue_1: 'one {{count}}',
+            defaultValue_2: 'two {{count}}',
+            defaultValue_3: 'three-ten {{count}}',
+          })`
+        ),
+        path: 'file.js',
+      })
+
+      i18nextParser.on('data', (file) => {
+        if (file.relative.endsWith(arLibraryPath)) {
+          result = JSON.parse(file.contents)
+        }
+      })
+      i18nextParser.once('end', () => {
+        assert.deepEqual(result, {
+          key_0: 'zero {{count}}',
+          key_1: 'one {{count}}',
+          key_2: 'two {{count}}',
+          key_3: 'three-ten {{count}}',
+          // Missing forms fall back on default
+          key_4: 'default for missing',
+          key_5: 'default for missing',
+        })
+        done()
+      })
+
+      i18nextParser.end(fakeFile)
+    })
+
     it('generates plurals with key as value for languages with multiple plural forms', (done) => {
       let result
       const i18nextParser = new i18nTransform({
