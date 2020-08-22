@@ -1268,7 +1268,7 @@ describe('parser', () => {
       i18nextParser.end(fakeFile)
     })
 
-    it.only('supports customValueTemplate option', (done) => {
+    it('supports customValueTemplate option', (done) => {
       let result
       const i18nextParser = new i18nTransform({
         customValueTemplate: {
