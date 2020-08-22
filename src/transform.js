@@ -110,7 +110,8 @@ export default class i18nTransform extends Transform {
       key = key.replace(/\\r/g, '\r')
       key = key.replace(/\\t/g, '\t')
       key = key.replace(/\\\\/g, '\\')
-      entry.key = entry.namespace + this.options.keySeparator + key
+      entry.key = key
+      entry.keyWithNamespace = entry.namespace + this.options.keySeparator + key
 
       this.addEntry(entry)
     }
@@ -251,6 +252,8 @@ export default class i18nTransform extends Transform {
       const contextEntry = Object.assign({}, entry)
       delete contextEntry.context
       contextEntry.key += this.options.contextSeparator + entry.context
+      contextEntry.keyWithNamespace +=
+        this.options.contextSeparator + entry.context
       this.entries.push(contextEntry)
     } else {
       this.entries.push(entry)

@@ -3,33 +3,41 @@ import { dotPathToHash } from '../../src/helpers'
 
 describe('dotPathToHash helper function', () => {
   it('creates an object from a string path', (done) => {
-    const { target, duplicate } = dotPathToHash({ key: 'one' })
+    const { target, duplicate } = dotPathToHash({ keyWithNamespace: 'one' })
     assert.deepEqual(target, { one: '' })
     assert.equal(duplicate, false)
     done()
   })
 
   it('ignores trailing separator', (done) => {
-    const { target } = dotPathToHash({ key: 'one.' }, {}, { separator: '.' })
+    const { target } = dotPathToHash(
+      { keyWithNamespace: 'one.' },
+      {},
+      { separator: '.' }
+    )
     assert.deepEqual(target, { one: '' })
     done()
   })
 
   it('ignores duplicated separator', (done) => {
-    const { target } = dotPathToHash({ key: 'one..two' })
+    const { target } = dotPathToHash({ keyWithNamespace: 'one..two' })
     assert.deepEqual(target, { one: { two: '' } })
     done()
   })
 
   it('supports custom separator', (done) => {
-    const { target } = dotPathToHash({ key: 'one-two' }, {}, { separator: '-' })
+    const { target } = dotPathToHash(
+      { keyWithNamespace: 'one-two' },
+      {},
+      { separator: '-' }
+    )
     assert.deepEqual(target, { one: { two: '' } })
     done()
   })
 
   it('supports custom separator when `useKeysAsDefaultValue` is true', (done) => {
     const { target } = dotPathToHash(
-      { key: 'namespace-two-three' },
+      { keyWithNamespace: 'namespace-two-three' },
       {},
       { separator: '-', useKeysAsDefaultValue: true }
     )
@@ -39,7 +47,7 @@ describe('dotPathToHash helper function', () => {
 
   it('handles a target hash', (done) => {
     const { target, duplicate } = dotPathToHash(
-      { key: 'one.two.three' },
+      { keyWithNamespace: 'one.two.three' },
       { one: { twenty: '' } }
     )
     assert.deepEqual(target, { one: { two: { three: '' }, twenty: '' } })
@@ -49,7 +57,7 @@ describe('dotPathToHash helper function', () => {
 
   it('handles a `defaultValue` option', (done) => {
     const { target } = dotPathToHash(
-      { key: 'one' },
+      { keyWithNamespace: 'one' },
       {},
       { value: 'myDefaultValue' }
     )
@@ -59,7 +67,7 @@ describe('dotPathToHash helper function', () => {
 
   it('handles a `separator` option', (done) => {
     const { target } = dotPathToHash(
-      { key: 'one_two_three.' },
+      { keyWithNamespace: 'one_two_three.' },
       {},
       { separator: '_' }
     )
@@ -69,7 +77,7 @@ describe('dotPathToHash helper function', () => {
 
   it('detects duplicate keys with the same value', (done) => {
     const { target, duplicate, conflict } = dotPathToHash(
-      { key: 'one.two.three' },
+      { keyWithNamespace: 'one.two.three' },
       { one: { two: { three: '' } } }
     )
     assert.deepEqual(target, { one: { two: { three: '' } } })
@@ -80,7 +88,7 @@ describe('dotPathToHash helper function', () => {
 
   it('detects and overwrites duplicate keys with different values', (done) => {
     const { target, duplicate, conflict } = dotPathToHash(
-      { key: 'one.two.three', defaultValue: 'new' },
+      { keyWithNamespace: 'one.two.three', defaultValue: 'new' },
       { one: { two: { three: 'old' } } }
     )
     assert.deepEqual(target, { one: { two: { three: 'new' } } })
@@ -91,7 +99,7 @@ describe('dotPathToHash helper function', () => {
 
   it('overwrites keys already mapped to a string with an object value', (done) => {
     const { target, duplicate, conflict } = dotPathToHash(
-      { key: 'one', defaultValue: 'bla' },
+      { keyWithNamespace: 'one', defaultValue: 'bla' },
       { one: { two: { three: 'bla' } } }
     )
     assert.deepEqual(target, { one: 'bla' })
@@ -102,7 +110,7 @@ describe('dotPathToHash helper function', () => {
 
   it('overwrites keys already mapped to an object with a string value', (done) => {
     const { target, duplicate, conflict } = dotPathToHash(
-      { key: 'one.two.three', defaultValue: 'bla' },
+      { keyWithNamespace: 'one.two.three', defaultValue: 'bla' },
       { one: 'bla' }
     )
     assert.deepEqual(target, { one: { two: { three: 'bla' } } })

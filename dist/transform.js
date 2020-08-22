@@ -110,7 +110,8 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
           key = key.replace(/\\r/g, '\r');
           key = key.replace(/\\t/g, '\t');
           key = key.replace(/\\\\/g, '\\');
-          entry.key = entry.namespace + this.options.keySeparator + key;
+          entry.key = key;
+          entry.keyWithNamespace = entry.namespace + this.options.keySeparator + key;
 
           this.addEntry(entry);
         }} catch (err) {_didIteratorError = true;_iteratorError = err;} finally {try {if (!_iteratorNormalCompletion && _iterator.return) {_iterator.return();}} finally {if (_didIteratorError) {throw _iteratorError;}}}
@@ -251,6 +252,8 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
         var contextEntry = Object.assign({}, entry);
         delete contextEntry.context;
         contextEntry.key += this.options.contextSeparator + entry.context;
+        contextEntry.keyWithNamespace +=
+        this.options.contextSeparator + entry.context;
         this.entries.push(contextEntry);
       } else {
         this.entries.push(entry);

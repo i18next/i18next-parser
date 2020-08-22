@@ -1268,12 +1268,14 @@ describe('parser', () => {
       i18nextParser.end(fakeFile)
     })
 
-    it('supports customValueTemplate option', (done) => {
+    it.only('supports customValueTemplate option', (done) => {
       let result
       const i18nextParser = new i18nTransform({
         customValueTemplate: {
           message: '${defaultValue}',
           description: '${max}',
+          namespace: '${namespace}',
+          key: '${key}',
         },
       })
 
@@ -1293,10 +1295,14 @@ describe('parser', () => {
           test: {
             message: '',
             description: '',
+            namespace: 'translation',
+            key: 'test',
           },
           salt: {
             message: 'salty',
             description: '150',
+            namespace: 'translation',
+            key: 'salt',
           },
         })
 

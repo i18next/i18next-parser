@@ -12,7 +12,7 @@
                                                                                                                                                                                                                                                                                                                                                       * different value, or `false`.
                                                                                                                                                                                                                                                                                                                                                       */
 function dotPathToHash(entry) {var target = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-  var path = entry.key;
+  var path = entry.keyWithNamespace;
   if (options.suffix || options.suffix === 0) {
     path += '_' + options.suffix;
   }
@@ -29,9 +29,9 @@ function dotPathToHash(entry) {var target = arguments.length > 1 && arguments[1]
   }
 
   if (options.useKeysAsDefaultValue) {
-    newValue = entry.key.substring(
-    entry.key.indexOf(separator) + separator.length,
-    entry.key.length);
+    newValue = entry.keyWithNamespace.substring(
+    entry.keyWithNamespace.indexOf(separator) + separator.length,
+    entry.keyWithNamespace.length);
 
   }
 

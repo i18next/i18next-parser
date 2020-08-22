@@ -12,7 +12,7 @@
  * different value, or `false`.
  */
 function dotPathToHash(entry, target = {}, options = {}) {
-  let path = entry.key
+  let path = entry.keyWithNamespace
   if (options.suffix || options.suffix === 0) {
     path += `_${options.suffix}`
   }
@@ -29,9 +29,9 @@ function dotPathToHash(entry, target = {}, options = {}) {
   }
 
   if (options.useKeysAsDefaultValue) {
-    newValue = entry.key.substring(
-      entry.key.indexOf(separator) + separator.length,
-      entry.key.length
+    newValue = entry.keyWithNamespace.substring(
+      entry.keyWithNamespace.indexOf(separator) + separator.length,
+      entry.keyWithNamespace.length
     )
   }
 
