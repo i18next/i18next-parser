@@ -1117,6 +1117,30 @@ describe('parser', () => {
       i18nextParser.end(fakeFile)
     })
 
+    it('generates plurals for defaultValue as second parameter', (done) => {
+      let result
+      const i18nextParser = new i18nTransform()
+      const fakeFile = new Vinyl({
+        contents: Buffer.from("t('key', 'test {{count}}', { count })"),
+        path: 'file.js',
+      })
+
+      i18nextParser.on('data', (file) => {
+        if (file.relative.endsWith(enLibraryPath)) {
+          result = JSON.parse(file.contents)
+        }
+      })
+      i18nextParser.once('end', () => {
+        assert.deepEqual(result, {
+          key: 'test {{count}}',
+          key_plural: 'test {{count}}',
+        })
+        done()
+      })
+
+      i18nextParser.end(fakeFile)
+    })
+
     it('generates plurals for different defaultValue in singular and plural form', (done) => {
       let result
       const i18nextParser = new i18nTransform()
@@ -1143,7 +1167,7 @@ describe('parser', () => {
       i18nextParser.end(fakeFile)
     })
 
-    it('generates plurals for different defaultValue in singular plural forms with fallback', (done) => {
+    it('generates plurals for different defaultValue in plural forms with fallback', (done) => {
       let result
       const i18nextParser = new i18nTransform({
         locales: ['ar'],
