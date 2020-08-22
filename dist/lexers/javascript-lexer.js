@@ -139,12 +139,16 @@ JavascriptLexer = function (_BaseLexer) {_inherits(JavascriptLexer, _BaseLexer);
 
         var optionsArgument = node.arguments.shift();
 
+        // Second argument could be a string default value
         if (
         optionsArgument &&
         optionsArgument.kind === ts.SyntaxKind.StringLiteral)
         {
           entry.defaultValue = optionsArgument.text;
-        } else if (
+          optionsArgument = node.arguments.shift();
+        }
+
+        if (
         optionsArgument &&
         optionsArgument.kind === ts.SyntaxKind.ObjectLiteralExpression)
         {var _iteratorNormalCompletion = true;var _didIteratorError = false;var _iteratorError = undefined;try {

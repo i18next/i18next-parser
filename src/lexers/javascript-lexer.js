@@ -137,14 +137,18 @@ export default class JavascriptLexer extends BaseLexer {
         return null
       }
 
-      const optionsArgument = node.arguments.shift()
+      let optionsArgument = node.arguments.shift()
 
+      // Second argument could be a string default value
       if (
         optionsArgument &&
         optionsArgument.kind === ts.SyntaxKind.StringLiteral
       ) {
         entry.defaultValue = optionsArgument.text
-      } else if (
+        optionsArgument = node.arguments.shift()
+      }
+
+      if (
         optionsArgument &&
         optionsArgument.kind === ts.SyntaxKind.ObjectLiteralExpression
       ) {
