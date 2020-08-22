@@ -1,6 +1,11 @@
 # Changelog
 
-# 3.2.0 - latest
+# 3.3.0 - latest
+
+- Fix customValueTemplate interpolation of ${key} #242
+- Extract options as third parameter when second parameter is default value string  #243 #241
+
+# 3.2.0
 
 - Fix defaultValue for plural forms #240 #212
 
