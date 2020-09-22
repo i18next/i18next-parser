@@ -221,7 +221,7 @@ The default configuration is below:
 {
   // JavascriptLexer default config (js, mjs)
   js: [{
-    lexer: 'JavascriptLexer'
+    lexer: 'JavascriptLexer',
     functions: ['t'], // Array of functions to match
   }],
 }
