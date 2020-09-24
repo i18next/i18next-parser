@@ -5,8 +5,11 @@ import JavascriptLexer from '../../src/lexers/javascript-lexer'
 describe('JavascriptLexer', () => {
   it('extracts keys from translation components', (done) => {
     const Lexer = new JavascriptLexer()
-    const content = 'i18n.t("first")'
-    assert.deepEqual(Lexer.extract(content), [{ key: 'first' }])
+    const content = 'i18nKey: "first" some_i18nKey: "second"'
+    assert.deepEqual(Lexer.extract(content), [
+      { key: 'first' },
+      { key: 'second' },
+    ])
     done()
   })
 

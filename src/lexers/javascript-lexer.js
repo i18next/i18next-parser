@@ -57,7 +57,7 @@ export default class JavascriptLexer extends BaseLexer {
         'warning',
         `Extracted from variable with i18nKey suffix: ${match[1]}`
       )
-      keys.push(match[1])
+      keys.push({ key: match[1] })
     }
 
     const parseCommentNode = this.createCommentNodeParser()

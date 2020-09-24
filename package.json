@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/i18next/i18next-parser"
+    "url": "https://github.com/tommq/i18next-parser"
   },
   "dependencies": {
     "broccoli-plugin": "^1.3.0",

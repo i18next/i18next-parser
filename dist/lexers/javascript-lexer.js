@@ -57,7 +57,7 @@ JavascriptLexer = function (_BaseLexer) {_inherits(JavascriptLexer, _BaseLexer);
           'warning', 'Extracted from variable with i18nKey suffix: ' +
           match[1]);
 
-          keys.push(match[1]);
+          keys.push({ key: match[1] });
         }} catch (err) {_didIteratorError = true;_iteratorError = err;} finally {try {if (!_iteratorNormalCompletion && _iterator.return) {_iterator.return();}} finally {if (_didIteratorError) {throw _iteratorError;}}}
 
       var parseCommentNode = this.createCommentNodeParser();
