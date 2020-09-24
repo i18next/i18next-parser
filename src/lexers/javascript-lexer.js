@@ -50,6 +50,16 @@ export default class JavascriptLexer extends BaseLexer {
   extract(content, filename = '__default.js') {
     const keys = []
 
+    const re = /.*?i18nKey:\s['"](\w*)['"]/gm;
+    const matches = content.matchAll(re);
+    for (const match of matches) {
+      this.emit(
+          'warning',
+          `Extracted from variable with i18nKey suffix: ${match[1]}`
+      )
+      keys.push(match[1]);
+    }
+
     const parseCommentNode = this.createCommentNodeParser()
 
     const parseTree = (node) => {
