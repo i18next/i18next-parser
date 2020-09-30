@@ -13,7 +13,8 @@ JsxLexer = function (_JavascriptLexer) {_inherits(JsxLexer, _JavascriptLexer);
     'i',
     'p'];
 
-    _this.omitAttributes = [_this.attr, 'ns', 'defaults'];return _this;
+    _this.omitAttributes = [_this.attr, 'ns', 'defaults'];
+    _this.component = options.component || 'Trans';return _this;
   }_createClass(JsxLexer, [{ key: 'extract', value: function extract(
 
     content) {var _this2 = this;var filename = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '__default.jsx';
@@ -72,7 +73,7 @@ JsxLexer = function (_JavascriptLexer) {_inherits(JsxLexer, _JavascriptLexer);
 
       var getKey = function getKey(node) {return getPropValue(node, _this3.attr);};
 
-      if (tagNode.tagName.text === 'Trans') {
+      if (tagNode.tagName.text === this.component) {
         var entry = {};
         entry.key = getKey(tagNode);
 
