@@ -14,6 +14,7 @@ export default class JsxLexer extends JavascriptLexer {
       'p',
     ]
     this.omitAttributes = [this.attr, 'ns', 'defaults']
+    this.component = options.component || 'Trans'
   }
 
   extract(content, filename = '__default.jsx') {
@@ -72,7 +73,7 @@ export default class JsxLexer extends JavascriptLexer {
 
     const getKey = (node) => getPropValue(node, this.attr)
 
-    if (tagNode.tagName.text === 'Trans') {
+    if (tagNode.tagName.text === this.component) {
       const entry = {}
       entry.key = getKey(tagNode)
 

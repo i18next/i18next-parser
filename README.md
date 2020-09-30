@@ -240,6 +240,7 @@ Default configuration:
   jsx: [{
     lexer: 'JsxLexer',
     attr: 'i18nKey', // Attribute for the keys
+    component: 'Trans', // Component name
   }],
 }
 ```
