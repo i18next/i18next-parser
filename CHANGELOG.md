@@ -1,6 +1,11 @@
 # Changelog
 
-# 3.3.0 - latest
+# 3.4.0 - latest
+
+- Support multiline output in YAML #251
+- Fix bug with unicode escape sequences #227
+
+# 3.3.0
 
 - Fix customValueTemplate interpolation of ${key} #242
 - Extract options as third parameter when second parameter is default value string  #243 #241
