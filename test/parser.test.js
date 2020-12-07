@@ -893,7 +893,56 @@ describe('parser', () => {
         }
       })
       i18nextParser.once('end', () => {
-        assert.equal(result.replace(/\r\n/g, '\n'), 'first: ""\n')
+        assert.equal(result.replace(/\r\n/g, '\n'), "first: ''\n")
+        done()
+      })
+
+      i18nextParser.end(fakeFile)
+    })
+
+    it('writes multiline output to yml', (done) => {
+      let result
+      const i18nextParser = new i18nTransform({
+        output: 'locales/$LOCALE/$NAMESPACE.yml',
+      })
+      const fakeFile = new Vinyl({
+        contents: Buffer.from("t('multiline', 'One\\nTwo')"),
+        path: 'file.js',
+      })
+
+      i18nextParser.on('data', (file) => {
+        if (file.relative.endsWith(path.normalize('en/translation.yml'))) {
+          result = file.contents.toString('utf8')
+        }
+      })
+      i18nextParser.once('end', () => {
+        assert.equal(result.replace(/\r\n/g, '\n'), `multiline: |-
+  One
+  Two
+`)
+        done()
+      })
+
+      i18nextParser.end(fakeFile)
+    })
+
+    it('writes non-breaking space output to yml', (done) => {
+      let result
+      const i18nextParser = new i18nTransform({
+        output: 'locales/$LOCALE/$NAMESPACE.yml',
+      })
+      const fakeFile = new Vinyl({
+        contents: Buffer.from("t('nbsp', 'One\\u00A0Two')"),
+        path: 'file.js',
+      })
+
+      i18nextParser.on('data', (file) => {
+        if (file.relative.endsWith(path.normalize('en/translation.yml'))) {
+          result = file.contents.toString('utf8')
+        }
+      })
+      i18nextParser.once('end', () => {
+        assert.equal(result.replace(/\r\n/g, '\n'), 'nbsp: "One\\_Two"\n')
         done()
       })
 

@@ -27,13 +27,13 @@
     "fs-extra": "^6.0.1",
     "gulp-sort": "^2.0.0",
     "i18next": "^19.0.1",
+    "js-yaml": "^3.14.0",
     "rsvp": "^4.8.2",
     "through2": "~2.0.3",
     "typescript": "^3.6.4",
     "vinyl": "~2.0.1",
     "vinyl-fs": "^3.0.2",
-    "vue-template-compiler": "^2.6.11",
-    "yamljs": "^0.3.0"
+    "vue-template-compiler": "^2.6.11"
   },
   "optionalDependencies": {},
   "engines": {
