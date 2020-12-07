@@ -893,7 +893,7 @@ describe('parser', () => {
         }
       })
       i18nextParser.once('end', () => {
-        assert.equal(result.replace(/\r\n/g, '\n'), 'first: ""\n')
+        assert.equal(result.replace(/\r\n/g, '\n'), "first: ''\n")
         done()
       })
 

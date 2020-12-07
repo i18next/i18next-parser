@@ -5,7 +5,7 @@ import fs from 'fs'
 import Parser from './parser'
 import path from 'path'
 import VirtualFile from 'vinyl'
-import YAML from 'yamljs'
+import yaml from 'js-yaml'
 import i18next from 'i18next'
 
 function getPluralSuffix(numberOfPluralForms, nthForm) {
@@ -264,7 +264,7 @@ export default class i18nTransform extends Transform {
     try {
       let content
       if (path.endsWith('yml')) {
-        content = YAML.parse(fs.readFileSync(path).toString())
+        content = yaml.safeLoad(fs.readFileSync(path).toString())
       } else {
         content = JSON.parse(fs.readFileSync(path))
       }
@@ -281,7 +281,9 @@ export default class i18nTransform extends Transform {
   pushFile(path, contents) {
     let text
     if (path.endsWith('yml')) {
-      text = YAML.stringify(contents, null, this.options.indentation)
+      text = yaml.safeDump(contents, {
+        indent: this.options.indentation,
+      })
     } else {
       text = JSON.stringify(contents, null, this.options.indentation) + '\n'
     }
