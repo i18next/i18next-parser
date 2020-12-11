@@ -1,6 +1,10 @@
 # Changelog
 
-# 3.4.0 - latest
+# 3.5.0 - latest
+
+- Stop trying to parse directories #252
+
+# 3.4.0
 
 - Support multiline output in YAML #251
 - Fix bug with unicode escape sequences #227
