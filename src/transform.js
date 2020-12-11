@@ -82,6 +82,11 @@ export default class i18nTransform extends Transform {
     let content
     if (file.isBuffer()) {
       content = file.contents.toString('utf8')
+    } else if (fs.lstatSync(file.path).isDirectory()) {
+      const warning = `${file.path} is a directory: skipping`
+      this.warn(warning)
+      done()
+      return
     } else {
       content = fs.readFileSync(file.path, encoding)
     }

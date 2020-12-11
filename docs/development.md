@@ -45,6 +45,7 @@ yarn link
 cd test
 i18next manual/**/*.html  -c i18next-parser.config.js
 i18next manual/**/*.html  -c i18next-parser.config.js --fail-on-warnings
+i18next manual/**/*.{js,jsx} --fail-on-warnings
 ```
 
 To test gulp:

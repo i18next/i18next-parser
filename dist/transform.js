@@ -82,6 +82,11 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
       var content = void 0;
       if (file.isBuffer()) {
         content = file.contents.toString('utf8');
+      } else if (_fs2.default.lstatSync(file.path).isDirectory()) {
+        var warning = file.path + ' is a directory: skipping';
+        this.warn(warning);
+        done();
+        return;
       } else {
         content = _fs2.default.readFileSync(file.path, encoding);
       }
