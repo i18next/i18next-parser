@@ -132,9 +132,9 @@ export default class JsxLexer extends JavascriptLexer {
                 this.transKeepBasicHtmlNodesFor.includes(child.name)
                   ? child.name
                   : index
-              return `<${elementName}>${elemsToString(
-                child.children
-              )}</${elementName}>`
+              const childrenString = elemsToString(child.children);
+              return childrenString ? `<${elementName}>${childrenString}</${elementName}>` :
+              `<${elementName} />`
             default:
               throw new Error('Unknown parsed content: ' + child.type)
           }
