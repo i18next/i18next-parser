@@ -132,7 +132,7 @@ export default class JsxLexer extends JavascriptLexer {
                 this.transKeepBasicHtmlNodesFor.includes(child.name)
               const elementName = useTagName ? child.name : index
               const childrenString = elemsToString(child.children)
-              return childrenString || !useTagName
+              return childrenString || !(useTagName && child.selfClosing)
                 ? `<${elementName}>${childrenString}</${elementName}>`
                 : `<${elementName} />`
             default:
@@ -166,6 +166,7 @@ export default class JsxLexer extends JavascriptLexer {
             children: this.parseChildren(child.children, sourceText),
             name,
             isBasic,
+            selfClosing: child.kind === ts.SyntaxKind.JsxSelfClosingElement
           }
         } else if (child.kind === ts.SyntaxKind.JsxExpression) {
           // strip empty expressions
