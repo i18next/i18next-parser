@@ -166,7 +166,7 @@ export default class JsxLexer extends JavascriptLexer {
             children: this.parseChildren(child.children, sourceText),
             name,
             isBasic,
-            selfClosing: child.kind === ts.SyntaxKind.JsxSelfClosingElement
+            selfClosing: child.kind === ts.SyntaxKind.JsxSelfClosingElement,
           }
         } else if (child.kind === ts.SyntaxKind.JsxExpression) {
           // strip empty expressions

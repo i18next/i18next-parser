@@ -916,10 +916,13 @@ describe('parser', () => {
         }
       })
       i18nextParser.once('end', () => {
-        assert.equal(result.replace(/\r\n/g, '\n'), `multiline: |-
+        assert.equal(
+          result.replace(/\r\n/g, '\n'),
+          `multiline: |-
   One
   Two
-`)
+`
+        )
         done()
       })
 
