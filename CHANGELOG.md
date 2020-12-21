@@ -1,6 +1,10 @@
 # Changelog
 
-# 3.5.0 - latest
+# 3.6.0 - latest
+
+- Fix a conflict in jsx lexer #254
+
+# 3.5.0
 
 - Stop trying to parse directories #252
 
