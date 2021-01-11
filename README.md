@@ -29,7 +29,7 @@ Finally, if you want to make this process even less painful, I invite you to che
 
 You can find information about major releases on the [dedicated page](https://github.com/i18next/i18next-parser/releases). The [migration documentation](docs/migration.md) will help you figure out the breaking changes between versions.
 
-For legacy user on `0.x`, the code has since been entirely rewritten and there is a dedicated [branch](https://github.com/i18next/i18next-parser/tree/0.x.x) for it. You are hihgly encouraged to upgrade!
+For legacy users on `0.x`, the code has since been entirely rewritten and there is a dedicated [branch](https://github.com/i18next/i18next-parser/tree/0.x.x) for it. You are highly encouraged to upgrade!
 
 ## Usage
 
