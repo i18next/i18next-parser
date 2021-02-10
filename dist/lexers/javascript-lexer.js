@@ -128,12 +128,12 @@ JavascriptLexer = function (_BaseLexer) {_inherits(JavascriptLexer, _BaseLexer);
           }
           entry.key = concatenatedString;
         } else {
-          if (keyArgument.kind === ts.SyntaxKind.Identifier) {
-            this.emit(
-            'warning', 'Key is not a string literal: ' +
-            keyArgument.text);
+          this.emit(
+          'warning',
+          keyArgument.kind === ts.SyntaxKind.Identifier ? 'Key is not a string literal: ' +
+          keyArgument.text :
+          'Key is not a string literal');
 
-          }
           return null;
         }
 
