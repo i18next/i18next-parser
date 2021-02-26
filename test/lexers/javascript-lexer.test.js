@@ -234,7 +234,11 @@ describe('JavascriptLexer', () => {
       'const bar = "bar"; i18n.t("foo"); i18n.t(bar); i18n.t(`foo.${bar}`);'
 
     let warningCount = 0
-    Lexer.on('warning', () => warningCount++)
+    Lexer.on('warning', (warning) => {
+      if (warning.indexOf('Key is not a string literal') === 0) {
+        warningCount++
+      }
+    })
 
     assert.deepEqual(Lexer.extract(content), [
       {
