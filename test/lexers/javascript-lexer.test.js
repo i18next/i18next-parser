@@ -227,4 +227,20 @@ describe('JavascriptLexer', () => {
       },
     ])
   })
+
+  it('emits warnings on dynamic keys', () => {
+    const Lexer = new JavascriptLexer()
+    const content =
+      'const bar = "bar"; i18n.t("foo"); i18n.t(bar); i18n.t(`foo.${bar}`);'
+
+    let warningCount = 0
+    Lexer.on('warning', () => warningCount++)
+
+    assert.deepEqual(Lexer.extract(content), [
+      {
+        key: 'foo',
+      },
+    ])
+    assert.strictEqual(warningCount, 2)
+  })
 })
