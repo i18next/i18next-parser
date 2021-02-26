@@ -1,6 +1,10 @@
 # Changelog
 
-# 3.6.0 - latest
+# 3.7.0 - latest
+
+- Improve handling of string literals #261
+
+# 3.6.0
 
 - Fix a conflict in jsx lexer #254
 
