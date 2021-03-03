@@ -24,7 +24,16 @@ export default class JsxLexer extends JavascriptLexer {
     const parseTree = (node) => {
       let entry
 
-      parseCommentNode(keys, node, content)
+      // Parse comment throws an error if disable-next-line is detected.
+      try {
+        parseCommentNode(keys, node, content)
+      } catch (error) {
+        if (error.context === 'disable-next-line') {
+          // Log disable and return to skip processing of this node
+          console.log('            Next line disabled.')
+          return
+        }
+      }
 
       switch (node.kind) {
         case ts.SyntaxKind.CallExpression:

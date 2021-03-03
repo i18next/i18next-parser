@@ -26,6 +26,12 @@ export default class JavascriptLexer extends BaseLexer {
           ) {
             visitedComments.add(commentId)
             const text = content.slice(pos, end)
+
+            if (BaseLexer.disableLineRegex.test(text)) {
+              // Throw error to abort processing of current node.
+              this.emit('error', 'disable-next-line')
+            }
+
             const commentKeys = this.commentExtractor.call(this, text)
             if (commentKeys) {
               keys.push(...commentKeys)
@@ -55,7 +61,16 @@ export default class JavascriptLexer extends BaseLexer {
     const parseTree = (node) => {
       let entry
 
-      parseCommentNode(keys, node, content)
+      // Parse comment throws an error if disable-next-line is detected.
+      try {
+        parseCommentNode(keys, node, content)
+      } catch (error) {
+        if (error.context === 'disable-next-line') {
+          // Log disable and return to skip processing of this node
+          console.log('            Next line disabled.')
+          return
+        }
+      }
 
       if (node.kind === ts.SyntaxKind.CallExpression) {
         entry = this.expressionExtractor.call(this, node)

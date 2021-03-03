@@ -32,6 +32,10 @@ export default class BaseLexer extends EventEmitter {
     return '(?:[A-Z0-9_.-]+)'
   }
 
+  static get disableLineRegex() {
+    return /i18next-parser-disable-next-line/
+  }
+
   static get stringPattern() {
     return (
       '(?:' +

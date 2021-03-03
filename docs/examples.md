@@ -156,3 +156,12 @@ In recursive mode, it will parse `*.hbs` and `*.js` files and skip `.git` folder
 }))`
 
 This will output your files in the format `$LOCALE/client.$LOCALE.i18n.json` in a `i18n/` directory.
+
+**Ignore a single line from parsing**
+(Currently only on Js/Jsx/Vue-Lexers)
+Using a preceding comment the following line will not get parsed:
+
+```
+/* i18next-parser-disable-next-line */
+i18n.t('This will not get parsed')
+```

@@ -335,5 +335,30 @@ describe('JsxLexer', () => {
         done()
       })
     })
+
+    it('Respect disable line comments', () => {
+      const Lexer = new JsxLexer()
+      const content = `
+        This unfortunately needs a first line
+        // i18next-parser-disable-next-line
+        i18n.t('First not parsed')
+        i18n.t('First parsed')
+
+        /* i18next-parser-disable-next-line */
+        i18n.t('Second not parsed')
+        i18n.t('Second parsed')
+
+        /*
+        * i18next-parser-disable-next-line
+        */
+        i18n.t('Third not parsed')
+        i18n.t('Third parsed')
+        `
+      assert.deepEqual(Lexer.extract(content), [
+        { key: 'First parsed' },
+        { key: 'Second parsed' },
+        { key: 'Third parsed' },
+      ])
+    })
   })
 })
