@@ -54,7 +54,7 @@
     "gulp": "^4.0.0",
     "mocha": "^5.0.0",
     "prettier": "2.0.5",
-    "sinon": "^6.2.0"
+    "sinon": "^10.0.0"
   },
   "keywords": [
     "gulpplugin",
