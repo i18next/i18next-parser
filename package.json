@@ -27,7 +27,7 @@
     "fs-extra": "^9.1.0",
     "gulp-sort": "^2.0.0",
     "i18next": "^20.2.1",
-    "js-yaml": "^3.14.0",
+    "js-yaml": "^4.1.0",
     "rsvp": "^4.8.2",
     "through2": "~4.0.2",
     "typescript": "^4.2.4",
