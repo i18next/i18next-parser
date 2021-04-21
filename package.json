@@ -20,7 +20,7 @@
   "dependencies": {
     "broccoli-plugin": "^4.0.5",
     "cheerio": "^1.0.0-rc.2",
-    "colors": "~1.2.0-rc0",
+    "colors": "~1.4.0",
     "commander": "~2.9.0",
     "concat-stream": "~1.6.0",
     "eol": "^0.9.1",
