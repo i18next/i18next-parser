@@ -76,4 +76,4 @@ Parser = function (_EventEmitter) {_inherits(Parser, _EventEmitter);
         }} catch (err) {_didIteratorError = true;_iteratorError = err;} finally {try {if (!_iteratorNormalCompletion && _iterator.return) {_iterator.return();}} finally {if (_didIteratorError) {throw _iteratorError;}}}
 
       return keys;
-    } }]);return Parser;}(_events2.default);exports.default = Parser;module.exports = exports['default'];
+    } }]);return Parser;}(_events2.default);exports.default = Parser;module.exports = exports.default;

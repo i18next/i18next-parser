@@ -269,7 +269,7 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
       try {
         var content = void 0;
         if (path.endsWith('yml')) {
-          content = _jsYaml2.default.safeLoad(_fs2.default.readFileSync(path).toString());
+          content = _jsYaml2.default.load(_fs2.default.readFileSync(path).toString());
         } else {
           content = JSON.parse(_fs2.default.readFileSync(path));
         }
@@ -286,7 +286,7 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
     path, contents) {
       var text = void 0;
       if (path.endsWith('yml')) {
-        text = _jsYaml2.default.safeDump(contents, {
+        text = _jsYaml2.default.dump(contents, {
           indent: this.options.indentation });
 
       } else {
@@ -315,4 +315,4 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
         contents: Buffer.from(text) });
 
       this.push(file);
-    } }]);return i18nTransform;}(_stream.Transform);exports.default = i18nTransform;module.exports = exports['default'];
+    } }]);return i18nTransform;}(_stream.Transform);exports.default = i18nTransform;module.exports = exports.default;

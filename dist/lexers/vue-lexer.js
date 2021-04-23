@@ -22,4 +22,4 @@ VueLexer = function (_BaseLexer) {_inherits(VueLexer, _BaseLexer);
       keys = keys.concat(Lexer2.extract(compiledTemplate));
 
       return keys;
-    } }]);return VueLexer;}(_baseLexer2.default);exports.default = VueLexer;module.exports = exports['default'];
+    } }]);return VueLexer;}(_baseLexer2.default);exports.default = VueLexer;module.exports = exports.default;

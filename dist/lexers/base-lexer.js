@@ -50,4 +50,4 @@ BaseLexer = function (_EventEmitter) {_inherits(BaseLexer, _EventEmitter);
         join('|') +
         ')');
 
-    } }]);return BaseLexer;}(_events2.default);exports.default = BaseLexer;module.exports = exports['default'];
+    } }]);return BaseLexer;}(_events2.default);exports.default = BaseLexer;module.exports = exports.default;
