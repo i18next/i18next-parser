@@ -2,6 +2,10 @@
 
 # 3.7.0 - latest
 
+- Update dependencies
+
+# 3.7.0
+
 - Improve handling of string literals #261
 
 # 3.6.0
