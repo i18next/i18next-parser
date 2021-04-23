@@ -56,4 +56,4 @@ i18nextParser = function (_Plugin) {_inherits(i18nextParser, _Plugin);
         }));
 
       });
-    } }]);return i18nextParser;}(_broccoliPlugin2.default);exports.default = i18nextParser;module.exports = exports['default'];
+    } }]);return i18nextParser;}(_broccoliPlugin2.default);exports.default = i18nextParser;module.exports = exports.default;
