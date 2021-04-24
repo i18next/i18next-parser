@@ -1,6 +1,10 @@
 # Changelog
 
-# 3.7.0 - latest
+# 3.8.1 - latest
+
+- Fix cli that wasn't running #295 #296
+
+# 3.8.0
 
 - Update dependencies
 
