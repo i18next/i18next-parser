@@ -11,7 +11,14 @@
   "scripts": {
     "test": "mocha -r @babel/register -r @babel/polyfill --recursive test/*.test.js test/**/*.test.js",
     "watch": "babel src -d dist -w",
-    "build": "prettier --write --no-semi --single-quote \"{src,test}/**/*.js\" && babel src -d dist"
+    "build": "prettier --write \"{src,test}/**/*.js\" && babel src -d dist"
+  },
+  "prettier": {
+    "trailingComma": "es5",
+    "semi": false,
+    "singleQuote": true,
+    "quoteProps": "as-needed",
+    "jsxSingleQuote": true
   },
   "repository": {
     "type": "git",
