@@ -1,6 +1,10 @@
 # Changelog
 
-# 3.8.1 - latest
+# 3.9.0 - latest
+
+- Update to babel 7 #298
+
+# 3.8.1
 
 - Fix cli that wasn't running #295 #296
 
