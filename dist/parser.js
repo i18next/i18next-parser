@@ -1,10 +1,10 @@
-'use strict';Object.defineProperty(exports, "__esModule", { value: true });var _extends = Object.assign || function (target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i];for (var key in source) {if (Object.prototype.hasOwnProperty.call(source, key)) {target[key] = source[key];}}}return target;};var _createClass = function () {function defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);}}return function (Constructor, protoProps, staticProps) {if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;};}();var _path = require('path');var _path2 = _interopRequireDefault(_path);
-var _events = require('events');var _events2 = _interopRequireDefault(_events);
-var _handlebarsLexer = require('./lexers/handlebars-lexer');var _handlebarsLexer2 = _interopRequireDefault(_handlebarsLexer);
-var _htmlLexer = require('./lexers/html-lexer');var _htmlLexer2 = _interopRequireDefault(_htmlLexer);
-var _javascriptLexer = require('./lexers/javascript-lexer');var _javascriptLexer2 = _interopRequireDefault(_javascriptLexer);
-var _jsxLexer = require('./lexers/jsx-lexer');var _jsxLexer2 = _interopRequireDefault(_jsxLexer);
-var _vueLexer = require('./lexers/vue-lexer');var _vueLexer2 = _interopRequireDefault(_vueLexer);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function _possibleConstructorReturn(self, call) {if (!self) {throw new ReferenceError("this hasn't been initialised - super() hasn't been called");}return call && (typeof call === "object" || typeof call === "function") ? call : self;}function _inherits(subClass, superClass) {if (typeof superClass !== "function" && superClass !== null) {throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);}subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;}
+"use strict";function _typeof(obj) {"@babel/helpers - typeof";if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {_typeof = function _typeof(obj) {return typeof obj;};} else {_typeof = function _typeof(obj) {return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;};}return _typeof(obj);}Object.defineProperty(exports, "__esModule", { value: true });exports["default"] = void 0;var _path = _interopRequireDefault(require("path"));
+var _events = _interopRequireDefault(require("events"));
+var _handlebarsLexer = _interopRequireDefault(require("./lexers/handlebars-lexer"));
+var _htmlLexer = _interopRequireDefault(require("./lexers/html-lexer"));
+var _javascriptLexer = _interopRequireDefault(require("./lexers/javascript-lexer"));
+var _jsxLexer = _interopRequireDefault(require("./lexers/jsx-lexer"));
+var _vueLexer = _interopRequireDefault(require("./lexers/vue-lexer"));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { "default": obj };}function _createForOfIteratorHelper(o, allowArrayLike) {var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"];if (!it) {if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") {if (it) o = it;var i = 0;var F = function F() {};return { s: F, n: function n() {if (i >= o.length) return { done: true };return { done: false, value: o[i++] };}, e: function e(_e) {throw _e;}, f: F };}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}var normalCompletion = true,didErr = false,err;return { s: function s() {it = it.call(o);}, n: function n() {var step = it.next();normalCompletion = step.done;return step;}, e: function e(_e2) {didErr = true;err = _e2;}, f: function f() {try {if (!normalCompletion && it["return"] != null) it["return"]();} finally {if (didErr) throw err;}} };}function _unsupportedIterableToArray(o, minLen) {if (!o) return;if (typeof o === "string") return _arrayLikeToArray(o, minLen);var n = Object.prototype.toString.call(o).slice(8, -1);if (n === "Object" && o.constructor) n = o.constructor.name;if (n === "Map" || n === "Set") return Array.from(o);if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);}function _arrayLikeToArray(arr, len) {if (len == null || len > arr.length) len = arr.length;for (var i = 0, arr2 = new Array(len); i < len; i++) {arr2[i] = arr[i];}return arr2;}function ownKeys(object, enumerableOnly) {var keys = Object.keys(object);if (Object.getOwnPropertySymbols) {var symbols = Object.getOwnPropertySymbols(object);if (enumerableOnly) symbols = symbols.filter(function (sym) {return Object.getOwnPropertyDescriptor(object, sym).enumerable;});keys.push.apply(keys, symbols);}return keys;}function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};if (i % 2) {ownKeys(Object(source), true).forEach(function (key) {_defineProperty(target, key, source[key]);});} else if (Object.getOwnPropertyDescriptors) {Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));} else {ownKeys(Object(source)).forEach(function (key) {Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));});}}return target;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function _defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);}}function _createClass(Constructor, protoProps, staticProps) {if (protoProps) _defineProperties(Constructor.prototype, protoProps);if (staticProps) _defineProperties(Constructor, staticProps);return Constructor;}function _inherits(subClass, superClass) {if (typeof superClass !== "function" && superClass !== null) {throw new TypeError("Super expression must either be null or a function");}subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } });if (superClass) _setPrototypeOf(subClass, superClass);}function _setPrototypeOf(o, p) {_setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) {o.__proto__ = p;return o;};return _setPrototypeOf(o, p);}function _createSuper(Derived) {var hasNativeReflectConstruct = _isNativeReflectConstruct();return function _createSuperInternal() {var Super = _getPrototypeOf(Derived),result;if (hasNativeReflectConstruct) {var NewTarget = _getPrototypeOf(this).constructor;result = Reflect.construct(Super, arguments, NewTarget);} else {result = Super.apply(this, arguments);}return _possibleConstructorReturn(this, result);};}function _possibleConstructorReturn(self, call) {if (call && (_typeof(call) === "object" || typeof call === "function")) {return call;}return _assertThisInitialized(self);}function _assertThisInitialized(self) {if (self === void 0) {throw new ReferenceError("this hasn't been initialised - super() hasn't been called");}return self;}function _isNativeReflectConstruct() {if (typeof Reflect === "undefined" || !Reflect.construct) return false;if (Reflect.construct.sham) return false;if (typeof Proxy === "function") return true;try {Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {}));return true;} catch (e) {return false;}}function _getPrototypeOf(o) {_getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) {return o.__proto__ || Object.getPrototypeOf(o);};return _getPrototypeOf(o);}
 
 var lexers = {
   hbs: ['HandlebarsLexer'],
@@ -21,30 +21,30 @@ var lexers = {
 
   vue: ['VueLexer'],
 
-  default: ['JavascriptLexer'] };
+  "default": ['JavascriptLexer'] };
 
 
 var lexersMap = {
-  HandlebarsLexer: _handlebarsLexer2.default,
-  HTMLLexer: _htmlLexer2.default,
-  JavascriptLexer: _javascriptLexer2.default,
-  JsxLexer: _jsxLexer2.default,
-  VueLexer: _vueLexer2.default };var
+  HandlebarsLexer: _handlebarsLexer["default"],
+  HTMLLexer: _htmlLexer["default"],
+  JavascriptLexer: _javascriptLexer["default"],
+  JsxLexer: _jsxLexer["default"],
+  VueLexer: _vueLexer["default"] };var
 
 
-Parser = function (_EventEmitter) {_inherits(Parser, _EventEmitter);
-  function Parser() {var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};_classCallCheck(this, Parser);var _this = _possibleConstructorReturn(this, (Parser.__proto__ || Object.getPrototypeOf(Parser)).call(this,
-    options));
+Parser = /*#__PURE__*/function (_EventEmitter) {_inherits(Parser, _EventEmitter);var _super = _createSuper(Parser);
+  function Parser() {var _this;var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};_classCallCheck(this, Parser);
+    _this = _super.call(this, options);
     _this.options = options;
-    _this.lexers = _extends({}, lexers, options.lexers);return _this;
-  }_createClass(Parser, [{ key: 'parse', value: function parse(
+    _this.lexers = _objectSpread(_objectSpread({}, lexers), options.lexers);return _this;
+  }_createClass(Parser, [{ key: "parse", value:
 
-    content, filename) {var _this2 = this;
+    function parse(content, filename) {var _this2 = this;
       var keys = [];
-      var extension = _path2.default.extname(filename).substr(1);
-      var lexers = this.lexers[extension] || this.lexers.default;var _iteratorNormalCompletion = true;var _didIteratorError = false;var _iteratorError = undefined;try {
+      var extension = _path["default"].extname(filename).substr(1);
+      var lexers = this.lexers[extension] || this.lexers["default"];var _iterator = _createForOfIteratorHelper(
 
-        for (var _iterator = lexers[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {var lexerConfig = _step.value;
+      lexers),_step;try {for (_iterator.s(); !(_step = _iterator.n()).done;) {var lexerConfig = _step.value;
           var lexerName = void 0;
           var lexerOptions = void 0;
 
@@ -64,7 +64,7 @@ Parser = function (_EventEmitter) {_inherits(Parser, _EventEmitter);
             Lexer = lexerName;
           } else {
             if (!lexersMap[lexerName]) {
-              this.emit('error', new Error('Lexer \'' + lexerName + '\' does not exist'));
+              this.emit('error', new Error("Lexer '".concat(lexerName, "' does not exist")));
             }
 
             Lexer = lexersMap[lexerName];
@@ -73,7 +73,7 @@ Parser = function (_EventEmitter) {_inherits(Parser, _EventEmitter);
           var lexer = new Lexer(lexerOptions);
           lexer.on('warning', function (warning) {return _this2.emit('warning', warning);});
           keys = keys.concat(lexer.extract(content, filename));
-        }} catch (err) {_didIteratorError = true;_iteratorError = err;} finally {try {if (!_iteratorNormalCompletion && _iterator.return) {_iterator.return();}} finally {if (_didIteratorError) {throw _iteratorError;}}}
+        }} catch (err) {_iterator.e(err);} finally {_iterator.f();}
 
       return keys;
-    } }]);return Parser;}(_events2.default);exports.default = Parser;module.exports = exports.default;
+    } }]);return Parser;}(_events["default"]);exports["default"] = Parser;module.exports = exports.default;

@@ -1,8 +1,10 @@
 {
-  "presets": ["env"],
+  "presets": [
+    "@babel/preset-env"
+  ],
   "plugins": [
     "add-module-exports",
-    "transform-object-rest-spread"
+    "@babel/plugin-proposal-object-rest-spread"
   ],
   "sourceMaps": true,
   "retainLines": true

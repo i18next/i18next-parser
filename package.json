@@ -9,9 +9,16 @@
     "i18next": "./bin/cli.js"
   },
   "scripts": {
-    "test": "mocha -r babel-register -r babel-polyfill --recursive test/*.test.js test/**/*.test.js",
+    "test": "mocha -r @babel/register -r @babel/polyfill --recursive test/*.test.js test/**/*.test.js",
     "watch": "babel src -d dist -w",
-    "build": "prettier --write --no-semi --single-quote \"{src,test}/**/*.js\" && babel src -d dist"
+    "build": "prettier --write \"{src,test}/**/*.js\" && babel src -d dist"
+  },
+  "prettier": {
+    "trailingComma": "es5",
+    "semi": false,
+    "singleQuote": true,
+    "quoteProps": "as-needed",
+    "jsxSingleQuote": true
   },
   "repository": {
     "type": "git",
@@ -42,12 +49,13 @@
     "yarn": ">=1"
   },
   "devDependencies": {
-    "babel-cli": "^6.26.0",
+    "@babel/cli": "^7.0.0",
+    "@babel/core": "^7.0.0",
+    "@babel/plugin-proposal-object-rest-spread": "^7.0.0",
+    "@babel/polyfill": "^7.0.0",
+    "@babel/preset-env": "^7.0.0",
+    "@babel/register": "^7.0.0",
     "babel-plugin-add-module-exports": "^1.0.4",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-polyfill": "^6.26.0",
-    "babel-preset-env": "^1.6.1",
-    "babel-register": "^6.26.0",
     "broccoli": "^3.5.1",
     "broccoli-funnel": "^3.0.4",
     "chai": "^4.1.2",
