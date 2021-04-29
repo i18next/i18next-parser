@@ -1,6 +1,10 @@
 # Changelog
 
-# 3.10.0 - latest
+# 3.11.0 - latest
+
+- Add a pluralSeparator option #300 #302 
+
+# 3.10.0
 
 - defaultValue, useKeysAsDefaultValue and skipDefaultValues options support function #224 #299 #301
 
