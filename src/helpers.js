@@ -18,21 +18,39 @@ function dotPathToHash(entry, target = {}, options = {}) {
   }
 
   const separator = options.separator || '.'
+
+  const key = entry.keyWithNamespace.substring(
+    entry.keyWithNamespace.indexOf(separator) + separator.length,
+    entry.keyWithNamespace.length
+  )
+
+  const defaultValue =
+    typeof options.value === 'function'
+      ? options.value(options.locale, entry.namespace, key)
+      : options.value
+
+  const skipDefaultValues =
+    typeof options.skipDefaultValues === 'function'
+      ? options.skipDefaultValues(options.locale, entry.namespace)
+      : options.skipDefaultValues
+
+  const useKeysAsDefaultValue =
+    typeof options.useKeysAsDefaultValue === 'function'
+      ? options.useKeysAsDefaultValue(options.locale, entry.namespace)
+      : options.useKeysAsDefaultValue
+
   let newValue =
     entry[`defaultValue_${options.suffix}`] ||
     entry.defaultValue ||
-    options.value ||
+    defaultValue ||
     ''
 
-  if (options.skipDefaultValues) {
+  if (skipDefaultValues) {
     newValue = ''
   }
 
-  if (options.useKeysAsDefaultValue) {
-    newValue = entry.keyWithNamespace.substring(
-      entry.keyWithNamespace.indexOf(separator) + separator.length,
-      entry.keyWithNamespace.length
-    )
+  if (useKeysAsDefaultValue) {
+    newValue = key
   }
 
   if (path.endsWith(separator)) {

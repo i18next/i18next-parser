@@ -18,21 +18,39 @@ function dotPathToHash(entry) {var target = arguments.length > 1 && arguments[1]
   }
 
   var separator = options.separator || '.';
+
+  var key = entry.keyWithNamespace.substring(
+  entry.keyWithNamespace.indexOf(separator) + separator.length,
+  entry.keyWithNamespace.length);
+
+
+  var defaultValue =
+  typeof options.value === 'function' ?
+  options.value(options.locale, entry.namespace, key) :
+  options.value;
+
+  var skipDefaultValues =
+  typeof options.skipDefaultValues === 'function' ?
+  options.skipDefaultValues(options.locale, entry.namespace) :
+  options.skipDefaultValues;
+
+  var useKeysAsDefaultValue =
+  typeof options.useKeysAsDefaultValue === 'function' ?
+  options.useKeysAsDefaultValue(options.locale, entry.namespace) :
+  options.useKeysAsDefaultValue;
+
   var newValue =
   entry["defaultValue_".concat(options.suffix)] ||
   entry.defaultValue ||
-  options.value ||
+  defaultValue ||
   '';
 
-  if (options.skipDefaultValues) {
+  if (skipDefaultValues) {
     newValue = '';
   }
 
-  if (options.useKeysAsDefaultValue) {
-    newValue = entry.keyWithNamespace.substring(
-    entry.keyWithNamespace.indexOf(separator) + separator.length,
-    entry.keyWithNamespace.length);
-
+  if (useKeysAsDefaultValue) {
+    newValue = key;
   }
 
   if (path.endsWith(separator)) {
