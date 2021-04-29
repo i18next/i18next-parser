@@ -1,6 +1,10 @@
 # Changelog
 
-# 3.9.0 - latest
+# 3.10.0 - latest
+
+- defaultValue, useKeysAsDefaultValue and skipDefaultValues options support function #224 #299 #301
+
+# 3.9.0
 
 - Update to babel 7 #298
 
