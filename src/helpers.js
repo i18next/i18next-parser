@@ -14,7 +14,7 @@
 function dotPathToHash(entry, target = {}, options = {}) {
   let path = entry.keyWithNamespace
   if (options.suffix || options.suffix === 0) {
-    path += `_${options.suffix}`
+    path += `${options.pluralSeparator}${options.suffix}`
   }
 
   const separator = options.separator || '.'
