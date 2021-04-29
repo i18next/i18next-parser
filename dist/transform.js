@@ -140,6 +140,7 @@ i18nTransform = /*#__PURE__*/function (_Transform) {_inherits(i18nTransform, _Tr
           var transformEntry = function transformEntry(entry, suffix) {
             var _dotPathToHash = (0, _helpers.dotPathToHash)(entry, catalog, {
               suffix: suffix,
+              locale: locale,
               separator: _this2.options.keySeparator,
               value: _this2.options.defaultValue,
               useKeysAsDefaultValue: _this2.options.useKeysAsDefaultValue,

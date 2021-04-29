@@ -140,6 +140,7 @@ export default class i18nTransform extends Transform {
       const transformEntry = (entry, suffix) => {
         const { duplicate, conflict } = dotPathToHash(entry, catalog, {
           suffix,
+          locale,
           separator: this.options.keySeparator,
           value: this.options.defaultValue,
           useKeysAsDefaultValue: this.options.useKeysAsDefaultValue,

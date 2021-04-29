@@ -19,6 +19,7 @@ Thumbs.db
 *.swp
 /sftp-config.json
 /.vscode
+.history
 
 # node files
 node_modules/
