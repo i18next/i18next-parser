@@ -14,7 +14,7 @@
 function dotPathToHash(entry) {var target = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
   var path = entry.keyWithNamespace;
   if (options.suffix || options.suffix === 0) {
-    path += "_".concat(options.suffix);
+    path += "".concat(options.pluralSeparator).concat(options.suffix);
   }
 
   var separator = options.separator || '.';

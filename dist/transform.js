@@ -34,6 +34,7 @@ i18nTransform = /*#__PURE__*/function (_Transform) {_inherits(i18nTransform, _Tr
       lineEnding: 'auto',
       locales: ['en', 'fr'],
       namespaceSeparator: ':',
+      pluralSeparator: '_',
       output: 'locales/$LOCALE/$NAMESPACE.json',
       sort: false,
       useKeysAsDefaultValue: false,
@@ -141,6 +142,7 @@ i18nTransform = /*#__PURE__*/function (_Transform) {_inherits(i18nTransform, _Tr
             var _dotPathToHash = (0, _helpers.dotPathToHash)(entry, catalog, {
               suffix: suffix,
               separator: _this2.options.keySeparator,
+              pluralSeparator: _this2.options.pluralSeparator,
               value: _this2.options.defaultValue,
               useKeysAsDefaultValue: _this2.options.useKeysAsDefaultValue,
               skipDefaultValues: _this2.options.skipDefaultValues,

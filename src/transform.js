@@ -34,6 +34,7 @@ export default class i18nTransform extends Transform {
       lineEnding: 'auto',
       locales: ['en', 'fr'],
       namespaceSeparator: ':',
+      pluralSeparator: '_',
       output: 'locales/$LOCALE/$NAMESPACE.json',
       sort: false,
       useKeysAsDefaultValue: false,
@@ -141,6 +142,7 @@ export default class i18nTransform extends Transform {
         const { duplicate, conflict } = dotPathToHash(entry, catalog, {
           suffix,
           separator: this.options.keySeparator,
+          pluralSeparator: this.options.pluralSeparator,
           value: this.options.defaultValue,
           useKeysAsDefaultValue: this.options.useKeysAsDefaultValue,
           skipDefaultValues: this.options.skipDefaultValues,
