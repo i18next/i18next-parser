@@ -1413,9 +1413,9 @@ broccoli-source@^3.0.0:
     broccoli-node-api "^1.6.0"
 
 broccoli@^3.5.1:
-  version "3.5.1"
-  resolved "https://registry.yarnpkg.com/broccoli/-/broccoli-3.5.1.tgz#371bc63cabe700bae3a2b80cac3e978f94664418"
-  integrity sha512-2Rvl40E6JgALX1JQN5PjCgP1apFAP24vVol+coX5TpVVy0Lsqzl3Mabbe3fVQcu3lMRfPJ6DyBKqBlo52XPSRg==
+  version "3.5.2"
+  resolved "https://registry.yarnpkg.com/broccoli/-/broccoli-3.5.2.tgz#60921167d57b43fb5bad527420d62fe532595ef4"
+  integrity sha512-sWi3b3fTUSVPDsz5KsQ5eCQNVAtLgkIE/HYFkEZXR/07clqmd4E/gFiuwSaqa9b+QTXc1Uemfb7TVWbEIURWDg==
   dependencies:
     "@types/chai" "^4.2.9"
     "@types/chai-as-promised" "^7.1.2"
