@@ -1356,13 +1356,13 @@ braces@^3.0.1, braces@~3.0.2:
     fill-range "^7.0.1"
 
 broccoli-funnel@^3.0.4:
-  version "3.0.4"
-  resolved "https://registry.yarnpkg.com/broccoli-funnel/-/broccoli-funnel-3.0.4.tgz#0fe6b7e8745fa4585f30470fbfe54653ce058e3c"
-  integrity sha512-6w0nhWvBeTnOQ0DGVM9mCvFN32duLbXxyE06qLFi9jcd0HwfODkQ0QMtvvuM60+i7pHa+JQ75MStWHpj1DIaoA==
+  version "3.0.5"
+  resolved "https://registry.yarnpkg.com/broccoli-funnel/-/broccoli-funnel-3.0.5.tgz#60da33d060fae2936b3d78217bd4008a6eea5e41"
+  integrity sha512-fcjvQIWq4lpKyzQ7FWRo/V8/nOALjIrAoRMFCLgFeO2xhOC1+i7QWbMndLTwpnLCoXpTa+luBu3WSFoxQ3VPlw==
   dependencies:
     array-equal "^1.0.0"
     blank-object "^1.0.1"
-    broccoli-plugin "^4.0.1"
+    broccoli-plugin "^4.0.7"
     debug "^4.1.1"
     fast-ordered-set "^1.0.0"
     fs-tree-diff "^2.0.1"
@@ -1390,14 +1390,14 @@ broccoli-output-wrapper@^3.2.5:
     heimdalljs-logger "^0.1.10"
     symlink-or-copy "^1.2.0"
 
-broccoli-plugin@^4.0.1, broccoli-plugin@^4.0.5:
-  version "4.0.5"
-  resolved "https://registry.yarnpkg.com/broccoli-plugin/-/broccoli-plugin-4.0.5.tgz#71e5597f31a652c0e0a6bcb7bbdb50142cc5c959"
-  integrity sha512-WA8FQP2EQCBOd1Z6RhXlyTyt/F+sJEwWGTCUrIIBDxHhSURibPW/n0NfwgLdEZSD8/3Ec4B9L3PUqaWxVuVC2A==
+broccoli-plugin@^4.0.5, broccoli-plugin@^4.0.7:
+  version "4.0.7"
+  resolved "https://registry.yarnpkg.com/broccoli-plugin/-/broccoli-plugin-4.0.7.tgz#dd176a85efe915ed557d913744b181abe05047db"
+  integrity sha512-a4zUsWtA1uns1K7p9rExYVYG99rdKeGRymW0qOCNkvDPHQxVi3yVyJHhQbM3EZwdt2E0mnhr5e0c/bPpJ7p3Wg==
   dependencies:
     broccoli-node-api "^1.7.0"
     broccoli-output-wrapper "^3.2.5"
-    fs-merger "^3.1.0"
+    fs-merger "^3.2.1"
     promise-map-series "^0.3.0"
     quick-temp "^0.1.8"
     rimraf "^3.0.2"
@@ -2469,17 +2469,16 @@ fs-extra@^9.1.0:
     jsonfile "^6.0.1"
     universalify "^2.0.0"
 
-fs-merger@^3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/fs-merger/-/fs-merger-3.1.0.tgz#f30f74f6c70b2ff7333ec074f3d2f22298152f3b"
-  integrity sha512-RZ9JtqugaE8Rkt7idO5NSwcxEGSDZpLmVFjtVQUm3f+bWun7JAU6fKyU6ZJUeUnKdJwGx8uaro+K4QQfOR7vpA==
+fs-merger@^3.2.1:
+  version "3.2.1"
+  resolved "https://registry.yarnpkg.com/fs-merger/-/fs-merger-3.2.1.tgz#a225b11ae530426138294b8fbb19e82e3d4e0b3b"
+  integrity sha512-AN6sX12liy0JE7C2evclwoo0aCG3PFulLjrTLsJpWh/2mM+DinhpSGqYLbHBBbIW1PLRNcFhJG8Axtz8mQW3ug==
   dependencies:
     broccoli-node-api "^1.7.0"
     broccoli-node-info "^2.1.0"
     fs-extra "^8.0.1"
     fs-tree-diff "^2.0.1"
-    rimraf "^2.6.3"
-    walk-sync "^2.0.2"
+    walk-sync "^2.2.0"
 
 fs-mkdirp-stream@^1.0.0:
   version "1.0.0"
@@ -5047,7 +5046,7 @@ walk-sync@^0.3.3:
     ensure-posix-path "^1.0.0"
     matcher-collection "^1.0.0"
 
-walk-sync@^2.0.2:
+walk-sync@^2.0.2, walk-sync@^2.2.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/walk-sync/-/walk-sync-2.2.0.tgz#80786b0657fcc8c0e1c0b1a042a09eae2966387a"
   integrity sha512-IC8sL7aB4/ZgFcGI2T1LczZeFWZ06b3zoHH7jBPyHxOtIIz1jppWHjjEXkOFvFojBVAK9pV7g47xOZ4LW3QLfg==
