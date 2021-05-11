@@ -29,5 +29,5 @@ jobs:
     - run: npm run coverage
     - uses: codecov/codecov-action@v1
       with: 
-        name: ${{ matrix.node-version }}
+        name: node-${{ matrix.node-version }}
         fail_ci_if_error: true
