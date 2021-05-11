@@ -26,5 +26,8 @@ jobs:
           ${{ runner.OS }}-
     - run: npm install
     - run: npm run build
-    - run: npm coverage
+    - run: npm run coverage
     - uses: codecov/codecov-action@v1
+      with: 
+        name: ${{ matrix.node-version }}
+        fail_ci_if_error: true
