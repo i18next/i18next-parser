@@ -26,4 +26,5 @@ jobs:
           ${{ runner.OS }}-
     - run: npm install
     - run: npm run build
-    - run: npm test
+    - run: npm coverage
+    - uses: codecov/codecov-action@v1
