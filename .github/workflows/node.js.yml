@@ -16,19 +16,17 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - name: Get yarn cache directory path
-      id: yarn-cache-dir-path
-      run: echo "::set-output name=dir::$(yarn cache dir)"
     - name: Cache Node.js modules
       uses: actions/cache@v2
       with:
-        path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+        path: ~/.npm
+        key: ${{ runner.OS }}-node-${{ hashFiles('**/package-lock.json') }}
         restore-keys: |
-          ${{ runner.os }}-yarn-
-    - run: yarn install
-    - run: yarn build
-    - run: yarn coverage
+          ${{ runner.OS }}-node-
+          ${{ runner.OS }}-
+    - run: npm install
+    - run: npm run build
+    - run: npm run coverage
     - uses: codecov/codecov-action@v1
       with: 
         name: node-${{ matrix.node-version }}
