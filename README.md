@@ -1,4 +1,4 @@
-# i18next Parser [![Build Status](https://travis-ci.org/i18next/i18next-parser.svg?branch=master)](https://travis-ci.org/i18next/i18next-parser)
+# i18next Parser [![Build Status](https://travis-ci.org/i18next/i18next-parser.svg?branch=master)](https://travis-ci.org/i18next/i18next-parser) [![codecov](https://codecov.io/gh/i18next/i18next-parser/branch/master/graph/badge.svg?token=CJ74Vps41L)](https://codecov.io/gh/i18next/i18next-parser)
 
 [![NPM](https://nodei.co/npm/i18next-parser.png?downloads=true&stars=true)](https://www.npmjs.com/package/i18next-parser)
 
