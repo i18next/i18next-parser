@@ -2,7 +2,7 @@
 
 var colors        = require('colors')
 var fs            = require('fs')
-var i18nTransform = require('../dist/transform')
+var i18nTransform = require('../dist/transform')['default']
 var path          = require('path')
 var pkg           = require('../package.json')
 var program       = require('commander')

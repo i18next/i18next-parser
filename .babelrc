@@ -3,7 +3,7 @@
     "@babel/preset-env"
   ],
   "plugins": [
-    "add-module-exports",
+    "@babel/transform-runtime",
     "@babel/plugin-proposal-object-rest-spread"
   ],
   "sourceMaps": true,

@@ -11,12 +11,12 @@
       "cwd": "${workspaceRoot}",
       "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
       "args": [
-        "-u", "tdd",
+        "-u", "bdd",
         "--timeout", "999999",
         "--colors",
-        "--require", "babel-register",
-        "--require", "babel-polyfill",
-        "--plugins", "transform-object-rest-spread",
+        "--require", "@babel/register",
+        "--require", "@babel/polyfill",
+        "--plugins", "@babel/plugin-transform-runtime",
         "${workspaceFolder}/test/**/*.test.js"
       ],
       "runtimeArgs": [
