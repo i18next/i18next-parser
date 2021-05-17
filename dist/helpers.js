@@ -1,4 +1,4 @@
-"use strict";Object.defineProperty(exports, "__esModule", { value: true });exports.dotPathToHash = dotPathToHash;exports.mergeHashes = mergeHashes;exports.transferValues = transferValues;function _typeof(obj) {"@babel/helpers - typeof";if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {_typeof = function _typeof(obj) {return typeof obj;};} else {_typeof = function _typeof(obj) {return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;};}return _typeof(obj);} /**
+"use strict";var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");Object.defineProperty(exports, "__esModule", { value: true });exports.dotPathToHash = dotPathToHash;exports.mergeHashes = mergeHashes;exports.transferValues = transferValues;var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof")); /**
  * Take an entry for the Parser and turn it into a hash,
  * turning the key path 'foo.bar' into an hash {foo: {bar: ""}}
  * The generated hash can be merged with an optional `target`.
@@ -12,6 +12,8 @@
  * different value, or `false`.
  */
 function dotPathToHash(entry) {var target = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+  var conflict = false;
+  var duplicate = false;
   var path = entry.keyWithNamespace;
   if (options.suffix || options.suffix === 0) {
     path += "".concat(options.pluralSeparator).concat(options.suffix);
@@ -23,6 +25,12 @@ function dotPathToHash(entry) {var target = arguments.length > 1 && arguments[1]
   entry.keyWithNamespace.indexOf(separator) + separator.length,
   entry.keyWithNamespace.length);
 
+
+  // There is no key to process so we return an empty object
+  if (!key) {
+    target[entry.namespace] = {};
+    return { target: target, duplicate: duplicate, conflict: conflict };
+  }
 
   var defaultValue =
   typeof options.value === 'function' ?
@@ -59,7 +67,6 @@ function dotPathToHash(entry) {var target = arguments.length > 1 && arguments[1]
 
   var segments = path.split(separator);
   var inner = target;
-  var conflict = false;
   for (var i = 0; i < segments.length - 1; i += 1) {
     var segment = segments[i];
     if (segment) {
@@ -76,9 +83,9 @@ function dotPathToHash(entry) {var target = arguments.length > 1 && arguments[1]
   var lastSegment = segments[segments.length - 1];
   var oldValue = inner[lastSegment];
   if (oldValue !== undefined && oldValue !== newValue) {
-    conflict = _typeof(oldValue) !== _typeof(newValue) ? 'key' : 'value';
+    conflict = (0, _typeof2["default"])(oldValue) !== (0, _typeof2["default"])(newValue) ? 'key' : 'value';
   }
-  var duplicate = oldValue !== undefined || conflict !== false;
+  duplicate = oldValue !== undefined || conflict !== false;
 
   if (options.customValueTemplate) {
     inner[lastSegment] = {};
@@ -118,7 +125,7 @@ function mergeHashes(source, target) {var keepRemoved = arguments.length > 2 && 
   var oldCount = 0;
   for (var key in source) {
     var hasNestedEntries =
-    _typeof(target[key]) === 'object' && !Array.isArray(target[key]);
+    (0, _typeof2["default"])(target[key]) === 'object' && !Array.isArray(target[key]);
 
     if (hasNestedEntries) {
       var nested = mergeHashes(source[key], target[key], keepRemoved);
@@ -177,8 +184,8 @@ function transferValues(source, target) {
     var sourceValue = source[key];
     var targetValue = target[key];
     if (
-    _typeof(sourceValue) === 'object' &&
-    _typeof(targetValue) === 'object' &&
+    (0, _typeof2["default"])(sourceValue) === 'object' &&
+    (0, _typeof2["default"])(targetValue) === 'object' &&
     !Array.isArray(sourceValue))
     {
       transferValues(sourceValue, targetValue);

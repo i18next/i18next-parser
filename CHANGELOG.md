@@ -1,6 +1,12 @@
 # Changelog
 
-# 3.11.0 - latest
+# 4.0.0 - latest
+
+- Drop support for Node 10
+- Update all dependencies
+- Fix an error that was causing empty namespace catalogs to be created as `""` instead of `{}` #273
+
+# 3.11.0
 
 - Add a pluralSeparator option #300 #302 
 
