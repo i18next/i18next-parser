@@ -11,11 +11,11 @@ describe('dotPathToHash helper function', () => {
 
   it('ignores trailing separator', (done) => {
     const { target } = dotPathToHash(
-      { keyWithNamespace: 'one.' },
+      { keyWithNamespace: 'one.two.' },
       {},
       { separator: '.' }
     )
-    assert.deepEqual(target, { one: '' })
+    assert.deepEqual(target, { one: { two: '' } })
     done()
   })
 

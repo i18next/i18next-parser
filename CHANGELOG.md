@@ -1,6 +1,6 @@
 # Changelog
 
-# 4.0.0 - latest
+# 4.0.1 - latest
 
 - Drop support for Node 10
 - Update all dependencies
