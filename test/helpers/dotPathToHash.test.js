@@ -45,6 +45,15 @@ describe('dotPathToHash helper function', () => {
     done()
   })
 
+  it('handles an empty namespace', (done) => {
+    const { target, duplicate } = dotPathToHash(
+      { keyWithNamespace: 'ns.', namespace: 'ns' }
+    )
+    assert.deepEqual(target, { ns: {} })
+    assert.equal(duplicate, false)
+    done()
+  })
+  
   it('handles a target hash', (done) => {
     const { target, duplicate } = dotPathToHash(
       { keyWithNamespace: 'one.two.three' },

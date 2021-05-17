@@ -12,6 +12,8 @@
  * different value, or `false`.
  */
 function dotPathToHash(entry, target = {}, options = {}) {
+  let conflict = false
+  let duplicate = false
   let path = entry.keyWithNamespace
   if (options.suffix || options.suffix === 0) {
     path += `${options.pluralSeparator}${options.suffix}`
@@ -23,6 +25,12 @@ function dotPathToHash(entry, target = {}, options = {}) {
     entry.keyWithNamespace.indexOf(separator) + separator.length,
     entry.keyWithNamespace.length
   )
+
+  // There is no key to process so we return an empty object
+  if (!key) {
+    target[entry.namespace] = {}
+    return { target, duplicate, conflict }
+  }
 
   const defaultValue =
     typeof options.value === 'function'
@@ -59,7 +67,6 @@ function dotPathToHash(entry, target = {}, options = {}) {
 
   const segments = path.split(separator)
   let inner = target
-  let conflict = false
   for (let i = 0; i < segments.length - 1; i += 1) {
     const segment = segments[i]
     if (segment) {
@@ -78,7 +85,7 @@ function dotPathToHash(entry, target = {}, options = {}) {
   if (oldValue !== undefined && oldValue !== newValue) {
     conflict = typeof oldValue !== typeof newValue ? 'key' : 'value'
   }
-  const duplicate = oldValue !== undefined || conflict !== false
+  duplicate = oldValue !== undefined || conflict !== false
 
   if (options.customValueTemplate) {
     inner[lastSegment] = {}

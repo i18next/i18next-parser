@@ -292,6 +292,41 @@ describe('parser', () => {
     i18nextParser.end(fakeFile)
   })
 
+  it('creates an empty namespace file if no key is provided', (done) => {
+    let results = []
+    let resultContent
+    const i18nextParser = new i18nTransform({
+      locales: ['en'],
+      defaultNamespace: 'default',
+    })
+    const fakeFile = new Vinyl({
+      contents: Buffer.from("t('empty:');"),
+      path: 'file.js',
+    })
+
+    i18nextParser.on('data', (file) => {
+      if (file.relative.endsWith(path.normalize('en/empty.json'))) {
+        resultContent = JSON.parse(file.contents)
+      }
+      results.push(file.relative.replace(/locales[\//\\]/, ''))
+    })
+    i18nextParser.on('end', () => {
+      const expectedFiles = [
+        'en/empty.json'
+      ]
+      let length = expectedFiles.length
+
+      assert.equal(results.length, 1)
+      assert.deepEqual(resultContent, {})
+      for (const filename of expectedFiles) {
+        assert.include(results, path.normalize(filename))
+        if (!--length) done()
+      }
+    })
+
+    i18nextParser.end(fakeFile)
+  })
+
   it('applies withTranslation namespace globally', (done) => {
     let result
     const i18nextParser = new i18nTransform()
