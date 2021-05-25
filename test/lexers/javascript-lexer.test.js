@@ -28,6 +28,18 @@ describe('JavascriptLexer', () => {
     done()
   })
 
+  it('emits a `warning` event if the option argument contains a spread operator', (done) => {
+    const Lexer = new JavascriptLexer()
+    const content = `{t('foo', { defaultValue: 'bar', ...spread })}`
+    Lexer.on('warning', (message) => {
+      assert.equal(message, 'Options argument is a spread operator : spread')
+      done()
+    })
+    assert.deepEqual(Lexer.extract(content), [
+      { key: 'foo', defaultValue: 'bar' },
+    ])
+  })
+
   it('extracts the defaultValue/context on multiple lines', (done) => {
     const Lexer = new JavascriptLexer()
     const content =

@@ -344,7 +344,7 @@ The transform emits a `error:json` event if the JSON.parse on json files fail:
 
 `.pipe( i18next().on('error:json', (path, error) => {}) )`
 
-The transform emits a `warning:variable` event if the file has a key that contains a variable:
+The transform emits a `warning` event if the file has a key that is not a string litteral or an option object with a spread operator:
 
 `.pipe( i18next().on('warning:variable', (path, key) => {}) )`
 

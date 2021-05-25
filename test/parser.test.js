@@ -311,9 +311,7 @@ describe('parser', () => {
       results.push(file.relative.replace(/locales[\//\\]/, ''))
     })
     i18nextParser.on('end', () => {
-      const expectedFiles = [
-        'en/empty.json'
-      ]
+      const expectedFiles = ['en/empty.json']
       let length = expectedFiles.length
 
       assert.equal(results.length, 1)

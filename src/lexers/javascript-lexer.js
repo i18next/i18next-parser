@@ -153,7 +153,14 @@ export default class JavascriptLexer extends BaseLexer {
         optionsArgument.kind === ts.SyntaxKind.ObjectLiteralExpression
       ) {
         for (const p of optionsArgument.properties) {
-          entry[p.name.text] = (p.initializer && p.initializer.text) || ''
+          if (p.kind === ts.SyntaxKind.PropertyAssignment) {
+            entry[p.name.text] = (p.initializer && p.initializer.text) || ''
+          } else if (p.kind === ts.SyntaxKind.SpreadAssignment) {
+            this.emit(
+              'warning',
+              `Options argument is a spread operator : ${p.expression.text}`
+            )
+          }
         }
       }
 
