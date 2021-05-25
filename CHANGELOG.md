@@ -1,6 +1,9 @@
 # Changelog
 
-# 4.0.1 - latest
+# 4.1.0 - latest
+
+- Improve support for spread operator in JS #199
+# 4.0.1
 
 - Drop support for Node 10
 - Update all dependencies
