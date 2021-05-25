@@ -153,13 +153,13 @@ JavascriptLexer = /*#__PURE__*/function (_BaseLexer) {(0, _inherits2["default"])
         optionsArgument.kind === ts.SyntaxKind.ObjectLiteralExpression)
         {var _iterator = _createForOfIteratorHelper(
           optionsArgument.properties),_step;try {for (_iterator.s(); !(_step = _iterator.n()).done;) {var p = _step.value;
-              if (p.kind === ts.SyntaxKind.PropertyAssignment) {
-                entry[p.name.text] = p.initializer && p.initializer.text || '';
-              } else if (p.kind === ts.SyntaxKind.SpreadAssignment) {
+              if (p.kind === ts.SyntaxKind.SpreadAssignment) {
                 this.emit(
                 'warning', "Options argument is a spread operator : ".concat(
                 p.expression.text));
 
+              } else {
+                entry[p.name.text] = p.initializer && p.initializer.text || '';
               }
             }} catch (err) {_iterator.e(err);} finally {_iterator.f();}
         }

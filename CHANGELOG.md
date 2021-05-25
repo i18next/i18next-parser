@@ -1,6 +1,6 @@
 # Changelog
 
-# 4.1.0 - latest
+# 4.1.1 - latest
 
 - Improve support for spread operator in JS #199
 # 4.0.1
