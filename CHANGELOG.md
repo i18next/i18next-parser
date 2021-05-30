@@ -1,6 +1,9 @@
 # Changelog
 
-# 4.1.1 - latest
+# 4.2.0 - latest
+
+- Improve warning for missing defaults #332
+# 4.1.1
 
 - Improve support for spread operator in JS #199
 # 4.0.1
