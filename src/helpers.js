@@ -8,7 +8,7 @@
  * is `"key"` if a parent of the key was already mapped to a string (e.g. when
  * merging entry {one: {two: "bla"}} with target {one: "bla"}) or the key was
  * already mapped to a map (e.g. when merging entry {one: "bla"} with target
- * {one: {two: "bla"}}), `"value"` if the same key already exists swith a
+ * {one: {two: "bla"}}), `"value"` if the same key already exists with a
  * different value, or `false`.
  */
 function dotPathToHash(entry, target = {}, options = {}) {
