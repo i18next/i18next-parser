@@ -128,4 +128,26 @@ describe('dotPathToHash helper function', () => {
     assert.equal(conflict, 'key')
     done()
   })
+
+  it('uses old value when there is no new value and does not conflict', (done) => {
+    const { target, duplicate, conflict } = dotPathToHash(
+      { keyWithNamespace: 'one.two.three' },
+      { one: { two: { three: 'old' } } }
+    )
+    assert.deepEqual(target, { one: { two: { three: 'old' } } })
+    assert.equal(duplicate, true)
+    assert.equal(conflict, false)
+    done()
+  })
+
+  it('uses new value when there is no old value and does not conflict', (done) => {
+    const { target, duplicate, conflict } = dotPathToHash(
+      { keyWithNamespace: 'one.two.three', defaultValue: 'new' },
+      { one: { two: { three: '' } } }
+    )
+    assert.deepEqual(target, { one: { two: { three: 'new' } } })
+    assert.equal(duplicate, true)
+    assert.equal(conflict, false)
+    done()
+  })
 })

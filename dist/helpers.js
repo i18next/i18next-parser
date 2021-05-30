@@ -83,7 +83,15 @@ function dotPathToHash(entry) {var target = arguments.length > 1 && arguments[1]
   var lastSegment = segments[segments.length - 1];
   var oldValue = inner[lastSegment];
   if (oldValue !== undefined && oldValue !== newValue) {
-    conflict = (0, _typeof2["default"])(oldValue) !== (0, _typeof2["default"])(newValue) ? 'key' : 'value';
+    if ((0, _typeof2["default"])(oldValue) !== (0, _typeof2["default"])(newValue)) {
+      conflict = 'key';
+    } else if (oldValue !== '') {
+      if (newValue === '') {
+        newValue = oldValue;
+      } else {
+        conflict = 'value';
+      }
+    }
   }
   duplicate = oldValue !== undefined || conflict !== false;
 

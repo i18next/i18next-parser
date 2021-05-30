@@ -83,7 +83,15 @@ function dotPathToHash(entry, target = {}, options = {}) {
   const lastSegment = segments[segments.length - 1]
   const oldValue = inner[lastSegment]
   if (oldValue !== undefined && oldValue !== newValue) {
-    conflict = typeof oldValue !== typeof newValue ? 'key' : 'value'
+    if (typeof oldValue !== typeof newValue) {
+      conflict = 'key'
+    } else if (oldValue !== '') {
+      if (newValue === '') {
+        newValue = oldValue
+      } else {
+        conflict = 'value'
+      }
+    }
   }
   duplicate = oldValue !== undefined || conflict !== false
 
