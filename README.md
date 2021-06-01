@@ -350,9 +350,9 @@ The transform emits a `warning` event if the file has a key that is not a string
 
 Here is a list of the warnings:
 
-- **Key is not a string literal**: the parser cannot parse variables so if your code contains something like `t(variable)`, the parser will through a warning.
-- **Found same keys with different values**: if your code contains the same key with different value in different places of your code, like `t('key', {defaultValue: 'foo'})` and `t('key', {defaultValue: 'bar'})`. The parser will select the latest one one but will throw a warning for you to fix this.
-- **Found translation key already mapped to a map or parent of new key already mapped to a string**: This happen in this kind of situation `t('parent', {defaultValue: 'foo'})` and `t('parent.child', {defaultValue: 'bar'})`. `parent` both be a translation and an object for `child`.
+- **Key is not a string literal**: the parser cannot parse variables, only literals. If your code contains something like `t(variable)`, the parser will throw a warning.
+- **Found same keys with different values**: if you use different default values for the same key, you'll get this error. For example, having `t('key', {defaultValue: 'foo'})` and `t('key', {defaultValue: bar'})`. The parser will select the latest one.
+- **Found translation key already mapped to a map or parent of new key already mapped to a string**: happens in this kind of situation: `t('parent', {defaultValue: 'foo'})` and `t('parent.child', {defaultValue: 'bar'})`. `parent` is both a translation and an object for `child`.
 
 
 ## Contribute
