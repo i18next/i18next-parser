@@ -1503,6 +1503,27 @@ describe('parser', () => {
       i18nextParser.end(fakeFile)
     })
 
+    it('parses TAPi18n calls correctly', (done) => {
+      let result
+      const i18nextParser = new i18nTransform({
+        functions: ['TAPi18n.__']
+      })
+      const fakeFile = new Vinyl({
+        contents: Buffer.from("TAPi18n.__('Say_hello_to_my_little_friend')"),
+        path: 'file.js'
+      })
+
+      i18nextParser.on('data', (file) => {
+        result = JSON.parse(file.contents)
+      })
+      i18nextParser.on('end', () => {
+        assert.deepEqual(result, { 'Say_hello_to_my_little_friend': '' })
+        done()
+      })
+
+      i18nextParser.end(fakeFile)
+    })
+
     describe('lexers', () => {
       it('support custom lexers options', (done) => {
         let result
