@@ -57,6 +57,10 @@ export default class JavascriptLexer extends BaseLexer {
 
       parseCommentNode(keys, node, content)
 
+      if (node.kind === ts.SyntaxKind.TaggedTemplateExpression) {
+        entry = this.taggedTemplateExpressionExtractor.call(this, node)
+      }
+
       if (node.kind === ts.SyntaxKind.CallExpression) {
         entry = this.expressionExtractor.call(this, node)
       }
@@ -76,6 +80,30 @@ export default class JavascriptLexer extends BaseLexer {
     parseTree(sourceFile)
 
     return this.setNamespaces(keys)
+  }
+
+  taggedTemplateExpressionExtractor(node) {
+    const entry = {}
+
+    const { tag, template } = node
+
+    const isTranslationFunction =
+      (tag.text && this.functions.includes(tag.text)) ||
+      (tag.name && this.functions.includes(tag.name.text))
+
+    if (!isTranslationFunction) return null
+
+    if (template.kind === ts.SyntaxKind.NoSubstitutionTemplateLiteral) {
+      entry.key = template.text
+    } else if (template.kind === ts.SyntaxKind.TemplateExpression) {
+      this.emit(
+        'warning',
+        'A key that is a template string must not have any interpolations.'
+      )
+      return null
+    }
+
+    return entry
   }
 
   expressionExtractor(node) {

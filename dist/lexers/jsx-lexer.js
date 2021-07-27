@@ -30,6 +30,9 @@ JsxLexer = /*#__PURE__*/function (_JavascriptLexer) {(0, _inherits2["default"])(
           case ts.SyntaxKind.CallExpression:
             entry = _this2.expressionExtractor.call(_this2, node);
             break;
+          case ts.SyntaxKind.TaggedTemplateExpression:
+            entry = _this2.taggedTemplateExpressionExtractor(node);
+            break;
           case ts.SyntaxKind.JsxElement:
             entry = _this2.jsxExtractor.call(_this2, node, content);
             break;

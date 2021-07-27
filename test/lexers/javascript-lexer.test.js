@@ -259,4 +259,34 @@ describe('JavascriptLexer', () => {
     ])
     assert.strictEqual(warningCount, 2)
   })
+
+  it('extracts non-interpolated tagged templates', () => {
+    const Lexer = new JavascriptLexer()
+    const content = 'i18n.t`some-key`'
+    assert.deepEqual(Lexer.extract(content), [
+      {
+        key: 'some-key',
+      },
+    ])
+  })
+
+  it('emits warnings on interpolated tagged templates', () => {
+    const Lexer = new JavascriptLexer()
+    const content = 'i18n.t`some-key${someVar}keykey`'
+
+    let warningCount = 0
+    Lexer.on('warning', (warning) => {
+      if (
+        warning.indexOf(
+          'A key that is a template string must not have any interpolations.'
+        ) === 0
+      ) {
+        warningCount++
+      }
+    })
+
+    Lexer.extract(content)
+
+    assert.equal(warningCount, 1)
+  })
 })

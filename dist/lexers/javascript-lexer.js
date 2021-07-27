@@ -57,6 +57,10 @@ JavascriptLexer = /*#__PURE__*/function (_BaseLexer) {(0, _inherits2["default"])
 
         parseCommentNode(keys, node, content);
 
+        if (node.kind === ts.SyntaxKind.TaggedTemplateExpression) {
+          entry = _this4.taggedTemplateExpressionExtractor.call(_this4, node);
+        }
+
         if (node.kind === ts.SyntaxKind.CallExpression) {
           entry = _this4.expressionExtractor.call(_this4, node);
         }
@@ -76,6 +80,30 @@ JavascriptLexer = /*#__PURE__*/function (_BaseLexer) {(0, _inherits2["default"])
       parseTree(sourceFile);
 
       return this.setNamespaces(keys);
+    } }, { key: "taggedTemplateExpressionExtractor", value:
+
+    function taggedTemplateExpressionExtractor(node) {
+      var entry = {};
+
+      var tag = node.tag,template = node.template;
+
+      var isTranslationFunction =
+      tag.text && this.functions.includes(tag.text) ||
+      tag.name && this.functions.includes(tag.name.text);
+
+      if (!isTranslationFunction) return null;
+
+      if (template.kind === ts.SyntaxKind.NoSubstitutionTemplateLiteral) {
+        entry.key = template.text;
+      } else if (template.kind === ts.SyntaxKind.TemplateExpression) {
+        this.emit(
+        'warning',
+        'A key that is a template string must not have any interpolations.');
+
+        return null;
+      }
+
+      return entry;
     } }, { key: "expressionExtractor", value:
 
     function expressionExtractor(node) {
