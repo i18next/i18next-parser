@@ -294,6 +294,11 @@ export default class i18nTransform extends Transform {
       })
     } else {
       text = JSON.stringify(contents, null, this.options.indentation) + '\n'
+      // Convert non-ASCII characters to unicode escape sequence
+      text = text.replace(
+        /[\u007F-\uFFFF]/g,
+        (chr) => `\\u${`0000${chr.charCodeAt(0).toString(16)}`.substr(-4)}`
+      )
     }
 
     if (this.options.lineEnding === 'auto') {
