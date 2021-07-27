@@ -1,6 +1,11 @@
 # Changelog
 
-# 4.2.0 - latest
+# 4.3.0 - latest
+
+- Extract tagged templates in js and jsx lexers #376 #381
+- Support unicode escape sequence in json #361 #362
+- Update dependencies
+# 4.2.0
 
 - Improve warning for missing defaults #332
 # 4.1.1
