@@ -294,11 +294,6 @@ i18nTransform = /*#__PURE__*/function (_Transform) {(0, _inherits2["default"])(i
 
       } else {
         text = JSON.stringify(contents, null, this.options.indentation) + '\n';
-        // Convert non-ASCII characters to unicode escape sequence
-        text = text.replace(
-        /[\u007F-\uFFFF]/g,
-        function (chr) {return "\\u".concat("0000".concat(chr.charCodeAt(0).toString(16)).substr(-4));});
-
       }
 
       if (this.options.lineEnding === 'auto') {

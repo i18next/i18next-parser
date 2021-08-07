@@ -1,6 +1,11 @@
 # Changelog
 
-# 4.3.0 - latest
+# 4.4.0 - latest
+
+- Revert #361 #362
+- Update dependencies
+
+# 4.3.0  DO NOT USE THIS VERSION!
 
 - Extract tagged templates in js and jsx lexers #376 #381
 - Support unicode escape sequence in json #361 #362
