@@ -28,19 +28,13 @@ locales/de/...
 locales/sp/...
 ```
 
-### Command Line
 ```
 $ i18next /path/to/file/or/dir -l en,de,sp
 ```
 
-### Gulp 
-```js
-pipe(i18next({ locales: ['en', 'de', 'sp'] }))
-```
-
 ## Changing the default namespace
 
-This will add all the translation from the default namespace in the file `locales/en/{namespace}.json`
+This will add all the translation from the default namespace in the file `locales/en/my_default_namespace.json`
 
 ### Command line
 
@@ -96,17 +90,7 @@ _e("key"
 _e "key"
 ```
 
-Please note that:
-- We don't match the closing parenthesis, as you might want to pass arguments to your translation function;
-- The parser is smart about escaped quotes (single or double) you may have in your key.
-
-### Command line
-
-```
-$ i18next /path/to/file/or/dir -f __,_e
-```
-
-You can also pass this option using the config file (`i18next-parser.config.js`). Just add the `function` property to the related lexer:
+Add the `function` property to the related lexer in the config file:
 ```js
 {
   lexers: {
@@ -118,21 +102,15 @@ You can also pass this option using the config file (`i18next-parser.config.js`)
 }
 ```
 
+Please note that:
+- We don't match the closing parenthesis, as you might want to pass arguments to your translation function;
+- The parser is smart about escaped quotes (single or double) you may have in your key.
+
 ### Gulp
 
 ```js
 .pipe(i18next({functions: ['__', '_e']}))`
 ```
-
-## Changing the regex
-
-If you use a custom regex, the `functions` option will be ignored. You need to write you regex to parse the functions you want parsed.
-
-You must pass the regex as a string. That means that you will have to properly escape it. Also, the parser will consider the translation key to be the first truthy match of the regex; it means that you must use non capturing blocks `(?:)` for anything that is not the translation key.
-
-The regex used by default is:
-
-`[^a-zA-Z0-9_](?:t)(?:\\(|\\s)\\s*(?:(?:\'((?:(?:\\\\\')?[^\']+)+[^\\\\])\')|(?:"((?:(?:\\\\")?[^"]+)+[^\\\\])"))/g`
 
 ### Command line
 ```
@@ -143,14 +121,6 @@ $ i18next /path/to/file/or/dir -p "(.*)"
 ```js
 .pipe(i18next({ parser: '(.*)' }))
 ```
-
-## Filter files and folders
-
-```
-$ i18next /path/to/file/or/dir --fileFilter '*.hbs,*.js' --directoryFilter '!.git'
-```
-
-In recursive mode, this command will parse `*.hbs` and `*.js` files and skip `.git` folder. This options is passed to readdirp. To learn more, read [their documentation](https://github.com/thlorenz/readdirp#filters).
 
 ## Work with Meteor TAP-i18N (gulp)**
 
