@@ -28,8 +28,14 @@ locales/de/...
 locales/sp/...
 ```
 
+### CLI
 ```
 $ i18next /path/to/file/or/dir -l en,de,sp
+```
+
+### Gulp
+```js
+.pipe(i18next({ locales: ['en', 'de', 'sp'] })
 ```
 
 ## Changing the default namespace
