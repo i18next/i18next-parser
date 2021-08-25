@@ -1,37 +1,26 @@
 # Examples
 
-**Change the output directory (cli and gulp)**
+## Changing the output directory
 
-Command line (the options are identical):
+This will create the files in the specified folder.
 
-`i18next /path/to/file/or/dir -o /translations/$LOCALE/$NAMESPACE.json`
-
-`i18next /path/to/file/or/dir:/translations/$LOCALE/$NAMESPACE.json`
-
-Gulp:
-
-`.pipe(i18next({output: 'translations/$LOCALE/$NAMESPACE.json'}))`
-
-It will create the file in the specified folder (in case of gulp it doesn't actually create the files until you call `dest()`):
-
+### Command line
 ```
-/translations/en/translation.json
-...
+$ i18next /path/to/file/or/dir -o /translations/$LOCALE/$NAMESPACE.json
+$ i18next /path/to/file/or/dir:/translations/$LOCALE/$NAMESPACE.json 
 ```
 
+### Gulp
 
+When using Gulp, note that the files are not created until `dest()` is called. 
 
-**Change the locales (cli and gulp)**
+```js
+.pipe(i18next({ output: 'translations/$LOCALE/$NAMESPACE.json' }))
+```
 
-Command line:
+## Changing the locales
 
-`i18next /path/to/file/or/dir -l en,de,sp`
-
-Gulp:
-
-`.pipe(i18next({locales: ['en', 'de', 'sp']}))`
-
-This will create a directory per locale in the output folder:
+This will create a directory for each locale in the output folder:
 
 ```
 locales/en/...
@@ -39,38 +28,35 @@ locales/de/...
 locales/sp/...
 ```
 
-
-
-**Change the default namespace (cli and gulp)**
-
-Command line:
-
-`i18next /path/to/file/or/dir -n my_default_namespace`
-
-Gulp:
-
-`.pipe(i18next({namespace: 'my_default_namespace'}))`
-
-This will add all the translation from the default namespace in the following file:
-
+### CLI
 ```
-locales/en/my_default_namespace.json
-...
+$ i18next /path/to/file/or/dir -l en,de,sp
 ```
 
+### Gulp
+```js
+.pipe(i18next({ locales: ['en', 'de', 'sp'] })
+```
 
+## Changing the default namespace
 
-**Change the namespace and key separators (cli and gulp)**
+This will add all the translation from the default namespace in the file `locales/en/my_default_namespace.json`
 
-Command line:
+### Command line
 
-`i18next /path/to/file/or/dir -s '?' -k '_'`
+```
+$ i18next /path/to/file/or/dir -n my_default_namespace
+```
 
-Gulp:
+### Gulp
 
-`.pipe(i18next({namespaceSeparator: '?', keySeparator: '_'}))`
+```js
+pipe(i18next({ namespace: 'my_default_namespace' }))
+```
 
-This parse the translation keys as follow:
+## Changing namespace and key separators
+
+This will parse the translation keys as in the following:
 
 ```
 namespace?key_subkey
@@ -84,17 +70,18 @@ namespace.json
 ...
 ```
 
+### Command line
+```
+$ i18next /path/to/file/or/dir -s '?' -k '_'
+```
 
+### Gulp
 
-**Change the translation functions (cli and gulp)**
+```js
+.pipe(i18next({namespaceSeparator: '?', keySeparator: '_'}))
+```
 
-Command line:
-
-`i18next /path/to/file/or/dir -f __,_e`
-
-Gulp:
-
-`.pipe(i18next({functions: ['__', '_e']}))`
+## Changing the translation functions
 
 This will parse any of the following function calls in your code and extract the key:
 
@@ -109,50 +96,48 @@ _e("key"
 _e "key"
 ```
 
-Note1: we don't match the closing parenthesis as you may want to pass arguments to your translation function.
+Add the `function` property to the related lexer in the config file:
+```js
+{
+  lexers: {
+    js: [{
+      lexer: 'JavascriptLexer',
+      functions: ['t', 'TAPi18n.__', '__']
+    }]
+  }  
+}
+```
 
-Note2: the parser is smart about escaped single or double quotes you may have in your key.
+Please note that:
+- We don't match the closing parenthesis, as you might want to pass arguments to your translation function;
+- The parser is smart about escaped quotes (single or double) you may have in your key.
 
+### Gulp
 
+```js
+.pipe(i18next({functions: ['__', '_e']}))`
+```
 
-**Change the regex (cli and gulp)**
+### Command line
+```
+$ i18next /path/to/file/or/dir -p "(.*)"
+```
 
-Command line:
+### Gulp
+```js
+.pipe(i18next({ parser: '(.*)' }))
+```
 
-`i18next /path/to/file/or/dir -p "(.*)"`
+## Work with Meteor TAP-i18N (gulp)**
 
-Gulp:
-
-`.pipe(i18next({parser: '(.*)'}))`
-
-If you use a custom regex, the `functions` option will be ignored. You need to write you regex to parse the functions you want parsed.
-
-You must pass the regex as a string. That means that you will have to properly escape it. Also, the parser will consider the translation key to be the first truthy match of the regex; it means that you must use non capturing blocks `(?:)` for anything that is not the translation key.
-
-The regex used by default is:
-
-`[^a-zA-Z0-9_](?:t)(?:\\(|\\s)\\s*(?:(?:\'((?:(?:\\\\\')?[^\']+)+[^\\\\])\')|(?:"((?:(?:\\\\")?[^"]+)+[^\\\\])"))/g`
-
-
-
-**Filter files and folders (cli)**
-
-<!-- TODO removed -->
-
-`i18next /path/to/file/or/dir --fileFilter '*.hbs,*.js' --directoryFilter '!.git'`
-
-In recursive mode, it will parse `*.hbs` and `*.js` files and skip `.git` folder. This options is passed to readdirp. To learn more, read [their documentation](https://github.com/thlorenz/readdirp#filters).
-
-
-
-**Work with Meteor TAP-i18N (gulp)**
-
-`.pipe(i18next({
+```js
+.pipe(i18next({
     output: "i18n/$LOCALE/$NAMESPACE.$LOCALE.i18n.json",
     locales: ['en', 'de', 'fr', 'es'],
     functions: ['_'],
     namespace: 'client',
     writeOld: false
-}))`
+}))
+```
 
 This will output your files in the format `$LOCALE/client.$LOCALE.i18n.json` in a `i18n/` directory.
