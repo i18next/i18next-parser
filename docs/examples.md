@@ -29,8 +29,13 @@ locales/sp/...
 ```
 
 ### CLI
-```
-$ i18next /path/to/file/or/dir -l en,de,sp
+
+Add the `locales` option to the config file:
+
+```js
+{
+  locales: ['en', 'de', 'sp']
+}
 ```
 
 ### Gulp
@@ -44,8 +49,12 @@ This will add all the translation from the default namespace in the file `locale
 
 ### Command line
 
-```
-$ i18next /path/to/file/or/dir -n my_default_namespace
+Add the `namespace` option to the config file:
+
+```js
+{
+  namespace: 'my_default_namespace'
+}
 ```
 
 ### Gulp
@@ -71,8 +80,14 @@ namespace.json
 ```
 
 ### Command line
-```
-$ i18next /path/to/file/or/dir -s '?' -k '_'
+
+Add the `namespaceSeparator` or `keySeparator` option to the config file:
+
+```js
+{
+  namespaceSeparator: '?',
+  keySeparator: '_'
+}
 ```
 
 ### Gulp
@@ -112,24 +127,8 @@ Please note that:
 - We don't match the closing parenthesis, as you might want to pass arguments to your translation function;
 - The parser is smart about escaped quotes (single or double) you may have in your key.
 
-### Gulp
-
-```js
-.pipe(i18next({functions: ['__', '_e']}))`
-```
-
-### Command line
-```
-$ i18next /path/to/file/or/dir -p "(.*)"
-```
-
-### Gulp
-```js
-.pipe(i18next({ parser: '(.*)' }))
-```
-
 ## Work with Meteor TAP-i18N (gulp)**
-
+en', 'de', 'sp
 ```js
 .pipe(i18next({
     output: "i18n/$LOCALE/$NAMESPACE.$LOCALE.i18n.json",
