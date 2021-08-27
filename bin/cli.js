@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-var colors        = require('colors')
 var fs            = require('fs')
 var i18nTransform = require('../dist/transform')['default']
 var path          = require('path')
