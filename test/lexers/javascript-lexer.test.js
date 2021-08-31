@@ -31,6 +31,18 @@ describe('JavascriptLexer', () => {
     done()
   })
 
+  it('emits a `warning` event if the option argument contains a spread operator', (done) => {
+    const Lexer = new JavascriptLexer()
+    const content = `{t('foo', { defaultValue: 'bar', ...spread })}`
+    Lexer.on('warning', (message) => {
+      assert.equal(message, 'Options argument is a spread operator : spread')
+      done()
+    })
+    assert.deepEqual(Lexer.extract(content), [
+      { key: 'foo', defaultValue: 'bar' },
+    ])
+  })
+
   it('extracts the defaultValue/context on multiple lines', (done) => {
     const Lexer = new JavascriptLexer()
     const content =
@@ -229,5 +241,55 @@ describe('JavascriptLexer', () => {
         description: 'Fantastic key!',
       },
     ])
+  })
+
+  it('emits warnings on dynamic keys', () => {
+    const Lexer = new JavascriptLexer()
+    const content =
+      'const bar = "bar"; i18n.t("foo"); i18n.t(bar); i18n.t(`foo.${bar}`);'
+
+    let warningCount = 0
+    Lexer.on('warning', (warning) => {
+      if (warning.indexOf('Key is not a string literal') === 0) {
+        warningCount++
+      }
+    })
+
+    assert.deepEqual(Lexer.extract(content), [
+      {
+        key: 'foo',
+      },
+    ])
+    assert.strictEqual(warningCount, 2)
+  })
+
+  it('extracts non-interpolated tagged templates', () => {
+    const Lexer = new JavascriptLexer()
+    const content = 'i18n.t`some-key`'
+    assert.deepEqual(Lexer.extract(content), [
+      {
+        key: 'some-key',
+      },
+    ])
+  })
+
+  it('emits warnings on interpolated tagged templates', () => {
+    const Lexer = new JavascriptLexer()
+    const content = 'i18n.t`some-key${someVar}keykey`'
+
+    let warningCount = 0
+    Lexer.on('warning', (warning) => {
+      if (
+        warning.indexOf(
+          'A key that is a template string must not have any interpolations.'
+        ) === 0
+      ) {
+        warningCount++
+      }
+    })
+
+    Lexer.extract(content)
+
+    assert.equal(warningCount, 1)
   })
 })

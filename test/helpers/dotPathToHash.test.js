@@ -11,11 +11,11 @@ describe('dotPathToHash helper function', () => {
 
   it('ignores trailing separator', (done) => {
     const { target } = dotPathToHash(
-      { keyWithNamespace: 'one.' },
+      { keyWithNamespace: 'one.two.' },
       {},
       { separator: '.' }
     )
-    assert.deepEqual(target, { one: '' })
+    assert.deepEqual(target, { one: { two: '' } })
     done()
   })
 
@@ -42,6 +42,16 @@ describe('dotPathToHash helper function', () => {
       { separator: '-', useKeysAsDefaultValue: true }
     )
     assert.deepEqual(target, { namespace: { two: { three: 'two-three' } } })
+    done()
+  })
+
+  it('handles an empty namespace', (done) => {
+    const { target, duplicate } = dotPathToHash({
+      keyWithNamespace: 'ns.',
+      namespace: 'ns',
+    })
+    assert.deepEqual(target, { ns: {} })
+    assert.equal(duplicate, false)
     done()
   })
 
@@ -116,6 +126,28 @@ describe('dotPathToHash helper function', () => {
     assert.deepEqual(target, { one: { two: { three: 'bla' } } })
     assert.equal(duplicate, true)
     assert.equal(conflict, 'key')
+    done()
+  })
+
+  it('uses old value when there is no new value and does not conflict', (done) => {
+    const { target, duplicate, conflict } = dotPathToHash(
+      { keyWithNamespace: 'one.two.three' },
+      { one: { two: { three: 'old' } } }
+    )
+    assert.deepEqual(target, { one: { two: { three: 'old' } } })
+    assert.equal(duplicate, true)
+    assert.equal(conflict, false)
+    done()
+  })
+
+  it('uses new value when there is no old value and does not conflict', (done) => {
+    const { target, duplicate, conflict } = dotPathToHash(
+      { keyWithNamespace: 'one.two.three', defaultValue: 'new' },
+      { one: { two: { three: '' } } }
+    )
+    assert.deepEqual(target, { one: { two: { three: 'new' } } })
+    assert.equal(duplicate, true)
+    assert.equal(conflict, false)
     done()
   })
 })

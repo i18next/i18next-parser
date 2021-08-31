@@ -1,12 +1,12 @@
-'use strict';Object.defineProperty(exports, "__esModule", { value: true });var _extends = Object.assign || function (target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i];for (var key in source) {if (Object.prototype.hasOwnProperty.call(source, key)) {target[key] = source[key];}}}return target;};var _createClass = function () {function defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);}}return function (Constructor, protoProps, staticProps) {if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;};}();var _helpers = require('./helpers');
-var _stream = require('stream');
-var _eol = require('eol');var _eol2 = _interopRequireDefault(_eol);
-var _fs = require('fs');var _fs2 = _interopRequireDefault(_fs);
-var _parser = require('./parser');var _parser2 = _interopRequireDefault(_parser);
-var _path = require('path');var _path2 = _interopRequireDefault(_path);
-var _vinyl = require('vinyl');var _vinyl2 = _interopRequireDefault(_vinyl);
-var _yamljs = require('yamljs');var _yamljs2 = _interopRequireDefault(_yamljs);
-var _i18next = require('i18next');var _i18next2 = _interopRequireDefault(_i18next);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function _possibleConstructorReturn(self, call) {if (!self) {throw new ReferenceError("this hasn't been initialised - super() hasn't been called");}return call && (typeof call === "object" || typeof call === "function") ? call : self;}function _inherits(subClass, superClass) {if (typeof superClass !== "function" && superClass !== null) {throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);}subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;}
+"use strict";var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");Object.defineProperty(exports, "__esModule", { value: true });exports["default"] = void 0;var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime/helpers/possibleConstructorReturn"));var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/getPrototypeOf"));var _helpers = require("./helpers");
+var _stream = require("stream");
+var _eol = _interopRequireDefault(require("eol"));
+var _fs = _interopRequireDefault(require("fs"));
+var _parser = _interopRequireDefault(require("./parser"));
+var _path = _interopRequireDefault(require("path"));
+var _vinyl = _interopRequireDefault(require("vinyl"));
+var _jsYaml = _interopRequireDefault(require("js-yaml"));
+var _i18next = _interopRequireDefault(require("i18next"));function _createForOfIteratorHelper(o, allowArrayLike) {var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"];if (!it) {if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") {if (it) o = it;var i = 0;var F = function F() {};return { s: F, n: function n() {if (i >= o.length) return { done: true };return { done: false, value: o[i++] };}, e: function e(_e) {throw _e;}, f: F };}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}var normalCompletion = true,didErr = false,err;return { s: function s() {it = it.call(o);}, n: function n() {var step = it.next();normalCompletion = step.done;return step;}, e: function e(_e2) {didErr = true;err = _e2;}, f: function f() {try {if (!normalCompletion && it["return"] != null) it["return"]();} finally {if (didErr) throw err;}} };}function _unsupportedIterableToArray(o, minLen) {if (!o) return;if (typeof o === "string") return _arrayLikeToArray(o, minLen);var n = Object.prototype.toString.call(o).slice(8, -1);if (n === "Object" && o.constructor) n = o.constructor.name;if (n === "Map" || n === "Set") return Array.from(o);if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);}function _arrayLikeToArray(arr, len) {if (len == null || len > arr.length) len = arr.length;for (var i = 0, arr2 = new Array(len); i < len; i++) {arr2[i] = arr[i];}return arr2;}function ownKeys(object, enumerableOnly) {var keys = Object.keys(object);if (Object.getOwnPropertySymbols) {var symbols = Object.getOwnPropertySymbols(object);if (enumerableOnly) {symbols = symbols.filter(function (sym) {return Object.getOwnPropertyDescriptor(object, sym).enumerable;});}keys.push.apply(keys, symbols);}return keys;}function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};if (i % 2) {ownKeys(Object(source), true).forEach(function (key) {(0, _defineProperty2["default"])(target, key, source[key]);});} else if (Object.getOwnPropertyDescriptors) {Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));} else {ownKeys(Object(source)).forEach(function (key) {Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));});}}return target;}function _createSuper(Derived) {var hasNativeReflectConstruct = _isNativeReflectConstruct();return function _createSuperInternal() {var Super = (0, _getPrototypeOf2["default"])(Derived),result;if (hasNativeReflectConstruct) {var NewTarget = (0, _getPrototypeOf2["default"])(this).constructor;result = Reflect.construct(Super, arguments, NewTarget);} else {result = Super.apply(this, arguments);}return (0, _possibleConstructorReturn2["default"])(this, result);};}function _isNativeReflectConstruct() {if (typeof Reflect === "undefined" || !Reflect.construct) return false;if (Reflect.construct.sham) return false;if (typeof Proxy === "function") return true;try {Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {}));return true;} catch (e) {return false;}}
 
 function getPluralSuffix(numberOfPluralForms, nthForm) {
   if (numberOfPluralForms.length > 2) {
@@ -17,10 +17,10 @@ function getPluralSuffix(numberOfPluralForms, nthForm) {
   return '';
 }var
 
-i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
-  function i18nTransform() {var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};_classCallCheck(this, i18nTransform);
-    options.objectMode = true;var _this = _possibleConstructorReturn(this, (i18nTransform.__proto__ || Object.getPrototypeOf(i18nTransform)).call(this,
-    options));
+i18nTransform = /*#__PURE__*/function (_Transform) {(0, _inherits2["default"])(i18nTransform, _Transform);var _super = _createSuper(i18nTransform);
+  function i18nTransform() {var _this;var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};(0, _classCallCheck2["default"])(this, i18nTransform);
+    options.objectMode = true;
+    _this = _super.call(this, options);
 
     _this.defaults = {
       contextSeparator: '_',
@@ -34,6 +34,7 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
       lineEnding: 'auto',
       locales: ['en', 'fr'],
       namespaceSeparator: ':',
+      pluralSeparator: '_',
       output: 'locales/$LOCALE/$NAMESPACE.json',
       sort: false,
       useKeysAsDefaultValue: false,
@@ -43,7 +44,7 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
       failOnWarnings: false };
 
 
-    _this.options = _extends({}, _this.defaults, options);
+    _this.options = _objectSpread(_objectSpread({}, _this.defaults), options);
     if (_this.options.keySeparator === false) {
       _this.options.keySeparator = '__!NO_KEY_SEPARATOR!__';
     }
@@ -53,48 +54,53 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
     _this.entries = [];
 
     _this.parserHadWarnings = false;
-    _this.parser = new _parser2.default(_this.options);
+    _this.parser = new _parser["default"](_this.options);
     _this.parser.on('error', function (error) {return _this.error(error);});
     _this.parser.on('warning', function (warning) {return _this.warn(warning);});
 
     _this.localeRegex = /\$LOCALE/g;
     _this.namespaceRegex = /\$NAMESPACE/g;
 
-    _i18next2.default.init();return _this;
-  }_createClass(i18nTransform, [{ key: 'error', value: function error(
+    _i18next["default"].init();return _this;
+  }(0, _createClass2["default"])(i18nTransform, [{ key: "error", value:
 
-    _error) {
+    function error(_error) {
       this.emit('error', _error);
       if (this.options.verbose) {
         console.error('\x1b[31m%s\x1b[0m', _error);
       }
-    } }, { key: 'warn', value: function warn(
+    } }, { key: "warn", value:
 
-    warning) {
+    function warn(warning) {
       this.emit('warning', warning);
       this.parserHadWarnings = true;
       if (this.options.verbose) {
         console.warn('\x1b[33m%s\x1b[0m', warning);
       }
-    } }, { key: '_transform', value: function _transform(
+    } }, { key: "_transform", value:
 
-    file, encoding, done) {
-      var content = void 0;
+    function _transform(file, encoding, done) {
+      var content;
       if (file.isBuffer()) {
         content = file.contents.toString('utf8');
+      } else if (_fs["default"].lstatSync(file.path).isDirectory()) {
+        var warning = "".concat(file.path, " is a directory: skipping");
+        this.warn(warning);
+        done();
+        return;
       } else {
-        content = _fs2.default.readFileSync(file.path, encoding);
+        content = _fs["default"].readFileSync(file.path, encoding);
       }
 
       this.emit('reading', file);
       if (this.options.verbose) {
-        console.log('Parsing ' + file.path);
+        console.log("Parsing ".concat(file.path));
       }
 
-      var filename = _path2.default.basename(file.path);
-      var entries = this.parser.parse(content, filename);var _iteratorNormalCompletion = true;var _didIteratorError = false;var _iteratorError = undefined;try {
+      var filename = _path["default"].basename(file.path);
+      var entries = this.parser.parse(content, filename);var _iterator = _createForOfIteratorHelper(
 
-        for (var _iterator = entries[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {var entry = _step.value;
+      entries),_step;try {for (_iterator.s(); !(_step = _iterator.n()).done;) {var entry = _step.value;
           var key = entry.key;
           var parts = key.split(this.options.namespaceSeparator);
 
@@ -114,127 +120,129 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
           entry.keyWithNamespace = entry.namespace + this.options.keySeparator + key;
 
           this.addEntry(entry);
-        }} catch (err) {_didIteratorError = true;_iteratorError = err;} finally {try {if (!_iteratorNormalCompletion && _iterator.return) {_iterator.return();}} finally {if (_didIteratorError) {throw _iteratorError;}}}
+        }} catch (err) {_iterator.e(err);} finally {_iterator.f();}
 
       done();
-    } }, { key: '_flush', value: function _flush(
+    } }, { key: "_flush", value:
 
-    done) {var _this2 = this;
+    function _flush(done) {var _this2 = this;
       if (this.options.sort) {
         this.entries = this.entries.sort(function (a, b) {return a.key.localeCompare(b.key);});
-      }var _loop = function _loop(
+      }var _iterator2 = _createForOfIteratorHelper(
 
-      locale) {
-        var catalog = {};
-        var pluralRule = _i18next2.default.services.pluralResolver.getRule(locale);
-        var numbers = pluralRule && pluralRule.numbers || [1, 2];
+      this.options.locales),_step2;try {var _loop = function _loop() {var locale = _step2.value;
+          var catalog = {};
+          var pluralRule = _i18next["default"].services.pluralResolver.getRule(locale);
+          var numbers = pluralRule && pluralRule.numbers || [1, 2];
 
-        var countWithPlurals = 0;
-        var uniqueCount = _this2.entries.length;
+          var countWithPlurals = 0;
+          var uniqueCount = _this2.entries.length;
 
-        var transformEntry = function transformEntry(entry, suffix) {var _dotPathToHash =
-          (0, _helpers.dotPathToHash)(entry, catalog, {
-            suffix: suffix,
-            separator: _this2.options.keySeparator,
-            value: _this2.options.defaultValue,
-            useKeysAsDefaultValue: _this2.options.useKeysAsDefaultValue,
-            skipDefaultValues: _this2.options.skipDefaultValues,
-            customValueTemplate: _this2.options.customValueTemplate }),duplicate = _dotPathToHash.duplicate,conflict = _dotPathToHash.conflict;
-
-
-          if (duplicate) {
-            uniqueCount -= 1;
-            if (conflict === 'key') {
-              var warning = 'Found translation key already mapped to a map or parent of new key already mapped to a string: ' + entry.key;
-              _this2.warn(warning);
-            } else if (conflict === 'value') {
-              var _warning = 'Found same keys with different values: ' + entry.key;
-              _this2.warn(_warning);
-            }
-          } else {
-            countWithPlurals += 1;
-          }
-        };
-
-        // generates plurals according to i18next rules: key, key_plural, key_0, key_1, etc.
-        var _loop2 = function _loop2(entry) {
-          if (entry.count !== undefined) {
-            numbers.forEach(function (_, i) {
-              transformEntry(entry, getPluralSuffix(numbers, i));
-            });
-          } else {
-            transformEntry(entry);
-          }};var _iteratorNormalCompletion3 = true;var _didIteratorError3 = false;var _iteratorError3 = undefined;try {for (var _iterator3 = _this2.entries[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {var entry = _step3.value;_loop2(entry);
-          }} catch (err) {_didIteratorError3 = true;_iteratorError3 = err;} finally {try {if (!_iteratorNormalCompletion3 && _iterator3.return) {_iterator3.return();}} finally {if (_didIteratorError3) {throw _iteratorError3;}}}
-
-        var outputPath = _path2.default.resolve(_this2.options.output);
-
-        for (var namespace in catalog) {
-          var namespacePath = outputPath;
-          namespacePath = namespacePath.replace(_this2.localeRegex, locale);
-          namespacePath = namespacePath.replace(_this2.namespaceRegex, namespace);
-
-          var parsedNamespacePath = _path2.default.parse(namespacePath);
-
-          var namespaceOldPath = _path2.default.join(
-          parsedNamespacePath.dir,
-          parsedNamespacePath.name + '_old' + parsedNamespacePath.ext);
+          var transformEntry = function transformEntry(entry, suffix) {
+            var _dotPathToHash = (0, _helpers.dotPathToHash)(entry, catalog, {
+              suffix: suffix,
+              locale: locale,
+              separator: _this2.options.keySeparator,
+              pluralSeparator: _this2.options.pluralSeparator,
+              value: _this2.options.defaultValue,
+              useKeysAsDefaultValue: _this2.options.useKeysAsDefaultValue,
+              skipDefaultValues: _this2.options.skipDefaultValues,
+              customValueTemplate: _this2.options.customValueTemplate }),duplicate = _dotPathToHash.duplicate,conflict = _dotPathToHash.conflict;
 
 
-          var existingCatalog = _this2.getCatalog(namespacePath);
-          var existingOldCatalog = _this2.getCatalog(namespaceOldPath);
-
-          // merges existing translations with the new ones
-          var _mergeHashes =
-
-
-
-
-          (0, _helpers.mergeHashes)(
-          existingCatalog,
-          catalog[namespace],
-          _this2.options.keepRemoved),newCatalog = _mergeHashes.new,oldKeys = _mergeHashes.old,mergeCount = _mergeHashes.mergeCount,oldCount = _mergeHashes.oldCount;
-
-
-          // restore old translations
-          var _mergeHashes2 = (0, _helpers.mergeHashes)(
-          existingOldCatalog,
-          newCatalog),oldCatalog = _mergeHashes2.old,restoreCount = _mergeHashes2.mergeCount;
-
-
-          // backup unused translations
-          (0, _helpers.transferValues)(oldKeys, oldCatalog);
-
-          if (_this2.options.verbose) {
-            console.log('[' + locale + '] ' + namespace + '\n');
-            console.log('Unique keys: ' +
-            uniqueCount + ' (' + countWithPlurals + ' with plurals)');
-
-            var addCount = countWithPlurals - mergeCount;
-            console.log('Added keys: ' + addCount);
-            console.log('Restored keys: ' + restoreCount);
-            if (_this2.options.keepRemoved) {
-              console.log('Unreferenced keys: ' + oldCount);
+            if (duplicate) {
+              uniqueCount -= 1;
+              if (conflict === 'key') {
+                var warning = "Found translation key already mapped to a map or parent of new key already mapped to a string: ".concat(entry.key);
+                _this2.warn(warning);
+              } else if (conflict === 'value') {
+                var _warning = "Found same keys with different values: ".concat(entry.key);
+                _this2.warn(_warning);
+              }
             } else {
-              console.log('Removed keys: ' + oldCount);
+              countWithPlurals += 1;
             }
-            console.log();
-          }
+          };
 
-          if (_this2.options.failOnWarnings && _this2.parserHadWarnings) {
-            continue;
-          }
+          // generates plurals according to i18next rules: key, key_plural, key_0, key_1, etc.
+          var _iterator3 = _createForOfIteratorHelper(_this2.entries),_step3;try {var _loop2 = function _loop2() {var entry = _step3.value;
+              if (entry.count !== undefined) {
+                numbers.forEach(function (_, i) {
+                  transformEntry(entry, getPluralSuffix(numbers, i));
+                });
+              } else {
+                transformEntry(entry);
+              }};for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {_loop2();
+            }} catch (err) {_iterator3.e(err);} finally {_iterator3.f();}
 
-          // push files back to the stream
-          _this2.pushFile(namespacePath, newCatalog);
-          if (
-          _this2.options.createOldCatalogs && (
-          Object.keys(oldCatalog).length || existingOldCatalog))
-          {
-            _this2.pushFile(namespaceOldPath, oldCatalog);
-          }
-        }};var _iteratorNormalCompletion2 = true;var _didIteratorError2 = false;var _iteratorError2 = undefined;try {for (var _iterator2 = this.options.locales[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {var locale = _step2.value;_loop(locale);
-        }} catch (err) {_didIteratorError2 = true;_iteratorError2 = err;} finally {try {if (!_iteratorNormalCompletion2 && _iterator2.return) {_iterator2.return();}} finally {if (_didIteratorError2) {throw _iteratorError2;}}}
+          var outputPath = _path["default"].resolve(_this2.options.output);
+
+          for (var namespace in catalog) {
+            var namespacePath = outputPath;
+            namespacePath = namespacePath.replace(_this2.localeRegex, locale);
+            namespacePath = namespacePath.replace(_this2.namespaceRegex, namespace);
+
+            var parsedNamespacePath = _path["default"].parse(namespacePath);
+
+            var namespaceOldPath = _path["default"].join(
+            parsedNamespacePath.dir, "".concat(
+            parsedNamespacePath.name, "_old").concat(parsedNamespacePath.ext));
+
+
+            var existingCatalog = _this2.getCatalog(namespacePath);
+            var existingOldCatalog = _this2.getCatalog(namespaceOldPath);
+
+            // merges existing translations with the new ones
+            var _mergeHashes =
+
+
+
+
+            (0, _helpers.mergeHashes)(
+            existingCatalog,
+            catalog[namespace],
+            _this2.options.keepRemoved),newCatalog = _mergeHashes["new"],oldKeys = _mergeHashes.old,mergeCount = _mergeHashes.mergeCount,oldCount = _mergeHashes.oldCount;
+
+
+            // restore old translations
+            var _mergeHashes2 = (0, _helpers.mergeHashes)(
+            existingOldCatalog,
+            newCatalog),oldCatalog = _mergeHashes2.old,restoreCount = _mergeHashes2.mergeCount;
+
+
+            // backup unused translations
+            (0, _helpers.transferValues)(oldKeys, oldCatalog);
+
+            if (_this2.options.verbose) {
+              console.log("[".concat(locale, "] ").concat(namespace, "\n"));
+              console.log("Unique keys: ".concat(
+              uniqueCount, " (").concat(countWithPlurals, " with plurals)"));
+
+              var addCount = countWithPlurals - mergeCount;
+              console.log("Added keys: ".concat(addCount));
+              console.log("Restored keys: ".concat(restoreCount));
+              if (_this2.options.keepRemoved) {
+                console.log("Unreferenced keys: ".concat(oldCount));
+              } else {
+                console.log("Removed keys: ".concat(oldCount));
+              }
+              console.log();
+            }
+
+            if (_this2.options.failOnWarnings && _this2.parserHadWarnings) {
+              continue;
+            }
+
+            // push files back to the stream
+            _this2.pushFile(namespacePath, newCatalog);
+            if (
+            _this2.options.createOldCatalogs && (
+            Object.keys(oldCatalog).length || existingOldCatalog))
+            {
+              _this2.pushFile(namespaceOldPath, oldCatalog);
+            }
+          }};for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {_loop();
+        }} catch (err) {_iterator2.e(err);} finally {_iterator2.f();}
 
       if (this.options.failOnWarnings && this.parserHadWarnings) {
         this.emit(
@@ -245,9 +253,9 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
       }
 
       done();
-    } }, { key: 'addEntry', value: function addEntry(
+    } }, { key: "addEntry", value:
 
-    entry) {
+    function addEntry(entry) {
       if (entry.context) {
         var contextEntry = Object.assign({}, entry);
         delete contextEntry.context;
@@ -258,15 +266,15 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
       } else {
         this.entries.push(entry);
       }
-    } }, { key: 'getCatalog', value: function getCatalog(
+    } }, { key: "getCatalog", value:
 
-    path) {
+    function getCatalog(path) {
       try {
-        var content = void 0;
+        var content;
         if (path.endsWith('yml')) {
-          content = _yamljs2.default.parse(_fs2.default.readFileSync(path).toString());
+          content = _jsYaml["default"].load(_fs["default"].readFileSync(path).toString());
         } else {
-          content = JSON.parse(_fs2.default.readFileSync(path));
+          content = JSON.parse(_fs["default"].readFileSync(path));
         }
         return content;
       } catch (error) {
@@ -276,36 +284,38 @@ i18nTransform = function (_Transform) {_inherits(i18nTransform, _Transform);
       }
 
       return null;
-    } }, { key: 'pushFile', value: function pushFile(
+    } }, { key: "pushFile", value:
 
-    path, contents) {
-      var text = void 0;
+    function pushFile(path, contents) {
+      var text;
       if (path.endsWith('yml')) {
-        text = _yamljs2.default.stringify(contents, null, this.options.indentation);
+        text = _jsYaml["default"].dump(contents, {
+          indent: this.options.indentation });
+
       } else {
         text = JSON.stringify(contents, null, this.options.indentation) + '\n';
       }
 
       if (this.options.lineEnding === 'auto') {
-        text = _eol2.default.auto(text);
+        text = _eol["default"].auto(text);
       } else if (
       this.options.lineEnding === '\r\n' ||
       this.options.lineEnding === 'crlf')
       {
-        text = _eol2.default.crlf(text);
+        text = _eol["default"].crlf(text);
       } else if (
       this.options.lineEnding === '\r' ||
       this.options.lineEnding === 'cr')
       {
-        text = _eol2.default.cr(text);
+        text = _eol["default"].cr(text);
       } else {
         // Defaults to LF, aka \n
-        text = _eol2.default.lf(text);
+        text = _eol["default"].lf(text);
       }
 
-      var file = new _vinyl2.default({
+      var file = new _vinyl["default"]({
         path: path,
         contents: Buffer.from(text) });
 
       this.push(file);
-    } }]);return i18nTransform;}(_stream.Transform);exports.default = i18nTransform;module.exports = exports['default'];
+    } }]);return i18nTransform;}(_stream.Transform);exports["default"] = i18nTransform;

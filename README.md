@@ -1,4 +1,4 @@
-# i18next Parser [![Build Status](https://travis-ci.org/i18next/i18next-parser.svg?branch=master)](https://travis-ci.org/i18next/i18next-parser)
+# i18next Parser [![Build Status](https://travis-ci.org/i18next/i18next-parser.svg?branch=master)](https://travis-ci.org/i18next/i18next-parser) [![codecov](https://codecov.io/gh/i18next/i18next-parser/branch/master/graph/badge.svg?token=CJ74Vps41L)](https://codecov.io/gh/i18next/i18next-parser)
 
 [![NPM](https://nodei.co/npm/i18next-parser.png?downloads=true&stars=true)](https://www.npmjs.com/package/i18next-parser)
 
@@ -29,7 +29,7 @@ Finally, if you want to make this process even less painful, I invite you to che
 
 You can find information about major releases on the [dedicated page](https://github.com/i18next/i18next-parser/releases). The [migration documentation](docs/migration.md) will help you figure out the breaking changes between versions.
 
-For legacy user on `0.x`, the code has since been entirely rewritten and there is a dedicated [branch](https://github.com/i18next/i18next-parser/tree/0.x.x) for it. You are hihgly encouraged to upgrade!
+For legacy users on `0.x`, the code has since been entirely rewritten and there is a dedicated [branch](https://github.com/i18next/i18next-parser/tree/0.x.x) for it. You are highly encouraged to upgrade!
 
 ## Usage
 
@@ -49,7 +49,7 @@ Multiple globbing patterns are supported to specify complex file selections. You
 
 - **-c, --config <path>**: Path to the config file (default: i18next-parser.config.js).
 - **-o, --output <path>**: Path to the output directory (default: locales/$LOCALE/$NAMESPACE.json).
-- **-S, --silent**: Disable logging to stdout.
+- **-s, --silent**: Disable logging to stdout.
 - **--fail-on-warnings**: Exit with an exit code of 1 on warnings
 
 ### Gulp
@@ -126,6 +126,7 @@ module.exports = {
 
   defaultValue: '',
   // Default value to give to empty keys
+  // You may also specify a function accepting the locale, namespace, and key as arguments
 
   indentation: 2,
   // Indentation of the catalog files
@@ -169,6 +170,10 @@ module.exports = {
   // Supports JSON (.json) and YAML (.yml) file formats
   // Where to write the locale files relative to process.cwd()
 
+  pluralSeparator: '_',
+  // Plural separator used in your translation keys
+  // If you want to use plain english keys, separators such as `_` might conflict. You might want to set `pluralSeparator` to a different string that does not occur in your keys.
+
   input: undefined,
   // An array of globs that describe where to look for source files
   // relative to the location of the configuration file
@@ -177,11 +182,13 @@ module.exports = {
   // Whether or not to sort the catalog
 
   skipDefaultValues: false,
-  // Whether to ignore default values.
+  // Whether to ignore default values
+  // You may also specify a function accepting the locale and namespace as arguments
 
   useKeysAsDefaultValue: false,
   // Whether to use the keys as the default value; ex. "Hello": "Hello", "World": "World"
   // This option takes precedence over the `defaultValue` and `skipDefaultValues` options
+  // You may also specify a function accepting the locale and namespace as arguments
 
   verbose: false,
   // Display info about the parsing including some stats
@@ -221,7 +228,7 @@ The default configuration is below:
 {
   // JavascriptLexer default config (js, mjs)
   js: [{
-    lexer: 'JavascriptLexer'
+    lexer: 'JavascriptLexer',
     functions: ['t'], // Array of functions to match
   }],
 }
@@ -337,9 +344,16 @@ The transform emits a `error:json` event if the JSON.parse on json files fail:
 
 `.pipe( i18next().on('error:json', (path, error) => {}) )`
 
-The transform emits a `warning:variable` event if the file has a key that contains a variable:
+The transform emits a `warning` event if the file has a key that is not a string litteral or an option object with a spread operator:
 
-`.pipe( i18next().on('warning:variable', (path, key) => {}) )`
+`.pipe( i18next().on('warning', (path, key) => {}) )`
+
+Here is a list of the warnings:
+
+- **Key is not a string literal**: the parser cannot parse variables, only literals. If your code contains something like `t(variable)`, the parser will throw a warning.
+- **Found same keys with different values**: if you use different default values for the same key, you'll get this error. For example, having `t('key', {defaultValue: 'foo'})` and `t('key', {defaultValue: bar'})`. The parser will select the latest one.
+- **Found translation key already mapped to a map or parent of new key already mapped to a string**: happens in this kind of situation: `t('parent', {defaultValue: 'foo'})` and `t('parent.child', {defaultValue: 'bar'})`. `parent` is both a translation and an object for `child`.
+
 
 ## Contribute
 

@@ -1,6 +1,65 @@
 # Changelog
 
-# 3.3.0 - latest
+# 4.4.0 - latest
+
+- Revert #361 #362
+- Update dependencies
+
+# 4.3.0  DO NOT USE THIS VERSION!
+
+- Extract tagged templates in js and jsx lexers #376 #381
+- Support unicode escape sequence in json #361 #362
+- Update dependencies
+# 4.2.0
+
+- Improve warning for missing defaults #332
+# 4.1.1
+
+- Improve support for spread operator in JS #199
+# 4.0.1
+
+- Drop support for Node 10
+- Update all dependencies
+- Fix an error that was causing empty namespace catalogs to be created as `""` instead of `{}` #273
+
+# 3.11.0
+
+- Add a pluralSeparator option #300 #302 
+
+# 3.10.0
+
+- defaultValue, useKeysAsDefaultValue and skipDefaultValues options support function #224 #299 #301
+
+# 3.9.0
+
+- Update to babel 7 #298
+
+# 3.8.1
+
+- Fix cli that wasn't running #295 #296
+
+# 3.8.0
+
+- Update dependencies
+
+# 3.7.0
+
+- Improve handling of string literals #261
+
+# 3.6.0
+
+- Fix a conflict in jsx lexer #254
+
+# 3.5.0
+
+- Stop trying to parse directories #252
+
+# 3.4.0
+
+- Support multiline output in YAML #251
+- Fix bug with unicode escape sequences #227
+
+# 3.3.0
 
 - Fix customValueTemplate interpolation of ${key} #242
 - Extract options as third parameter when second parameter is default value string  #243 #241

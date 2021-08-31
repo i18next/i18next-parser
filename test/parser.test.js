@@ -292,6 +292,39 @@ describe('parser', () => {
     i18nextParser.end(fakeFile)
   })
 
+  it('creates an empty namespace file if no key is provided', (done) => {
+    let results = []
+    let resultContent
+    const i18nextParser = new i18nTransform({
+      locales: ['en'],
+      defaultNamespace: 'default',
+    })
+    const fakeFile = new Vinyl({
+      contents: Buffer.from("t('empty:');"),
+      path: 'file.js',
+    })
+
+    i18nextParser.on('data', (file) => {
+      if (file.relative.endsWith(path.normalize('en/empty.json'))) {
+        resultContent = JSON.parse(file.contents)
+      }
+      results.push(file.relative.replace(/locales[\//\\]/, ''))
+    })
+    i18nextParser.on('end', () => {
+      const expectedFiles = ['en/empty.json']
+      let length = expectedFiles.length
+
+      assert.equal(results.length, 1)
+      assert.deepEqual(resultContent, {})
+      for (const filename of expectedFiles) {
+        assert.include(results, path.normalize(filename))
+        if (!--length) done()
+      }
+    })
+
+    i18nextParser.end(fakeFile)
+  })
+
   it('applies withTranslation namespace globally', (done) => {
     let result
     const i18nextParser = new i18nTransform()
@@ -721,6 +754,86 @@ describe('parser', () => {
       i18nextParser.end(fakeFile)
     })
 
+    it('supports a defaultValue function', (done) => {
+      let result
+      const i18nextParser = new i18nTransform({
+        defaultValue: (locale, namespace, key) =>
+          `${locale}:${namespace}:${key}`,
+      })
+      const fakeFile = new Vinyl({
+        contents: Buffer.from("t('first')"),
+        path: 'file.js',
+      })
+
+      i18nextParser.on('data', (file) => {
+        if (file.relative.endsWith(enLibraryPath)) {
+          result = JSON.parse(file.contents)
+        }
+      })
+      i18nextParser.once('end', () => {
+        assert.deepEqual(result, { first: 'en:translation:first' })
+        done()
+      })
+
+      i18nextParser.end(fakeFile)
+    })
+
+    it('supports a useKeysAsDefaultValue function', (done) => {
+      let enResult
+      let arResult
+      const i18nextParser = new i18nTransform({
+        locales: ['en', 'ar'],
+        useKeysAsDefaultValue: (locale, namespace) => locale === 'en',
+      })
+      const fakeFile = new Vinyl({
+        contents: Buffer.from("t('first')"),
+        path: 'file.js',
+      })
+
+      i18nextParser.on('data', (file) => {
+        if (file.relative.endsWith(enLibraryPath)) {
+          enResult = JSON.parse(file.contents)
+        } else if (file.relative.endsWith(arLibraryPath)) {
+          arResult = JSON.parse(file.contents)
+        }
+      })
+      i18nextParser.once('end', () => {
+        assert.deepEqual(enResult, { first: 'first' })
+        assert.deepEqual(arResult, { first: '' })
+        done()
+      })
+
+      i18nextParser.end(fakeFile)
+    })
+
+    it('supports a skipDefaultValues function', (done) => {
+      let enResult
+      let arResult
+      const i18nextParser = new i18nTransform({
+        locales: ['en', 'ar'],
+        skipDefaultValues: (locale, namespace) => locale === 'en',
+      })
+      const fakeFile = new Vinyl({
+        contents: Buffer.from("t('first', { defaultValue: 'default' })"),
+        path: 'file.js',
+      })
+
+      i18nextParser.on('data', (file) => {
+        if (file.relative.endsWith(enLibraryPath)) {
+          enResult = JSON.parse(file.contents)
+        } else if (file.relative.endsWith(arLibraryPath)) {
+          arResult = JSON.parse(file.contents)
+        }
+      })
+      i18nextParser.once('end', () => {
+        assert.deepEqual(enResult, { first: '' })
+        assert.deepEqual(arResult, { first: 'default' })
+        done()
+      })
+
+      i18nextParser.end(fakeFile)
+    })
+
     it('supports a lineEnding', (done) => {
       let result
       const i18nextParser = new i18nTransform({
@@ -893,7 +1006,59 @@ describe('parser', () => {
         }
       })
       i18nextParser.once('end', () => {
-        assert.equal(result.replace(/\r\n/g, '\n'), 'first: ""\n')
+        assert.equal(result.replace(/\r\n/g, '\n'), "first: ''\n")
+        done()
+      })
+
+      i18nextParser.end(fakeFile)
+    })
+
+    it('writes multiline output to yml', (done) => {
+      let result
+      const i18nextParser = new i18nTransform({
+        output: 'locales/$LOCALE/$NAMESPACE.yml',
+      })
+      const fakeFile = new Vinyl({
+        contents: Buffer.from("t('multiline', 'One\\nTwo')"),
+        path: 'file.js',
+      })
+
+      i18nextParser.on('data', (file) => {
+        if (file.relative.endsWith(path.normalize('en/translation.yml'))) {
+          result = file.contents.toString('utf8')
+        }
+      })
+      i18nextParser.once('end', () => {
+        assert.equal(
+          result.replace(/\r\n/g, '\n'),
+          `multiline: |-
+  One
+  Two
+`
+        )
+        done()
+      })
+
+      i18nextParser.end(fakeFile)
+    })
+
+    it('writes non-breaking space output to yml', (done) => {
+      let result
+      const i18nextParser = new i18nTransform({
+        output: 'locales/$LOCALE/$NAMESPACE.yml',
+      })
+      const fakeFile = new Vinyl({
+        contents: Buffer.from("t('nbsp', 'One\\u00A0Two')"),
+        path: 'file.js',
+      })
+
+      i18nextParser.on('data', (file) => {
+        if (file.relative.endsWith(path.normalize('en/translation.yml'))) {
+          result = file.contents.toString('utf8')
+        }
+      })
+      i18nextParser.once('end', () => {
+        assert.equal(result.replace(/\r\n/g, '\n'), 'nbsp: "One\\_Two"\n')
         done()
       })
 
@@ -1030,6 +1195,32 @@ describe('parser', () => {
         assert.deepEqual(result, {
           'test {{count}}': '',
           'test {{count}}_plural': '',
+        })
+        done()
+      })
+
+      i18nextParser.end(fakeFile)
+    })
+
+    it('generates plurals with custom plural separator', (done) => {
+      let result
+      const i18nextParser = new i18nTransform({
+        pluralSeparator: '~~~',
+      })
+      const fakeFile = new Vinyl({
+        contents: Buffer.from("t('test {{count}}', { count: 1 })"),
+        path: 'file.js',
+      })
+
+      i18nextParser.on('data', (file) => {
+        if (file.relative.endsWith(enLibraryPath)) {
+          result = JSON.parse(file.contents)
+        }
+      })
+      i18nextParser.once('end', () => {
+        assert.deepEqual(result, {
+          'test {{count}}': '',
+          'test {{count}}~~~plural': '',
         })
         done()
       })

@@ -1,38 +1,64 @@
-'use strict';Object.defineProperty(exports, "__esModule", { value: true });var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {return typeof obj;} : function (obj) {return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;}; /**
-                                                                                                                                                                                                                                                                                                                                                      * Take an entry for the Parser and turn it into a hash,
-                                                                                                                                                                                                                                                                                                                                                      * turning the key path 'foo.bar' into an hash {foo: {bar: ""}}
-                                                                                                                                                                                                                                                                                                                                                      * The generated hash can be merged with an optional `target`.
-                                                                                                                                                                                                                                                                                                                                                      * @returns An `{ target, duplicate, conflict }` object. `target` is the hash
-                                                                                                                                                                                                                                                                                                                                                      * that was passed as an argument or a new hash if none was passed. `duplicate`
-                                                                                                                                                                                                                                                                                                                                                      * indicates whether the entry already existed in the `target` hash. `conflict`
-                                                                                                                                                                                                                                                                                                                                                      * is `"key"` if a parent of the key was already mapped to a string (e.g. when
-                                                                                                                                                                                                                                                                                                                                                      * merging entry {one: {two: "bla"}} with target {one: "bla"}) or the key was
-                                                                                                                                                                                                                                                                                                                                                      * already mapped to a map (e.g. when merging entry {one: "bla"} with target
-                                                                                                                                                                                                                                                                                                                                                      * {one: {two: "bla"}}), `"value"` if the same key already exists swith a
-                                                                                                                                                                                                                                                                                                                                                      * different value, or `false`.
-                                                                                                                                                                                                                                                                                                                                                      */
+"use strict";var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");Object.defineProperty(exports, "__esModule", { value: true });exports.dotPathToHash = dotPathToHash;exports.mergeHashes = mergeHashes;exports.transferValues = transferValues;var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof")); /**
+ * Take an entry for the Parser and turn it into a hash,
+ * turning the key path 'foo.bar' into an hash {foo: {bar: ""}}
+ * The generated hash can be merged with an optional `target`.
+ * @returns An `{ target, duplicate, conflict }` object. `target` is the hash
+ * that was passed as an argument or a new hash if none was passed. `duplicate`
+ * indicates whether the entry already existed in the `target` hash. `conflict`
+ * is `"key"` if a parent of the key was already mapped to a string (e.g. when
+ * merging entry {one: {two: "bla"}} with target {one: "bla"}) or the key was
+ * already mapped to a map (e.g. when merging entry {one: "bla"} with target
+ * {one: {two: "bla"}}), `"value"` if the same key already exists with a
+ * different value, or `false`.
+ */
 function dotPathToHash(entry) {var target = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+  var conflict = false;
+  var duplicate = false;
   var path = entry.keyWithNamespace;
   if (options.suffix || options.suffix === 0) {
-    path += '_' + options.suffix;
+    path += "".concat(options.pluralSeparator).concat(options.suffix);
   }
 
   var separator = options.separator || '.';
+
+  var key = entry.keyWithNamespace.substring(
+  entry.keyWithNamespace.indexOf(separator) + separator.length,
+  entry.keyWithNamespace.length);
+
+
+  // There is no key to process so we return an empty object
+  if (!key) {
+    target[entry.namespace] = {};
+    return { target: target, duplicate: duplicate, conflict: conflict };
+  }
+
+  var defaultValue =
+  typeof options.value === 'function' ?
+  options.value(options.locale, entry.namespace, key) :
+  options.value;
+
+  var skipDefaultValues =
+  typeof options.skipDefaultValues === 'function' ?
+  options.skipDefaultValues(options.locale, entry.namespace) :
+  options.skipDefaultValues;
+
+  var useKeysAsDefaultValue =
+  typeof options.useKeysAsDefaultValue === 'function' ?
+  options.useKeysAsDefaultValue(options.locale, entry.namespace) :
+  options.useKeysAsDefaultValue;
+
   var newValue =
-  entry['defaultValue_' + options.suffix] ||
+  entry["defaultValue_".concat(options.suffix)] ||
   entry.defaultValue ||
-  options.value ||
+  defaultValue ||
   '';
 
-  if (options.skipDefaultValues) {
+  if (skipDefaultValues) {
     newValue = '';
   }
 
-  if (options.useKeysAsDefaultValue) {
-    newValue = entry.keyWithNamespace.substring(
-    entry.keyWithNamespace.indexOf(separator) + separator.length,
-    entry.keyWithNamespace.length);
-
+  if (useKeysAsDefaultValue) {
+    newValue = key;
   }
 
   if (path.endsWith(separator)) {
@@ -41,7 +67,6 @@ function dotPathToHash(entry) {var target = arguments.length > 1 && arguments[1]
 
   var segments = path.split(separator);
   var inner = target;
-  var conflict = false;
   for (var i = 0; i < segments.length - 1; i += 1) {
     var segment = segments[i];
     if (segment) {
@@ -58,9 +83,17 @@ function dotPathToHash(entry) {var target = arguments.length > 1 && arguments[1]
   var lastSegment = segments[segments.length - 1];
   var oldValue = inner[lastSegment];
   if (oldValue !== undefined && oldValue !== newValue) {
-    conflict = (typeof oldValue === 'undefined' ? 'undefined' : _typeof(oldValue)) !== (typeof newValue === 'undefined' ? 'undefined' : _typeof(newValue)) ? 'key' : 'value';
+    if ((0, _typeof2["default"])(oldValue) !== (0, _typeof2["default"])(newValue)) {
+      conflict = 'key';
+    } else if (oldValue !== '') {
+      if (newValue === '') {
+        newValue = oldValue;
+      } else {
+        conflict = 'value';
+      }
+    }
   }
-  var duplicate = oldValue !== undefined || conflict !== false;
+  duplicate = oldValue !== undefined || conflict !== false;
 
   if (options.customValueTemplate) {
     inner[lastSegment] = {};
@@ -82,17 +115,17 @@ function dotPathToHash(entry) {var target = arguments.length > 1 && arguments[1]
 }
 
 /**
-   * Takes a `source` hash and makes sure its value
-   * is pasted in the `target` hash, if the target
-   * hash has the corresponding key (or if `keepRemoved` is true).
-   * @returns An `{ old, new, mergeCount, pullCount, oldCount }` object.
-   * `old` is a hash of values that have not been merged into `target`.
-   * `new` is `target`. `mergeCount` is the number of keys merged into
-   * `new`, `pullCount` is the number of context and plural keys added to
-   * `new` and `oldCount` is the number of keys that were either added to `old` or
-   * `new` (if `keepRemoved` is true and `target` didn't have the corresponding
-   * key).
-   */
+ * Takes a `source` hash and makes sure its value
+ * is pasted in the `target` hash, if the target
+ * hash has the corresponding key (or if `keepRemoved` is true).
+ * @returns An `{ old, new, mergeCount, pullCount, oldCount }` object.
+ * `old` is a hash of values that have not been merged into `target`.
+ * `new` is `target`. `mergeCount` is the number of keys merged into
+ * `new`, `pullCount` is the number of context and plural keys added to
+ * `new` and `oldCount` is the number of keys that were either added to `old` or
+ * `new` (if `keepRemoved` is true and `target` didn't have the corresponding
+ * key).
+ */
 function mergeHashes(source, target) {var keepRemoved = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
   var old = {};
   var mergeCount = 0;
@@ -100,7 +133,7 @@ function mergeHashes(source, target) {var keepRemoved = arguments.length > 2 && 
   var oldCount = 0;
   for (var key in source) {
     var hasNestedEntries =
-    _typeof(target[key]) === 'object' && !Array.isArray(target[key]);
+    (0, _typeof2["default"])(target[key]) === 'object' && !Array.isArray(target[key]);
 
     if (hasNestedEntries) {
       var nested = mergeHashes(source[key], target[key], keepRemoved);
@@ -148,19 +181,19 @@ function mergeHashes(source, target) {var keepRemoved = arguments.length > 2 && 
     }
   }
 
-  return { old: old, new: target, mergeCount: mergeCount, pullCount: pullCount, oldCount: oldCount };
+  return { old: old, "new": target, mergeCount: mergeCount, pullCount: pullCount, oldCount: oldCount };
 }
 
 /**
-   * Merge `source` into `target` by merging nested dictionaries.
-   */
+ * Merge `source` into `target` by merging nested dictionaries.
+ */
 function transferValues(source, target) {
   for (var key in source) {
     var sourceValue = source[key];
     var targetValue = target[key];
     if (
-    (typeof sourceValue === 'undefined' ? 'undefined' : _typeof(sourceValue)) === 'object' &&
-    (typeof targetValue === 'undefined' ? 'undefined' : _typeof(targetValue)) === 'object' &&
+    (0, _typeof2["default"])(sourceValue) === 'object' &&
+    (0, _typeof2["default"])(targetValue) === 'object' &&
     !Array.isArray(sourceValue))
     {
       transferValues(sourceValue, targetValue);
@@ -168,6 +201,4 @@ function transferValues(source, target) {
       target[key] = sourceValue;
     }
   }
-}exports.
-
-dotPathToHash = dotPathToHash;exports.mergeHashes = mergeHashes;exports.transferValues = transferValues;
+}

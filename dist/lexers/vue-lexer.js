@@ -1,25 +1,26 @@
-'use strict';Object.defineProperty(exports, "__esModule", { value: true });var _createClass = function () {function defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);}}return function (Constructor, protoProps, staticProps) {if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;};}();var _baseLexer = require('./base-lexer');var _baseLexer2 = _interopRequireDefault(_baseLexer);
-var _javascriptLexer = require('./javascript-lexer.js');var _javascriptLexer2 = _interopRequireDefault(_javascriptLexer);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function _possibleConstructorReturn(self, call) {if (!self) {throw new ReferenceError("this hasn't been initialised - super() hasn't been called");}return call && (typeof call === "object" || typeof call === "function") ? call : self;}function _inherits(subClass, superClass) {if (typeof superClass !== "function" && superClass !== null) {throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);}subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;}var
+"use strict";var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");Object.defineProperty(exports, "__esModule", { value: true });exports["default"] = void 0;var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime/helpers/possibleConstructorReturn"));var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/getPrototypeOf"));var _baseLexer = _interopRequireDefault(require("./base-lexer"));
+var _javascriptLexer = _interopRequireDefault(require("./javascript-lexer.js"));function _createSuper(Derived) {var hasNativeReflectConstruct = _isNativeReflectConstruct();return function _createSuperInternal() {var Super = (0, _getPrototypeOf2["default"])(Derived),result;if (hasNativeReflectConstruct) {var NewTarget = (0, _getPrototypeOf2["default"])(this).constructor;result = Reflect.construct(Super, arguments, NewTarget);} else {result = Super.apply(this, arguments);}return (0, _possibleConstructorReturn2["default"])(this, result);};}function _isNativeReflectConstruct() {if (typeof Reflect === "undefined" || !Reflect.construct) return false;if (Reflect.construct.sham) return false;if (typeof Proxy === "function") return true;try {Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {}));return true;} catch (e) {return false;}}var
 
-VueLexer = function (_BaseLexer) {_inherits(VueLexer, _BaseLexer);
-  function VueLexer() {var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};_classCallCheck(this, VueLexer);var _this = _possibleConstructorReturn(this, (VueLexer.__proto__ || Object.getPrototypeOf(VueLexer)).call(this,
-    options));
+VueLexer = /*#__PURE__*/function (_BaseLexer) {(0, _inherits2["default"])(VueLexer, _BaseLexer);var _super = _createSuper(VueLexer);
+  function VueLexer() {var _this;var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};(0, _classCallCheck2["default"])(this, VueLexer);
+    _this = _super.call(this, options);
 
     _this.functions = options.functions || ['$t'];return _this;
-  }_createClass(VueLexer, [{ key: 'extract', value: function extract(
+  }(0, _createClass2["default"])(VueLexer, [{ key: "extract", value:
 
-    content, filename) {var _this2 = this;
+    function extract(content, filename) {var _this2 = this;
       var keys = [];
 
-      var Lexer = new _javascriptLexer2.default();
+      var Lexer = new _javascriptLexer["default"]();
       Lexer.on('warning', function (warning) {return _this2.emit('warning', warning);});
       keys = keys.concat(Lexer.extract(content));
 
-      var compiledTemplate = require('vue-template-compiler').compile(content).
+      var compiledTemplate = require('vue-template-compiler').compile(
+      content).
       render;
-      var Lexer2 = new _javascriptLexer2.default({ functions: this.functions });
+      var Lexer2 = new _javascriptLexer["default"]({ functions: this.functions });
       Lexer2.on('warning', function (warning) {return _this2.emit('warning', warning);});
       keys = keys.concat(Lexer2.extract(compiledTemplate));
 
       return keys;
-    } }]);return VueLexer;}(_baseLexer2.default);exports.default = VueLexer;module.exports = exports['default'];
+    } }]);return VueLexer;}(_baseLexer["default"]);exports["default"] = VueLexer;

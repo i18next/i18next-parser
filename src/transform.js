@@ -5,7 +5,7 @@ import fs from 'fs'
 import Parser from './parser'
 import path from 'path'
 import VirtualFile from 'vinyl'
-import YAML from 'yamljs'
+import yaml from 'js-yaml'
 import i18next from 'i18next'
 
 function getPluralSuffix(numberOfPluralForms, nthForm) {
@@ -34,6 +34,7 @@ export default class i18nTransform extends Transform {
       lineEnding: 'auto',
       locales: ['en', 'fr'],
       namespaceSeparator: ':',
+      pluralSeparator: '_',
       output: 'locales/$LOCALE/$NAMESPACE.json',
       sort: false,
       useKeysAsDefaultValue: false,
@@ -82,6 +83,11 @@ export default class i18nTransform extends Transform {
     let content
     if (file.isBuffer()) {
       content = file.contents.toString('utf8')
+    } else if (fs.lstatSync(file.path).isDirectory()) {
+      const warning = `${file.path} is a directory: skipping`
+      this.warn(warning)
+      done()
+      return
     } else {
       content = fs.readFileSync(file.path, encoding)
     }
@@ -135,7 +141,9 @@ export default class i18nTransform extends Transform {
       const transformEntry = (entry, suffix) => {
         const { duplicate, conflict } = dotPathToHash(entry, catalog, {
           suffix,
+          locale,
           separator: this.options.keySeparator,
+          pluralSeparator: this.options.pluralSeparator,
           value: this.options.defaultValue,
           useKeysAsDefaultValue: this.options.useKeysAsDefaultValue,
           skipDefaultValues: this.options.skipDefaultValues,
@@ -264,7 +272,7 @@ export default class i18nTransform extends Transform {
     try {
       let content
       if (path.endsWith('yml')) {
-        content = YAML.parse(fs.readFileSync(path).toString())
+        content = yaml.load(fs.readFileSync(path).toString())
       } else {
         content = JSON.parse(fs.readFileSync(path))
       }
@@ -281,7 +289,9 @@ export default class i18nTransform extends Transform {
   pushFile(path, contents) {
     let text
     if (path.endsWith('yml')) {
-      text = YAML.stringify(contents, null, this.options.indentation)
+      text = yaml.dump(contents, {
+        indent: this.options.indentation,
+      })
     } else {
       text = JSON.stringify(contents, null, this.options.indentation) + '\n'
     }

@@ -30,6 +30,9 @@ export default class JsxLexer extends JavascriptLexer {
         case ts.SyntaxKind.CallExpression:
           entry = this.expressionExtractor.call(this, node)
           break
+        case ts.SyntaxKind.TaggedTemplateExpression:
+          entry = this.taggedTemplateExpressionExtractor.call(this, node)
+          break
         case ts.SyntaxKind.JsxElement:
           entry = this.jsxExtractor.call(this, node, content)
           break
@@ -126,15 +129,15 @@ export default class JsxLexer extends JavascriptLexer {
             case 'text':
               return child.content
             case 'tag':
-              const elementName =
+              const useTagName =
                 child.isBasic &&
                 this.transSupportBasicHtmlNodes &&
                 this.transKeepBasicHtmlNodesFor.includes(child.name)
-                  ? child.name
-                  : index
-              return `<${elementName}>${elemsToString(
-                child.children
-              )}</${elementName}>`
+              const elementName = useTagName ? child.name : index
+              const childrenString = elemsToString(child.children)
+              return childrenString || !(useTagName && child.selfClosing)
+                ? `<${elementName}>${childrenString}</${elementName}>`
+                : `<${elementName} />`
             default:
               throw new Error('Unknown parsed content: ' + child.type)
           }
@@ -166,6 +169,7 @@ export default class JsxLexer extends JavascriptLexer {
             children: this.parseChildren(child.children, sourceText),
             name,
             isBasic,
+            selfClosing: child.kind === ts.SyntaxKind.JsxSelfClosingElement,
           }
         } else if (child.kind === ts.SyntaxKind.JsxExpression) {
           // strip empty expressions

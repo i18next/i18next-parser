@@ -8,31 +8,57 @@
  * is `"key"` if a parent of the key was already mapped to a string (e.g. when
  * merging entry {one: {two: "bla"}} with target {one: "bla"}) or the key was
  * already mapped to a map (e.g. when merging entry {one: "bla"} with target
- * {one: {two: "bla"}}), `"value"` if the same key already exists swith a
+ * {one: {two: "bla"}}), `"value"` if the same key already exists with a
  * different value, or `false`.
  */
 function dotPathToHash(entry, target = {}, options = {}) {
+  let conflict = false
+  let duplicate = false
   let path = entry.keyWithNamespace
   if (options.suffix || options.suffix === 0) {
-    path += `_${options.suffix}`
+    path += `${options.pluralSeparator}${options.suffix}`
   }
 
   const separator = options.separator || '.'
+
+  const key = entry.keyWithNamespace.substring(
+    entry.keyWithNamespace.indexOf(separator) + separator.length,
+    entry.keyWithNamespace.length
+  )
+
+  // There is no key to process so we return an empty object
+  if (!key) {
+    target[entry.namespace] = {}
+    return { target, duplicate, conflict }
+  }
+
+  const defaultValue =
+    typeof options.value === 'function'
+      ? options.value(options.locale, entry.namespace, key)
+      : options.value
+
+  const skipDefaultValues =
+    typeof options.skipDefaultValues === 'function'
+      ? options.skipDefaultValues(options.locale, entry.namespace)
+      : options.skipDefaultValues
+
+  const useKeysAsDefaultValue =
+    typeof options.useKeysAsDefaultValue === 'function'
+      ? options.useKeysAsDefaultValue(options.locale, entry.namespace)
+      : options.useKeysAsDefaultValue
+
   let newValue =
     entry[`defaultValue_${options.suffix}`] ||
     entry.defaultValue ||
-    options.value ||
+    defaultValue ||
     ''
 
-  if (options.skipDefaultValues) {
+  if (skipDefaultValues) {
     newValue = ''
   }
 
-  if (options.useKeysAsDefaultValue) {
-    newValue = entry.keyWithNamespace.substring(
-      entry.keyWithNamespace.indexOf(separator) + separator.length,
-      entry.keyWithNamespace.length
-    )
+  if (useKeysAsDefaultValue) {
+    newValue = key
   }
 
   if (path.endsWith(separator)) {
@@ -41,7 +67,6 @@ function dotPathToHash(entry, target = {}, options = {}) {
 
   const segments = path.split(separator)
   let inner = target
-  let conflict = false
   for (let i = 0; i < segments.length - 1; i += 1) {
     const segment = segments[i]
     if (segment) {
@@ -58,9 +83,17 @@ function dotPathToHash(entry, target = {}, options = {}) {
   const lastSegment = segments[segments.length - 1]
   const oldValue = inner[lastSegment]
   if (oldValue !== undefined && oldValue !== newValue) {
-    conflict = typeof oldValue !== typeof newValue ? 'key' : 'value'
+    if (typeof oldValue !== typeof newValue) {
+      conflict = 'key'
+    } else if (oldValue !== '') {
+      if (newValue === '') {
+        newValue = oldValue
+      } else {
+        conflict = 'value'
+      }
+    }
   }
-  const duplicate = oldValue !== undefined || conflict !== false
+  duplicate = oldValue !== undefined || conflict !== false
 
   if (options.customValueTemplate) {
     inner[lastSegment] = {}

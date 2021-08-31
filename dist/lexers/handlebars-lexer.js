@@ -1,17 +1,17 @@
-'use strict';Object.defineProperty(exports, "__esModule", { value: true });var _extends = Object.assign || function (target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i];for (var key in source) {if (Object.prototype.hasOwnProperty.call(source, key)) {target[key] = source[key];}}}return target;};var _createClass = function () {function defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);}}return function (Constructor, protoProps, staticProps) {if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;};}();var _baseLexer = require('./base-lexer');var _baseLexer2 = _interopRequireDefault(_baseLexer);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function _possibleConstructorReturn(self, call) {if (!self) {throw new ReferenceError("this hasn't been initialised - super() hasn't been called");}return call && (typeof call === "object" || typeof call === "function") ? call : self;}function _inherits(subClass, superClass) {if (typeof superClass !== "function" && superClass !== null) {throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);}subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;}var
+"use strict";var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");Object.defineProperty(exports, "__esModule", { value: true });exports["default"] = void 0;var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime/helpers/possibleConstructorReturn"));var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/getPrototypeOf"));var _baseLexer = _interopRequireDefault(require("./base-lexer"));function ownKeys(object, enumerableOnly) {var keys = Object.keys(object);if (Object.getOwnPropertySymbols) {var symbols = Object.getOwnPropertySymbols(object);if (enumerableOnly) {symbols = symbols.filter(function (sym) {return Object.getOwnPropertyDescriptor(object, sym).enumerable;});}keys.push.apply(keys, symbols);}return keys;}function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};if (i % 2) {ownKeys(Object(source), true).forEach(function (key) {(0, _defineProperty2["default"])(target, key, source[key]);});} else if (Object.getOwnPropertyDescriptors) {Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));} else {ownKeys(Object(source)).forEach(function (key) {Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));});}}return target;}function _createSuper(Derived) {var hasNativeReflectConstruct = _isNativeReflectConstruct();return function _createSuperInternal() {var Super = (0, _getPrototypeOf2["default"])(Derived),result;if (hasNativeReflectConstruct) {var NewTarget = (0, _getPrototypeOf2["default"])(this).constructor;result = Reflect.construct(Super, arguments, NewTarget);} else {result = Super.apply(this, arguments);}return (0, _possibleConstructorReturn2["default"])(this, result);};}function _isNativeReflectConstruct() {if (typeof Reflect === "undefined" || !Reflect.construct) return false;if (Reflect.construct.sham) return false;if (typeof Proxy === "function") return true;try {Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {}));return true;} catch (e) {return false;}}var
 
-HandlebarsLexer = function (_BaseLexer) {_inherits(HandlebarsLexer, _BaseLexer);
-  function HandlebarsLexer() {var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};_classCallCheck(this, HandlebarsLexer);var _this = _possibleConstructorReturn(this, (HandlebarsLexer.__proto__ || Object.getPrototypeOf(HandlebarsLexer)).call(this,
-    options));
+HandlebarsLexer = /*#__PURE__*/function (_BaseLexer) {(0, _inherits2["default"])(HandlebarsLexer, _BaseLexer);var _super = _createSuper(HandlebarsLexer);
+  function HandlebarsLexer() {var _this;var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};(0, _classCallCheck2["default"])(this, HandlebarsLexer);
+    _this = _super.call(this, options);
 
     _this.functions = options.functions || ['t'];
 
     _this.createFunctionRegex();
     _this.createArgumentsRegex();return _this;
-  }_createClass(HandlebarsLexer, [{ key: 'extract', value: function extract(
+  }(0, _createClass2["default"])(HandlebarsLexer, [{ key: "extract", value:
 
-    content) {
-      var matches = void 0;
+    function extract(content) {
+      var matches;
 
       while (matches = this.functionRegex.exec(content)) {
         var args = this.parseArguments(matches[1] || matches[2]);
@@ -19,10 +19,10 @@ HandlebarsLexer = function (_BaseLexer) {_inherits(HandlebarsLexer, _BaseLexer);
       }
 
       return this.keys;
-    } }, { key: 'parseArguments', value: function parseArguments(
+    } }, { key: "parseArguments", value:
 
-    args) {
-      var matches = void 0;
+    function parseArguments(args) {
+      var matches;
       var result = {
         arguments: [],
         options: {} };
@@ -36,19 +36,19 @@ HandlebarsLexer = function (_BaseLexer) {_inherits(HandlebarsLexer, _BaseLexer);
         }
       }
       return result;
-    } }, { key: 'populateKeysFromArguments', value: function populateKeysFromArguments(
+    } }, { key: "populateKeysFromArguments", value:
 
-    args) {
+    function populateKeysFromArguments(args) {
       var firstArgument = args.arguments[0];
       var secondArgument = args.arguments[1];
       var isKeyString = this.validateString(firstArgument);
       var isDefaultValueString = this.validateString(secondArgument);
 
       if (!isKeyString) {
-        this.emit('warning', 'Key is not a string literal: ' + firstArgument);
+        this.emit('warning', "Key is not a string literal: ".concat(firstArgument));
       } else {
-        var result = _extends({},
-        args.options, {
+        var result = _objectSpread(_objectSpread({},
+        args.options), {}, {
           key: firstArgument.slice(1, -1) });
 
         if (isDefaultValueString) {
@@ -56,30 +56,30 @@ HandlebarsLexer = function (_BaseLexer) {_inherits(HandlebarsLexer, _BaseLexer);
         }
         this.keys.push(result);
       }
-    } }, { key: 'createFunctionRegex', value: function createFunctionRegex()
+    } }, { key: "createFunctionRegex", value:
 
-    {
+    function createFunctionRegex() {
       var functionPattern = this.functionPattern();
       var curlyPattern = '(?:{{)' + functionPattern + '\\s+(.*?)(?:}})';
       var parenthesisPattern = '(?:\\()' + functionPattern + '\\s+(.*)(?:\\))';
       var pattern = curlyPattern + '|' + parenthesisPattern;
       this.functionRegex = new RegExp(pattern, 'gi');
       return this.functionRegex;
-    } }, { key: 'createArgumentsRegex', value: function createArgumentsRegex()
+    } }, { key: "createArgumentsRegex", value:
 
-    {
+    function createArgumentsRegex() {
       var pattern =
       '(?:\\s+|^)' +
       '(' +
       '(?:' +
-      _baseLexer2.default.variablePattern +
+      _baseLexer["default"].variablePattern +
       '(?:=' +
-      _baseLexer2.default.stringOrVariablePattern +
+      _baseLexer["default"].stringOrVariablePattern +
       ')?' +
       ')' +
       '|' +
-      _baseLexer2.default.stringPattern +
+      _baseLexer["default"].stringPattern +
       ')';
       this.argumentsRegex = new RegExp(pattern, 'gi');
       return this.argumentsRegex;
-    } }]);return HandlebarsLexer;}(_baseLexer2.default);exports.default = HandlebarsLexer;module.exports = exports['default'];
+    } }]);return HandlebarsLexer;}(_baseLexer["default"]);exports["default"] = HandlebarsLexer;

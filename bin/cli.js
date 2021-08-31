@@ -2,7 +2,7 @@
 
 var colors        = require('colors')
 var fs            = require('fs')
-var i18nTransform = require('../dist/transform')
+var i18nTransform = require('../dist/transform')['default']
 var path          = require('path')
 var pkg           = require('../package.json')
 var program       = require('commander')
@@ -29,18 +29,18 @@ program.parse(process.argv)
 
 var config = {}
 try {
-  config = require(path.resolve(program.config))
+  config = require(path.resolve(program.opts().config))
 } catch (err) {
   if (err.code === 'MODULE_NOT_FOUND') {
-    console.log('  [error] '.red + 'Config file does not exist: ' + program.config)
+    console.log('  [error] '.red + 'Config file does not exist: ' + program.opts().config)
   }
   else {
     throw err
   }
 }
 
-config.output = program.output || config.output || 'locales/$LOCALE/$NAMESPACE.json'
-config.failOnWarnings = program.failOnWarnings || config.failOnWarnings || false
+config.output = program.opts().output || config.output || 'locales/$LOCALE/$NAMESPACE.json'
+config.failOnWarnings = program.opts().failOnWarnings || config.failOnWarnings || false
 
 var args = program.args || []
 var globs
@@ -75,7 +75,7 @@ else if (config.input) {
       negate = '!'
       s = s.substr(1)
     }
-    return negate + path.resolve(path.dirname(path.resolve(program.config)), s)
+    return negate + path.resolve(path.dirname(path.resolve(program.opts().config)), s)
   })
 }
 
@@ -91,7 +91,7 @@ console.log('  i18next Parser'.cyan)
 console.log('  --------------'.cyan)
 console.log('  Input:  '.cyan + args.join(', '))
 console.log('  Output: '.cyan + config.output)
-if (!program.silent) {
+if (!program.opts().silent) {
   console.log()
 }
 
@@ -102,13 +102,13 @@ vfs.src(globs)
 .pipe(
   new i18nTransform(config)
   .on('reading', function (file) {
-    if (!program.silent) {
+    if (!program.opts().silent) {
       console.log('  [read]    '.green + file.path)
     }
     count++
   })
   .on('data', function (file) {
-    if (!program.silent) {
+    if (!program.opts().silent) {
       console.log('  [write]   '.green + file.path)
     }
   })
@@ -119,12 +119,12 @@ vfs.src(globs)
     console.log('  [error]   '.red + message)
   })
   .on('warning', function (message) {
-    if (!program.silent) {
+    if (!program.opts().silent) {
       console.log('  [warning] '.yellow + message)
     }
   })
   .on('finish', function () {
-    if (!program.silent) {
+    if (!program.opts().silent) {
       console.log()
     }
     console.log('  Stats:  '.cyan + count + ' files were parsed')
