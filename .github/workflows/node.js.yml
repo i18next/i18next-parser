@@ -13,21 +13,14 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v2.4.0
+      uses: actions/setup-node@v2
       with:
+        cache: npm
         node-version: ${{ matrix.node-version }}
-    - name: Cache Node.js modules
-      uses: actions/cache@v2
-      with:
-        path: ~/.npm
-        key: ${{ runner.OS }}-node-${{ hashFiles('**/package-lock.json') }}
-        restore-keys: |
-          ${{ runner.OS }}-node-
-          ${{ runner.OS }}-
     - run: npm install
     - run: npm run build
     - run: npm run coverage
-    - uses: codecov/codecov-action@v2.0.3
+    - uses: codecov/codecov-action@v2
       with: 
         name: node-${{ matrix.node-version }}
         fail_ci_if_error: false
