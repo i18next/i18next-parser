@@ -990,31 +990,6 @@ describe('parser', () => {
       i18nextParser.end(fakeFile)
     })
 
-    it('writes non-breaking space output to json', (done) => {
-      let result
-      const expected = '{\n  "nbsp": "One\\u00a0Two\\u00a0Three"\n}\n'
-
-      const i18nextParser = new i18nTransform({
-        output: 'locales/$LOCALE/$NAMESPACE.json',
-      })
-      const fakeFile = new Vinyl({
-        contents: Buffer.from("t('nbsp', 'One\\u00A0Two\\u00a0Three')"),
-        path: 'file.js',
-      })
-
-      i18nextParser.on('data', (file) => {
-        if (file.relative.endsWith(path.normalize('en/translation.json'))) {
-          result = file.contents.toString('utf8')
-        }
-      })
-      i18nextParser.once('end', () => {
-        assert.equal(result, expected)
-        done()
-      })
-
-      i18nextParser.end(fakeFile)
-    })
-
     it('supports outputing to yml', (done) => {
       let result
       const i18nextParser = new i18nTransform({

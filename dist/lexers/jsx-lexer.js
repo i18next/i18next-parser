@@ -188,33 +188,33 @@ JsxLexer = /*#__PURE__*/function (_JavascriptLexer) {(0, _inherits2["default"])(
           // strip properties from ObjectExpressions
           // annoying (and who knows how many other exceptions we'll need to write) but necessary
           else if (
-            child.expression.kind === ts.SyntaxKind.ObjectLiteralExpression)
-            {
-              // i18next-react only accepts two props, any random single prop, and a format prop
-              // for our purposes, format prop is always ignored
+          child.expression.kind === ts.SyntaxKind.ObjectLiteralExpression)
+          {
+            // i18next-react only accepts two props, any random single prop, and a format prop
+            // for our purposes, format prop is always ignored
 
-              var nonFormatProperties = child.expression.properties.filter(
-              function (prop) {return prop.name.text !== 'format';});
-
-
-              // more than one property throw a warning in i18next-react, but still works as a key
-              if (nonFormatProperties.length > 1) {
-                _this5.emit(
-                'warning', "The passed in object contained more than one variable - the object should look like {{ value, format }} where format is optional.");
+            var nonFormatProperties = child.expression.properties.filter(
+            function (prop) {return prop.name.text !== 'format';});
 
 
+            // more than one property throw a warning in i18next-react, but still works as a key
+            if (nonFormatProperties.length > 1) {
+              _this5.emit(
+              'warning', "The passed in object contained more than one variable - the object should look like {{ value, format }} where format is optional.");
 
-                return {
-                  type: 'text',
-                  content: '' };
 
-              }
 
               return {
-                type: 'js',
-                content: "{{".concat(nonFormatProperties[0].name.text, "}}") };
+                type: 'text',
+                content: '' };
 
             }
+
+            return {
+              type: 'js',
+              content: "{{".concat(nonFormatProperties[0].name.text, "}}") };
+
+          }
 
           // slice on the expression so that we ignore comments around it
           return {
