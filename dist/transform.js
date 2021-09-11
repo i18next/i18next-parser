@@ -294,6 +294,12 @@ i18nTransform = /*#__PURE__*/function (_Transform) {(0, _inherits2["default"])(i
 
       } else {
         text = JSON.stringify(contents, null, this.options.indentation) + '\n';
+        // Convert non-printable Unicode characters to unicode escape sequence
+        // https://unicode.org/reports/tr18/#General_Category_Property
+        text = text.replace(/(?:[\0- \x7F-\xA0\xAD\u0600-\u0605\u061C\u06DD\u070F\u08E2\u1680\u180E\u2000-\u200F\u2028-\u202F\u205F-\u2064\u2066-\u206F\u3000\uFEFF\uFFF9-\uFFFB]|\uD804[\uDCBD\uDCCD]|\uD80D[\uDC30-\uDC38]|\uD82F[\uDCA0-\uDCA3]|\uD834[\uDD73-\uDD7A]|\uDB40[\uDC01\uDC20-\uDC7F])/g, function (chr) {
+          var n = chr.charCodeAt(0);
+          return n < 128 ? chr : "\\u".concat("0000".concat(n.toString(16)).substr(-4));
+        });
       }
 
       if (this.options.lineEnding === 'auto') {

@@ -1,6 +1,11 @@
 # Changelog
 
-# 4.4.0 - latest
+# 4.5.0 - latest
+
+- Escape non-printable Unicode characters #413 #361
+- Update dependencies
+
+# 4.4.0
 
 - Revert #361 #362
 - Update dependencies
