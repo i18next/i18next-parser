@@ -70,7 +70,7 @@ export default class Parser extends EventEmitter {
         Lexer = lexersMap[lexerName]
       }
 
-      const lexer = new Lexer({ ...this.options, ...lexerOptions})
+      const lexer = new Lexer(lexerOptions)
       lexer.on('warning', (warning) => this.emit('warning', warning))
       keys = keys.concat(lexer.extract(content, filename))
     }
