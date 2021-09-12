@@ -189,30 +189,12 @@ describe('JavascriptLexer', () => {
       ])
     })
 
-    it('extracts first namespace when it is an array', () => {
-      const Lexer = new JavascriptLexer()
-      const content =
-        'const ExtendedComponent = useTranslation(["foo", "baz"]); t("bar");'
-      assert.deepEqual(Lexer.extract(content), [
-        { namespace: 'foo', key: 'bar' },
-      ])
-    })
-
     it('uses namespace from t function with priority', () => {
       const Lexer = new JavascriptLexer()
       const content =
         'const {t} = useTranslation("foo"); t("bar", {ns: "baz"});'
       assert.deepEqual(Lexer.extract(content), [
         { namespace: 'baz', key: 'bar', ns: 'baz' },
-      ])
-    })
-
-    it('uses namespace separator', () => {
-      const Lexer = new JavascriptLexer({ namespaceSeparator: ':'})
-      const content = 'const {t} = useTranslation(["foo", "baz"]); t("baz:bar"); t("qux");'
-      assert.deepEqual(Lexer.extract(content), [
-        { key: 'bar', ns: 'baz', namespace: 'baz' },
-        { key: 'qux', namespace: 'foo' }
       ])
     })
   })
@@ -242,16 +224,6 @@ describe('JavascriptLexer', () => {
         'const ExtendedComponent = withTranslation("foo")(MyComponent); t("bar", {ns: "baz"});'
       assert.deepEqual(Lexer.extract(content), [
         { namespace: 'baz', key: 'bar', ns: 'baz' },
-      ])
-    })
-
-    it('uses namespace separator', () => {
-      const Lexer = new JavascriptLexer({ namespaceSeparator: ':'})
-      const content =
-        'const {t} = withTranslation(["foo", "baz"])(MyComponent); t("baz:bar"); t("qux");'
-      assert.deepEqual(Lexer.extract(content), [
-        { key: 'bar', ns: 'baz', namespace: 'baz' },
-        { key: 'qux', namespace: 'foo' }
       ])
     })
   })
