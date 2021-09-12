@@ -4,7 +4,7 @@ import * as ts from 'typescript'
 export default class JavascriptLexer extends BaseLexer {
   constructor(options = {}) {
     super(options)
-    this.namespaceSeparator = options.namespaceSeparator;
+
     this.callPattern = '(?<=^|\\s|\\.)' + this.functionPattern() + '\\(.*\\)'
     this.functions = options.functions || ['t']
     this.attr = options.attr || 'i18nKey'
@@ -138,17 +138,7 @@ export default class JavascriptLexer extends BaseLexer {
         keyArgument.kind === ts.SyntaxKind.StringLiteral ||
         keyArgument.kind === ts.SyntaxKind.NoSubstitutionTemplateLiteral
       ) {
-        if (this.namespaceSeparator) {
-          const [ns, key] = keyArgument.text.split(this.namespaceSeparator, 2);
-          if (key) {
-            entry.key = key;
-            entry.ns = ns;
-          } else {
-            entry.key = keyArgument.text
-          }
-        } else {
-          entry.key = keyArgument.text
-        }
+        entry.key = keyArgument.text
       } else if (keyArgument.kind === ts.SyntaxKind.BinaryExpression) {
         const concatenatedString = this.concatenateString(keyArgument)
         if (!concatenatedString) {
