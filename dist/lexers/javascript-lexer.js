@@ -110,14 +110,8 @@ JavascriptLexer = /*#__PURE__*/function (_BaseLexer) {(0, _inherits2["default"])
       var entry = {};
 
       if (
-      node.expression.escapedText === 'useTranslation' &&
-      node.arguments.length)
-      {
-        this.defaultNamespace = node.arguments[0].text;
-      }
-
-      if (
-      node.expression.escapedText === 'withTranslation' &&
+      (node.expression.escapedText === 'useTranslation' ||
+      node.expression.escapedText === 'withTranslation') &&
       node.arguments.length)
       {
         var _node$arguments$ = node.arguments[0],text = _node$arguments$.text,elements = _node$arguments$.elements;

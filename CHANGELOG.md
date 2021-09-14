@@ -1,6 +1,10 @@
 # Changelog
 
-# 4.5.0 - latest
+# 4.6.0 - latest
+
+- Add support for array argument for useTranslation #389 #305
+
+# 4.5.0
 
 - Escape non-printable Unicode characters #413 #361
 - Update dependencies

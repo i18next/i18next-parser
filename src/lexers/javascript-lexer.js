@@ -111,7 +111,7 @@ export default class JavascriptLexer extends BaseLexer {
 
     if (
       (node.expression.escapedText === 'useTranslation' ||
-      node.expression.escapedText === 'withTranslation') &&
+        node.expression.escapedText === 'withTranslation') &&
       node.arguments.length
     ) {
       const { text, elements } = node.arguments[0]
