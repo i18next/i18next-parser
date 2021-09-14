@@ -189,6 +189,15 @@ describe('JavascriptLexer', () => {
       ])
     })
 
+    it('extracts first namespace when it is an array', () => {
+      const Lexer = new JavascriptLexer()
+      const content =
+        'const ExtendedComponent = useTranslation(["foo", "baz"]); t("bar");'
+      assert.deepEqual(Lexer.extract(content), [
+        { namespace: 'foo', key: 'bar' },
+      ])
+    })
+
     it('uses namespace from t function with priority', () => {
       const Lexer = new JavascriptLexer()
       const content =
