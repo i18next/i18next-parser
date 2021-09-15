@@ -64,16 +64,19 @@ npm install --save-dev i18next-parser
 [Gulp](http://gulpjs.com/) defines itself as the streaming build system. Put simply, it is like Grunt, but performant and elegant.
 
 ```javascript
-const i18nextParser = require('i18next-parser').gulp;
+const i18nextParser = require('i18next-parser').gulp
 
-gulp.task('i18next', function() {
-  gulp.src('app/**')
-    .pipe(new i18nextParser({
-      locales: ['en', 'de'],
-      output: 'locales/$LOCALE/$NAMESPACE.json'
-    }))
-    .pipe(gulp.dest('./'));
-});
+gulp.task('i18next', function () {
+  gulp
+    .src('app/**')
+    .pipe(
+      new i18nextParser({
+        locales: ['en', 'de'],
+        output: 'locales/$LOCALE/$NAMESPACE.json',
+      })
+    )
+    .pipe(gulp.dest('./'))
+})
 ```
 
 **IMPORTANT**: `output` is required to know where to read the catalog from. You might think that `gulp.dest()` is enough though it does not inform the transform where to read the existing catalog from.
@@ -97,11 +100,11 @@ const appRoot = 'broccoli'
 
 let i18n = new Funnel(appRoot, {
   files: ['handlebars.hbs', 'javascript.js'],
-  annotation: 'i18next-parser'
+  annotation: 'i18next-parser',
 })
 
 i18n = new i18nextParser([i18n], {
-  output: 'broccoli/locales/$LOCALE/$NAMESPACE.json'
+  output: 'broccoli/locales/$LOCALE/$NAMESPACE.json',
 })
 
 module.exports = i18n
@@ -152,7 +155,7 @@ module.exports = {
     jsx: ['JsxLexer'],
     tsx: ['JsxLexer'],
 
-    default: ['JavascriptLexer']
+    default: ['JavascriptLexer'],
   },
 
   lineEnding: 'auto',
@@ -179,7 +182,7 @@ module.exports = {
   // relative to the location of the configuration file
 
   sort: false,
-  // Whether or not to sort the catalog
+  // Whether or not to sort the catalog. Can also be a [compareFunction](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort#parameters)
 
   skipDefaultValues: false,
   // Whether to ignore default values
@@ -196,7 +199,7 @@ module.exports = {
   failOnWarnings: false,
   // Exit with an exit code of 1 on warnings
 
-  customValueTemplate: null
+  customValueTemplate: null,
   // If you wish to customize the value output the value as an object, you can set your own format.
   // ${defaultValue} is the default value you set in your translation function.
   // Any other custom property will be automatically extracted.
@@ -273,8 +276,8 @@ Typescript is supported via Javascript and Jsx lexers. If you are using Javascri
   handlebars: [
     {
       lexer: 'HandlebarsLexer',
-      functions: ['t'] // Array of functions to match
-    }
+      functions: ['t'], // Array of functions to match
+    },
   ]
 }
 ```
@@ -353,7 +356,6 @@ Here is a list of the warnings:
 - **Key is not a string literal**: the parser cannot parse variables, only literals. If your code contains something like `t(variable)`, the parser will throw a warning.
 - **Found same keys with different values**: if you use different default values for the same key, you'll get this error. For example, having `t('key', {defaultValue: 'foo'})` and `t('key', {defaultValue: bar'})`. The parser will select the latest one.
 - **Found translation key already mapped to a map or parent of new key already mapped to a string**: happens in this kind of situation: `t('parent', {defaultValue: 'foo'})` and `t('parent.child', {defaultValue: 'bar'})`. `parent` is both a translation and an object for `child`.
-
 
 ## Contribute
 
