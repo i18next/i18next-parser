@@ -126,8 +126,11 @@ i18nTransform = /*#__PURE__*/function (_Transform) {(0, _inherits2["default"])(i
     } }, { key: "_flush", value:
 
     function _flush(done) {var _this2 = this;
-      if (this.options.sort) {
-        this.entries = this.entries.sort(function (a, b) {return a.key.localeCompare(b.key);});
+      var sort = this.options.sort;
+      if (sort) {
+        this.entries = this.entries.sort(
+        typeof sort === 'function' ? sort : function (a, b) {return a.key.localeCompare(b.key);});
+
       }var _iterator2 = _createForOfIteratorHelper(
 
       this.options.locales),_step2;try {var _loop = function _loop() {var locale = _step2.value;
