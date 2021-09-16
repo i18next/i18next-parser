@@ -179,7 +179,7 @@ module.exports = {
   // relative to the location of the configuration file
 
   sort: false,
-  // Whether or not to sort the catalog
+  // Whether or not to sort the catalog. Can also be a [compareFunction](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort#parameters)
 
   skipDefaultValues: false,
   // Whether to ignore default values

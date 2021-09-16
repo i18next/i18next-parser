@@ -1660,14 +1660,14 @@ describe('parser', () => {
         i18nextParser.end(fakeFile)
       })
 
-      it('supports sort as an option', (done) => {
+      it('supports sort as a boolean', (done) => {
         let result
         const i18nextParser = new i18nTransform({
           sort: true,
         })
         const fakeFile = new Vinyl({
           contents: Buffer.from(
-            "t('ccc'); t('aaa'); t('bbb.bbb'); t('bbb.aaa')"
+            "t('aaA'); t('aaa'); t('bbb.bbb'); t('bbb.aaa')"
           ),
           path: 'file.js',
         })
@@ -1678,8 +1678,34 @@ describe('parser', () => {
           }
         })
         i18nextParser.once('end', () => {
-          assert.sameOrderedMembers(Object.keys(result), ['aaa', 'bbb', 'ccc'])
+          assert.sameOrderedMembers(Object.keys(result), ['aaa', 'aaA', 'bbb'])
           assert.sameOrderedMembers(Object.keys(result.bbb), ['aaa', 'bbb'])
+          done()
+        })
+
+        i18nextParser.end(fakeFile)
+      })
+
+      it('supports sort as a function', (done) => {
+        let result
+        const i18nextParser = new i18nTransform({
+          sort: (a, b) => (a.key > b.key) - (a.key < b.key),
+        })
+        const fakeFile = new Vinyl({
+          contents: Buffer.from(
+            "t('aaa'); t('aaA'); t('bbb.bbb'); t('bbb.bbB')"
+          ),
+          path: 'file.js',
+        })
+
+        i18nextParser.on('data', (file) => {
+          if (file.relative.endsWith(enLibraryPath)) {
+            result = JSON.parse(file.contents)
+          }
+        })
+        i18nextParser.once('end', () => {
+          assert.sameOrderedMembers(Object.keys(result), ['aaA', 'aaa', 'bbb'])
+          assert.sameOrderedMembers(Object.keys(result.bbb), ['bbB', 'bbb'])
           done()
         })
 

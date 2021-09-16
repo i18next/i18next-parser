@@ -126,8 +126,11 @@ export default class i18nTransform extends Transform {
   }
 
   _flush(done) {
-    if (this.options.sort) {
-      this.entries = this.entries.sort((a, b) => a.key.localeCompare(b.key))
+    const { sort } = this.options
+    if (sort) {
+      this.entries = this.entries.sort(
+        typeof sort === 'function' ? sort : (a, b) => a.key.localeCompare(b.key)
+      )
     }
 
     for (const locale of this.options.locales) {
