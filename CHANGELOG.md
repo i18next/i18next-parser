@@ -1,6 +1,11 @@
 # Changelog
 
-# 4.6.0 - latest
+# 4.7.0 - latest
+
+- CLI `silent` option is now fully silent #417
+- `sort` option can now take a function #418
+
+# 4.6.0
 
 - Add support for array argument for useTranslation #389 #305
 
