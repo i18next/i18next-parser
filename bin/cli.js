@@ -86,12 +86,12 @@ if (!globs.length) {
 }
 
 // Welcome message
-console.log()
-console.log('  i18next Parser'.cyan)
-console.log('  --------------'.cyan)
-console.log('  Input:  '.cyan + args.join(', '))
-console.log('  Output: '.cyan + config.output)
 if (!program.opts().silent) {
+  console.log()
+  console.log('  i18next Parser'.cyan)
+  console.log('  --------------'.cyan)
+  console.log('  Input:  '.cyan + args.join(', '))
+  console.log('  Output: '.cyan + config.output)
   console.log()
 }
 
@@ -126,8 +126,8 @@ vfs.src(globs)
   .on('finish', function () {
     if (!program.opts().silent) {
       console.log()
+      console.log('  Stats:  '.cyan + count + ' files were parsed')
     }
-    console.log('  Stats:  '.cyan + count + ' files were parsed')
   })
 )
 .pipe(vfs.dest(process.cwd()))
