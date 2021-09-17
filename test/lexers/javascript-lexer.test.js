@@ -10,9 +10,18 @@ describe('JavascriptLexer', () => {
     done()
   })
 
-  it('extracts the second argument as defaultValue', (done) => {
+  it('extracts the second argument string literal as defaultValue', (done) => {
     const Lexer = new JavascriptLexer()
     const content = 'i18n.t("first", "bla")'
+    assert.deepEqual(Lexer.extract(content), [
+      { key: 'first', defaultValue: 'bla' },
+    ])
+    done()
+  })
+
+  it('extracts the second argument template literal as defaultValue', (done) => {
+    const Lexer = new JavascriptLexer()
+    const content = 'i18n.t("first", `bla`)'
     assert.deepEqual(Lexer.extract(content), [
       { key: 'first', defaultValue: 'bla' },
     ])

@@ -163,8 +163,9 @@ JavascriptLexer = /*#__PURE__*/function (_BaseLexer) {(0, _inherits2["default"])
 
         // Second argument could be a string default value
         if (
-        optionsArgument &&
-        optionsArgument.kind === ts.SyntaxKind.StringLiteral)
+        optionsArgument && (
+        optionsArgument.kind === ts.SyntaxKind.StringLiteral ||
+        optionsArgument.kind === ts.SyntaxKind.NoSubstitutionTemplateLiteral))
         {
           entry.defaultValue = optionsArgument.text;
           optionsArgument = node.arguments.shift();
