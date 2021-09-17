@@ -1,6 +1,11 @@
 # Changelog
 
-# 4.7.0 - latest
+# 4.8.0 - latest
+
+- Add template literal support for defaultValue as a second argument #419 #420
+- Update dependencies
+
+# 4.7.0
 
 - CLI `silent` option is now fully silent #417
 - `sort` option can now take a function #418
