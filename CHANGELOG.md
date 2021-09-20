@@ -1,5 +1,8 @@
 # Changelog
 
+# 5.0.0 - unreleased
+- BREAKING: Format Json output conforming to i18next JSON v4 (see: https://www.i18next.com/misc/json-format)
+
 # 4.8.0 - latest
 
 - Add template literal support for defaultValue as a second argument #419 #420
@@ -43,7 +46,7 @@
 
 # 3.11.0
 
-- Add a pluralSeparator option #300 #302 
+- Add a pluralSeparator option #300 #302
 
 # 3.10.0
 

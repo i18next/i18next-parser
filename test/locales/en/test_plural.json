@@ -1,7 +1,7 @@
 {
-  "first": "first",
-  "first_plural": "first plural",
-  "second": "second",
-  "second_0": "second plural 0",
-  "second_12": "second plural 12"
+  "first_one": "first",
+  "first_other": "first plural",
+  "second_one": "second",
+  "second_zero": "second plural zero",
+  "second_other": "second plural other"
 }

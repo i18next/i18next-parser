@@ -8,15 +8,6 @@ import VirtualFile from 'vinyl'
 import yaml from 'js-yaml'
 import i18next from 'i18next'
 
-function getPluralSuffix(numberOfPluralForms, nthForm) {
-  if (numberOfPluralForms.length > 2) {
-    return nthForm // key_0, key_1, etc.
-  } else if (nthForm === 1) {
-    return 'plural'
-  }
-  return ''
-}
-
 export default class i18nTransform extends Transform {
   constructor(options = {}) {
     options.objectMode = true
@@ -61,7 +52,9 @@ export default class i18nTransform extends Transform {
     this.localeRegex = /\$LOCALE/g
     this.namespaceRegex = /\$NAMESPACE/g
 
-    i18next.init()
+    i18next.init({
+      pluralSeparator: this.options.pluralSeparator,
+    })
   }
 
   error(error) {
@@ -135,8 +128,6 @@ export default class i18nTransform extends Transform {
 
     for (const locale of this.options.locales) {
       const catalog = {}
-      const pluralRule = i18next.services.pluralResolver.getRule(locale)
-      const numbers = (pluralRule && pluralRule.numbers) || [1, 2]
 
       let countWithPlurals = 0
       let uniqueCount = this.entries.length
@@ -167,12 +158,12 @@ export default class i18nTransform extends Transform {
         }
       }
 
-      // generates plurals according to i18next rules: key, key_plural, key_0, key_1, etc.
+      // generates plurals according to i18next rules: key_zero, key_one, key_two, key_few, key_many and key_other
       for (const entry of this.entries) {
         if (entry.count !== undefined) {
-          numbers.forEach((_, i) => {
-            transformEntry(entry, getPluralSuffix(numbers, i))
-          })
+          i18next.services.pluralResolver.getSuffixes(locale).forEach((suffix) => {
+            transformEntry(entry, suffix)
+          });
         } else {
           transformEntry(entry)
         }
