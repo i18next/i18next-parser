@@ -132,8 +132,8 @@ function mergeHashes(source, target, options = {}) {
   let pullCount = 0
   let oldCount = 0
 
-  const keepRemoved = options.keepRemoved || false;
-  const pluralSeparator = options.pluralSeparator || '_';
+  const keepRemoved = options.keepRemoved || false
+  const pluralSeparator = options.pluralSeparator || '_'
 
   for (const key in source) {
     const hasNestedEntries =
@@ -158,7 +158,9 @@ function mergeHashes(source, target, options = {}) {
         }
       } else {
         // support for plural in keys
-        const pluralRegex = new RegExp(`(${pluralSeparator}(?:zero|one|two|few|many|other))$`)
+        const pluralRegex = new RegExp(
+          `(${pluralSeparator}(?:zero|one|two|few|many|other))$`
+        )
         const pluralMatch = pluralRegex.test(key)
         const singularKey = key.replace(pluralRegex, '')
 
@@ -169,7 +171,9 @@ function mergeHashes(source, target, options = {}) {
 
         if (
           (contextMatch && target[rawKey] !== undefined) ||
-          (pluralMatch && findRelatedPluralKey(`${singularKey}${pluralSeparator}`, target) !== undefined)
+          (pluralMatch &&
+            findRelatedPluralKey(`${singularKey}${pluralSeparator}`, target) !==
+              undefined)
         ) {
           target[key] = source[key]
           pullCount += 1
@@ -208,18 +212,11 @@ function transferValues(source, target) {
 }
 
 function findRelatedPluralKey(rawKey, source) {
-  const suffixes = [
-    'zero',
-    'one',
-    'two',
-    'few',
-    'many',
-    'other',
-  ];
+  const suffixes = ['zero', 'one', 'two', 'few', 'many', 'other']
 
   for (const suffix of suffixes) {
     if (source[`${rawKey}${suffix}`] !== undefined) {
-      return source[`${rawKey}${suffix}`];
+      return source[`${rawKey}${suffix}`]
     }
   }
 }

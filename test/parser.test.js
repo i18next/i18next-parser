@@ -602,7 +602,9 @@ describe('parser', () => {
       output: 'test/locales/$LOCALE/$NAMESPACE.json',
     })
     const fakeFile = new Vinyl({
-      contents: Buffer.from("t('test_plural:first_one'); t('test_plural:second_one')"),
+      contents: Buffer.from(
+        "t('test_plural:first_one'); t('test_plural:second_one')"
+      ),
       path: 'file.js',
     })
 
