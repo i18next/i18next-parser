@@ -22,7 +22,7 @@ Finally, if you want to make this process even less painful, I invite you to che
 - Parses comments for static keys to support dynamic key translations.
 - Supports i18next features:
   - **Context**: keys of the form `key_context`
-  - **Plural**: keys of the form `key_plural` and `key_0`, `key_1` as described [here](https://www.i18next.com/translation-function/plurals)
+  - **Plural**: keys of the form `key_zero`, `key_one`, `key_two`, `key_few`, `key_many` and `key_other` as described [here](https://www.i18next.com/translation-function/plurals)
 - Tested on Node 10+. If you need support for 6 and 8, look at the `1.0.x` versions.
 
 ## Versions
