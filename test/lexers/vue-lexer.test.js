@@ -62,4 +62,16 @@ describe('VueLexer', () => {
     ])
     done()
   })
+
+  it('extracts boolean options', (done) => {
+    const Lexer = new VueLexer()
+    const content =
+      "<template><p>{{ $t('first', {ordinal: true, custom: false}) }}</p><template><script>export default " +
+      "{ mounted() { this.$i18n.t('second'); } }</script>"
+    assert.deepEqual(Lexer.extract(content), [
+      { key: 'second' },
+      { key: 'first', ordinal: true, custom: false },
+    ])
+    done()
+  })
 })

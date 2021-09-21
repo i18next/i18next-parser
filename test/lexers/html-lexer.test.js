@@ -88,4 +88,14 @@ describe('HTMLLexer', () => {
     ])
     done()
   })
+
+  it('extracts boolean options', (done) => {
+    const Lexer = new HTMLLexer()
+    const content =
+      '<p data-i18n="first" data-i18n-options=\'{"ordinal": true, "custom": false}\'>first</p>'
+    assert.deepEqual(Lexer.extract(content), [
+      { key: 'first', ordinal: true, custom: false },
+    ])
+    done()
+  })
 })

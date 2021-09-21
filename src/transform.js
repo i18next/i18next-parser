@@ -162,7 +162,7 @@ export default class i18nTransform extends Transform {
       for (const entry of this.entries) {
         if (entry.count !== undefined) {
           i18next.services.pluralResolver
-            .getSuffixes(locale)
+            .getSuffixes(locale, { ordinal: entry.ordinal })
             .forEach((suffix) => {
               transformEntry(entry, suffix)
             })

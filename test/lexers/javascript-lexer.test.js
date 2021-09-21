@@ -258,6 +258,19 @@ describe('JavascriptLexer', () => {
     ])
   })
 
+  it('extracts boolean options', () => {
+    const Lexer = new JavascriptLexer()
+
+    const content = 'i18n.t("headline", {ordinal: true, custom: false});'
+    assert.deepEqual(Lexer.extract(content), [
+      {
+        key: 'headline',
+        ordinal: true,
+        custom: false,
+      },
+    ])
+  })
+
   it('emits warnings on dynamic keys', () => {
     const Lexer = new JavascriptLexer()
     const content =
