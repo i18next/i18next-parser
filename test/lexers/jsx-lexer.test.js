@@ -79,9 +79,16 @@ describe('JsxLexer', () => {
 
     it('extracts boolean attributes', (done) => {
       const Lexer = new JsxLexer()
-      const content = '<Trans ordinal customTrue={true} customFalse={false}>Yo</Trans>'
+      const content =
+        '<Trans ordinal customTrue={true} customFalse={false}>Yo</Trans>'
       assert.deepEqual(Lexer.extract(content), [
-        { key: 'Yo', defaultValue: 'Yo', ordinal: true, customTrue: true, customFalse: false },
+        {
+          key: 'Yo',
+          defaultValue: 'Yo',
+          ordinal: true,
+          customTrue: true,
+          customFalse: false,
+        },
       ])
       done()
     })

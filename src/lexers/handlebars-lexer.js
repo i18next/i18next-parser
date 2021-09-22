@@ -32,11 +32,11 @@ export default class HandlebarsLexer extends BaseLexer {
       const parts = arg.split('=')
       result.arguments.push(arg)
       if (parts.length === 2 && this.validateString(parts[1])) {
-        const value = parts[1].slice(1, -1);
+        const value = parts[1].slice(1, -1)
         if (value === 'true') {
-          result.options[parts[0]] = true;
+          result.options[parts[0]] = true
         } else if (value === 'false') {
-          result.options[parts[0]] = false;
+          result.options[parts[0]] = false
         } else {
           result.options[parts[0]] = value
         }

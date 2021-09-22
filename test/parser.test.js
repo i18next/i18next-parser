@@ -1460,7 +1460,9 @@ describe('parser', () => {
       let result
       const i18nextParser = new i18nTransform()
       const fakeFile = new Vinyl({
-        contents: Buffer.from("t('test {{count}}', { count: 1, ordinal: true })"),
+        contents: Buffer.from(
+          "t('test {{count}}', { count: 1, ordinal: true })"
+        ),
         path: 'file.js',
       })
 

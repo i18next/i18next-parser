@@ -162,7 +162,7 @@ i18nTransform = /*#__PURE__*/function (_Transform) {(0, _inherits2["default"])(i
           var _iterator3 = _createForOfIteratorHelper(_this2.entries),_step3;try {var _loop2 = function _loop2() {var entry = _step3.value;
               if (entry.count !== undefined) {
                 _i18next["default"].services.pluralResolver.
-                getSuffixes(locale).
+                getSuffixes(locale, { ordinal: entry.ordinal }).
                 forEach(function (suffix) {
                   transformEntry(entry, suffix);
                 });
