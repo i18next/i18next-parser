@@ -3335,7 +3335,7 @@ is-number@^7.0.0:
   resolved "https://registry.yarnpkg.com/is-number/-/is-number-7.0.0.tgz#7535345b896734d5f80c4d06c50955527a14f12b"
   integrity sha512-41Cifkg6e8TylSpdtTpeLVMqvSBEVzTttHvERD741+pnZ8ANv0004MRL43QKPDlK9cGvNp6NZWZUBlbGXYxxng==
 
-is-plain-obj@^2.1.0:
+is-plain-obj@^2.0.0, is-plain-obj@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/is-plain-obj/-/is-plain-obj-2.1.0.tgz#45e42e37fccf1f40da8e5f76ee21515840c09287"
   integrity sha512-YWnfyRwxL/+SsrWYfOpUtz5b3YD+nyfkHvjbcanzk8zgyO4ASD67uVMRt8k5bM4lLMDnXfriRhOpemw+NfT1eA==
@@ -4942,6 +4942,13 @@ snapdragon@^0.8.1:
     source-map "^0.5.6"
     source-map-resolve "^0.5.0"
     use "^3.1.0"
+
+sort-keys@^4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/sort-keys/-/sort-keys-4.2.0.tgz#6b7638cee42c506fff8c1cecde7376d21315be18"
+  integrity sha512-aUYIEU/UviqPgc8mHR6IW1EGxkAXpeRETYcrzg8cLAvUPZcpAlleSXHV2mY7G12GphSH6Gzv+4MMVSSkbdteHg==
+  dependencies:
+    is-plain-obj "^2.0.0"
 
 source-map-resolve@^0.5.0:
   version "0.5.3"

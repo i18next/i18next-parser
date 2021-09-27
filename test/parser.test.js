@@ -609,11 +609,16 @@ describe('parser', () => {
     })
 
     const expectedResult = {
-      first_one: 'first',
-      first_other: 'first plural',
-      second_one: 'second',
-      second_zero: 'second plural zero',
-      second_other: 'second plural other',
+      first_zero: 'first zero',
+      first_one: 'first one',
+      first_few: 'first few',
+      first_many: 'first many',
+      first_other: 'first other',
+      second_zero: 'second zero',
+      second_one: 'second one',
+      second_few: 'second few',
+      second_many: 'second many',
+      second_other: 'second other',
     }
 
     i18nextParser.on('data', (file) => {
@@ -1749,7 +1754,7 @@ describe('parser', () => {
       it('supports sort as a function', (done) => {
         let result
         const i18nextParser = new i18nTransform({
-          sort: (a, b) => (a.key > b.key) - (a.key < b.key),
+          sort: (a, b) => (a > b) - (a < b),
         })
         const fakeFile = new Vinyl({
           contents: Buffer.from(
@@ -1766,6 +1771,50 @@ describe('parser', () => {
         i18nextParser.once('end', () => {
           assert.sameOrderedMembers(Object.keys(result), ['aaA', 'aaa', 'bbb'])
           assert.sameOrderedMembers(Object.keys(result.bbb), ['bbB', 'bbb'])
+          done()
+        })
+
+        i18nextParser.end(fakeFile)
+      })
+
+      it('sorts plural values correctly', (done) => {
+        let result
+        const i18nextParser = new i18nTransform({
+          output: 'test/locales/$LOCALE/$NAMESPACE.json',
+          sort: true,
+        })
+        const fakeFile = new Vinyl({
+          contents: Buffer.from(
+            [
+              "t('test_plural:first', { count: 1 })",
+              "t('test_plural:second', { count: 1 })",
+              "t('test_plural:unsorted')",
+            ].join(';')
+          ),
+          path: 'file.js',
+        })
+
+        const expectedOrder = [
+          'first_few',
+          'first_many',
+          'first_one',
+          'first_other',
+          'first_zero',
+          'second_few',
+          'second_many',
+          'second_one',
+          'second_other',
+          'second_zero',
+          'unsorted',
+        ]
+
+        i18nextParser.on('data', (file) => {
+          if (file.relative.endsWith(path.normalize('en/test_plural.json'))) {
+            result = JSON.parse(file.contents)
+          }
+        })
+        i18nextParser.once('end', () => {
+          assert.sameOrderedMembers(Object.keys(result), expectedOrder)
           done()
         })
 

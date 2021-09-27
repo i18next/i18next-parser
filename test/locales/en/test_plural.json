@@ -1,7 +1,13 @@
 {
-  "first_one": "first",
-  "first_other": "first plural",
-  "second_one": "second",
-  "second_zero": "second plural zero",
-  "second_other": "second plural other"
+  "first_zero": "first zero",
+  "first_one": "first one",
+  "first_few": "first few",
+  "first_many": "first many",
+  "first_other": "first other",
+  "second_zero": "second zero",
+  "second_one": "second one",
+  "second_few": "second few",
+  "second_many": "second many",
+  "second_other": "second other",
+  "unsorted": "value"
 }
