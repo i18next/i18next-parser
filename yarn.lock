@@ -3104,10 +3104,10 @@ https@^1.0.0:
   resolved "https://registry.yarnpkg.com/https/-/https-1.0.0.tgz#3c37c7ae1a8eeb966904a2ad1e975a194b7ed3a4"
   integrity sha1-PDfHrhqO65ZpBKKtHpdaGUt+06Q=
 
-i18next@^20.2.1:
-  version "20.6.1"
-  resolved "https://registry.yarnpkg.com/i18next/-/i18next-20.6.1.tgz#535e5f6e5baeb685c7d25df70db63bf3cc0aa345"
-  integrity sha512-yCMYTMEJ9ihCwEQQ3phLo7I/Pwycf8uAx+sRHwwk5U9Aui/IZYgQRyMqXafQOw5QQ7DM1Z+WyEXWIqSuJHhG2A==
+i18next@^21.1.1:
+  version "21.1.1"
+  resolved "https://registry.yarnpkg.com/i18next/-/i18next-21.1.1.tgz#e7569de4d9fea2972c28ca4c334d13799b94ce76"
+  integrity sha512-oBEi+3MI/jEv0DifAmA+e47WAS55Sv6yG2CmZ0Kpz/VGu8rTQARJGRkwhMcLhcIi+JYmxmfBD/DQ/7Ho3FYryw==
   dependencies:
     "@babel/runtime" "^7.12.0"
 
