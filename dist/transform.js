@@ -194,16 +194,13 @@ i18nTransform = /*#__PURE__*/function (_Transform) {(0, _inherits2["default"])(i
 
 
 
-            (0, _helpers.mergeHashes)(
-            existingCatalog,
-            catalog[namespace],
-            _this2.options.keepRemoved),newCatalog = _mergeHashes["new"],oldKeys = _mergeHashes.old,mergeCount = _mergeHashes.mergeCount,oldCount = _mergeHashes.oldCount;
-
+            (0, _helpers.mergeHashes)(existingCatalog, catalog[namespace], _this2.options),newCatalog = _mergeHashes["new"],oldKeys = _mergeHashes.old,mergeCount = _mergeHashes.mergeCount,oldCount = _mergeHashes.oldCount;
 
             // restore old translations
             var _mergeHashes2 = (0, _helpers.mergeHashes)(
             existingOldCatalog,
-            newCatalog),oldCatalog = _mergeHashes2.old,restoreCount = _mergeHashes2.mergeCount;
+            newCatalog, _objectSpread(_objectSpread({},
+            _this2.options), {}, { keepRemoved: false })),oldCatalog = _mergeHashes2.old,restoreCount = _mergeHashes2.mergeCount;
 
 
             // backup unused translations

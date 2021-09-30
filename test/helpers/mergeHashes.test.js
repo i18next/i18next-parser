@@ -76,6 +76,28 @@ describe('mergeHashes helper function', () => {
     done()
   })
 
+  it('copies `source` nested keys to `target` regardless of presence when `keepRemoved` is enabled', (done) => {
+    const source = {
+      key1: 'value1',
+      key2: 'value2',
+      key4: { key41: 'value41' },
+    }
+    const target = { key1: '', key3: '', key4: { key42: '' } }
+    const res = mergeHashes(source, target, { keepRemoved: true })
+
+    assert.deepEqual(res.new, {
+      key1: 'value1',
+      key2: 'value2',
+      key3: '',
+      key4: { key41: 'value41', key42: '' },
+    })
+    assert.deepEqual(res.old, {})
+    assert.strictEqual(res.mergeCount, 1)
+    assert.strictEqual(res.pullCount, 0)
+    assert.strictEqual(res.oldCount, 2)
+    done()
+  })
+
   it('restores plural keys when the singular one exists', (done) => {
     const source = { key1_one: '', key1_other: 'value1' }
     const target = { key1_one: '' }

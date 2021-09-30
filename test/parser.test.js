@@ -1559,6 +1559,35 @@ describe('parser', () => {
       i18nextParser.end(fakeFile)
     })
 
+    it('supports keepRemoved option', (done) => {
+      let result, resultOld
+      const i18nextParser = new i18nTransform({
+        keepRemoved: true,
+        output: 'test/locales/$LOCALE/$NAMESPACE.json',
+      })
+      const fakeFile = new Vinyl({
+        contents: Buffer.from("t('test_merge:first'); t('test_merge:second')"),
+        path: 'file.js',
+      })
+
+      i18nextParser.on('data', (file) => {
+        if (file.relative.endsWith(path.normalize('en/test_merge.json'))) {
+          result = JSON.parse(file.contents)
+        } else if (
+          file.relative.endsWith(path.normalize('en/test_merge_old.json'))
+        ) {
+          resultOld = JSON.parse(file.contents)
+        }
+      })
+      i18nextParser.once('end', () => {
+        assert.deepEqual(result, { first: 'first', second: '', third: 'third' })
+        assert.deepEqual(resultOld, undefined)
+        done()
+      })
+
+      i18nextParser.end(fakeFile)
+    })
+
     describe('lexers', () => {
       it('supports custom lexers options', (done) => {
         let result

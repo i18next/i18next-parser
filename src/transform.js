@@ -194,16 +194,13 @@ export default class i18nTransform extends Transform {
           old: oldKeys,
           mergeCount,
           oldCount,
-        } = mergeHashes(
-          existingCatalog,
-          catalog[namespace],
-          this.options.keepRemoved
-        )
+        } = mergeHashes(existingCatalog, catalog[namespace], this.options)
 
         // restore old translations
         const { old: oldCatalog, mergeCount: restoreCount } = mergeHashes(
           existingOldCatalog,
-          newCatalog
+          newCatalog,
+          { ...this.options, keepRemoved: false }
         )
 
         // backup unused translations

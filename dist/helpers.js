@@ -140,12 +140,12 @@ function mergeHashes(source, target) {var options = arguments.length > 2 && argu
     (0, _typeof2["default"])(target[key]) === 'object' && !Array.isArray(target[key]);
 
     if (hasNestedEntries) {
-      var nested = mergeHashes(source[key], target[key], keepRemoved);
+      var nested = mergeHashes(source[key], target[key], options);
       mergeCount += nested.mergeCount;
       pullCount += nested.pullCount;
+      oldCount += nested.oldCount;
       if (Object.keys(nested.old).length) {
         old[key] = nested.old;
-        oldCount += nested.oldCount;
       }
     } else {
       if (target[key] !== undefined) {

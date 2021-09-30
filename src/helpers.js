@@ -140,12 +140,12 @@ function mergeHashes(source, target, options = {}) {
       typeof target[key] === 'object' && !Array.isArray(target[key])
 
     if (hasNestedEntries) {
-      const nested = mergeHashes(source[key], target[key], keepRemoved)
+      const nested = mergeHashes(source[key], target[key], options)
       mergeCount += nested.mergeCount
       pullCount += nested.pullCount
+      oldCount += nested.oldCount
       if (Object.keys(nested.old).length) {
         old[key] = nested.old
-        oldCount += nested.oldCount
       }
     } else {
       if (target[key] !== undefined) {
