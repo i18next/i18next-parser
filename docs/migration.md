@@ -1,4 +1,4 @@
-# Migrating from `3.x` to `4.x`
+# Migrating from `4.x` to `5.x`
 
 ## Breaking change
 
