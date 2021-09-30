@@ -31,3 +31,7 @@ npm-debug.log
 # manual test files
 test/manual/en
 test/manual/fr
+
+# coverage
+.nyc_output
+coverage
