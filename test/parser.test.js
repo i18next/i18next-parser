@@ -642,6 +642,7 @@ describe('parser', () => {
     const expectedResult = {
       first: 'first',
       first_context1_other: 'first context1 plural',
+      first_context2_two: 'first context2 plural 2',
     }
 
     i18nextParser.on('data', (file) => {
