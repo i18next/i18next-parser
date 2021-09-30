@@ -1560,7 +1560,7 @@ describe('parser', () => {
     })
 
     describe('lexers', () => {
-      it('support custom lexers options', (done) => {
+      it('supports custom lexers options', (done) => {
         let result
         const i18nextParser = new i18nTransform({
           lexers: {
@@ -1590,7 +1590,7 @@ describe('parser', () => {
         i18nextParser.end(fakeFile)
       })
 
-      it('support function as custom lexer', (done) => {
+      it('supports function as custom lexer', (done) => {
         class CustomLexer {
           extract(content) {
             return content.split(';').map((key) => ({ key }))
