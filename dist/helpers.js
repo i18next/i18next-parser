@@ -1,4 +1,4 @@
-"use strict";var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");Object.defineProperty(exports, "__esModule", { value: true });exports.dotPathToHash = dotPathToHash;exports.mergeHashes = mergeHashes;exports.transferValues = transferValues;var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof")); /**
+"use strict";var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");Object.defineProperty(exports, "__esModule", { value: true });exports.dotPathToHash = dotPathToHash;exports.mergeHashes = mergeHashes;exports.transferValues = transferValues;exports.hasRelatedPluralKey = hasRelatedPluralKey;var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof")); /**
  * Take an entry for the Parser and turn it into a hash,
  * turning the key path 'foo.bar' into an hash {foo: {bar: ""}}
  * The generated hash can be merged with an optional `target`.
@@ -172,8 +172,7 @@ function mergeHashes(source, target) {var options = arguments.length > 2 && argu
         if (
         contextMatch && target[rawKey] !== undefined ||
         pluralMatch &&
-        findRelatedPluralKey("".concat(singularKey).concat(pluralSeparator), target) !==
-        undefined)
+        hasRelatedPluralKey("".concat(singularKey).concat(pluralSeparator), target))
         {
           target[key] = source[key];
           pullCount += 1;
@@ -211,12 +210,14 @@ function transferValues(source, target) {
   }
 }
 
-function findRelatedPluralKey(rawKey, source) {
+function hasRelatedPluralKey(rawKey, source) {
   var suffixes = ['zero', 'one', 'two', 'few', 'many', 'other'];
 
   for (var _i = 0, _suffixes = suffixes; _i < _suffixes.length; _i++) {var suffix = _suffixes[_i];
     if (source["".concat(rawKey).concat(suffix)] !== undefined) {
-      return source["".concat(rawKey).concat(suffix)];
+      return true;
     }
   }
+
+  return false;
 }

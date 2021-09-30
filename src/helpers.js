@@ -172,8 +172,7 @@ function mergeHashes(source, target, options = {}) {
         if (
           (contextMatch && target[rawKey] !== undefined) ||
           (pluralMatch &&
-            findRelatedPluralKey(`${singularKey}${pluralSeparator}`, target) !==
-              undefined)
+            hasRelatedPluralKey(`${singularKey}${pluralSeparator}`, target))
         ) {
           target[key] = source[key]
           pullCount += 1
@@ -211,14 +210,16 @@ function transferValues(source, target) {
   }
 }
 
-function findRelatedPluralKey(rawKey, source) {
+function hasRelatedPluralKey(rawKey, source) {
   const suffixes = ['zero', 'one', 'two', 'few', 'many', 'other']
 
   for (const suffix of suffixes) {
     if (source[`${rawKey}${suffix}`] !== undefined) {
-      return source[`${rawKey}${suffix}`]
+      return true
     }
   }
+
+  return false
 }
 
-export { dotPathToHash, mergeHashes, transferValues }
+export { dotPathToHash, mergeHashes, transferValues, hasRelatedPluralKey }
