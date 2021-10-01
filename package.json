@@ -19,13 +19,6 @@
     "dist/",
     "i18next-parser.config.js"
   ],
-  "prettier": {
-    "trailingComma": "es5",
-    "semi": false,
-    "singleQuote": true,
-    "quoteProps": "as-needed",
-    "jsxSingleQuote": true
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/i18next/i18next-parser"
