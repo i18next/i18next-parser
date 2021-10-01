@@ -212,7 +212,7 @@ function hasRelatedPluralKey(rawKey, source) {
 
 function getSingularForm(key, pluralSeparator) {
   const pluralRegex = new RegExp(
-    `(${pluralSeparator}(?:zero|one|two|few|many|other))$`
+    `(\\${pluralSeparator}(?:zero|one|two|few|many|other))$`
   )
 
   return key.replace(pluralRegex, '')
