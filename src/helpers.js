@@ -222,7 +222,7 @@ function getPluralSuffixPosition(key) {
   const suffixes = ['zero', 'one', 'two', 'few', 'many', 'other']
 
   for (let i = 0, len = suffixes.length; i < len; i++) {
-    if (key.includes(suffixes[i])) return i
+    if (key.endsWith(suffixes[i])) return i
   }
 
   return -1
