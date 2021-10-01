@@ -15,8 +15,8 @@ function dotPathToHash(entry, target = {}, options = {}) {
   let conflict = false
   let duplicate = false
   let path = entry.keyWithNamespace
-  if (options.suffix || options.suffix === 0) {
-    path += `${options.pluralSeparator}${options.suffix}`
+  if (options.suffix) {
+    path += options.suffix
   }
 
   const separator = options.separator || '.'
@@ -48,7 +48,7 @@ function dotPathToHash(entry, target = {}, options = {}) {
       : options.useKeysAsDefaultValue
 
   let newValue =
-    entry[`defaultValue_${options.suffix}`] ||
+    entry[`defaultValue${options.suffix}`] ||
     entry.defaultValue ||
     defaultValue ||
     ''
@@ -117,31 +117,35 @@ function dotPathToHash(entry, target = {}, options = {}) {
 /**
  * Takes a `source` hash and makes sure its value
  * is pasted in the `target` hash, if the target
- * hash has the corresponding key (or if `keepRemoved` is true).
+ * hash has the corresponding key (or if `options.keepRemoved` is true).
  * @returns An `{ old, new, mergeCount, pullCount, oldCount }` object.
  * `old` is a hash of values that have not been merged into `target`.
  * `new` is `target`. `mergeCount` is the number of keys merged into
  * `new`, `pullCount` is the number of context and plural keys added to
  * `new` and `oldCount` is the number of keys that were either added to `old` or
- * `new` (if `keepRemoved` is true and `target` didn't have the corresponding
+ * `new` (if `options.keepRemoved` is true and `target` didn't have the corresponding
  * key).
  */
-function mergeHashes(source, target, keepRemoved = false) {
+function mergeHashes(source, target, options = {}) {
   let old = {}
   let mergeCount = 0
   let pullCount = 0
   let oldCount = 0
+
+  const keepRemoved = options.keepRemoved || false
+  const pluralSeparator = options.pluralSeparator || '_'
+
   for (const key in source) {
     const hasNestedEntries =
       typeof target[key] === 'object' && !Array.isArray(target[key])
 
     if (hasNestedEntries) {
-      const nested = mergeHashes(source[key], target[key], keepRemoved)
+      const nested = mergeHashes(source[key], target[key], options)
       mergeCount += nested.mergeCount
       pullCount += nested.pullCount
+      oldCount += nested.oldCount
       if (Object.keys(nested.old).length) {
         old[key] = nested.old
-        oldCount += nested.oldCount
       }
     } else {
       if (target[key] !== undefined) {
@@ -154,7 +158,9 @@ function mergeHashes(source, target, keepRemoved = false) {
         }
       } else {
         // support for plural in keys
-        const pluralRegex = /(_plural)|(_\d+)$/
+        const pluralRegex = new RegExp(
+          `(${pluralSeparator}(?:zero|one|two|few|many|other))$`
+        )
         const pluralMatch = pluralRegex.test(key)
         const singularKey = key.replace(pluralRegex, '')
 
@@ -165,7 +171,8 @@ function mergeHashes(source, target, keepRemoved = false) {
 
         if (
           (contextMatch && target[rawKey] !== undefined) ||
-          (pluralMatch && target[singularKey] !== undefined)
+          (pluralMatch &&
+            hasRelatedPluralKey(`${singularKey}${pluralSeparator}`, target))
         ) {
           target[key] = source[key]
           pullCount += 1
@@ -203,4 +210,16 @@ function transferValues(source, target) {
   }
 }
 
-export { dotPathToHash, mergeHashes, transferValues }
+function hasRelatedPluralKey(rawKey, source) {
+  const suffixes = ['zero', 'one', 'two', 'few', 'many', 'other']
+
+  for (const suffix of suffixes) {
+    if (source[`${rawKey}${suffix}`] !== undefined) {
+      return true
+    }
+  }
+
+  return false
+}
+
+export { dotPathToHash, mergeHashes, transferValues, hasRelatedPluralKey }

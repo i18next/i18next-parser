@@ -1,3 +1,11 @@
+# Migrating from `4.x` to `5.x`
+
+## Breaking change
+
+- The output format is now in [JSON v4](https://www.i18next.com/misc/json-format). To convert your existing translations to the new v4 format, have a look at [i18next-v4-format-converter](https://github.com/i18next/i18next-v4-format-converter) or [this web tool](https://i18next.github.io/i18next-v4-format-converter-web/).
+
+---
+
 # Migrating from `2.x` to `3.x`
 
 ## Breaking change

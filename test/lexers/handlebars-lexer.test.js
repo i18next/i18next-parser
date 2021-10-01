@@ -70,6 +70,15 @@ describe('HandlebarsLexer', () => {
     done()
   })
 
+  it('extracts boolean options', (done) => {
+    const Lexer = new HandlebarsLexer()
+    const content = '<p>{{t "first" ordinal="true" custom="false"}}</p>'
+    assert.deepEqual(Lexer.extract(content), [
+      { key: 'first', ordinal: true, custom: false },
+    ])
+    done()
+  })
+
   describe('parseArguments()', () => {
     it('matches string arguments', (done) => {
       const Lexer = new HandlebarsLexer()

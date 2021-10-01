@@ -61,7 +61,7 @@ describe('mergeHashes helper function', () => {
       key4: { key41: 'value41' },
     }
     const target = { key1: '', key3: '' }
-    const res = mergeHashes(source, target, true)
+    const res = mergeHashes(source, target, { keepRemoved: true })
 
     assert.deepEqual(res.new, {
       key1: 'value1',
@@ -76,12 +76,34 @@ describe('mergeHashes helper function', () => {
     done()
   })
 
+  it('copies `source` nested keys to `target` regardless of presence when `keepRemoved` is enabled', (done) => {
+    const source = {
+      key1: 'value1',
+      key2: 'value2',
+      key4: { key41: 'value41' },
+    }
+    const target = { key1: '', key3: '', key4: { key42: '' } }
+    const res = mergeHashes(source, target, { keepRemoved: true })
+
+    assert.deepEqual(res.new, {
+      key1: 'value1',
+      key2: 'value2',
+      key3: '',
+      key4: { key41: 'value41', key42: '' },
+    })
+    assert.deepEqual(res.old, {})
+    assert.strictEqual(res.mergeCount, 1)
+    assert.strictEqual(res.pullCount, 0)
+    assert.strictEqual(res.oldCount, 2)
+    done()
+  })
+
   it('restores plural keys when the singular one exists', (done) => {
-    const source = { key1: '', key1_plural: 'value1' }
-    const target = { key1: '' }
+    const source = { key1_one: '', key1_other: 'value1' }
+    const target = { key1_one: '' }
     const res = mergeHashes(source, target)
 
-    assert.deepEqual(res.new, { key1: '', key1_plural: 'value1' })
+    assert.deepEqual(res.new, { key1_one: '', key1_other: 'value1' })
     assert.deepEqual(res.old, {})
     assert.strictEqual(res.mergeCount, 1)
     assert.strictEqual(res.pullCount, 1)
@@ -90,12 +112,12 @@ describe('mergeHashes helper function', () => {
   })
 
   it('does not restore plural keys when the singular one does not', (done) => {
-    const source = { key1: '', key1_plural: 'value1' }
+    const source = { key1_one: '', key1_other: 'value1' }
     const target = { key2: '' }
     const res = mergeHashes(source, target)
 
     assert.deepEqual(res.new, { key2: '' })
-    assert.deepEqual(res.old, { key1: '', key1_plural: 'value1' })
+    assert.deepEqual(res.old, { key1_one: '', key1_other: 'value1' })
     assert.strictEqual(res.mergeCount, 0)
     assert.strictEqual(res.pullCount, 0)
     assert.strictEqual(res.oldCount, 2)

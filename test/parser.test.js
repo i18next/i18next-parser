@@ -178,16 +178,16 @@ describe('parser', () => {
       first: '',
       second: '',
       third: {
-        first:
+        first_one:
           'Hello <1>{{name}}</1>, you have {{count}} unread message. <5>Go to messages</5>.',
-        first_plural:
+        first_other:
           'Hello <1>{{name}}</1>, you have {{count}} unread message. <5>Go to messages</5>.',
         second: " <1>Hello,</1> this shouldn't be trimmed.",
         third: "<0>Hello,</0>this should be trimmed.<2> and this shoudln't</2>",
       },
       fourth: '',
-      fifth: '',
-      fifth_plural: '',
+      fifth_one: '',
+      fifth_other: '',
       bar: '',
       foo: '',
       'This should be part of the value and the key':
@@ -223,16 +223,16 @@ describe('parser', () => {
       first: '',
       second: '',
       third: {
-        first:
+        first_one:
           'Hello <1>{{name}}</1>, you have {{count}} unread message. <5>Go to messages</5>.',
-        first_plural:
+        first_other:
           'Hello <1>{{name}}</1>, you have {{count}} unread message. <5>Go to messages</5>.',
         second: " <1>Hello,</1> this shouldn't be trimmed.",
         third: "<0>Hello,</0>this should be trimmed.<2> and this shoudln't</2>",
       },
       fourth: '',
-      fifth: '',
-      fifth_plural: '',
+      fifth_one: '',
+      fifth_other: '',
       bar: '',
       foo: '',
       'This should be part of the value and the key':
@@ -602,16 +602,18 @@ describe('parser', () => {
       output: 'test/locales/$LOCALE/$NAMESPACE.json',
     })
     const fakeFile = new Vinyl({
-      contents: Buffer.from("t('test_plural:first'); t('test_plural:second')"),
+      contents: Buffer.from(
+        "t('test_plural:first_one'); t('test_plural:second_one')"
+      ),
       path: 'file.js',
     })
 
     const expectedResult = {
-      first: 'first',
-      first_plural: 'first plural',
-      second: 'second',
-      second_0: 'second plural 0',
-      second_12: 'second plural 12',
+      first_one: 'first',
+      first_other: 'first plural',
+      second_one: 'second',
+      second_zero: 'second plural zero',
+      second_other: 'second plural other',
     }
 
     i18nextParser.on('data', (file) => {
@@ -639,7 +641,8 @@ describe('parser', () => {
 
     const expectedResult = {
       first: 'first',
-      first_context1_plural: 'first context1 plural',
+      first_context1_other: 'first context1 plural',
+      first_context2_two: 'first context2 plural 2',
     }
 
     i18nextParser.on('data', (file) => {
@@ -901,17 +904,17 @@ describe('parser', () => {
         first: '',
         second: '',
         third: {
-          first:
+          first_one:
             'Hello <1>{{name}}</1>, you have {{count}} unread message. <5>Go to messages</5>.',
-          first_plural:
+          first_other:
             'Hello <1>{{name}}</1>, you have {{count}} unread message. <5>Go to messages</5>.',
           second: " <1>Hello,</1> this shouldn't be trimmed.",
           third:
             "<0>Hello,</0>this should be trimmed.<2> and this shoudln't</2>",
         },
         fourth: '',
-        fifth: '',
-        fifth_plural: '',
+        fifth_one: '',
+        fifth_other: '',
         bar: '',
         foo: '',
         'This should be part of the value and the key':
@@ -957,17 +960,17 @@ describe('parser', () => {
         first: '',
         second: '',
         third: {
-          first:
+          first_one:
             'Hello <1>{{name}}</1>, you have {{count}} unread message. <5>Go to messages</5>.',
-          first_plural:
+          first_other:
             'Hello <1>{{name}}</1>, you have {{count}} unread message. <5>Go to messages</5>.',
           second: " <b>Hello,</b> this shouldn't be trimmed.",
           third:
             "<b>Hello,</b>this should be trimmed.<2> and this shoudln't</2>",
         },
         fourth: '',
-        fifth: '',
-        fifth_plural: '',
+        fifth_one: '',
+        fifth_other: '',
         bar: '',
         foo: '',
         'This should be part of the value and the key':
@@ -1218,8 +1221,8 @@ describe('parser', () => {
       })
       i18nextParser.once('end', () => {
         assert.deepEqual(result, {
-          'test {{count}}': '',
-          'test {{count}}_plural': '',
+          'test {{count}}_one': '',
+          'test {{count}}_other': '',
         })
         done()
       })
@@ -1244,8 +1247,8 @@ describe('parser', () => {
       })
       i18nextParser.once('end', () => {
         assert.deepEqual(result, {
-          'test {{count}}': '',
-          'test {{count}}~~~plural': '',
+          'test {{count}}~~~one': '',
+          'test {{count}}~~~other': '',
         })
         done()
       })
@@ -1270,8 +1273,8 @@ describe('parser', () => {
       })
       i18nextParser.once('end', () => {
         assert.deepEqual(result, {
-          'test {{count}}': '',
-          'test {{count}}_plural': '',
+          'test {{count}}_one': '',
+          'test {{count}}_other': '',
         })
         done()
       })
@@ -1294,12 +1297,12 @@ describe('parser', () => {
       })
       i18nextParser.once('end', () => {
         assert.deepEqual(result, {
-          'test {{count}}_0': '',
-          'test {{count}}_1': '',
-          'test {{count}}_2': '',
-          'test {{count}}_3': '',
-          'test {{count}}_4': '',
-          'test {{count}}_5': '',
+          'test {{count}}_zero': '',
+          'test {{count}}_one': '',
+          'test {{count}}_two': '',
+          'test {{count}}_few': '',
+          'test {{count}}_many': '',
+          'test {{count}}_other': '',
         })
         done()
       })
@@ -1324,8 +1327,8 @@ describe('parser', () => {
       })
       i18nextParser.once('end', () => {
         assert.deepEqual(result, {
-          'test {{count}}': 'test {{count}}',
-          'test {{count}}_plural': 'test {{count}}',
+          'test {{count}}_one': 'test {{count}}',
+          'test {{count}}_other': 'test {{count}}',
         })
         done()
       })
@@ -1348,8 +1351,8 @@ describe('parser', () => {
       })
       i18nextParser.once('end', () => {
         assert.deepEqual(result, {
-          key: 'test {{count}}',
-          key_plural: 'test {{count}}',
+          key_one: 'test {{count}}',
+          key_other: 'test {{count}}',
         })
         done()
       })
@@ -1362,7 +1365,7 @@ describe('parser', () => {
       const i18nextParser = new i18nTransform()
       const fakeFile = new Vinyl({
         contents: Buffer.from(
-          "t('key', { count, defaultValue: 'singular {{count}}', defaultValue_plural: 'plural {{count}}' })"
+          "t('key', { count, defaultValue: 'singular {{count}}', defaultValue_other: 'plural {{count}}' })"
         ),
         path: 'file.js',
       })
@@ -1374,8 +1377,8 @@ describe('parser', () => {
       })
       i18nextParser.once('end', () => {
         assert.deepEqual(result, {
-          key: 'singular {{count}}',
-          key_plural: 'plural {{count}}',
+          key_one: 'singular {{count}}',
+          key_other: 'plural {{count}}',
         })
         done()
       })
@@ -1393,10 +1396,10 @@ describe('parser', () => {
           `t('key', {
             count,
             defaultValue: 'default for missing',
-            defaultValue_0: 'zero {{count}}',
-            defaultValue_1: 'one {{count}}',
-            defaultValue_2: 'two {{count}}',
-            defaultValue_3: 'three-ten {{count}}',
+            defaultValue_zero: 'zero {{count}}',
+            defaultValue_one: 'one {{count}}',
+            defaultValue_two: 'two {{count}}',
+            defaultValue_few: 'three-ten {{count}}',
           })`
         ),
         path: 'file.js',
@@ -1409,13 +1412,13 @@ describe('parser', () => {
       })
       i18nextParser.once('end', () => {
         assert.deepEqual(result, {
-          key_0: 'zero {{count}}',
-          key_1: 'one {{count}}',
-          key_2: 'two {{count}}',
-          key_3: 'three-ten {{count}}',
+          key_zero: 'zero {{count}}',
+          key_one: 'one {{count}}',
+          key_two: 'two {{count}}',
+          key_few: 'three-ten {{count}}',
           // Missing forms fall back on default
-          key_4: 'default for missing',
-          key_5: 'default for missing',
+          key_many: 'default for missing',
+          key_other: 'default for missing',
         })
         done()
       })
@@ -1441,12 +1444,40 @@ describe('parser', () => {
       })
       i18nextParser.once('end', () => {
         assert.deepEqual(result, {
-          'test {{count}}_0': 'test {{count}}',
-          'test {{count}}_1': 'test {{count}}',
-          'test {{count}}_2': 'test {{count}}',
-          'test {{count}}_3': 'test {{count}}',
-          'test {{count}}_4': 'test {{count}}',
-          'test {{count}}_5': 'test {{count}}',
+          'test {{count}}_zero': 'test {{count}}',
+          'test {{count}}_one': 'test {{count}}',
+          'test {{count}}_two': 'test {{count}}',
+          'test {{count}}_few': 'test {{count}}',
+          'test {{count}}_many': 'test {{count}}',
+          'test {{count}}_other': 'test {{count}}',
+        })
+        done()
+      })
+
+      i18nextParser.end(fakeFile)
+    })
+
+    it('generates ordinal', (done) => {
+      let result
+      const i18nextParser = new i18nTransform()
+      const fakeFile = new Vinyl({
+        contents: Buffer.from(
+          "t('test {{count}}', { count: 1, ordinal: true })"
+        ),
+        path: 'file.js',
+      })
+
+      i18nextParser.on('data', (file) => {
+        if (file.relative.endsWith(enLibraryPath)) {
+          result = JSON.parse(file.contents)
+        }
+      })
+      i18nextParser.once('end', () => {
+        assert.deepEqual(result, {
+          'test {{count}}_one': '',
+          'test {{count}}_two': '',
+          'test {{count}}_few': '',
+          'test {{count}}_other': '',
         })
         done()
       })
@@ -1528,8 +1559,37 @@ describe('parser', () => {
       i18nextParser.end(fakeFile)
     })
 
+    it('supports keepRemoved option', (done) => {
+      let result, resultOld
+      const i18nextParser = new i18nTransform({
+        keepRemoved: true,
+        output: 'test/locales/$LOCALE/$NAMESPACE.json',
+      })
+      const fakeFile = new Vinyl({
+        contents: Buffer.from("t('test_merge:first'); t('test_merge:second')"),
+        path: 'file.js',
+      })
+
+      i18nextParser.on('data', (file) => {
+        if (file.relative.endsWith(path.normalize('en/test_merge.json'))) {
+          result = JSON.parse(file.contents)
+        } else if (
+          file.relative.endsWith(path.normalize('en/test_merge_old.json'))
+        ) {
+          resultOld = JSON.parse(file.contents)
+        }
+      })
+      i18nextParser.once('end', () => {
+        assert.deepEqual(result, { first: 'first', second: '', third: 'third' })
+        assert.deepEqual(resultOld, undefined)
+        done()
+      })
+
+      i18nextParser.end(fakeFile)
+    })
+
     describe('lexers', () => {
-      it('support custom lexers options', (done) => {
+      it('supports custom lexers options', (done) => {
         let result
         const i18nextParser = new i18nTransform({
           lexers: {
@@ -1559,7 +1619,7 @@ describe('parser', () => {
         i18nextParser.end(fakeFile)
       })
 
-      it('support function as custom lexer', (done) => {
+      it('supports function as custom lexer', (done) => {
         class CustomLexer {
           extract(content) {
             return content.split(';').map((key) => ({ key }))

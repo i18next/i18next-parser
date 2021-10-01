@@ -181,8 +181,16 @@ export default class JavascriptLexer extends BaseLexer {
               'warning',
               `Options argument is a spread operator : ${p.expression.text}`
             )
+          } else if (p.initializer) {
+            if (p.initializer.kind === ts.SyntaxKind.TrueKeyword) {
+              entry[p.name.text] = true
+            } else if (p.initializer.kind === ts.SyntaxKind.FalseKeyword) {
+              entry[p.name.text] = false
+            } else {
+              entry[p.name.text] = p.initializer.text || ''
+            }
           } else {
-            entry[p.name.text] = (p.initializer && p.initializer.text) || ''
+            entry[p.name.text] = ''
           }
         }
       }

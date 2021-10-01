@@ -101,13 +101,26 @@ export default class JsxLexer extends JavascriptLexer {
           return
         }
 
-        if (property.initializer.expression) {
-          entry[
-            property.name.text
-          ] = `{${property.initializer.expression.text}}`
-        } else {
-          entry[property.name.text] = property.initializer.text
-        }
+        if (property.initializer) {
+          if (property.initializer.expression) {
+            if (
+              property.initializer.expression.kind === ts.SyntaxKind.TrueKeyword
+            ) {
+              entry[property.name.text] = true
+            } else if (
+              property.initializer.expression.kind ===
+              ts.SyntaxKind.FalseKeyword
+            ) {
+              entry[property.name.text] = false
+            } else {
+              entry[
+                property.name.text
+              ] = `{${property.initializer.expression.text}}`
+            }
+          } else {
+            entry[property.name.text] = property.initializer.text
+          }
+        } else entry[property.name.text] = true
       })
 
       return entry.key ? entry : null

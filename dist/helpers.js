@@ -1,4 +1,4 @@
-"use strict";var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");Object.defineProperty(exports, "__esModule", { value: true });exports.dotPathToHash = dotPathToHash;exports.mergeHashes = mergeHashes;exports.transferValues = transferValues;var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof")); /**
+"use strict";var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");Object.defineProperty(exports, "__esModule", { value: true });exports.dotPathToHash = dotPathToHash;exports.mergeHashes = mergeHashes;exports.transferValues = transferValues;exports.hasRelatedPluralKey = hasRelatedPluralKey;var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof")); /**
  * Take an entry for the Parser and turn it into a hash,
  * turning the key path 'foo.bar' into an hash {foo: {bar: ""}}
  * The generated hash can be merged with an optional `target`.
@@ -15,8 +15,8 @@ function dotPathToHash(entry) {var target = arguments.length > 1 && arguments[1]
   var conflict = false;
   var duplicate = false;
   var path = entry.keyWithNamespace;
-  if (options.suffix || options.suffix === 0) {
-    path += "".concat(options.pluralSeparator).concat(options.suffix);
+  if (options.suffix) {
+    path += options.suffix;
   }
 
   var separator = options.separator || '.';
@@ -48,7 +48,7 @@ function dotPathToHash(entry) {var target = arguments.length > 1 && arguments[1]
   options.useKeysAsDefaultValue;
 
   var newValue =
-  entry["defaultValue_".concat(options.suffix)] ||
+  entry["defaultValue".concat(options.suffix)] ||
   entry.defaultValue ||
   defaultValue ||
   '';
@@ -117,31 +117,35 @@ function dotPathToHash(entry) {var target = arguments.length > 1 && arguments[1]
 /**
  * Takes a `source` hash and makes sure its value
  * is pasted in the `target` hash, if the target
- * hash has the corresponding key (or if `keepRemoved` is true).
+ * hash has the corresponding key (or if `options.keepRemoved` is true).
  * @returns An `{ old, new, mergeCount, pullCount, oldCount }` object.
  * `old` is a hash of values that have not been merged into `target`.
  * `new` is `target`. `mergeCount` is the number of keys merged into
  * `new`, `pullCount` is the number of context and plural keys added to
  * `new` and `oldCount` is the number of keys that were either added to `old` or
- * `new` (if `keepRemoved` is true and `target` didn't have the corresponding
+ * `new` (if `options.keepRemoved` is true and `target` didn't have the corresponding
  * key).
  */
-function mergeHashes(source, target) {var keepRemoved = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+function mergeHashes(source, target) {var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
   var old = {};
   var mergeCount = 0;
   var pullCount = 0;
   var oldCount = 0;
+
+  var keepRemoved = options.keepRemoved || false;
+  var pluralSeparator = options.pluralSeparator || '_';
+
   for (var key in source) {
     var hasNestedEntries =
     (0, _typeof2["default"])(target[key]) === 'object' && !Array.isArray(target[key]);
 
     if (hasNestedEntries) {
-      var nested = mergeHashes(source[key], target[key], keepRemoved);
+      var nested = mergeHashes(source[key], target[key], options);
       mergeCount += nested.mergeCount;
       pullCount += nested.pullCount;
+      oldCount += nested.oldCount;
       if (Object.keys(nested.old).length) {
         old[key] = nested.old;
-        oldCount += nested.oldCount;
       }
     } else {
       if (target[key] !== undefined) {
@@ -154,7 +158,9 @@ function mergeHashes(source, target) {var keepRemoved = arguments.length > 2 && 
         }
       } else {
         // support for plural in keys
-        var pluralRegex = /(_plural)|(_\d+)$/;
+        var pluralRegex = new RegExp("(".concat(
+        pluralSeparator, "(?:zero|one|two|few|many|other))$"));
+
         var pluralMatch = pluralRegex.test(key);
         var singularKey = key.replace(pluralRegex, '');
 
@@ -165,7 +171,8 @@ function mergeHashes(source, target) {var keepRemoved = arguments.length > 2 && 
 
         if (
         contextMatch && target[rawKey] !== undefined ||
-        pluralMatch && target[singularKey] !== undefined)
+        pluralMatch &&
+        hasRelatedPluralKey("".concat(singularKey).concat(pluralSeparator), target))
         {
           target[key] = source[key];
           pullCount += 1;
@@ -201,4 +208,16 @@ function transferValues(source, target) {
       target[key] = sourceValue;
     }
   }
+}
+
+function hasRelatedPluralKey(rawKey, source) {
+  var suffixes = ['zero', 'one', 'two', 'few', 'many', 'other'];
+
+  for (var _i = 0, _suffixes = suffixes; _i < _suffixes.length; _i++) {var suffix = _suffixes[_i];
+    if (source["".concat(rawKey).concat(suffix)] !== undefined) {
+      return true;
+    }
+  }
+
+  return false;
 }
