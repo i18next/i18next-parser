@@ -12,7 +12,8 @@
     "coverage": "nyc --reporter=lcov --reporter=text npm run test",
     "test": "mocha -r @babel/register -r @babel/polyfill --recursive test/*.test.js test/**/*.test.js",
     "watch": "babel src -d dist -w",
-    "build": "prettier --write \"{src,test}/**/*.js\" && babel src -d dist"
+    "prettify": "prettier --write \"{src,test}/**/*.js\"",
+    "build": "yarn -s prettify && babel src -d dist"
   },
   "files": [
     "bin/",
