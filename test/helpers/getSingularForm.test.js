@@ -31,6 +31,12 @@ describe('getSingularForm helper function', () => {
       'key1-few',
       'key1-many',
       'key1-other',
+      'key1_zero_edgeCase',
+      'key1_one_edgeCase',
+      'key1_two_edgeCase',
+      'key1_few_edgeCase',
+      'key1_many_edgeCase',
+      'key1_other_edgeCase',
     ]
 
     nonPluralKeys.forEach(key => {
@@ -69,6 +75,12 @@ describe('getSingularForm helper function', () => {
       'key1_few',
       'key1_many',
       'key1_other',
+      'key1|zero|edgeCase',
+      'key1|one|edgeCase',
+      'key1|two|edgeCase',
+      'key1|few|edgeCase',
+      'key1|many|edgeCase',
+      'key1|other|edgeCase',
     ]
 
     nonPluralKeys.forEach(key => {
