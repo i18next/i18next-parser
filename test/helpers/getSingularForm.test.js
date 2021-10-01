@@ -3,7 +3,7 @@ import { getSingularForm } from '../../src/helpers'
 
 describe('getSingularForm helper function', () => {
   it('returns singular key for all valid plural forms', (done) => {
-    const pluralSeparator = '_';
+    const pluralSeparator = '_'
     const validPluralForms = [
       'key1_zero',
       'key1_one',
@@ -13,7 +13,7 @@ describe('getSingularForm helper function', () => {
       'key1_other',
     ]
 
-    validPluralForms.forEach(pluralKey => {
+    validPluralForms.forEach((pluralKey) => {
       assert.strictEqual(getSingularForm(pluralKey, pluralSeparator), 'key1')
     })
 
@@ -21,7 +21,7 @@ describe('getSingularForm helper function', () => {
   })
 
   it('returns the key unchanged when not in plural form', (done) => {
-    const pluralSeparator = '_';
+    const pluralSeparator = '_'
     const nonPluralKeys = [
       'key1',
       'key1_context',
@@ -39,7 +39,7 @@ describe('getSingularForm helper function', () => {
       'key1_other_edgeCase',
     ]
 
-    nonPluralKeys.forEach(key => {
+    nonPluralKeys.forEach((key) => {
       assert.strictEqual(getSingularForm(key, pluralSeparator), key)
     })
 
@@ -47,7 +47,7 @@ describe('getSingularForm helper function', () => {
   })
 
   it('returns singular key for all valid plural forms with custom pluralSeparator', (done) => {
-    const pluralSeparator = '|';
+    const pluralSeparator = '|'
     const validPluralForms = [
       'key1|zero',
       'key1|one',
@@ -57,7 +57,7 @@ describe('getSingularForm helper function', () => {
       'key1|other',
     ]
 
-    validPluralForms.forEach(pluralKey => {
+    validPluralForms.forEach((pluralKey) => {
       assert.strictEqual(getSingularForm(pluralKey, pluralSeparator), 'key1')
     })
 
@@ -65,7 +65,7 @@ describe('getSingularForm helper function', () => {
   })
 
   it('returns the key unchanged when not in plural form with custom pluralSeparator', (done) => {
-    const pluralSeparator = '|';
+    const pluralSeparator = '|'
     const nonPluralKeys = [
       'key1',
       'key1_context',
@@ -83,7 +83,7 @@ describe('getSingularForm helper function', () => {
       'key1|other|edgeCase',
     ]
 
-    nonPluralKeys.forEach(key => {
+    nonPluralKeys.forEach((key) => {
       assert.strictEqual(getSingularForm(key, pluralSeparator), key)
     })
 

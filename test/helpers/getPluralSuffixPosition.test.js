@@ -42,7 +42,7 @@ describe('getPluralSuffixPosition helper function', () => {
       'key1_other_edgeCase',
     ]
 
-    nonPluralKeys.forEach(key => {
+    nonPluralKeys.forEach((key) => {
       const res = getPluralSuffixPosition(key)
 
       assert.strictEqual(res, -1)

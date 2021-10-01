@@ -211,7 +211,7 @@ function hasRelatedPluralKey(rawKey, source) {
 }
 
 function getSingularForm(key, pluralSeparator) {
-  var pluralRegex = new RegExp("(".concat(
+  var pluralRegex = new RegExp("(\\".concat(
   pluralSeparator, "(?:zero|one|two|few|many|other))$"));
 
 
@@ -222,7 +222,7 @@ function getPluralSuffixPosition(key) {
   var suffixes = ['zero', 'one', 'two', 'few', 'many', 'other'];
 
   for (var i = 0, len = suffixes.length; i < len; i++) {
-    if (key.includes(suffixes[i])) return i;
+    if (key.endsWith(suffixes[i])) return i;
   }
 
   return -1;
