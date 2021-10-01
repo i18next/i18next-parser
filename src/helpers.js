@@ -147,43 +147,41 @@ function mergeHashes(source, target, options = {}) {
       if (Object.keys(nested.old).length) {
         old[key] = nested.old
       }
+    } else if (target[key] !== undefined) {
+      if (typeof source[key] === 'string' || Array.isArray(source[key])) {
+        target[key] = source[key]
+        mergeCount += 1
+      } else {
+        old[key] = source[key]
+        oldCount += 1
+      }
     } else {
-      if (target[key] !== undefined) {
-        if (typeof source[key] === 'string' || Array.isArray(source[key])) {
+      // support for plural in keys
+      const pluralRegex = new RegExp(
+        `(${pluralSeparator}(?:zero|one|two|few|many|other))$`
+      )
+      const pluralMatch = pluralRegex.test(key)
+      const singularKey = key.replace(pluralRegex, '')
+
+      // support for context in keys
+      const contextRegex = /_([^_]+)?$/
+      const contextMatch = contextRegex.test(singularKey)
+      const rawKey = singularKey.replace(contextRegex, '')
+
+      if (
+        (contextMatch && target[rawKey] !== undefined) ||
+        (pluralMatch &&
+          hasRelatedPluralKey(`${singularKey}${pluralSeparator}`, target))
+      ) {
+        target[key] = source[key]
+        pullCount += 1
+      } else {
+        if (keepRemoved) {
           target[key] = source[key]
-          mergeCount += 1
         } else {
           old[key] = source[key]
-          oldCount += 1
         }
-      } else {
-        // support for plural in keys
-        const pluralRegex = new RegExp(
-          `(${pluralSeparator}(?:zero|one|two|few|many|other))$`
-        )
-        const pluralMatch = pluralRegex.test(key)
-        const singularKey = key.replace(pluralRegex, '')
-
-        // support for context in keys
-        const contextRegex = /_([^_]+)?$/
-        const contextMatch = contextRegex.test(singularKey)
-        const rawKey = singularKey.replace(contextRegex, '')
-
-        if (
-          (contextMatch && target[rawKey] !== undefined) ||
-          (pluralMatch &&
-            hasRelatedPluralKey(`${singularKey}${pluralSeparator}`, target))
-        ) {
-          target[key] = source[key]
-          pullCount += 1
-        } else {
-          if (keepRemoved) {
-            target[key] = source[key]
-          } else {
-            old[key] = source[key]
-          }
-          oldCount += 1
-        }
+        oldCount += 1
       }
     }
   }
@@ -212,14 +210,7 @@ function transferValues(source, target) {
 
 function hasRelatedPluralKey(rawKey, source) {
   const suffixes = ['zero', 'one', 'two', 'few', 'many', 'other']
-
-  for (const suffix of suffixes) {
-    if (source[`${rawKey}${suffix}`] !== undefined) {
-      return true
-    }
-  }
-
-  return false
+  return suffixes.some((suffix) => source[`${rawKey}${suffix}`] !== undefined)
 }
 
 export { dotPathToHash, mergeHashes, transferValues, hasRelatedPluralKey }

@@ -147,43 +147,41 @@ function mergeHashes(source, target) {var options = arguments.length > 2 && argu
       if (Object.keys(nested.old).length) {
         old[key] = nested.old;
       }
+    } else if (target[key] !== undefined) {
+      if (typeof source[key] === 'string' || Array.isArray(source[key])) {
+        target[key] = source[key];
+        mergeCount += 1;
+      } else {
+        old[key] = source[key];
+        oldCount += 1;
+      }
     } else {
-      if (target[key] !== undefined) {
-        if (typeof source[key] === 'string' || Array.isArray(source[key])) {
+      // support for plural in keys
+      var pluralRegex = new RegExp("(".concat(
+      pluralSeparator, "(?:zero|one|two|few|many|other))$"));
+
+      var pluralMatch = pluralRegex.test(key);
+      var singularKey = key.replace(pluralRegex, '');
+
+      // support for context in keys
+      var contextRegex = /_([^_]+)?$/;
+      var contextMatch = contextRegex.test(singularKey);
+      var rawKey = singularKey.replace(contextRegex, '');
+
+      if (
+      contextMatch && target[rawKey] !== undefined ||
+      pluralMatch &&
+      hasRelatedPluralKey("".concat(singularKey).concat(pluralSeparator), target))
+      {
+        target[key] = source[key];
+        pullCount += 1;
+      } else {
+        if (keepRemoved) {
           target[key] = source[key];
-          mergeCount += 1;
         } else {
           old[key] = source[key];
-          oldCount += 1;
         }
-      } else {
-        // support for plural in keys
-        var pluralRegex = new RegExp("(".concat(
-        pluralSeparator, "(?:zero|one|two|few|many|other))$"));
-
-        var pluralMatch = pluralRegex.test(key);
-        var singularKey = key.replace(pluralRegex, '');
-
-        // support for context in keys
-        var contextRegex = /_([^_]+)?$/;
-        var contextMatch = contextRegex.test(singularKey);
-        var rawKey = singularKey.replace(contextRegex, '');
-
-        if (
-        contextMatch && target[rawKey] !== undefined ||
-        pluralMatch &&
-        hasRelatedPluralKey("".concat(singularKey).concat(pluralSeparator), target))
-        {
-          target[key] = source[key];
-          pullCount += 1;
-        } else {
-          if (keepRemoved) {
-            target[key] = source[key];
-          } else {
-            old[key] = source[key];
-          }
-          oldCount += 1;
-        }
+        oldCount += 1;
       }
     }
   }
@@ -212,12 +210,5 @@ function transferValues(source, target) {
 
 function hasRelatedPluralKey(rawKey, source) {
   var suffixes = ['zero', 'one', 'two', 'few', 'many', 'other'];
-
-  for (var _i = 0, _suffixes = suffixes; _i < _suffixes.length; _i++) {var suffix = _suffixes[_i];
-    if (source["".concat(rawKey).concat(suffix)] !== undefined) {
-      return true;
-    }
-  }
-
-  return false;
+  return suffixes.some(function (suffix) {return source["".concat(rawKey).concat(suffix)] !== undefined;});
 }
