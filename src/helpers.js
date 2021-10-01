@@ -157,11 +157,8 @@ function mergeHashes(source, target, options = {}) {
       }
     } else {
       // support for plural in keys
-      const pluralRegex = new RegExp(
-        `(${pluralSeparator}(?:zero|one|two|few|many|other))$`
-      )
-      const pluralMatch = pluralRegex.test(key)
-      const singularKey = key.replace(pluralRegex, '')
+      const singularKey = getSingularForm(key, pluralSeparator)
+      const pluralMatch = key !== singularKey
 
       // support for context in keys
       const contextRegex = /_([^_]+)?$/
@@ -213,4 +210,44 @@ function hasRelatedPluralKey(rawKey, source) {
   return suffixes.some((suffix) => source[`${rawKey}${suffix}`] !== undefined)
 }
 
-export { dotPathToHash, mergeHashes, transferValues, hasRelatedPluralKey }
+function getSingularForm(key, pluralSeparator) {
+  const pluralRegex = new RegExp(
+    `(${pluralSeparator}(?:zero|one|two|few|many|other))$`
+  )
+
+  return key.replace(pluralRegex, '')
+}
+
+function getPluralSuffixPosition(key) {
+  const suffixes = ['zero', 'one', 'two', 'few', 'many', 'other'];
+
+  for (let i = 0, len = suffixes.length; i < len; i++) {
+    if (key.includes(suffixes[i]))
+      return i;
+  }
+
+  return -1;
+}
+
+function makeDefaultSort(pluralSeparator) {
+  return function defaultSort(key1, key2) {
+    const singularKey1 = getSingularForm(key1, pluralSeparator);
+    const singularKey2 = getSingularForm(key2, pluralSeparator);
+
+    if (singularKey1 === singularKey2) {
+      return getPluralSuffixPosition(key1) - getPluralSuffixPosition(key2);
+    }
+
+    return singularKey1.localeCompare(singularKey2);
+  }
+}
+
+export {
+  dotPathToHash,
+  mergeHashes,
+  transferValues,
+  hasRelatedPluralKey,
+  getSingularForm,
+  getPluralSuffixPosition,
+  makeDefaultSort,
+}
