@@ -1,4 +1,4 @@
-"use strict";var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");Object.defineProperty(exports, "__esModule", { value: true });exports.dotPathToHash = dotPathToHash;exports.mergeHashes = mergeHashes;exports.transferValues = transferValues;exports.hasRelatedPluralKey = hasRelatedPluralKey;var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof")); /**
+"use strict";var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");Object.defineProperty(exports, "__esModule", { value: true });exports.dotPathToHash = dotPathToHash;exports.mergeHashes = mergeHashes;exports.transferValues = transferValues;exports.hasRelatedPluralKey = hasRelatedPluralKey;exports.getSingularForm = getSingularForm;exports.getPluralSuffixPosition = getPluralSuffixPosition;exports.makeDefaultSort = makeDefaultSort;var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof")); /**
  * Take an entry for the Parser and turn it into a hash,
  * turning the key path 'foo.bar' into an hash {foo: {bar: ""}}
  * The generated hash can be merged with an optional `target`.
@@ -157,11 +157,8 @@ function mergeHashes(source, target) {var options = arguments.length > 2 && argu
       }
     } else {
       // support for plural in keys
-      var pluralRegex = new RegExp("(".concat(
-      pluralSeparator, "(?:zero|one|two|few|many|other))$"));
-
-      var pluralMatch = pluralRegex.test(key);
-      var singularKey = key.replace(pluralRegex, '');
+      var singularKey = getSingularForm(key, pluralSeparator);
+      var pluralMatch = key !== singularKey;
 
       // support for context in keys
       var contextRegex = /_([^_]+)?$/;
@@ -211,4 +208,35 @@ function transferValues(source, target) {
 function hasRelatedPluralKey(rawKey, source) {
   var suffixes = ['zero', 'one', 'two', 'few', 'many', 'other'];
   return suffixes.some(function (suffix) {return source["".concat(rawKey).concat(suffix)] !== undefined;});
+}
+
+function getSingularForm(key, pluralSeparator) {
+  var pluralRegex = new RegExp("(".concat(
+  pluralSeparator, "(?:zero|one|two|few|many|other))$"));
+
+
+  return key.replace(pluralRegex, '');
+}
+
+function getPluralSuffixPosition(key) {
+  var suffixes = ['zero', 'one', 'two', 'few', 'many', 'other'];
+
+  for (var i = 0, len = suffixes.length; i < len; i++) {
+    if (key.includes(suffixes[i])) return i;
+  }
+
+  return -1;
+}
+
+function makeDefaultSort(pluralSeparator) {
+  return function defaultSort(key1, key2) {
+    var singularKey1 = getSingularForm(key1, pluralSeparator);
+    var singularKey2 = getSingularForm(key2, pluralSeparator);
+
+    if (singularKey1 === singularKey2) {
+      return getPluralSuffixPosition(key1) - getPluralSuffixPosition(key2);
+    }
+
+    return singularKey1.localeCompare(singularKey2);
+  };
 }

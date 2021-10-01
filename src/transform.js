@@ -1,4 +1,9 @@
-import { dotPathToHash, mergeHashes, transferValues, makeDefaultSort } from './helpers'
+import {
+  dotPathToHash,
+  mergeHashes,
+  transferValues,
+  makeDefaultSort,
+} from './helpers'
 import { Transform } from 'stream'
 import eol from 'eol'
 import fs from 'fs'
@@ -224,7 +229,9 @@ export default class i18nTransform extends Transform {
         const { sort } = this.options
         if (sort) {
           const compare =
-            typeof sort === 'function' ? sort : makeDefaultSort(this.options.pluralSeparator)
+            typeof sort === 'function'
+              ? sort
+              : makeDefaultSort(this.options.pluralSeparator)
           maybeSortedNewCatalog = sortKeys(newCatalog, { deep: true, compare })
         }
 

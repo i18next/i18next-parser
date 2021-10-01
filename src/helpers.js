@@ -219,26 +219,25 @@ function getSingularForm(key, pluralSeparator) {
 }
 
 function getPluralSuffixPosition(key) {
-  const suffixes = ['zero', 'one', 'two', 'few', 'many', 'other'];
+  const suffixes = ['zero', 'one', 'two', 'few', 'many', 'other']
 
   for (let i = 0, len = suffixes.length; i < len; i++) {
-    if (key.includes(suffixes[i]))
-      return i;
+    if (key.includes(suffixes[i])) return i
   }
 
-  return -1;
+  return -1
 }
 
 function makeDefaultSort(pluralSeparator) {
   return function defaultSort(key1, key2) {
-    const singularKey1 = getSingularForm(key1, pluralSeparator);
-    const singularKey2 = getSingularForm(key2, pluralSeparator);
+    const singularKey1 = getSingularForm(key1, pluralSeparator)
+    const singularKey2 = getSingularForm(key2, pluralSeparator)
 
     if (singularKey1 === singularKey2) {
-      return getPluralSuffixPosition(key1) - getPluralSuffixPosition(key2);
+      return getPluralSuffixPosition(key1) - getPluralSuffixPosition(key2)
     }
 
-    return singularKey1.localeCompare(singularKey2);
+    return singularKey1.localeCompare(singularKey2)
   }
 }
 
