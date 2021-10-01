@@ -2,7 +2,7 @@ import { assert } from 'chai'
 import { hasRelatedPluralKey } from '../../src/helpers'
 
 describe('hasRelatedPluralKey helper function', () => {
-  it('return false when `source` does not contain valid plural form of `rawKey`', (done) => {
+  it('returns false when `source` does not contain valid plural form of `rawKey`', (done) => {
     const rawKey = 'key1_'
     const source = {
       key1: '',
@@ -17,7 +17,7 @@ describe('hasRelatedPluralKey helper function', () => {
     done()
   })
 
-  it('return true when `source` contains any valid plural form of `rawKey`', (done) => {
+  it('returns true when `source` contains any valid plural form of `rawKey`', (done) => {
     const rawKey = 'key1_'
     const sources = [
       { key1_zero: '' },
