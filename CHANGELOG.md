@@ -1,9 +1,10 @@
 # Changelog
 
-# 5.0.0 - unreleased
+# 5.0.0
+
 - BREAKING: Format Json output conforming to i18next JSON v4 (see: https://www.i18next.com/misc/json-format)
 
-# 4.8.0 - latest
+# 4.8.0
 
 - Add template literal support for defaultValue as a second argument #419 #420
 - Update dependencies
