@@ -66,11 +66,9 @@ rm -rf dist && broccoli build dist
 
 ## Deploy
 
-- `yarn build`
 - update `package.json` version
 - create commit and add version tag
 - `npm publish`
-
 
 ## `0.x` vs `1.x`
 
