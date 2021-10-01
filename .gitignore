@@ -35,3 +35,6 @@ test/manual/fr
 # coverage
 .nyc_output
 coverage
+
+# build artifacts
+dist/
