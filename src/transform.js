@@ -226,6 +226,7 @@ export default class i18nTransform extends Transform {
         }
 
         let maybeSortedNewCatalog = newCatalog
+        let maybeSortedOldCatalog = oldCatalog
         const { sort } = this.options
         if (sort) {
           const compare =
@@ -233,6 +234,7 @@ export default class i18nTransform extends Transform {
               ? sort
               : makeDefaultSort(this.options.pluralSeparator)
           maybeSortedNewCatalog = sortKeys(newCatalog, { deep: true, compare })
+          maybeSortedOldCatalog = sortKeys(oldCatalog, { deep: true, compare })
         }
 
         // push files back to the stream
@@ -241,7 +243,7 @@ export default class i18nTransform extends Transform {
           this.options.createOldCatalogs &&
           (Object.keys(oldCatalog).length || existingOldCatalog)
         ) {
-          this.pushFile(namespaceOldPath, oldCatalog)
+          this.pushFile(namespaceOldPath, maybeSortedOldCatalog)
         }
       }
     }

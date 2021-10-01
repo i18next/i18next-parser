@@ -234,6 +234,7 @@ i18nTransform = /*#__PURE__*/function (_Transform) {(0, _inherits2["default"])(i
               sort :
               (0, _helpers.makeDefaultSort)(_this2.options.pluralSeparator);
               maybeSortedNewCatalog = (0, _sortKeys["default"])(newCatalog, { deep: true, compare: compare });
+              maybeSortedOldCatalog = (0, _sortKeys["default"])(oldCatalog, { deep: true, compare: compare });
             }
 
             // push files back to the stream
@@ -242,7 +243,7 @@ i18nTransform = /*#__PURE__*/function (_Transform) {(0, _inherits2["default"])(i
             _this2.options.createOldCatalogs && (
             Object.keys(oldCatalog).length || existingOldCatalog))
             {
-              _this2.pushFile(namespaceOldPath, oldCatalog);
+              _this2.pushFile(namespaceOldPath, maybeSortedOldCatalog);
             }
           }};for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {_loop();
         }} catch (err) {_iterator2.e(err);} finally {_iterator2.f();}
