@@ -1,8 +1,13 @@
 # Changelog
 
+# 6.0.0
+- BREAKING: `sort` option as a function has changed signature #437
+- Support sorting of plural keys in JSON v4 #437
+- Support regex token character for `pluralSeparator` option #437
+
 # 5.0.0
 
-- BREAKING: Format Json output conforming to i18next JSON v4 (see: https://www.i18next.com/misc/json-format)
+- BREAKING: Format Json output conforming to i18next JSON v4 (see: https://www.i18next.com/misc/json-format) #423
 
 # 4.8.0
 

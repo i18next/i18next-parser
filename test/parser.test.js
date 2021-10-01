@@ -1700,9 +1700,27 @@ describe('parser', () => {
         let result
         const i18nextParser = new i18nTransform()
         const fakeFile = new Vinyl({
-          contents: Buffer.from(
-            "t('ccc'); t('aaa'); t('bbb.bbb'); t('bbb.aaa')"
-          ),
+          contents: Buffer.from(`
+            t('bbb.aaA');
+            t('pluralKey_withContext', { count: 1, context: 'male' });
+            t('aaA');
+            t('bbb.withContext', { context: 'male' });
+            t('aaa');
+            t('bbb.pluralKey', { count: 1 });
+            t('pluralKey', { count: 1 });
+            t('bbb.withContext', { context: 'female' });
+            t('aa1');
+            t('withContext', { context: 'male' });
+            t('aaa_aaa');
+            t('bbb.pluralKey_withContext', { count: 1, context: 'male' });
+            t('bbb.aa1');
+            t('pluralKey_withContext', { count: 1, context: 'female' });
+            t('bbb.ccc');
+            t('bbb.pluralKey_withContext', { count: 1, context: 'female' });
+            t('withContext', { context: 'female' });
+            t('bbb.aaa');
+            t('bbb.aaa_aaa');
+          `),
           path: 'file.js',
         })
 
@@ -1712,8 +1730,36 @@ describe('parser', () => {
           }
         })
         i18nextParser.once('end', () => {
-          assert.sameOrderedMembers(Object.keys(result), ['ccc', 'aaa', 'bbb'])
-          assert.sameOrderedMembers(Object.keys(result.bbb), ['bbb', 'aaa'])
+          assert.sameOrderedMembers(Object.keys(result), [
+            'bbb',
+            'pluralKey_withContext_male_one',
+            'pluralKey_withContext_male_other',
+            'aaA',
+            'aaa',
+            'pluralKey_one',
+            'pluralKey_other',
+            'aa1',
+            'withContext_male',
+            'aaa_aaa',
+            'pluralKey_withContext_female_one',
+            'pluralKey_withContext_female_other',
+            'withContext_female',
+          ])
+          assert.sameOrderedMembers(Object.keys(result.bbb), [
+            'aaA',
+            'withContext_male',
+            'pluralKey_one',
+            'pluralKey_other',
+            'withContext_female',
+            'pluralKey_withContext_male_one',
+            'pluralKey_withContext_male_other',
+            'aa1',
+            'ccc',
+            'pluralKey_withContext_female_one',
+            'pluralKey_withContext_female_other',
+            'aaa',
+            'aaa_aaa',
+          ])
           done()
         })
 
@@ -1726,9 +1772,27 @@ describe('parser', () => {
           sort: true,
         })
         const fakeFile = new Vinyl({
-          contents: Buffer.from(
-            "t('aaA'); t('aaa'); t('bbb.bbb'); t('bbb.aaa')"
-          ),
+          contents: Buffer.from(`
+            t('bbb.aaA');
+            t('pluralKey_withContext', { count: 1, context: 'male' });
+            t('aaA');
+            t('bbb.withContext', { context: 'male' });
+            t('aaa');
+            t('bbb.pluralKey', { count: 1 });
+            t('pluralKey', { count: 1 });
+            t('bbb.withContext', { context: 'female' });
+            t('aa1');
+            t('withContext', { context: 'male' });
+            t('aaa_aaa');
+            t('bbb.pluralKey_withContext', { count: 1, context: 'male' });
+            t('bbb.aa1');
+            t('pluralKey_withContext', { count: 1, context: 'female' });
+            t('bbb.ccc');
+            t('bbb.pluralKey_withContext', { count: 1, context: 'female' });
+            t('withContext', { context: 'female' });
+            t('bbb.aaa');
+            t('bbb.aaa_aaa');
+          `),
           path: 'file.js',
         })
 
@@ -1738,8 +1802,133 @@ describe('parser', () => {
           }
         })
         i18nextParser.once('end', () => {
-          assert.sameOrderedMembers(Object.keys(result), ['aaa', 'aaA', 'bbb'])
-          assert.sameOrderedMembers(Object.keys(result.bbb), ['aaa', 'bbb'])
+          assert.sameOrderedMembers(Object.keys(result), [
+            'aa1',
+            'aaa',
+            'aaA',
+            'aaa_aaa',
+            'bbb',
+            'pluralKey_one',
+            'pluralKey_other',
+            'pluralKey_withContext_female_one',
+            'pluralKey_withContext_female_other',
+            'pluralKey_withContext_male_one',
+            'pluralKey_withContext_male_other',
+            'withContext_female',
+            'withContext_male',
+          ])
+          assert.sameOrderedMembers(Object.keys(result.bbb), [
+            'aa1',
+            'aaa',
+            'aaA',
+            'aaa_aaa',
+            'ccc',
+            'pluralKey_one',
+            'pluralKey_other',
+            'pluralKey_withContext_female_one',
+            'pluralKey_withContext_female_other',
+            'pluralKey_withContext_male_one',
+            'pluralKey_withContext_male_other',
+            'withContext_female',
+            'withContext_male',
+          ])
+          done()
+        })
+
+        i18nextParser.end(fakeFile)
+      })
+
+      it('supports sort of the plural keys in count order', (done) => {
+        let result
+        const i18nextParser = new i18nTransform({
+          sort: true,
+          locales: ['ar'],
+        })
+        const fakeFile = new Vinyl({
+          contents: Buffer.from(`
+            t('bbb.aaA');
+            t('pluralKey_withContext', { count: 1, context: 'male' });
+            t('aaA');
+            t('bbb.withContext', { context: 'male' });
+            t('aaa');
+            t('bbb.pluralKey', { count: 1 });
+            t('pluralKey', { count: 1 });
+            t('bbb.withContext', { context: 'female' });
+            t('aa1');
+            t('withContext', { context: 'male' });
+            t('aaa_aaa');
+            t('bbb.pluralKey_withContext', { count: 1, context: 'male' });
+            t('bbb.aa1');
+            t('pluralKey_withContext', { count: 1, context: 'female' });
+            t('bbb.ccc');
+            t('bbb.pluralKey_withContext', { count: 1, context: 'female' });
+            t('withContext', { context: 'female' });
+            t('bbb.aaa');
+            t('bbb.aaa_aaa');
+          `),
+          path: 'file.js',
+        })
+
+        i18nextParser.on('data', (file) => {
+          if (file.relative.endsWith(arLibraryPath)) {
+            result = JSON.parse(file.contents)
+          }
+        })
+        i18nextParser.once('end', () => {
+          assert.sameOrderedMembers(Object.keys(result), [
+            'aa1',
+            'aaa',
+            'aaA',
+            'aaa_aaa',
+            'bbb',
+            'pluralKey_zero',
+            'pluralKey_one',
+            'pluralKey_two',
+            'pluralKey_few',
+            'pluralKey_many',
+            'pluralKey_other',
+            'pluralKey_withContext_female_zero',
+            'pluralKey_withContext_female_one',
+            'pluralKey_withContext_female_two',
+            'pluralKey_withContext_female_few',
+            'pluralKey_withContext_female_many',
+            'pluralKey_withContext_female_other',
+            'pluralKey_withContext_male_zero',
+            'pluralKey_withContext_male_one',
+            'pluralKey_withContext_male_two',
+            'pluralKey_withContext_male_few',
+            'pluralKey_withContext_male_many',
+            'pluralKey_withContext_male_other',
+            'withContext_female',
+            'withContext_male',
+          ])
+          assert.sameOrderedMembers(Object.keys(result.bbb), [
+            'aa1',
+            'aaa',
+            'aaA',
+            'aaa_aaa',
+            'ccc',
+            'pluralKey_zero',
+            'pluralKey_one',
+            'pluralKey_two',
+            'pluralKey_few',
+            'pluralKey_many',
+            'pluralKey_other',
+            'pluralKey_withContext_female_zero',
+            'pluralKey_withContext_female_one',
+            'pluralKey_withContext_female_two',
+            'pluralKey_withContext_female_few',
+            'pluralKey_withContext_female_many',
+            'pluralKey_withContext_female_other',
+            'pluralKey_withContext_male_zero',
+            'pluralKey_withContext_male_one',
+            'pluralKey_withContext_male_two',
+            'pluralKey_withContext_male_few',
+            'pluralKey_withContext_male_many',
+            'pluralKey_withContext_male_other',
+            'withContext_female',
+            'withContext_male',
+          ])
           done()
         })
 
@@ -1749,23 +1938,178 @@ describe('parser', () => {
       it('supports sort as a function', (done) => {
         let result
         const i18nextParser = new i18nTransform({
-          sort: (a, b) => (a.key > b.key) - (a.key < b.key),
+          sort: (a, b) => a.slice(0, -1).localeCompare(b.slice(0, -1)),
+          locales: ['ar'],
         })
         const fakeFile = new Vinyl({
-          contents: Buffer.from(
-            "t('aaa'); t('aaA'); t('bbb.bbb'); t('bbb.bbB')"
-          ),
+          contents: Buffer.from(`
+            t('bbb.aaA');
+            t('pluralKey_withContext', { count: 1, context: 'male' });
+            t('aaA');
+            t('bbb.withContext', { context: 'male' });
+            t('aaa');
+            t('bbb.pluralKey', { count: 1 });
+            t('pluralKey', { count: 1 });
+            t('bbb.withContext', { context: 'female' });
+            t('aa1');
+            t('withContext', { context: 'male' });
+            t('aaa_aaa');
+            t('bbb.pluralKey_withContext', { count: 1, context: 'male' });
+            t('bbb.aa1');
+            t('pluralKey_withContext', { count: 1, context: 'female' });
+            t('bbb.ccc');
+            t('bbb.pluralKey_withContext', { count: 1, context: 'female' });
+            t('withContext', { context: 'female' });
+            t('bbb.aaa');
+            t('bbb.aaa_aaa');
+          `),
           path: 'file.js',
         })
 
         i18nextParser.on('data', (file) => {
-          if (file.relative.endsWith(enLibraryPath)) {
+          if (file.relative.endsWith(arLibraryPath)) {
             result = JSON.parse(file.contents)
           }
         })
         i18nextParser.once('end', () => {
-          assert.sameOrderedMembers(Object.keys(result), ['aaA', 'aaa', 'bbb'])
-          assert.sameOrderedMembers(Object.keys(result.bbb), ['bbB', 'bbb'])
+          assert.sameOrderedMembers(Object.keys(result), [
+            'aaA',
+            'aaa',
+            'aa1',
+            'aaa_aaa',
+            'bbb',
+            'pluralKey_few',
+            'pluralKey_many',
+            'pluralKey_one',
+            'pluralKey_other',
+            'pluralKey_two',
+            'pluralKey_withContext_female_few',
+            'pluralKey_withContext_female_many',
+            'pluralKey_withContext_female_one',
+            'pluralKey_withContext_female_other',
+            'pluralKey_withContext_female_two',
+            'pluralKey_withContext_female_zero',
+            'pluralKey_withContext_male_few',
+            'pluralKey_withContext_male_many',
+            'pluralKey_withContext_male_one',
+            'pluralKey_withContext_male_other',
+            'pluralKey_withContext_male_two',
+            'pluralKey_withContext_male_zero',
+            'pluralKey_zero',
+            'withContext_female',
+            'withContext_male',
+          ])
+          assert.sameOrderedMembers(Object.keys(result.bbb), [
+            'aaA',
+            'aa1',
+            'aaa',
+            'aaa_aaa',
+            'ccc',
+            'pluralKey_few',
+            'pluralKey_many',
+            'pluralKey_one',
+            'pluralKey_other',
+            'pluralKey_two',
+            'pluralKey_withContext_female_few',
+            'pluralKey_withContext_female_many',
+            'pluralKey_withContext_female_one',
+            'pluralKey_withContext_female_other',
+            'pluralKey_withContext_female_two',
+            'pluralKey_withContext_female_zero',
+            'pluralKey_withContext_male_few',
+            'pluralKey_withContext_male_many',
+            'pluralKey_withContext_male_one',
+            'pluralKey_withContext_male_other',
+            'pluralKey_withContext_male_two',
+            'pluralKey_withContext_male_zero',
+            'pluralKey_zero',
+            'withContext_female',
+            'withContext_male',
+          ])
+          done()
+        })
+
+        i18nextParser.end(fakeFile)
+      })
+
+      it('supports sort of old catalog', (done) => {
+        const i18nextParser = new i18nTransform({
+          output: 'test/locales/$LOCALE/$NAMESPACE.json',
+          sort: true,
+          locales: ['ar'],
+        })
+        const fakeFile = new Vinyl({
+          contents: Buffer.from("t('test_sort:ccc'), t('test_sort:bbb.ddd')"),
+          path: 'file.js',
+        })
+
+        let result, resultOld
+        i18nextParser.on('data', (file) => {
+          if (file.relative.endsWith(path.normalize('ar/test_sort.json'))) {
+            result = JSON.parse(file.contents)
+          } else if (
+            file.relative.endsWith(path.normalize('ar/test_sort_old.json'))
+          ) {
+            resultOld = JSON.parse(file.contents)
+          }
+        })
+        i18nextParser.once('end', () => {
+          assert.sameOrderedMembers(Object.keys(result), ['bbb', 'ccc'])
+          assert.sameOrderedMembers(Object.keys(result.bbb), ['ddd'])
+          assert.sameOrderedMembers(Object.keys(resultOld), [
+            'aa1',
+            'aaa',
+            'aaA',
+            'aaa_aaa',
+            'bbb',
+            'pluralKey_zero',
+            'pluralKey_one',
+            'pluralKey_two',
+            'pluralKey_few',
+            'pluralKey_many',
+            'pluralKey_other',
+            'pluralKey_withContext_female_zero',
+            'pluralKey_withContext_female_one',
+            'pluralKey_withContext_female_two',
+            'pluralKey_withContext_female_few',
+            'pluralKey_withContext_female_many',
+            'pluralKey_withContext_female_other',
+            'pluralKey_withContext_male_zero',
+            'pluralKey_withContext_male_one',
+            'pluralKey_withContext_male_two',
+            'pluralKey_withContext_male_few',
+            'pluralKey_withContext_male_many',
+            'pluralKey_withContext_male_other',
+            'withContext_female',
+            'withContext_male',
+          ])
+          assert.sameOrderedMembers(Object.keys(resultOld.bbb), [
+            'aa1',
+            'aaa',
+            'aaA',
+            'aaa_aaa',
+            'ccc',
+            'pluralKey_zero',
+            'pluralKey_one',
+            'pluralKey_two',
+            'pluralKey_few',
+            'pluralKey_many',
+            'pluralKey_other',
+            'pluralKey_withContext_female_zero',
+            'pluralKey_withContext_female_one',
+            'pluralKey_withContext_female_two',
+            'pluralKey_withContext_female_few',
+            'pluralKey_withContext_female_many',
+            'pluralKey_withContext_female_other',
+            'pluralKey_withContext_male_zero',
+            'pluralKey_withContext_male_one',
+            'pluralKey_withContext_male_two',
+            'pluralKey_withContext_male_few',
+            'pluralKey_withContext_male_many',
+            'pluralKey_withContext_male_other',
+            'withContext_female',
+            'withContext_male',
+          ])
           done()
         })
 

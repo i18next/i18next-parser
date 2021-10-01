@@ -2,7 +2,7 @@
   "author": "Karel Ledru",
   "description": "Command Line tool for i18next",
   "name": "i18next-parser",
-  "version": "5.0.0",
+  "version": "6.0.0",
   "license": "MIT",
   "main": "dist/index.js",
   "bin": {
@@ -37,6 +37,7 @@
     "i18next": "^21.2.0",
     "js-yaml": "4.1.0",
     "rsvp": "^4.8.2",
+    "sort-keys": "^4.2.0",
     "through2": "~4.0.2",
     "typescript": "^4.2.4",
     "vinyl": "~2.2.1",
@@ -45,7 +46,7 @@
   },
   "optionalDependencies": {},
   "engines": {
-    "node": ">=10",
+    "node": ">=12",
     "npm": ">=6",
     "yarn": ">=1"
   },

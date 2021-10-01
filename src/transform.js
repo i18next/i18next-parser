@@ -1,4 +1,9 @@
-import { dotPathToHash, mergeHashes, transferValues } from './helpers'
+import {
+  dotPathToHash,
+  mergeHashes,
+  transferValues,
+  makeDefaultSort,
+} from './helpers'
 import { Transform } from 'stream'
 import eol from 'eol'
 import fs from 'fs'
@@ -7,6 +12,7 @@ import path from 'path'
 import VirtualFile from 'vinyl'
 import yaml from 'js-yaml'
 import i18next from 'i18next'
+import sortKeys from 'sort-keys'
 
 export default class i18nTransform extends Transform {
   constructor(options = {}) {
@@ -119,13 +125,6 @@ export default class i18nTransform extends Transform {
   }
 
   _flush(done) {
-    const { sort } = this.options
-    if (sort) {
-      this.entries = this.entries.sort(
-        typeof sort === 'function' ? sort : (a, b) => a.key.localeCompare(b.key)
-      )
-    }
-
     for (const locale of this.options.locales) {
       const catalog = {}
 
@@ -226,13 +225,25 @@ export default class i18nTransform extends Transform {
           continue
         }
 
+        let maybeSortedNewCatalog = newCatalog
+        let maybeSortedOldCatalog = oldCatalog
+        const { sort } = this.options
+        if (sort) {
+          const compare =
+            typeof sort === 'function'
+              ? sort
+              : makeDefaultSort(this.options.pluralSeparator)
+          maybeSortedNewCatalog = sortKeys(newCatalog, { deep: true, compare })
+          maybeSortedOldCatalog = sortKeys(oldCatalog, { deep: true, compare })
+        }
+
         // push files back to the stream
-        this.pushFile(namespacePath, newCatalog)
+        this.pushFile(namespacePath, maybeSortedNewCatalog)
         if (
           this.options.createOldCatalogs &&
           (Object.keys(oldCatalog).length || existingOldCatalog)
         ) {
-          this.pushFile(namespaceOldPath, oldCatalog)
+          this.pushFile(namespaceOldPath, maybeSortedOldCatalog)
         }
       }
     }
