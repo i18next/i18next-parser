@@ -11,6 +11,7 @@
   "scripts": {
     "coverage": "nyc --reporter=lcov --reporter=text npm run test",
     "test": "mocha -r @babel/register -r @babel/polyfill --recursive test/*.test.js test/**/*.test.js",
+    "test:broccoli": "broccoli build --brocfile-path test/Brocfile.js",
     "watch": "babel src -d dist -w",
     "prettify": "prettier --write \"{src,test}/**/*.js\"",
     "build": "yarn -s prettify && babel src -d dist",
@@ -60,6 +61,7 @@
     "@babel/preset-env": "^7.0.0",
     "@babel/register": "^7.0.0",
     "broccoli": "^3.5.2",
+    "broccoli-cli": "^1.0.0",
     "broccoli-funnel": "^3.0.8",
     "chai": "^4.1.2",
     "gulp": "^4.0.0",

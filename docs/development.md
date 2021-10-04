@@ -56,12 +56,10 @@ cd test
 gulp i18next
 ```
 
-To test broccoli:
+To test broccoli specifically:
 
 ```
-yarn global add broccoli-cli
-cd test
-rm -rf dist && broccoli build dist
+yarn test:broccoli
 ```
 
 ## Deploy
