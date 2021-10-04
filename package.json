@@ -1,12 +1,17 @@
 {
-  "author": "Karel Ledru",
-  "description": "Command Line tool for i18next",
   "name": "i18next-parser",
+  "description": "Command Line tool for i18next",
   "version": "5.0.0",
   "license": "MIT",
+  "author": "Karel Ledru",
   "main": "dist/index.js",
   "bin": {
     "i18next": "./bin/cli.js"
+  },
+  "engines": {
+    "node": ">=12",
+    "npm": ">=6",
+    "yarn": ">=1"
   },
   "scripts": {
     "coverage": "nyc --reporter=lcov --reporter=text npm run test",
@@ -19,15 +24,6 @@
     "build": "babel src -d dist",
     "prepare": "husky install",
     "prepublishOnly": "yarn -s prettify && yarn -s build"
-  },
-  "files": [
-    "bin/",
-    "dist/",
-    "i18next-parser.config.js"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/i18next/i18next-parser"
   },
   "dependencies": {
     "broccoli-plugin": "^4.0.7",
@@ -47,12 +43,6 @@
     "vinyl": "~2.2.1",
     "vinyl-fs": "^3.0.2",
     "vue-template-compiler": "^2.6.11"
-  },
-  "optionalDependencies": {},
-  "engines": {
-    "node": ">=12",
-    "npm": ">=6",
-    "yarn": ">=1"
   },
   "devDependencies": {
     "@babel/cli": "^7.0.0",
@@ -75,6 +65,15 @@
     "prettier": "2.4.1",
     "sinon": "^11.1.1"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/i18next/i18next-parser"
+  },
+  "files": [
+    "bin/",
+    "dist/",
+    "i18next-parser.config.js"
+  ],
   "keywords": [
     "gulpplugin",
     "i18next",
