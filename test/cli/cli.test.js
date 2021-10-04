@@ -85,8 +85,8 @@ describe('CLI', function () {
     } catch (error) {
       assert.strictEqual(error.exitCode, 1)
       assert.include(
-        error.stdout,
-        '[error]   \u001b[39mWarnings were triggered and failOnWarnings option is enabled. Exiting...'
+        error.stdout.replace(),
+        'Warnings were triggered and failOnWarnings option is enabled. Exiting...'
       )
     }
   })
@@ -98,7 +98,7 @@ describe('CLI', function () {
 
     assert.include(
       subprocess.stdout,
-      '\u001b[36m  Stats:  \u001b[39m0 files were parsed'
+      '0 files were parsed'
     )
   })
 })
