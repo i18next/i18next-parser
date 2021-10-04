@@ -38,14 +38,12 @@ Make sure the tests pass:
 yarn test
 ```
 
-To test the CLI:
+To test the CLI specifically:
 
 ```
-yarn link
-cd test
-i18next manual/**/*.html  -c i18next-parser.config.js
-i18next manual/**/*.html  -c i18next-parser.config.js --fail-on-warnings
-i18next manual/**/*.{js,jsx} --fail-on-warnings
+yarn test:cli
+yarn test:cli --fail-on-warnings
+yarn test:cli "test/cli/**/*.{js,jsx}"
 ```
 
 To test gulp specifically:
