@@ -48,12 +48,10 @@ i18next manual/**/*.html  -c i18next-parser.config.js --fail-on-warnings
 i18next manual/**/*.{js,jsx} --fail-on-warnings
 ```
 
-To test gulp:
+To test gulp specifically:
 
 ```
-yarn global add gulp@next
-cd test
-gulp i18next
+yarn test:gulp
 ```
 
 To test broccoli specifically:

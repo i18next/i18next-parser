@@ -12,11 +12,12 @@
     "coverage": "nyc --reporter=lcov --reporter=text npm run test",
     "test": "mocha -r @babel/register -r @babel/polyfill --recursive test/*.test.js test/**/*.test.js",
     "test:broccoli": "broccoli build --brocfile-path test/Brocfile.js",
+    "test:gulp": "yarn -s build && gulp --cwd test/ i18next",
     "watch": "babel src -d dist -w",
     "prettify": "prettier --write \"{src,test}/**/*.js\"",
-    "build": "yarn -s prettify && babel src -d dist",
+    "build": "babel src -d dist",
     "prepare": "husky install",
-    "prepublishOnly": "yarn -s build"
+    "prepublishOnly": "yarn -s prettify && yarn -s build"
   },
   "files": [
     "bin/",
