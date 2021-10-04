@@ -1,5 +1,5 @@
 const Funnel = require('broccoli-funnel')
-const i18nextParser = require('../src/broccoli').default
+const i18nextParser = require('../dist/index').broccoli
 
 const appRoot = 'broccoli'
 
