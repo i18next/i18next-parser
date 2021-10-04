@@ -5,7 +5,7 @@ import fs from 'fs-extra'
 
 describe('gulp plugin', function () {
   // test execution time depends on I/O
-  this.timeout(5000)
+  this.timeout(0)
 
   it('works as a gulp plugin', async () => {
     const subprocess = await execa.command('yarn test:gulp')

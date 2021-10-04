@@ -5,7 +5,7 @@ import fs from 'fs-extra'
 
 describe('CLI', function () {
   // test execution time depends on I/O
-  this.timeout(5000)
+  this.timeout(0)
 
   it('works without options', async () => {
     const subprocess = await execa.command('yarn test:cli')
