@@ -11,7 +11,7 @@
   "scripts": {
     "coverage": "nyc --reporter=lcov --reporter=text npm run test",
     "test": "mocha -r @babel/register -r @babel/polyfill --recursive test/*.test.js test/**/*.test.js",
-    "test:gulp": "yarn -s build && gulp --cwd test/ i18next",
+    "test:gulp": "yarn -s build && gulp --cwd test/gulp i18next",
     "test:broccoli": "yarn -s build && broccoli build --brocfile-path test/broccoli/Brocfile.js",
     "watch": "babel src -d dist -w",
     "prettify": "prettier --write \"{src,test}/**/*.js\"",
