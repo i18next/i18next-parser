@@ -1,0 +1,12 @@
+{
+  "fifth_male": "",
+  "first": "",
+  "fourth": "",
+  "fourth_male": "defaultValue",
+  "second": "defaultValue",
+  "second_male": "defaultValue",
+  "seventh": "defaultValue",
+  "sixth": "",
+  "third": "{{var}} defaultValue",
+  "third_female": "defaultValue"
+}
