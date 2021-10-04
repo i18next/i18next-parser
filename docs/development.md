@@ -38,6 +38,8 @@ Make sure the tests pass:
 yarn test
 ```
 
+The CLI, the gulp plugin and the broccoli plugin are also tested but, as thoses tests are highly I/O dependent, you might encounter timeout issue depending on your configuration. You might want to raise the timeout allowed (search for `this.timeout(5000)`)
+
 To test the CLI specifically:
 
 ```
