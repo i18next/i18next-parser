@@ -1,5 +1,5 @@
 const gulp = require('gulp')
-const i18next = require('../dist/index')
+const i18next = require('../dist/index').gulp
 
 gulp.task('i18next', function () {
   return gulp
