@@ -41,3 +41,4 @@ dist/
 
 # test artifacts
 test/broccoli/src/locales
+test/gulp/locales

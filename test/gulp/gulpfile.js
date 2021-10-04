@@ -8,6 +8,7 @@ gulp.task('i18next', function () {
       new i18next({
         locales: ['en', 'fr'],
         output: 'locales/$LOCALE/$NAMESPACE.json',
+        sort: true,
       })
     )
     .pipe(gulp.dest('./'))
