@@ -1,14 +1,31 @@
 import path from 'path'
 import { assert } from 'chai'
-import execa from 'execa'
+import sinon from 'sinon'
 import fs from 'fs-extra'
+import { Builder } from 'broccoli'
+import brocFile from './Brocfile.js'
+import PluralRulesMock from '../Intl.PluralRules.mock.js'
 
 describe('broccoli plugin', function () {
   // test execution time depends on I/O
   this.timeout(0)
 
+  let builder = null
+
+  beforeEach(async () => {
+    await fs.emptyDir(path.resolve(__dirname, './src/locales'))
+    sinon.replace(Intl, 'PluralRules', PluralRulesMock)
+    builder = new Builder(brocFile)
+  })
+
+  afterEach(async () => {
+    await fs.emptyDir(path.resolve(__dirname, './src/locales'))
+    await builder.cleanup()
+    sinon.restore()
+  })
+
   it('works as a broccoli plugin', async () => {
-    const subprocess = await execa.command('yarn test:broccoli')
+    await builder.build()
 
     const enTranslation = await fs.readJson(
       path.resolve(__dirname, './src/locales/en/translation.json')
@@ -35,6 +52,8 @@ describe('broccoli plugin', function () {
     }
 
     assert.deepEqual(enTranslation, {
+      eighth_one: '',
+      eighth_other: '',
       fifth_male: '',
       first: '',
       fourth: '',
@@ -48,6 +67,9 @@ describe('broccoli plugin', function () {
     })
 
     assert.deepEqual(frTranslation, {
+      eighth_one: '',
+      eighth_many: '',
+      eighth_other: '',
       fifth_male: '',
       first: '',
       fourth: '',

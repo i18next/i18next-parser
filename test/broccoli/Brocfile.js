@@ -1,16 +1,18 @@
+const path = require('path')
 const Funnel = require('broccoli-funnel')
-const i18nextParser = require('../../dist/index').broccoli
+const i18nextParser = require('../../src/index').broccoli
 
-const appRoot = 'src'
+const appRoot = path.resolve(__dirname, 'src')
 
-let i18n = new Funnel(appRoot, {
+const filesToParse = new Funnel(appRoot, {
   files: ['handlebars.hbs', 'javascript.js'],
-  annotation: 'i18next-parser',
+  annotation: 'files for i18next-parser',
 })
 
-i18n = new i18nextParser([i18n], {
-  output: 'src/locales/$LOCALE/$NAMESPACE.json',
+const i18n = new i18nextParser([filesToParse], {
+  output: path.resolve(__dirname, 'src/locales/$LOCALE/$NAMESPACE.json'),
   sort: true,
+  silent: true,
 })
 
 module.exports = i18n
