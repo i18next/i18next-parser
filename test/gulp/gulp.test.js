@@ -13,11 +13,15 @@ describe('gulp plugin', function () {
 
   beforeEach(async () => {
     await fs.emptyDir(path.resolve(__dirname, './locales'))
+    sinon.replace(Intl, 'PluralRules', PluralRulesMock)
+  })
+
+  afterEach(async () => {
+    await fs.emptyDir(path.resolve(__dirname, './locales'))
+    sinon.restore()
   })
 
   it('works as a gulp plugin', async () => {
-    sinon.replace(Intl, 'PluralRules', PluralRulesMock)
-
     const gulpStream = gulp.task('i18next')()
 
     await pEvent(gulpStream, 'end')
