@@ -96,9 +96,6 @@ describe('CLI', function () {
       'yarn test:cli cli/**/*.{ts,jsx} --fail-on-warnings'
     )
 
-    assert.include(
-      subprocess.stdout,
-      '0 files were parsed'
-    )
+    assert.include(subprocess.stdout, '0 files were parsed')
   })
 })
