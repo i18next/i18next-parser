@@ -116,6 +116,7 @@ describe('gulp plugin', function () {
       bar: '',
       "don't split {{on}}": "don't split {{on}}",
       fifth_one: '',
+      fifth_many: '',
       fifth_other: '',
       first: '',
       foo: '',
@@ -125,6 +126,7 @@ describe('gulp plugin', function () {
       third: {
         first_one:
           'Hello <1>{{name}}</1>, you have {{count}} unread message. <5>Go to messages</5>.',
+        first_many: "Hello <1>{{name}}</1>, you have {{count}} unread message. <5>Go to messages</5>.",
         first_other:
           'Hello <1>{{name}}</1>, you have {{count}} unread message. <5>Go to messages</5>.',
         second: " <1>Hello,</1> this shouldn't be trimmed.",
