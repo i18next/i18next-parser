@@ -26,6 +26,7 @@
     "url": "https://github.com/i18next/i18next-parser"
   },
   "dependencies": {
+    "@babel/runtime": "^7.15.4",
     "broccoli-plugin": "^4.0.5",
     "cheerio": "^1.0.0-rc.2",
     "colors": "~1.4.0",
