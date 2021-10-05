@@ -48,12 +48,6 @@ yarn test:cli --fail-on-warnings
 yarn test:cli "test/cli/**/*.{js,jsx}"
 ```
 
-To test gulp specifically:
-
-```
-yarn test:gulp
-```
-
 To test broccoli specifically:
 
 ```
