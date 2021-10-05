@@ -48,12 +48,6 @@ yarn test:cli --fail-on-warnings
 yarn test:cli "test/cli/**/*.{js,jsx}"
 ```
 
-To test broccoli specifically:
-
-```
-yarn test:broccoli
-```
-
 ## Deploy
 
 - update `package.json` version

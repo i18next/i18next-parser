@@ -17,7 +17,6 @@
     "coverage": "nyc --reporter=lcov --reporter=text yarn test",
     "test": "mocha -r @babel/register -r @babel/polyfill --recursive test/*.test.js test/**/*.test.js",
     "test:cli": "yarn -s build && ./bin/cli.js -c test/cli/i18next-parser.config.js",
-    "test:broccoli": "yarn -s build && broccoli build --brocfile-path test/broccoli/Brocfile.js",
     "watch": "babel src -d dist -w",
     "prettify": "prettier --write \"{src,test}/**/*.js\"",
     "build": "babel src -d dist",
