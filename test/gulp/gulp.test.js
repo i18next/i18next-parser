@@ -1,14 +1,26 @@
 import path from 'path'
 import { assert } from 'chai'
-import execa from 'execa'
+import sinon from 'sinon'
 import fs from 'fs-extra'
+import pEvent from 'p-event'
+import gulp from 'gulp'
+import './gulpfile.js'
+import PluralRulesMock from '../Intl.PluralRules.mock.js'
 
 describe('gulp plugin', function () {
   // test execution time depends on I/O
   this.timeout(0)
 
+  beforeEach(async () => {
+    await fs.emptyDir(path.resolve(__dirname, './locales'))
+  })
+
   it('works as a gulp plugin', async () => {
-    const subprocess = await execa.command('yarn test:gulp')
+    sinon.replace(Intl, 'PluralRules', PluralRulesMock)
+
+    const gulpStream = gulp.task('i18next')()
+
+    await pEvent(gulpStream, 'end')
 
     const enReact = await fs.readJson(
       path.resolve(__dirname, './locales/en/react.json')
@@ -126,7 +138,8 @@ describe('gulp plugin', function () {
       third: {
         first_one:
           'Hello <1>{{name}}</1>, you have {{count}} unread message. <5>Go to messages</5>.',
-        first_many: "Hello <1>{{name}}</1>, you have {{count}} unread message. <5>Go to messages</5>.",
+        first_many:
+          'Hello <1>{{name}}</1>, you have {{count}} unread message. <5>Go to messages</5>.',
         first_other:
           'Hello <1>{{name}}</1>, you have {{count}} unread message. <5>Go to messages</5>.',
         second: " <1>Hello,</1> this shouldn't be trimmed.",
