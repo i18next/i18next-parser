@@ -47,8 +47,8 @@ export default class i18nextParser extends Plugin {
             .on('finish', function () {
               if (!this.options.silent) {
                 console.log()
+                console.log('  Stats:  '.yellow + count + ' files were parsed')
               }
-              console.log('  Stats:  '.yellow + count + ' files were parsed')
 
               Promise.all(files).then(() => {
                 resolve(files)
