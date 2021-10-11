@@ -2,7 +2,7 @@ import colors from 'colors'
 import fse from 'fs-extra'
 import path from 'path'
 import Plugin from 'broccoli-plugin'
-import i18nTransform from '../dist/transform'
+import i18nTransform from './transform'
 import rsvp from 'rsvp'
 import sort from 'gulp-sort'
 import vfs from 'vinyl-fs'
@@ -47,8 +47,8 @@ export default class i18nextParser extends Plugin {
             .on('finish', function () {
               if (!this.options.silent) {
                 console.log()
+                console.log('  Stats:  '.yellow + count + ' files were parsed')
               }
-              console.log('  Stats:  '.yellow + count + ' files were parsed')
 
               Promise.all(files).then(() => {
                 resolve(files)

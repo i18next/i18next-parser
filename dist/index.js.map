@@ -1,1 +1,0 @@
-{"version":3,"sources":["../src/index.js"],"names":[],"mappings":"+mBAAA;AACA;AACA","sourcesContent":["export { default as broccoli } from './broccoli'\nexport { default as parser } from './parser'\nexport { default as transform } from './transform'\nexport { default as gulp } from './transform'\n"],"file":"index.js"}

@@ -38,39 +38,21 @@ Make sure the tests pass:
 yarn test
 ```
 
-To test the CLI:
+The CLI, the gulp plugin and the broccoli plugin are also tested but, as thoses tests are highly I/O dependent, you might encounter timeout issue depending on your configuration. You might want to raise the timeout allowed (search for `this.timeout(5000)`)
+
+To test the CLI specifically:
 
 ```
-yarn link
-cd test
-i18next manual/**/*.html  -c i18next-parser.config.js
-i18next manual/**/*.html  -c i18next-parser.config.js --fail-on-warnings
-i18next manual/**/*.{js,jsx} --fail-on-warnings
-```
-
-To test gulp:
-
-```
-yarn global add gulp@next
-cd test
-gulp i18next
-```
-
-To test broccoli:
-
-```
-yarn global add broccoli-cli
-cd test
-rm -rf dist && broccoli build dist
+yarn test:cli
+yarn test:cli --fail-on-warnings
+yarn test:cli "test/cli/**/*.{js,jsx}"
 ```
 
 ## Deploy
 
-- `yarn build`
 - update `package.json` version
 - create commit and add version tag
 - `npm publish`
-
 
 ## `0.x` vs `1.x`
 

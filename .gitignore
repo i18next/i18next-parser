@@ -35,3 +35,11 @@ test/manual/fr
 # coverage
 .nyc_output
 coverage
+
+# build artifacts
+dist/
+
+# test artifacts
+test/broccoli/src/locales
+test/gulp/locales
+test/cli/locales

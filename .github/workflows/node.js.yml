@@ -1,7 +1,7 @@
 name: Node.js CI
 
 on:
-  push: 
+  push:
   pull_request:
 
 jobs:
@@ -15,12 +15,12 @@ jobs:
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v2
       with:
-        cache: npm
+        cache: yarn
         node-version: ${{ matrix.node-version }}
-    - run: npm install
-    - run: npm run build
-    - run: npm run coverage
+    - run: yarn install
+    - run: yarn build
+    - run: yarn coverage
     - uses: codecov/codecov-action@v2
-      with: 
+      with:
         name: node-${{ matrix.node-version }}
         fail_ci_if_error: false
