@@ -325,7 +325,10 @@ describe('JavascriptLexer', () => {
   })
 
   it('extracts count options', () => {
-    const Lexer = new JavascriptLexer({ typeMap: { CountType: { count: '' } } })
+    const Lexer = new JavascriptLexer({
+      typeMap: { CountType: { count: '' } },
+      parseGenerics: true,
+    })
 
     const content = 'i18n.t<{count: number}>("key_count");'
     assert.deepEqual(Lexer.extract(content, 'file.ts'), [
