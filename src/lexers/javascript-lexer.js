@@ -161,7 +161,7 @@ export default class JavascriptLexer extends BaseLexer {
         return null
       }
 
-      if (this.parseGenerics) {
+      if (this.parseGenerics && node.typeArguments) {
         let typeArgument = node.typeArguments.shift()
 
         const parseTypeArgument = (typeArg) => {
@@ -184,9 +184,9 @@ export default class JavascriptLexer extends BaseLexer {
             }
           }
         }
-      }
 
-      parseTypeArgument(typeArgument)
+        parseTypeArgument(typeArgument)
+      }
 
       let optionsArgument = node.arguments.shift()
 
