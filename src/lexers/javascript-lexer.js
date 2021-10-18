@@ -8,6 +8,7 @@ export default class JavascriptLexer extends BaseLexer {
     this.callPattern = '(?<=^|\\s|\\.)' + this.functionPattern() + '\\(.*\\)'
     this.functions = options.functions || ['t']
     this.attr = options.attr || 'i18nKey'
+    this.typeMap = options.typeMap || {}
   }
 
   createCommentNodeParser() {
@@ -158,6 +159,31 @@ export default class JavascriptLexer extends BaseLexer {
         )
         return null
       }
+
+      let typeArgument = node.typeArguments.shift()
+
+      const parseTypeArgument = (typeArg) => {
+        if (typeArg) {
+          if (typeArg.kind === ts.SyntaxKind.TypeLiteral) {
+            for (const member of typeArg.members) {
+              entry[member.name.text] = ''
+            }
+          } else if (typeArg.kind === ts.SyntaxKind.TypeReference) {
+            if (typeArg.typeName.kind === ts.SyntaxKind.Identifier) {
+              const typeName = typeArg.typeName.text
+              if (typeName in this.typeMap) {
+                Object.assign(entry, this.typeMap[typeName])
+              }
+            }
+          } else {
+            if (Array.isArray(typeArg.types)) {
+              for (const tp of typeArgument.types) parseTypeArgument(tp)
+            }
+          }
+        }
+      }
+
+      parseTypeArgument(typeArgument)
 
       let optionsArgument = node.arguments.shift()
 

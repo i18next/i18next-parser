@@ -323,4 +323,45 @@ describe('JavascriptLexer', () => {
 
     assert.equal(warningCount, 1)
   })
+
+  it('extracts count options', () => {
+    const Lexer = new JavascriptLexer({ typeMap: { CountType: { count: '' } } })
+
+    const content = 'i18n.t<{count: number}>("key_count");'
+    assert.deepEqual(Lexer.extract(content, 'file.ts'), [
+      {
+        key: 'key_count',
+        count: '',
+      },
+    ])
+
+    const content2 = `type CountType = {count : number};
+  i18n.t<CountType>("key_count");`
+    assert.deepEqual(Lexer.extract(content2, 'file.ts'), [
+      {
+        count: '',
+        key: 'key_count',
+      },
+    ])
+
+    const content3 = `type CountType = {count : number};
+     i18n.t<CountType & {my_custom: number}>("key_count");`
+    assert.deepEqual(Lexer.extract(content3, 'file.ts'), [
+      {
+        key: 'key_count',
+        count: '',
+        my_custom: '',
+      },
+    ])
+
+    const content4 = `type CountType = {count : number};
+     i18n.t<CountType | {my_custom: number}>("key_count");`
+    assert.deepEqual(Lexer.extract(content4, 'file.ts'), [
+      {
+        key: 'key_count',
+        count: '',
+        my_custom: '',
+      },
+    ])
+  })
 })
