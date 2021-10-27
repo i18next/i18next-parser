@@ -43,6 +43,12 @@ export default class i18nTransform extends Transform {
     }
 
     this.options = { ...this.defaults, ...options }
+    this.options.i18nextOptions = {
+      ...options.i18nextOptions,
+      pluralSeparator: this.options.pluralSeparator,
+      nsSeparator: this.options.namespaceSeparator
+    }
+
     if (this.options.keySeparator === false) {
       this.options.keySeparator = '__!NO_KEY_SEPARATOR!__'
     }
@@ -60,9 +66,8 @@ export default class i18nTransform extends Transform {
     this.localeRegex = /\$LOCALE/g
     this.namespaceRegex = /\$NAMESPACE/g
 
-    i18next.init({
-      pluralSeparator: this.options.pluralSeparator,
-    })
+    this.i18next = i18next.createInstance()
+    this.i18next.init(this.options.i18nextOptions)
   }
 
   error(error) {
@@ -174,7 +179,7 @@ export default class i18nTransform extends Transform {
       // generates plurals according to i18next rules: key_zero, key_one, key_two, key_few, key_many and key_other
       for (const entry of this.entries) {
         if (entry.count !== undefined) {
-          i18next.services.pluralResolver
+          this.i18next.services.pluralResolver
             .getSuffixes(locale, { ordinal: entry.ordinal })
             .forEach((suffix) => {
               transformEntry(entry, suffix)

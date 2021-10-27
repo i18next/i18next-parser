@@ -1380,6 +1380,60 @@ describe('parser', () => {
       i18nextParser.end(fakeFile)
     })
 
+    it('generates plurals according to compatibilityJSON value', (done) => {
+      let result
+      const i18nextParser = new i18nTransform({
+        i18nextOptions: { compatibilityJSON: 'v3' }
+      })
+      const fakeFile = new Vinyl({
+        contents: Buffer.from("t('test {{count}}', { count: 1 })"),
+        path: 'file.js',
+      })
+
+      i18nextParser.on('data', (file) => {
+        if (file.relative.endsWith(enLibraryPath)) {
+          result = JSON.parse(file.contents)
+        }
+      })
+      i18nextParser.once('end', () => {
+        assert.deepEqual(result, {
+          'test {{count}}': '',
+          'test {{count}}_plural': '',
+        })
+        done()
+      })
+
+      i18nextParser.end(fakeFile)
+    })
+
+    it('generates plurals according to compatibilityJSON value for languages with multiple plural forms', (done) => {
+      let result
+      const i18nextParser = new i18nTransform({ locales: ['ar'], i18nextOptions: { compatibilityJSON: 'v3'} })
+      const fakeFile = new Vinyl({
+        contents: Buffer.from("t('test {{count}}', { count: 1 })"),
+        path: 'file.js',
+      })
+
+      i18nextParser.on('data', (file) => {
+        if (file.relative.endsWith(arLibraryPath)) {
+          result = JSON.parse(file.contents)
+        }
+      })
+      i18nextParser.once('end', () => {
+        assert.deepEqual(result, {
+          'test {{count}}_0': '',
+          'test {{count}}_1': '',
+          'test {{count}}_2': '',
+          'test {{count}}_3': '',
+          'test {{count}}_4': '',
+          'test {{count}}_5': '',
+        })
+        done()
+      })
+
+      i18nextParser.end(fakeFile)
+    })
+
     it('generates one plural key for unknow languages', (done) => {
       let result
       const i18nextParser = new i18nTransform({ locales: ['unknown'] })
