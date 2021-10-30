@@ -3,9 +3,9 @@
 
 
 "@babel/cli@^7.0.0":
-  version "7.15.7"
-  resolved "https://registry.yarnpkg.com/@babel/cli/-/cli-7.15.7.tgz#62658abedb786d09c1f70229224b11a65440d7a1"
-  integrity sha512-YW5wOprO2LzMjoWZ5ZG6jfbY9JnkDxuHDwvnrThnuYtByorova/I0HNXJedrUfwuXFQfYOjcqDA4PU3qlZGZjg==
+  version "7.16.0"
+  resolved "https://registry.yarnpkg.com/@babel/cli/-/cli-7.16.0.tgz#a729b7a48eb80b49f48a339529fc4129fd7bcef3"
+  integrity sha512-WLrM42vKX/4atIoQB+eb0ovUof53UUvecb4qGjU2PDDWRiZr50ZpiV8NpcLo7iSxeGYrRG0Mqembsa+UrTAV6Q==
   dependencies:
     commander "^4.0.1"
     convert-source-map "^1.1.0"
@@ -982,6 +982,13 @@
   version "7.13.17"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.13.17.tgz#8966d1fc9593bf848602f0662d6b4d0069e3a7ec"
   integrity sha512-NCdgJEelPTSh+FEFylhnP1ylq848l1z9t9N0j1Lfbcw0+KXGjsTvUmkxy+voLLXB5SOKMbLLx4jxYliGrYQseA==
+  dependencies:
+    regenerator-runtime "^0.13.4"
+
+"@babel/runtime@^7.15.4":
+  version "7.15.4"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.15.4.tgz#fd17d16bfdf878e6dd02d19753a39fa8a8d9c84a"
+  integrity sha512-99catp6bHCaxr4sJ/DbTGgHS4+Rs2RVd2g7iOap6SLGPDknRK9ztKNsE/Fg6QhSeh1FGE5f6gHGQmvvn3I3xhw==
   dependencies:
     regenerator-runtime "^0.13.4"
 
@@ -3204,9 +3211,9 @@ human-signals@^2.1.0:
   integrity sha512-B4FFZ6q/T2jhhksgkbEW3HBvWIfDW85snkQgawt07S7J5QXTk6BkNV+0yAeZrM5QpMAdYlocGoljn0sJ/WQkFw==
 
 husky@>=7.0.2:
-  version "7.0.2"
-  resolved "https://registry.yarnpkg.com/husky/-/husky-7.0.2.tgz#21900da0f30199acca43a46c043c4ad84ae88dff"
-  integrity sha512-8yKEWNX4z2YsofXAMT7KvA1g8p+GxtB1ffV8XtpAEGuXNAbCV5wdNKH+qTpw8SM9fh4aMPDR+yQuKfgnreyZlg==
+  version "7.0.4"
+  resolved "https://registry.yarnpkg.com/husky/-/husky-7.0.4.tgz#242048245dc49c8fb1bf0cc7cfb98dd722531535"
+  integrity sha512-vbaCKN2QLtP/vD4yvs6iz6hBEo6wkSzs8HpRah1Z6aGmF2KW5PdYuAd7uX5a+OyBZHBhd+TFLqgjUgytQr4RvQ==
 
 i18next@^21.2.0:
   version "21.3.3"
@@ -3764,9 +3771,9 @@ lines-and-columns@^1.1.6:
   integrity sha1-HADHQ7QzzQpOgHWPe2SldEDZ/wA=
 
 lint-staged@>=11.1.2:
-  version "11.2.3"
-  resolved "https://registry.yarnpkg.com/lint-staged/-/lint-staged-11.2.3.tgz#fc3f4569cc4f46553309dfc1447b8aef69f744fb"
-  integrity sha512-Tfmhk8O2XFMD25EswHPv+OYhUjsijy5D7liTdxeXvhG2rsadmOLFtyj8lmlfoFFXY8oXWAIOKpoI+lJe1DB1mw==
+  version "11.2.6"
+  resolved "https://registry.yarnpkg.com/lint-staged/-/lint-staged-11.2.6.tgz#f477b1af0294db054e5937f171679df63baa4c43"
+  integrity sha512-Vti55pUnpvPE0J9936lKl0ngVeTdSZpEdTNhASbkaWX7J5R9OEifo1INBGQuGW4zmy6OG+TcWPJ3m5yuy5Q8Tg==
   dependencies:
     cli-truncate "2.1.0"
     colorette "^1.4.0"
@@ -4027,9 +4034,9 @@ mktemp@~0.4.0:
   integrity sha1-bQUVYRyKjITkhKogABKbmOmB/ws=
 
 mocha@^9.0.0:
-  version "9.1.2"
-  resolved "https://registry.yarnpkg.com/mocha/-/mocha-9.1.2.tgz#93f53175b0f0dc4014bd2d612218fccfcf3534d3"
-  integrity sha512-ta3LtJ+63RIBP03VBjMGtSqbe6cWXRejF9SyM9Zyli1CKZJZ+vfCTj3oW24V7wAphMJdpOFLoMI3hjJ1LWbs0w==
+  version "9.1.3"
+  resolved "https://registry.yarnpkg.com/mocha/-/mocha-9.1.3.tgz#8a623be6b323810493d8c8f6f7667440fa469fdb"
+  integrity sha512-Xcpl9FqXOAYqI3j79pEtHBBnQgVXIhpULjGQa7DVb0Po+VzmSIK9kanAiWLHoRR/dbZ2qpdPshuXr8l1VaHCzw==
   dependencies:
     "@ungap/promise-all-settled" "1.1.2"
     ansi-colors "4.1.1"
@@ -5700,9 +5707,9 @@ typedarray@^0.0.6:
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
 typescript@^4.2.4:
-  version "4.4.3"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.4.3.tgz#bdc5407caa2b109efd4f82fe130656f977a29324"
-  integrity sha512-4xfscpisVgqqDfPaJo5vkd+Qd/ItkoagnHpufr+i2QCHBsNYp+G7UAoyFl8aPtx879u38wPV65rZ8qbGZijalA==
+  version "4.4.4"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.4.4.tgz#2cd01a1a1f160704d3101fd5a58ff0f9fcb8030c"
+  integrity sha512-DqGhF5IKoBl8WNf8C1gu8q0xZSInh9j1kJJMqT3a94w1JzVaBU4EXOSMrz9yDqMT0xt3selp83fuFMQ0uzv6qA==
 
 uglify-js@^3.1.4:
   version "3.9.1"
