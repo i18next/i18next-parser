@@ -1,33 +1,31 @@
 {
-  "author": "Karel Ledru",
-  "description": "Command Line tool for i18next",
   "name": "i18next-parser",
+  "description": "Command Line tool for i18next",
   "version": "5.0.0",
   "license": "MIT",
+  "author": "Karel Ledru",
   "main": "dist/index.js",
   "bin": {
     "i18next": "./bin/cli.js"
   },
+  "engines": {
+    "node": ">=12",
+    "npm": ">=6",
+    "yarn": ">=1"
+  },
   "scripts": {
-    "coverage": "nyc --reporter=lcov --reporter=text npm run test",
+    "coverage": "nyc --reporter=lcov --reporter=text yarn test",
     "test": "mocha -r @babel/register -r @babel/polyfill --recursive test/*.test.js test/**/*.test.js",
+    "test:cli": "yarn -s build && ./bin/cli.js -c test/cli/i18next-parser.config.js",
     "watch": "babel src -d dist -w",
-    "build": "prettier --write \"{src,test}/**/*.js\" && babel src -d dist"
-  },
-  "prettier": {
-    "trailingComma": "es5",
-    "semi": false,
-    "singleQuote": true,
-    "quoteProps": "as-needed",
-    "jsxSingleQuote": true
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/i18next/i18next-parser"
+    "prettify": "prettier --write \"{src,test}/**/*.js\"",
+    "build": "babel src -d dist",
+    "prepare": "husky install",
+    "prepublishOnly": "yarn -s prettify && yarn -s build"
   },
   "dependencies": {
     "@babel/runtime": "^7.15.4",
-    "broccoli-plugin": "^4.0.5",
+    "broccoli-plugin": "^4.0.7",
     "cheerio": "^1.0.0-rc.2",
     "colors": "~1.4.0",
     "commander": "~8.2.0",
@@ -45,12 +43,6 @@
     "vinyl-fs": "^3.0.2",
     "vue-template-compiler": "^2.6.11"
   },
-  "optionalDependencies": {},
-  "engines": {
-    "node": ">=12",
-    "npm": ">=6",
-    "yarn": ">=1"
-  },
   "devDependencies": {
     "@babel/cli": "^7.0.0",
     "@babel/core": "^7.0.0",
@@ -59,15 +51,29 @@
     "@babel/polyfill": "^7.0.0",
     "@babel/preset-env": "^7.0.0",
     "@babel/register": "^7.0.0",
-    "broccoli": "^3.5.1",
-    "broccoli-funnel": "^3.0.4",
+    "broccoli": "^3.5.2",
+    "broccoli-cli": "^1.0.0",
+    "broccoli-funnel": "^3.0.8",
     "chai": "^4.1.2",
-    "gulp": "^4.0.0",
+    "execa": "^5.1.1",
+    "gulp": "^4.0.2",
+    "husky": ">=7.0.2",
+    "lint-staged": ">=11.1.2",
     "mocha": "^9.0.0",
     "nyc": "^15.1.0",
+    "p-event": "^4.2.0",
     "prettier": "2.4.1",
     "sinon": "^11.1.1"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/i18next/i18next-parser"
+  },
+  "files": [
+    "bin/",
+    "dist/",
+    "i18next-parser.config.js"
+  ],
   "keywords": [
     "gulpplugin",
     "i18next",

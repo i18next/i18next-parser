@@ -5,14 +5,15 @@
 This will create the files in the specified folder.
 
 ### Command line
+
 ```
 $ i18next /path/to/file/or/dir -o /translations/$LOCALE/$NAMESPACE.json
-$ i18next /path/to/file/or/dir:/translations/$LOCALE/$NAMESPACE.json 
+$ i18next /path/to/file/or/dir:/translations/$LOCALE/$NAMESPACE.json
 ```
 
 ### Gulp
 
-When using Gulp, note that the files are not created until `dest()` is called. 
+When using Gulp, note that the files are not created until `dest()` is called.
 
 ```js
 .pipe(i18next({ output: 'translations/$LOCALE/$NAMESPACE.json' }))
@@ -39,6 +40,7 @@ Add the `locales` option to the config file:
 ```
 
 ### Gulp
+
 ```js
 .pipe(i18next({ locales: ['en', 'de', 'sp'] })
 ```
@@ -112,23 +114,72 @@ _e "key"
 ```
 
 Add the `function` property to the related lexer in the config file:
+
 ```js
 {
   lexers: {
-    js: [{
-      lexer: 'JavascriptLexer',
-      functions: ['t', 'TAPi18n.__', '__']
-    }]
-  }  
+    js: [
+      {
+        lexer: 'JavascriptLexer',
+        functions: ['t', 'TAPi18n.__', '__'],
+      },
+    ]
+  }
+}
+```
+
+Add the `parseGenerics` (as well as `typeMap`) if you want to parse the data from the generic types in typescript
+
+```js
+{
+  lexers: {
+    js: [
+      {
+        lexer: 'JavascriptLexer',
+        parseGenerics: true,
+        typeMap: { CountType: { count: '' } },
+      },
+    ]
+  }
+}
+```
+
+So that the parser can detect typescript code like :
+
+```ts
+const MyKey T<{count: number}>('my_key');
+
+type CountType = {count : number};
+const MyOtherKey = T<CountType>('my_other_key');
+
+i18next.t(MyKey, {count: 1});
+i18next.t(MyOtherKey, {count: 2});
+```
+
+and generate the correct keys
+
+```js
+{
+  lexers: {
+    js: [
+      {
+        lexer: 'JavascriptLexer',
+        functions: ['t', 'TAPi18n.__', '__'],
+      },
+    ]
+  }
 }
 ```
 
 Please note that:
+
 - We don't match the closing parenthesis, as you might want to pass arguments to your translation function;
 - The parser is smart about escaped quotes (single or double) you may have in your key.
 
-## Work with Meteor TAP-i18N (gulp)**
+## Work with Meteor TAP-i18N (gulp)\*\*
+
 en', 'de', 'sp
+
 ```js
 .pipe(i18next({
     output: "i18n/$LOCALE/$NAMESPACE.$LOCALE.i18n.json",
