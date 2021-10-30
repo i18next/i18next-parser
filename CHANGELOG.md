@@ -1,5 +1,9 @@
 # Changelog
 
+# 5.1.0
+
+- Typescript: Parse type details #457 #454
+
 # 5.0.0
 
 - BREAKING: Format Json output conforming to i18next JSON v4 (see: https://www.i18next.com/misc/json-format) #423

@@ -176,9 +176,7 @@ Please note that:
 - We don't match the closing parenthesis, as you might want to pass arguments to your translation function;
 - The parser is smart about escaped quotes (single or double) you may have in your key.
 
-## Work with Meteor TAP-i18N (gulp)\*\*
-
-en', 'de', 'sp
+## Work with Meteor TAP-i18N (gulp)
 
 ```js
 .pipe(i18next({
