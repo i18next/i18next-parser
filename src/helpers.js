@@ -118,19 +118,22 @@ function dotPathToHash(entry, target = {}, options = {}) {
  * Takes a `source` hash and makes sure its value
  * is pasted in the `target` hash, if the target
  * hash has the corresponding key (or if `options.keepRemoved` is true).
- * @returns An `{ old, new, mergeCount, pullCount, oldCount }` object.
+ * @returns An `{ old, new, mergeCount, pullCount, oldCount, reset, resetCount }` object.
  * `old` is a hash of values that have not been merged into `target`.
  * `new` is `target`. `mergeCount` is the number of keys merged into
  * `new`, `pullCount` is the number of context and plural keys added to
  * `new` and `oldCount` is the number of keys that were either added to `old` or
  * `new` (if `options.keepRemoved` is true and `target` didn't have the corresponding
- * key).
+ * key) and `reset` is the keys that were reset due to not matching default values,
+ *  and `resetCount` which is the number of keys reset.
  */
-function mergeHashes(source, target, options = {}) {
+function mergeHashes(source, target, options = {}, resetValues = {}) {
   let old = {}
+  let reset = {}
   let mergeCount = 0
   let pullCount = 0
   let oldCount = 0
+  let resetCount = 0
 
   const keepRemoved = options.keepRemoved || false
   const pluralSeparator = options.pluralSeparator || '_'
@@ -148,12 +151,25 @@ function mergeHashes(source, target, options = {}) {
         old[key] = nested.old
       }
     } else if (target[key] !== undefined) {
-      if (typeof source[key] === 'string' || Array.isArray(source[key])) {
-        target[key] = source[key]
-        mergeCount += 1
-      } else {
+      if (typeof source[key] !== 'string' && !Array.isArray(source[key])) {
         old[key] = source[key]
         oldCount += 1
+      } else {
+        if (
+          (options.resetAndFlag &&
+            !isPlural(key) &&
+            typeof source[key] === 'string' &&
+            source[key] !== target[key]) ||
+          resetValues[key]
+        ) {
+          old[key] = source[key]
+          oldCount += 1
+          reset[key] = true
+          resetCount += 1
+        } else {
+          target[key] = source[key]
+          mergeCount += 1
+        }
       }
     } else {
       // support for plural in keys
@@ -183,7 +199,15 @@ function mergeHashes(source, target, options = {}) {
     }
   }
 
-  return { old, new: target, mergeCount, pullCount, oldCount }
+  return {
+    old,
+    new: target,
+    mergeCount,
+    pullCount,
+    oldCount,
+    reset,
+    resetCount,
+  }
 }
 
 /**
@@ -205,9 +229,16 @@ function transferValues(source, target) {
   }
 }
 
+const pluralSuffixes = ['zero', 'one', 'two', 'few', 'many', 'other']
+
+function isPlural(key) {
+  return pluralSuffixes.some((suffix) => key.endsWith(suffix))
+}
+
 function hasRelatedPluralKey(rawKey, source) {
-  const suffixes = ['zero', 'one', 'two', 'few', 'many', 'other']
-  return suffixes.some((suffix) => source[`${rawKey}${suffix}`] !== undefined)
+  return pluralSuffixes.some(
+    (suffix) => source[`${rawKey}${suffix}`] !== undefined
+  )
 }
 
 function getSingularForm(key, pluralSeparator) {
@@ -219,10 +250,8 @@ function getSingularForm(key, pluralSeparator) {
 }
 
 function getPluralSuffixPosition(key) {
-  const suffixes = ['zero', 'one', 'two', 'few', 'many', 'other']
-
-  for (let i = 0, len = suffixes.length; i < len; i++) {
-    if (key.endsWith(suffixes[i])) return i
+  for (let i = 0, len = pluralSuffixes.length; i < len; i++) {
+    if (key.endsWith(pluralSuffixes[i])) return i
   }
 
   return -1
