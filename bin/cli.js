@@ -15,6 +15,7 @@ program
 .option('-o, --output <path>', 'Path to the output directory (default: locales/$LOCALE/$NAMESPACE.json)')
 .option('-s, --silent', 'Disable logging to stdout')
 .option('--fail-on-warnings', 'Exit with an exit code of 1 on warnings')
+.option('--fail-on-update', 'Exit with an exit code of 1 when translations are updated (for CI purpose)')
 
 program.on('--help', function() {
   console.log('  Examples:')
@@ -41,6 +42,7 @@ try {
 
 config.output = program.opts().output || config.output || 'locales/$LOCALE/$NAMESPACE.json'
 config.failOnWarnings = program.opts().failOnWarnings || config.failOnWarnings || false
+config.failOnUpdate = program.opts().failOnUpdate || config.failOnUpdate || false
 
 var args = program.args || []
 var globs

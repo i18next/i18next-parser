@@ -51,6 +51,7 @@ Multiple globbing patterns are supported to specify complex file selections. You
 - **-o, --output <path>**: Path to the output directory (default: locales/$LOCALE/$NAMESPACE.json).
 - **-s, --silent**: Disable logging to stdout.
 - **--fail-on-warnings**: Exit with an exit code of 1 on warnings
+- **--fail-on-update**: Exit with an exit code of 1 when translations are updated (for CI purpose)
 
 ### Gulp
 
@@ -195,6 +196,9 @@ module.exports = {
 
   failOnWarnings: false,
   // Exit with an exit code of 1 on warnings
+
+  failOnUpdate: false,
+  // Exit with an exit code of 1 when translations are updated (for CI purpose)
 
   customValueTemplate: null
   // If you wish to customize the value output the value as an object, you can set your own format.

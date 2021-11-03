@@ -98,4 +98,16 @@ describe('CLI', function () {
 
     assert.include(subprocess.stdout, '0 files were parsed')
   })
+
+  it('works with `--fail-on-update` option', async () => {
+    try {
+      await execa.command('yarn test:cli --fail-on-update')
+    } catch (error) {
+      assert.strictEqual(error.exitCode, 1)
+      assert.include(
+        error.stdout.replace(),
+        'Some translations was updated and failOnUpdate option is enabled. Exiting...'
+      )
+    }
+  })
 })
