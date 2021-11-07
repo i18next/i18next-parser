@@ -3,6 +3,7 @@
 # 5.1.0
 
 - Typescript: Parse type details #457 #454
+-  Add fail-on-update option #471
 
 # 5.0.0
 

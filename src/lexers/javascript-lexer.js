@@ -181,7 +181,7 @@ export default class JavascriptLexer extends BaseLexer {
               Object.assign(entry, this.typeMap[typeName])
             }
           } else if (Array.isArray(typeArg.types)) {
-            typeArgument.types.forEach(tp => parseTypeArgument(tp))
+            typeArgument.types.forEach((tp) => parseTypeArgument(tp))
           }
         }
 
