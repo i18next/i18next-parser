@@ -51,6 +51,7 @@ export default class i18nTransform extends Transform {
     this.entries = []
 
     this.parserHadWarnings = false
+    this.parserHadUpdate = false
     this.parser = new Parser(this.options)
     this.parser.on('error', (error) => this.error(error))
     this.parser.on('warning', (warning) => this.warn(warning))
@@ -221,6 +222,14 @@ export default class i18nTransform extends Transform {
           console.log()
         }
 
+        if (this.options.failOnUpdate) {
+          const addCount = countWithPlurals - mergeCount
+          if (addCount + restoreCount + oldCount !== 0) {
+            this.parserHadUpdate = true
+            continue
+          }
+        }
+
         if (this.options.failOnWarnings && this.parserHadWarnings) {
           continue
         }
@@ -252,6 +261,14 @@ export default class i18nTransform extends Transform {
       this.emit(
         'error',
         'Warnings were triggered and failOnWarnings option is enabled. Exiting...'
+      )
+      process.exit(1)
+    }
+
+    if (this.options.failOnUpdate && this.parserHadUpdate) {
+      this.emit(
+        'error',
+        'Some translations was updated and failOnUpdate option is enabled. Exiting...'
       )
       process.exit(1)
     }
