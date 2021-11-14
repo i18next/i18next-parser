@@ -1,9 +1,14 @@
 # Changelog
 
+# 5.2.0
+
+- Add resetDefaultValueLocale option #451 
+- Update dependencies
+
 # 5.1.0
 
 - Typescript: Parse type details #457 #454
--  Add fail-on-update option #471
+- Add fail-on-update option #471
 
 # 5.0.0
 

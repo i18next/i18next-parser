@@ -1,7 +1,7 @@
 {
   "name": "i18next-parser",
   "description": "Command Line tool for i18next",
-  "version": "5.1.0",
+  "version": "5.2.0",
   "license": "MIT",
   "author": "Karel Ledru",
   "main": "dist/index.js",
