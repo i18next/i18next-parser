@@ -33,6 +33,7 @@ export default class i18nTransform extends Transform {
       namespaceSeparator: ':',
       pluralSeparator: '_',
       output: 'locales/$LOCALE/$NAMESPACE.json',
+      resetDefaultValueLocale: null,
       sort: false,
       useKeysAsDefaultValue: false,
       verbose: false,
@@ -126,8 +127,20 @@ export default class i18nTransform extends Transform {
   }
 
   _flush(done) {
-    for (const locale of this.options.locales) {
+    let maybeSortedLocales = this.options.locales
+    if (this.options.resetDefaultValueLocale) {
+      // ensure we process the reset locale first
+      maybeSortedLocales.sort((a) =>
+        a === this.options.resetDefaultValueLocale ? -1 : 1
+      )
+    }
+
+    // Tracks keys to reset by namespace
+    let resetValues = {}
+
+    for (const locale of maybeSortedLocales) {
       const catalog = {}
+      const resetAndFlag = this.options.resetDefaultValueLocale === locale
 
       let countWithPlurals = 0
       let uniqueCount = this.entries.length
@@ -194,7 +207,23 @@ export default class i18nTransform extends Transform {
           old: oldKeys,
           mergeCount,
           oldCount,
-        } = mergeHashes(existingCatalog, catalog[namespace], this.options)
+          reset: resetFlags,
+          resetCount,
+        } = mergeHashes(
+          existingCatalog,
+          catalog[namespace],
+          {
+            ...this.options,
+            resetAndFlag,
+          },
+          resetValues[namespace]
+        )
+
+        // record values to be reset
+        // assumes that the 'default' namespace is processed first
+        if (resetAndFlag && !resetValues[namespace]) {
+          resetValues[namespace] = resetFlags
+        }
 
         // restore old translations
         const { old: oldCatalog, mergeCount: restoreCount } = mergeHashes(
@@ -218,6 +247,9 @@ export default class i18nTransform extends Transform {
             console.log(`Unreferenced keys: ${oldCount}`)
           } else {
             console.log(`Removed keys: ${oldCount}`)
+          }
+          if (this.options.resetDefaultValueLocale) {
+            console.log(`Reset keys: ${resetCount}`)
           }
           console.log()
         }

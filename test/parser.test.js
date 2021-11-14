@@ -1,8 +1,9 @@
-import { assert } from 'chai'
+import { assert, expect } from 'chai'
 import Vinyl from 'vinyl'
 import fs from 'fs'
 import i18nTransform from '../src/transform'
 import path from 'path'
+import sinon from 'sinon'
 
 const enLibraryPath = path.normalize('en/translation.json')
 const arLibraryPath = path.normalize('ar/translation.json')
@@ -661,6 +662,129 @@ describe('parser', () => {
   })
 
   describe('options', () => {
+    describe('resetDefaultValueLocale', () => {
+      it('will not reset a key if a default value has not changed in the locale', (done) => {
+        const i18nextParser = new i18nTransform({
+          resetDefaultValueLocale: 'fr',
+          output: 'test/locales/$LOCALE/$NAMESPACE.json',
+          locales: ['en', 'ar', 'fr'],
+        })
+
+        const fakeFile = new Vinyl({
+          contents: Buffer.from(
+            `t('test_reset:key', {
+            defaultValue: 'defaultTranslation',
+          })`
+          ),
+          path: 'file.js',
+        })
+
+        let enResult, arResult
+        i18nextParser.on('data', (file) => {
+          if (file.relative.endsWith(path.normalize('en/test_reset.json'))) {
+            enResult = JSON.parse(file.contents)
+          } else if (
+            file.relative.endsWith(path.normalize('ar/test_reset.json'))
+          ) {
+            arResult = JSON.parse(file.contents)
+          }
+        })
+        i18nextParser.once('end', () => {
+          assert.deepEqual(enResult, {
+            key: 'en_translation',
+          })
+          assert.deepEqual(arResult, {
+            key: 'ar_translation',
+          })
+          done()
+        })
+
+        i18nextParser.end(fakeFile)
+      })
+
+      it('will reset a key if a default value has changed in the locale', (done) => {
+        const i18nextParser = new i18nTransform({
+          resetDefaultValueLocale: 'fr',
+          output: 'test/locales/$LOCALE/$NAMESPACE.json',
+          locales: ['en', 'ar', 'fr'],
+        })
+
+        const newString = 'newTranslation'
+
+        const fakeFile = new Vinyl({
+          contents: Buffer.from(
+            `t('test_reset:key', {
+            defaultValue: '${newString}',
+          })`
+          ),
+          path: 'file.js',
+        })
+
+        let enResult, arResult
+        i18nextParser.on('data', (file) => {
+          if (file.relative.endsWith(path.normalize('en/test_reset.json'))) {
+            enResult = JSON.parse(file.contents)
+          } else if (
+            file.relative.endsWith(path.normalize('ar/test_reset.json'))
+          ) {
+            arResult = JSON.parse(file.contents)
+          }
+        })
+        i18nextParser.once('end', () => {
+          assert.deepEqual(enResult, {
+            key: newString,
+          })
+          assert.deepEqual(arResult, {
+            key: newString,
+          })
+          done()
+        })
+
+        i18nextParser.end(fakeFile)
+      })
+    })
+
+    describe('verbose', () => {
+      beforeEach(() => {
+        sinon.spy(console, 'log')
+      })
+
+      afterEach(() => {
+        console.log.restore();
+      })
+
+      describe('with defaultResetLocale', () => {
+        it('logs the number of values reset', (done) => {
+          const i18nextParser = new i18nTransform({
+            verbose: true,
+            resetDefaultValueLocale: 'fr',
+            output: 'test/locales/$LOCALE/$NAMESPACE.json',
+            locales: ['en', 'fr'],
+          })
+
+          const newString = 'newTranslation'
+
+          const fakeFile = new Vinyl({
+            contents: Buffer.from(
+              `t('test_reset:key', {
+              defaultValue: '${newString}',
+            })`
+            ),
+            path: 'file.js',
+          })
+
+          i18nextParser.on('data', () => {})
+
+          i18nextParser.once('end', () => {
+            assert(console.log.calledWith('Reset keys: 1'))
+            done()
+          })
+
+          i18nextParser.end(fakeFile)
+        })
+      })
+    })
+
     it('handles output with $LOCALE and $NAMESPACE var', (done) => {
       let result
       const i18nextParser = new i18nTransform({

@@ -228,4 +228,40 @@ describe('mergeHashes helper function', () => {
     assert.strictEqual(res.oldCount, 0)
     done()
   })
+
+  it('resets keys to the target value if they are flagged in the resetKeys object', (done) => {
+    const source = { key1: 'key1', key2: 'key2' }
+    const target = { key1: 'changedKey1', key2: 'changedKey2' }
+    const res = mergeHashes(source, target, {}, { key1: true })
+
+    assert.deepEqual(res.new, { key1: 'changedKey1', key2: 'key2' })
+    assert.deepEqual(res.old, { key1: 'key1' })
+    assert.strictEqual(res.resetCount, 1)
+    done()
+  })
+
+  it('ignores keys if they are plurals', (done) => {
+    const source = { key1_one: 'key1', key2: 'key2' }
+    const target = { key1_one: 'changedKey1', key2: 'changedKey2' }
+    const res = mergeHashes(source, target, {}, { key1: true })
+
+    assert.deepEqual(res.new, { key1_one: 'key1', key2: 'key2' })
+    assert.deepEqual(res.old, {})
+    assert.strictEqual(res.resetCount, 0)
+    done()
+  })
+
+  it('resets and flags keys if the resetAndFlag value is set', (done) => {
+    const source = { key1: 'key1', key2: 'key2' }
+    const target = { key1: 'changedKey1', key2: 'key2' }
+    const res = mergeHashes(source, target, {
+      resetAndFlag: true,
+    })
+
+    assert.deepEqual(res.new, { key1: 'changedKey1', key2: 'key2' })
+    assert.deepEqual(res.old, { key1: 'key1' })
+    assert.deepEqual(res.reset, { key1: true })
+    assert.strictEqual(res.resetCount, 1)
+    done()
+  })
 })
