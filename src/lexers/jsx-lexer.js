@@ -134,6 +134,20 @@ export default class JsxLexer extends JavascriptLexer {
   nodeToString(node, sourceText) {
     const children = this.parseChildren.call(this, node.children, sourceText)
 
+    const flattenText = (children) =>
+      children
+        .reduce((res, c) => {
+          const last = res[0]
+          if (last?.type == 'text' && c.type == 'text') {
+            const newContent = last.content + c.content
+            last.content = newContent
+
+            return res
+          }
+          return [c].concat(res)
+        }, [])
+        .reverse()
+
     const elemsToString = (children) =>
       children
         .map((child, index) => {
@@ -157,7 +171,7 @@ export default class JsxLexer extends JavascriptLexer {
         })
         .join('')
 
-    return elemsToString(children)
+    return elemsToString(flattenText(children))
   }
 
   parseChildren(children = [], sourceText) {
