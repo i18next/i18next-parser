@@ -211,11 +211,16 @@ module.exports = {
   //   description: "${maxLength}", // t('my-key', {maxLength: 150})
   // }
 
-  resetDefaultValueLocale: null
+  resetDefaultValueLocale: null,
   // The locale to compare with default values to determine whether a default value has been changed.
   // If this is set and a default value differs from a translation in the specified locale, all entries
   // for that key across locales are reset to the default value, and existing translations are moved to
   // the `_old` file.
+
+  i18nextOptions: null
+  // If you wish to customize options in internally used i18next instance, you can define an object with any 
+  // configuration property supported by i18next (https://www.i18next.com/overview/configuration-options).
+  // { compatibilityJSON: 'v3' } can be used to generate v3 compatible plurals.
 }
 ```
 
