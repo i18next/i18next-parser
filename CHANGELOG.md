@@ -1,5 +1,10 @@
 # Changelog
 
+# 5.3.0
+
+- Add i18nextOptions option to generate v3 plurals #462
+- Update dependencies
+
 # 5.2.0
 
 - Add resetDefaultValueLocale option #451 
