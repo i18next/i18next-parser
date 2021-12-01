@@ -779,7 +779,7 @@ describe('parser', () => {
       })
 
       afterEach(() => {
-        console.log.restore()
+        console.log.restore();
       })
 
       describe('with defaultResetLocale', () => {
@@ -1412,7 +1412,7 @@ describe('parser', () => {
     it('generates plurals according to compatibilityJSON value', (done) => {
       let result
       const i18nextParser = new i18nTransform({
-        i18nextOptions: { compatibilityJSON: 'v3' },
+        i18nextOptions: { compatibilityJSON: 'v3' }
       })
       const fakeFile = new Vinyl({
         contents: Buffer.from("t('test {{count}}', { count: 1 })"),
@@ -1437,10 +1437,7 @@ describe('parser', () => {
 
     it('generates plurals according to compatibilityJSON value for languages with multiple plural forms', (done) => {
       let result
-      const i18nextParser = new i18nTransform({
-        locales: ['ar'],
-        i18nextOptions: { compatibilityJSON: 'v3' },
-      })
+      const i18nextParser = new i18nTransform({ locales: ['ar'], i18nextOptions: { compatibilityJSON: 'v3'} })
       const fakeFile = new Vinyl({
         contents: Buffer.from("t('test {{count}}', { count: 1 })"),
         path: 'file.js',
