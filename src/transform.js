@@ -46,7 +46,7 @@ export default class i18nTransform extends Transform {
     this.options.i18nextOptions = {
       ...options.i18nextOptions,
       pluralSeparator: this.options.pluralSeparator,
-      nsSeparator: this.options.namespaceSeparator
+      nsSeparator: this.options.namespaceSeparator,
     }
 
     if (this.options.keySeparator === false) {
@@ -108,6 +108,11 @@ export default class i18nTransform extends Transform {
 
     for (const entry of entries) {
       let key = entry.key
+
+      if (entry.keyPrefix) {
+        key = entry.keyPrefix + this.options.keySeparator + key
+      }
+
       const parts = key.split(this.options.namespaceSeparator)
 
       // make sure we're not pulling a 'namespace' out of a default value

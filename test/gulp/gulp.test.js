@@ -48,6 +48,18 @@ describe('gulp plugin', function () {
       assert.strictEqual(error.code, 'ENOENT')
     }
 
+    const enKeyPrefix = await fs.readJson(
+      path.resolve(__dirname, './locales/en/key-prefix.json')
+    )
+
+    try {
+      await fs.readJson(
+        path.resolve(__dirname, './locales/en/key-prefix_old.json')
+      )
+    } catch (error) {
+      assert.strictEqual(error.code, 'ENOENT')
+    }
+
     const enTranslation = await fs.readJson(
       path.resolve(__dirname, './locales/en/translation.json')
     )
@@ -112,6 +124,12 @@ describe('gulp plugin', function () {
     assert.deepEqual(enNamespace, {
       'test-1': '',
       'test-2': '',
+    })
+    assert.deepEqual(enKeyPrefix, {
+      'test-prefix': {
+        foo: '',
+        bar: '',
+      },
     })
     assert.deepEqual(enTranslation, {
       fifth: 'bar',

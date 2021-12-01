@@ -49,6 +49,17 @@ export default class JavascriptLexer extends BaseLexer {
     return keys
   }
 
+  setKeyPrefixes(keys) {
+    if (this.keyPrefix) {
+      return keys.map((key) => ({
+        ...key,
+        keyPrefix: this.keyPrefix,
+      }))
+    }
+
+    return keys
+  }
+
   extract(content, filename = '__default.js') {
     const keys = []
 
@@ -117,8 +128,25 @@ export default class JavascriptLexer extends BaseLexer {
       node.arguments.length
     ) {
       const { text, elements } = node.arguments[0]
+
+      // useTranslation
       if (text) {
         this.defaultNamespace = text
+        const optionsArgument = node.arguments[1]
+
+        if (
+          optionsArgument &&
+          optionsArgument.kind === ts.SyntaxKind.ObjectLiteralExpression
+        ) {
+          const node = optionsArgument.properties.find(
+            (p) => p.name.escapedText === 'keyPrefix'
+          )
+          if (node != null) {
+            const keyPrefixValue = node.initializer.text
+            this.keyPrefix = keyPrefixValue
+          }
+        }
+        // withTranslation
       } else if (elements && elements.length) {
         this.defaultNamespace = elements[0].text
       }
