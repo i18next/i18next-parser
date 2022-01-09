@@ -55,7 +55,7 @@
     "broccoli-cli": "^1.0.0",
     "broccoli-funnel": "^3.0.8",
     "chai": "^4.1.2",
-    "execa": "^5.1.1",
+    "execa": "^6.0.0",
     "gulp": "^4.0.2",
     "husky": ">=7.0.2",
     "lint-staged": ">=11.1.2",
