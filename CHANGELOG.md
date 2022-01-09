@@ -1,5 +1,9 @@
 # Changelog
 
+# 5.4.0
+
+- Set colors dependency to 1.4.0 #503
+
 # 5.3.0
 
 - Add i18nextOptions option to generate v3 plurals #462
@@ -7,7 +11,7 @@
 
 # 5.2.0
 
-- Add resetDefaultValueLocale option #451 
+- Add resetDefaultValueLocale option #451
 - Update dependencies
 
 # 5.1.0
@@ -46,17 +50,20 @@
 - Revert #361 #362
 - Update dependencies
 
-# 4.3.0  DO NOT USE THIS VERSION!
+# 4.3.0 DO NOT USE THIS VERSION!
 
 - Extract tagged templates in js and jsx lexers #376 #381
 - Support unicode escape sequence in json #361 #362
 - Update dependencies
+
 # 4.2.0
 
 - Improve warning for missing defaults #332
+
 # 4.1.1
 
 - Improve support for spread operator in JS #199
+
 # 4.0.1
 
 - Drop support for Node 10
@@ -103,7 +110,7 @@
 # 3.3.0
 
 - Fix customValueTemplate interpolation of ${key} #242
-- Extract options as third parameter when second parameter is default value string  #243 #241
+- Extract options as third parameter when second parameter is default value string #243 #241
 
 # 3.2.0
 
@@ -258,11 +265,9 @@
 
 - Trailing separator in translation keys wasn't handled properly (fix #20)
 
-
 ## 0.3.2
 
 - The translation key should be the first truthy match of the regex (fix #18)
-
 
 ## 0.3.1
 
