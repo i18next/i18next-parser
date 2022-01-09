@@ -46,7 +46,7 @@ export default class i18nTransform extends Transform {
     this.options.i18nextOptions = {
       ...options.i18nextOptions,
       pluralSeparator: this.options.pluralSeparator,
-      nsSeparator: this.options.namespaceSeparator
+      nsSeparator: this.options.namespaceSeparator,
     }
 
     if (this.options.keySeparator === false) {
