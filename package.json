@@ -27,7 +27,7 @@
     "@babel/runtime": "^7.15.4",
     "broccoli-plugin": "^4.0.7",
     "cheerio": "^1.0.0-rc.2",
-    "colors": "~1.4.0",
+    "colors": "1.4.2",
     "commander": "~8.3.0",
     "concat-stream": "~2.0.0",
     "eol": "^0.9.1",
