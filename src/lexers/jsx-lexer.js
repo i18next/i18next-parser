@@ -68,6 +68,15 @@ export default class JsxLexer extends JavascriptLexer {
       if (!attribute) {
         return undefined
       }
+
+      if (attribute.initializer.expression?.kind === ts.SyntaxKind.Identifier) {
+        this.emit(
+          'warning',
+          `Key is not a string literal: ${attribute.initializer.expression.text}`
+        )
+        return undefined
+      }
+
       return attribute.initializer.expression
         ? attribute.initializer.expression.text
         : attribute.initializer.text
