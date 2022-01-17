@@ -2366,6 +2366,22 @@ describe('parser', () => {
       i18nextParser.end(fakeFile)
     })
 
+    it('emits a `warning` event if a namespace contains a variable', (done) => {
+      const i18nextParser = new i18nTransform({
+        output: 'test/locales/$LOCALE/$NAMESPACE.json',
+      })
+      const fakeFile = new Vinyl({
+        contents: Buffer.from('<Trans i18nKey={variable} />'),
+        path: 'file.jsx',
+      })
+
+      i18nextParser.on('warning', (message) => {
+        assert.equal(message, 'Namespace is not a string literal: variable')
+        done()
+      })
+      i18nextParser.end(fakeFile)
+    })
+
     it('emits a `warning` event if a react value contains two variables', (done) => {
       const i18nextParser = new i18nTransform({
         output: 'test/locales/$LOCALE/$NAMESPACE.json',

@@ -267,6 +267,13 @@ describe('JsxLexer', () => {
         done()
       })
 
+      it('does not extract variable identifier from i18nKey as key', (done) => {
+        const Lexer = new JsxLexer()
+        const content = '<Trans i18nKey={variable} />'
+        assert.deepEqual(Lexer.extract(content), [])
+        done()
+      })
+
       it('extracts keys from user-defined key attributes from self-closing tags', (done) => {
         const Lexer = new JsxLexer({ attr: 'myIntlKey' })
         const content = '<Trans myIntlKey="first" count={count} />'
