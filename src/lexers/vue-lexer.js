@@ -1,4 +1,5 @@
-import BaseLexer from './base-lexer'
+import VueTemplateCompiler from 'vue-template-compiler'
+import BaseLexer from './base-lexer.js'
 import JavascriptLexer from './javascript-lexer.js'
 
 export default class VueLexer extends BaseLexer {
@@ -15,9 +16,7 @@ export default class VueLexer extends BaseLexer {
     Lexer.on('warning', (warning) => this.emit('warning', warning))
     keys = keys.concat(Lexer.extract(content))
 
-    const compiledTemplate = require('vue-template-compiler').compile(
-      content
-    ).render
+    const compiledTemplate = VueTemplateCompiler.compile(content).render
     const Lexer2 = new JavascriptLexer({ functions: this.functions })
     Lexer2.on('warning', (warning) => this.emit('warning', warning))
     keys = keys.concat(Lexer2.extract(compiledTemplate))

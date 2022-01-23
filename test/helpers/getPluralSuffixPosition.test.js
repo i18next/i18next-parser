@@ -1,5 +1,5 @@
 import { assert } from 'chai'
-import { getPluralSuffixPosition } from '../../src/helpers'
+import { getPluralSuffixPosition } from '../../src/helpers.js'
 
 describe('getPluralSuffixPosition helper function', () => {
   it('returns suffix position for all valid plural forms', (done) => {

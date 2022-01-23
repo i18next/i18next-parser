@@ -1,5 +1,5 @@
 import { assert } from 'chai'
-import { mergeHashes } from '../../src/helpers'
+import { mergeHashes } from '../../src/helpers.js'
 
 describe('mergeHashes helper function', () => {
   it('replaces empty `target` keys with `source`', (done) => {

@@ -1,11 +1,14 @@
-import path from 'path'
 import { assert } from 'chai'
-import sinon from 'sinon'
+import { fileURLToPath } from 'url'
 import fs from 'fs-extra'
-import pEvent from 'p-event'
 import gulp from 'gulp'
+import path from 'path'
+import pEvent from 'p-event'
+import sinon from 'sinon'
 import './gulpfile.js'
 import PluralRulesMock from '../Intl.PluralRules.mock.js'
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 describe('gulp plugin', function () {
   // test execution time depends on I/O

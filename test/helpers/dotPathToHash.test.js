@@ -1,5 +1,5 @@
 import { assert } from 'chai'
-import { dotPathToHash } from '../../src/helpers'
+import { dotPathToHash } from '../../src/helpers.js'
 
 describe('dotPathToHash helper function', () => {
   it('creates an object from a string path', (done) => {

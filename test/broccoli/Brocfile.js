@@ -1,9 +1,11 @@
-const path = require('path')
-const Funnel = require('broccoli-funnel')
+import path from 'path'
+import { fileURLToPath } from 'url'
+import Funnel from 'broccoli-funnel'
 // In a real use case, it should be:
-// const i18next = require('i18next-parser').broccoli
-const i18nextParser = require('../../src/index').broccoli
+// import i18next from 'i18next-parser').broccol
+import { broccoli as i18nextParser } from '../../src/index.js'
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const appRoot = path.resolve(__dirname, 'src')
 
 const filesToParse = new Funnel(appRoot, {
@@ -17,4 +19,4 @@ const i18n = new i18nextParser([filesToParse], {
   silent: true,
 })
 
-module.exports = i18n
+export default i18n

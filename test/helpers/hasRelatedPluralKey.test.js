@@ -1,5 +1,5 @@
 import { assert } from 'chai'
-import { hasRelatedPluralKey } from '../../src/helpers'
+import { hasRelatedPluralKey } from '../../src/helpers.js'
 
 describe('hasRelatedPluralKey helper function', () => {
   it('returns false when `source` does not contain valid plural form of `rawKey`', (done) => {

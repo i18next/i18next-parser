@@ -1,5 +1,5 @@
-import BaseLexer from './base-lexer'
-import * as ts from 'typescript'
+import BaseLexer from './base-lexer.js'
+import ts from 'typescript'
 
 export default class JavascriptLexer extends BaseLexer {
   constructor(options = {}) {

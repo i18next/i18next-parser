@@ -1,10 +1,10 @@
 import path from 'path'
 import EventEmitter from 'events'
-import HandlebarsLexer from './lexers/handlebars-lexer'
-import HTMLLexer from './lexers/html-lexer'
-import JavascriptLexer from './lexers/javascript-lexer'
-import JsxLexer from './lexers/jsx-lexer'
-import VueLexer from './lexers/vue-lexer'
+import HandlebarsLexer from './lexers/handlebars-lexer.js'
+import HTMLLexer from './lexers/html-lexer.js'
+import JavascriptLexer from './lexers/javascript-lexer.js'
+import JsxLexer from './lexers/jsx-lexer.js'
+import VueLexer from './lexers/vue-lexer.js'
 
 const lexers = {
   hbs: ['HandlebarsLexer'],

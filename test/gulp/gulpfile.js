@@ -1,8 +1,11 @@
-const path = require('path')
-const gulp = require('gulp')
+import { fileURLToPath } from 'url'
+import gulp from 'gulp'
+import path from 'path'
 // In a real use case, it should be:
-// const i18next = require('i18next-parser').gulp
-const i18next = require('../../src/index').gulp
+// import { gulp as i18next } from 'i18next-parser'
+import { gulp as i18next } from '../../src/index.js'
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 gulp.task('i18next', function () {
   return gulp

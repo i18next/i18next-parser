@@ -1,5 +1,5 @@
 import { assert } from 'chai'
-import HTMLLexer from '../../src/lexers/html-lexer'
+import HTMLLexer from '../../src/lexers/html-lexer.js'
 
 describe('HTMLLexer', () => {
   it('extracts keys from html attributes', (done) => {

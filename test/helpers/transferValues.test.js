@@ -1,5 +1,5 @@
 import { assert } from 'chai'
-import { transferValues } from '../../src/helpers'
+import { transferValues } from '../../src/helpers.js'
 
 describe('transferValues helper function', () => {
   it('sets undefined keys', (done) => {

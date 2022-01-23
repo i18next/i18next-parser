@@ -1,5 +1,5 @@
 import { assert } from 'chai'
-import JsxLexer from '../../src/lexers/jsx-lexer'
+import JsxLexer from '../../src/lexers/jsx-lexer.js'
 
 describe('JsxLexer', () => {
   describe('<Interpolate>', () => {

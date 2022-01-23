@@ -1,5 +1,5 @@
-import JavascriptLexer from './javascript-lexer'
-import * as ts from 'typescript'
+import JavascriptLexer from './javascript-lexer.js'
+import ts from 'typescript'
 
 export default class JsxLexer extends JavascriptLexer {
   constructor(options = {}) {

@@ -1,5 +1,5 @@
 import { assert } from 'chai'
-import VueLexer from '../../src/lexers/vue-lexer'
+import VueLexer from '../../src/lexers/vue-lexer.js'
 
 describe('VueLexer', () => {
   it('extracts keys from template & js', (done) => {

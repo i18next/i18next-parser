@@ -1,11 +1,10 @@
-import colors from 'colors'
 import fse from 'fs-extra'
-import path from 'path'
 import Plugin from 'broccoli-plugin'
-import i18nTransform from './transform'
 import rsvp from 'rsvp'
 import sort from 'gulp-sort'
 import vfs from 'vinyl-fs'
+
+import i18nTransform from './transform.js'
 
 const Promise = rsvp.Promise
 

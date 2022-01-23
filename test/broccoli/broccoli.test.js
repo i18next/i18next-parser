@@ -1,10 +1,14 @@
-import path from 'path'
 import { assert } from 'chai'
-import sinon from 'sinon'
+import { fileURLToPath } from 'url'
+import broccoli from 'broccoli'
 import fs from 'fs-extra'
-import { Builder } from 'broccoli'
+import path from 'path'
+import sinon from 'sinon'
 import brocFile from './Brocfile.js'
 import PluralRulesMock from '../Intl.PluralRules.mock.js'
+
+const { Builder } = broccoli
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 describe('broccoli plugin', function () {
   // test execution time depends on I/O

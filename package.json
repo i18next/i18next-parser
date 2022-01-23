@@ -2,9 +2,10 @@
   "name": "i18next-parser",
   "description": "Command Line tool for i18next",
   "version": "5.4.0",
+  "type": "module",
   "license": "MIT",
   "author": "Karel Ledru",
-  "main": "dist/index.js",
+  "exports": "./dist/index.js",
   "bin": {
     "i18next": "./bin/cli.js"
   },
@@ -36,7 +37,7 @@
     "i18next": "^21.2.0",
     "js-yaml": "4.1.0",
     "rsvp": "^4.8.2",
-    "sort-keys": "^4.2.0",
+    "sort-keys": "^5.0.0",
     "through2": "~4.0.2",
     "typescript": "^4.2.4",
     "vinyl": "~2.2.1",
