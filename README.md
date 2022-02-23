@@ -245,6 +245,7 @@ The default configuration is below:
   js: [{
     lexer: 'JavascriptLexer',
     functions: ['t'], // Array of functions to match
+    functionsNamespace: ['useTranslation', 'withTranslation'], // Array of functions to match for namespace
   }],
 }
 ```
