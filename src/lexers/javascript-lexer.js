@@ -7,6 +7,7 @@ export default class JavascriptLexer extends BaseLexer {
 
     this.callPattern = '(?<=^|\\s|\\.)' + this.functionPattern() + '\\(.*\\)'
     this.functions = options.functions || ['t']
+    this.namespaceFunctions = options.namespaceFunctions || ['useTranslation', 'withTranslation']
     this.attr = options.attr || 'i18nKey'
     this.parseGenerics = options.parseGenerics || false
     this.typeMap = options.typeMap || {}
@@ -111,9 +112,7 @@ export default class JavascriptLexer extends BaseLexer {
   expressionExtractor(node) {
     const entry = {}
 
-    if (
-      (node.expression.escapedText === 'useTranslation' ||
-        node.expression.escapedText === 'withTranslation') &&
+    if (this.namespaceFunctions.inlcudes(node.expression.escapedText) &&
       node.arguments.length
     ) {
       const { text, elements } = node.arguments[0]
