@@ -1,4 +1,4 @@
-import BaseLexer from './base-lexer'
+import BaseLexer from './base-lexer.js'
 import cheerio from 'cheerio'
 
 export default class HTMLLexer extends BaseLexer {

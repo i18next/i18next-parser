@@ -1,7 +1,10 @@
-import path from 'path'
 import { assert } from 'chai'
+import { fileURLToPath } from 'url'
 import execa from 'execa'
 import fs from 'fs-extra'
+import path from 'path'
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 describe('CLI', function () {
   // test execution time depends on I/O

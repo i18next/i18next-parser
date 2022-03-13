@@ -1,3 +1,3 @@
-module.exports = {
-  output: 'test/manual/$LOCALE/$NAMESPACE.json'
-};
+export default {
+  output: 'test/manual/$LOCALE/$NAMESPACE.json',
+}

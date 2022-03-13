@@ -1,18 +1,19 @@
-import {
-  dotPathToHash,
-  mergeHashes,
-  transferValues,
-  makeDefaultSort,
-} from './helpers'
 import { Transform } from 'stream'
 import eol from 'eol'
 import fs from 'fs'
-import Parser from './parser'
 import path from 'path'
 import VirtualFile from 'vinyl'
 import yaml from 'js-yaml'
 import i18next from 'i18next'
 import sortKeys from 'sort-keys'
+
+import {
+  dotPathToHash,
+  mergeHashes,
+  transferValues,
+  makeDefaultSort,
+} from './helpers.js'
+import Parser from './parser.js'
 
 export default class i18nTransform extends Transform {
   constructor(options = {}) {

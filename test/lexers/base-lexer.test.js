@@ -1,5 +1,5 @@
 import { assert } from 'chai'
-import BaseLexer from '../../src/lexers/base-lexer'
+import BaseLexer from '../../src/lexers/base-lexer.js'
 
 describe('BaseLexer', () => {
   it('functionPattern() return a regex pattern', (done) => {

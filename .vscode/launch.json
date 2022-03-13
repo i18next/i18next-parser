@@ -17,7 +17,8 @@
         "--require", "@babel/register",
         "--require", "@babel/polyfill",
         "--plugins", "@babel/plugin-transform-runtime",
-        "${workspaceFolder}/test/**/*.test.js"
+        "${workspaceFolder}/test/**/*.test.js",
+        "${workspaceFolder}/test/*.test.js"
       ],
       "runtimeArgs": [
         "--nolazy"

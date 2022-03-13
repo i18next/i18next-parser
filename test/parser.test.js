@@ -1,12 +1,14 @@
 import { assert, expect } from 'chai'
-import Vinyl from 'vinyl'
+import { fileURLToPath } from 'url'
 import fs from 'fs'
-import i18nTransform from '../src/transform'
 import path from 'path'
 import sinon from 'sinon'
+import Vinyl from 'vinyl'
+import i18nTransform from '../src/transform.js'
 
 const enLibraryPath = path.normalize('en/translation.json')
 const arLibraryPath = path.normalize('ar/translation.json')
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 describe('parser', () => {
   it('parses globally on multiple lines', (done) => {

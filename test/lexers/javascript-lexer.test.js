@@ -1,6 +1,5 @@
 import { assert } from 'chai'
-
-import JavascriptLexer from '../../src/lexers/javascript-lexer'
+import JavascriptLexer from '../../src/lexers/javascript-lexer.js'
 
 describe('JavascriptLexer', () => {
   it('extracts keys from translation components', (done) => {

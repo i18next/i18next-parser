@@ -1,4 +1,4 @@
-import BaseLexer from './base-lexer'
+import BaseLexer from './base-lexer.js'
 
 export default class HandlebarsLexer extends BaseLexer {
   constructor(options = {}) {

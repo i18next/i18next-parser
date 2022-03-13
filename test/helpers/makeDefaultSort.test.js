@@ -1,5 +1,5 @@
 import { assert } from 'chai'
-import { makeDefaultSort } from '../../src/helpers'
+import { makeDefaultSort } from '../../src/helpers.js'
 
 describe('makeDefaultSort helper function', () => {
   it('sorts the keys alphanumerically', (done) => {

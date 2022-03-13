@@ -1,5 +1,5 @@
 import { assert } from 'chai'
-import { getSingularForm } from '../../src/helpers'
+import { getSingularForm } from '../../src/helpers.js'
 
 describe('getSingularForm helper function', () => {
   it('returns singular key for all valid plural forms', (done) => {

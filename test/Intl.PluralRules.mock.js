@@ -1,4 +1,4 @@
-class PluralRules {
+export default class PluralRules {
   constructor(locale) {
     this.locale = locale
   }
@@ -15,5 +15,3 @@ class PluralRules {
     }
   }
 }
-
-module.exports = PluralRules

@@ -1,5 +1,5 @@
 import { assert } from 'chai'
-import HandlebarsLexer from '../../src/lexers/handlebars-lexer'
+import HandlebarsLexer from '../../src/lexers/handlebars-lexer.js'
 
 describe('HandlebarsLexer', () => {
   it('extracts keys from translation components', (done) => {
