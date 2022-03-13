@@ -1,5 +1,11 @@
 # Changelog
 
+# 6.0.0
+
+- BREAKING: Drop support for Node 13, 15. Add support for Node 18.
+- BREAKING: This package is now pure ESM
+- Update dependencies
+
 # 5.4.0
 
 - Set colors dependency to 1.4.0 #503
