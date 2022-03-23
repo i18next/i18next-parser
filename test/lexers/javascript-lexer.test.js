@@ -215,6 +215,16 @@ describe('JavascriptLexer', () => {
         { namespace: 'baz', key: 'bar', ns: 'baz' },
       ])
     })
+
+    it('extracts namespace with a custom hook', () => {
+      const Lexer = new JavascriptLexer({
+        namespaceFunctions: ['useCustomTranslationHook'],
+      })
+      const content = 'const {t} = useCustomTranslationHook("foo"); t("bar");'
+      assert.deepEqual(Lexer.extract(content), [
+        { namespace: 'foo', key: 'bar' },
+      ])
+    })
   })
 
   describe('withTranslation', () => {
