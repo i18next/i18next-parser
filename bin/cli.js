@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import { pathToFileURL } from 'url'
 import { promises as fsp } from 'fs'
 import colors from 'colors'
 import path from 'path'
@@ -48,7 +49,8 @@ import i18nTransform from '../dist/transform.js'
 
   let config = {}
   try {
-    config = (await import(path.resolve(program.opts().config))).default
+    config = (await import(pathToFileURL(path.resolve(program.opts().config))))
+      .default
   } catch (err) {
     if (err.code === 'MODULE_NOT_FOUND') {
       console.log(
