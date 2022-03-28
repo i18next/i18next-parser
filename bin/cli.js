@@ -2,9 +2,9 @@
 
 import { pathToFileURL } from 'url'
 import { promises as fsp } from 'fs'
+import { program } from 'commander'
 import colors from 'colors'
 import path from 'path'
-import program from 'commander'
 import sort from 'gulp-sort'
 import vfs from 'vinyl-fs'
 
