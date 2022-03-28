@@ -2,7 +2,7 @@
 
 ## Breaking changes
 
-- We dropped support for node versions that are not LTS. Only even numbered versions will be supported going forward.
+- We dropped support for node versions that are not LTS. Only even numbered versions will be supported going forward. Support is for Node 14+
 - This project is now a pure ESM project. You can read about it [here](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c) to help you transition your project.
 
 # Migrating from `4.x` to `5.x`

@@ -1,5 +1,9 @@
 # Changelog
 
+# 6.0.1
+
+- BREAKING: Drop support for Node 12
+
 # 6.0.0
 
 - BREAKING: Drop support for Node 13, 15. Add support for Node 18.
