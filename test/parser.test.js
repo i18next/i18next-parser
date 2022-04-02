@@ -755,6 +755,35 @@ describe('parser', () => {
         console.log.restore()
       })
 
+      it('logs number of unique keys', (done) => {
+        const i18nextParser = new i18nTransform({
+          verbose: true,
+          output: 'test/locales/$LOCALE/$NAMESPACE.json',
+          locales: ['en'],
+        })
+        const fakeFile = new Vinyl({
+          contents: Buffer.from(
+            `t('key', {
+              ns: 'namespace1',
+            })
+            t('key', {
+              ns: 'namespace2',
+            })
+            `
+          ),
+          path: 'file.js',
+        })
+
+        i18nextParser.on('data', () => {})
+
+        i18nextParser.once('end', () => {
+          assert(console.log.calledWith('Unique keys: 1 (1 with plurals)'))
+          done()
+        })
+
+        i18nextParser.end(fakeFile)
+      })
+
       describe('with defaultResetLocale', () => {
         it('logs the number of values reset', (done) => {
           const i18nextParser = new i18nTransform({
