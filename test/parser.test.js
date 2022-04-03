@@ -755,7 +755,7 @@ describe('parser', () => {
         console.log.restore()
       })
 
-      it('logs number of unique keys', (done) => {
+      it('logs stats unique keys per namespace', (done) => {
         const i18nextParser = new i18nTransform({
           verbose: true,
           output: 'test/locales/$LOCALE/$NAMESPACE.json',
@@ -765,6 +765,17 @@ describe('parser', () => {
           contents: Buffer.from(
             `t('key', {
               ns: 'namespace1',
+            })
+            t('key', {
+              ns: 'namespace1'
+            })
+            t('key2', {
+              ns: 'namespace1',
+              count: 1
+            })
+            t('key2', {
+              ns: 'namespace1',
+              count: 2
             })
             t('key', {
               ns: 'namespace2',
@@ -777,7 +788,42 @@ describe('parser', () => {
         i18nextParser.on('data', () => {})
 
         i18nextParser.once('end', () => {
-          assert(console.log.calledWith('Unique keys: 1 (1 with plurals)'))
+          assert(console.log.calledWith('Unique keys: 3 (2 are plurals)')) // namespace1
+          assert(console.log.calledWith('Unique keys: 1 (0 are plurals)')) // namespace2
+          done()
+        })
+
+        i18nextParser.end(fakeFile)
+      })
+
+      it('logs added and removed keys', (done) => {
+        const i18nextParser = new i18nTransform({
+          verbose: true,
+          output: 'test/locales/$LOCALE/$NAMESPACE.json',
+          locales: ['en'],
+        })
+        const fakeFile = new Vinyl({
+          contents: Buffer.from(
+            `
+            t('test_log:was_present')
+            t('test_log:was_not_present')
+            t('test_log:was_present_but_not_plural', {
+              count: 1
+            })
+            t('test_log:was_not_present_and_plural', {
+              count: 1
+            })
+            t('test_log:was_present_and_plural_but_no_more')
+            `
+          ),
+          path: 'file.js',
+        })
+
+        i18nextParser.on('data', () => {})
+
+        i18nextParser.once('end', () => {
+          assert(console.log.calledWith('Added keys: 6'))
+          assert(console.log.calledWith('Removed keys: 3'))
           done()
         })
 

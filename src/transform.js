@@ -148,10 +148,17 @@ export default class i18nTransform extends Transform {
       const catalog = {}
       const resetAndFlag = this.options.resetDefaultValueLocale === locale
 
-      let countWithPlurals = {}
       let uniqueCount = {}
+      let uniquePluralsCount = {}
 
       const transformEntry = (entry, suffix) => {
+        if (uniqueCount[entry.namespace] === undefined) {
+          uniqueCount[entry.namespace] = 0
+        }
+        if (uniquePluralsCount[entry.namespace] === undefined) {
+          uniquePluralsCount[entry.namespace] = 0
+        }
+
         const { duplicate, conflict } = dotPathToHash(entry, catalog, {
           suffix,
           locale,
@@ -165,34 +172,31 @@ export default class i18nTransform extends Transform {
 
         if (duplicate) {
           if (conflict === 'key') {
-            const warning = `Found translation key already mapped to a map or parent of new key already mapped to a string: ${entry.key}`
-            this.warn(warning)
+            this.warn(
+              `Found translation key already mapped to a map or parent of ` +
+                `new key already mapped to a string: ${entry.key}`
+            )
           } else if (conflict === 'value') {
-            const warning = `Found same keys with different values: ${entry.key}`
-            this.warn(warning)
+            this.warn(`Found same keys with different values: ${entry.key}`)
+          }
+        } else {
+          uniqueCount[entry.namespace] += 1
+          if (suffix) {
+            uniquePluralsCount[entry.namespace] += 1
           }
         }
       }
 
       // generates plurals according to i18next rules: key_zero, key_one, key_two, key_few, key_many and key_other
       for (const entry of this.entries) {
-        if (uniqueCount[entry.namespace] === undefined) {
-          uniqueCount[entry.namespace] = 0
-        }
-        if (countWithPlurals[entry.namespace] === undefined) {
-          countWithPlurals[entry.namespace] = 0
-        }
-        uniqueCount[entry.namespace] += 1
         if (entry.count !== undefined) {
           this.i18next.services.pluralResolver
             .getSuffixes(locale, { ordinal: entry.ordinal })
             .forEach((suffix) => {
-              countWithPlurals[entry.namespace] += 1
               transformEntry(entry, suffix)
             })
         } else {
           transformEntry(entry)
-          countWithPlurals[entry.namespace] += 1
         }
       }
 
@@ -248,11 +252,11 @@ export default class i18nTransform extends Transform {
         transferValues(oldKeys, oldCatalog)
 
         if (this.options.verbose) {
-          console.log(`[${locale}] ${namespace}\n`)
+          console.log(`[${locale}] ${namespace}`)
           console.log(
-            `Unique keys: ${uniqueCount[namespace]} (${countWithPlurals[namespace]} with plurals)`
+            `Unique keys: ${uniqueCount[namespace]} (${uniquePluralsCount[namespace]} are plurals)`
           )
-          const addCount = countWithPlurals[namespace] - mergeCount
+          const addCount = uniqueCount[namespace] - mergeCount
           console.log(`Added keys: ${addCount}`)
           console.log(`Restored keys: ${restoreCount}`)
           if (this.options.keepRemoved) {
@@ -263,11 +267,11 @@ export default class i18nTransform extends Transform {
           if (this.options.resetDefaultValueLocale) {
             console.log(`Reset keys: ${resetCount}`)
           }
-          console.log()
+          console.log('')
         }
 
         if (this.options.failOnUpdate) {
-          const addCount = countWithPlurals[namespace] - mergeCount
+          const addCount = uniqueCount[namespace] - mergeCount
           if (addCount + restoreCount + oldCount !== 0) {
             this.parserHadUpdate = true
             continue

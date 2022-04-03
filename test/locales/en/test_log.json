@@ -1,0 +1,6 @@
+{
+  "was_present": "first",
+  "was_present_but_not_plural": "bla",
+  "was_present_and_plural_but_no_more_one": "bla",
+  "was_present_and_plural_but_no_more_other": "bla"
+}
