@@ -1,5 +1,9 @@
 # Changelog
 
+# 6.2.0
+
+- Fix stats of files added, removed and unique keys #546 #498 #489
+
 # 6.1.0
 
 - Add a `functionsNamespace` option to the Javascrip Lexer #512
