@@ -382,6 +382,35 @@ describe('parser', () => {
     i18nextParser.end(fakeFile)
   })
 
+  it('applies useTranslation keyPrefix globally', (done) => {
+    let result
+    const i18nextParser = new i18nTransform()
+    const fakeFile = new Vinyl({
+      contents: fs.readFileSync(
+        path.resolve(__dirname, 'templating/keyPrefix-hook.jsx')
+      ),
+      path: 'file.jsx',
+    })
+    const expected = {
+      'test-prefix': {
+        foo: '',
+        bar: '',
+      },
+    }
+
+    i18nextParser.on('data', (file) => {
+      if (file.relative.endsWith(path.normalize('en/key-prefix.json'))) {
+        result = JSON.parse(file.contents)
+      }
+    })
+    i18nextParser.on('end', () => {
+      assert.deepEqual(result, expected)
+      done()
+    })
+
+    i18nextParser.end(fakeFile)
+  })
+
   it('handles escaped single and double quotes', (done) => {
     let result
     const i18nextParser = new i18nTransform()
