@@ -1,5 +1,9 @@
 # Changelog
 
+# 6.3.0
+
+- Support keyPrefix of useTranslation hook #485 #486
+
 # 6.2.0
 
 - Fix stats of files added, removed and unique keys #546 #498 #489
