@@ -157,7 +157,7 @@ import i18nTransform, { KEY_REUSE_WARNING } from '../dist/transform.js'
           if (!program.opts().silent) {
             console.log('  [warning] '.yellow + message)
           }
-          if (message.startsWith(i18nTransform.KEY_REUSE_WARNING)) {
+          if (message.startsWith(KEY_REUSE_WARNING)) {
             const key = message.substr(KEY_REUSE_WARNING.length)
             const previousValue = warningMap[key] ?? 1
             warningMap[key] = previousValue + 1
