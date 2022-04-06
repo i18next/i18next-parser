@@ -163,9 +163,11 @@ import i18nTransform from '../dist/transform.js'
           if (!program.opts().silent) {
             console.log()
             console.log('  Stats:  '.cyan + count + ' files were parsed')
-            console.log(
-              '  Warnings:  '.yellow + warnings + ' warnings encountered'
-            )
+            if (program.opts().warnOnDuplicates && warnings > 0) {
+              console.log(
+                '  Warnings:  '.yellow + warnings + ' warnings encountered'
+              )
+            }
           }
         })
     )
