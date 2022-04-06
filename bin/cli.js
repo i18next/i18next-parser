@@ -8,7 +8,7 @@ import path from 'path'
 import sort from 'gulp-sort'
 import vfs from 'vinyl-fs'
 
-import i18nTransform from '../dist/transform.js'
+import i18nTransform, { KEY_REUSE_WARNING } from '../dist/transform.js'
 ;(async () => {
   const pkg = JSON.parse(
     await fsp.readFile(new URL('../package.json', import.meta.url), 'utf-8')
@@ -129,7 +129,7 @@ import i18nTransform from '../dist/transform.js'
   }
 
   var count = 0
-  var warnings = 0
+  let warningMap = {}
 
   vfs
     .src(globs)
@@ -157,15 +157,28 @@ import i18nTransform from '../dist/transform.js'
           if (!program.opts().silent) {
             console.log('  [warning] '.yellow + message)
           }
-          warnings++
+          if (message.startsWith(i18nTransform.KEY_REUSE_WARNING)) {
+            const key = message.substr(KEY_REUSE_WARNING.length)
+            const previousValue = warningMap[key] ?? 1
+            warningMap[key] = previousValue + 1
+          }
         })
         .on('finish', function () {
           if (!program.opts().silent) {
             console.log()
             console.log('  Stats:  '.cyan + count + ' files were parsed')
-            if (config.warnOnDuplicates && warnings > 0) {
+            if (config.warnOnDuplicates && Object.keys(warningMap).length > 0) {
+              var keys = []
+              for (var key in warningMap) {
+                keys.push([key, warningMap[key]])
+              }
+
+              keys.sort(function (a, b) {
+                return b[1] - a[1]
+              })
+              console.log(keys)
               console.log(
-                '  Warnings:  '.yellow + warnings + ' warnings encountered'
+                '  Key Reuse Warning:  '.yellow + keys.length + ' keys reused'
               )
             }
           }

@@ -14,6 +14,7 @@ import {
   makeDefaultSort,
 } from './helpers.js'
 import Parser from './parser.js'
+export const KEY_REUSE_WARNING = 'Found same keys with different values: '
 
 export default class i18nTransform extends Transform {
   constructor(options = {}) {
@@ -184,7 +185,7 @@ export default class i18nTransform extends Transform {
                 `new key already mapped to a string: ${entry.key}`
             )
           } else if (conflict === 'value') {
-            this.warn(`Found same keys with different values: ${entry.key}`)
+            this.warn(KEY_REUSE_WARNING + entry.key)
           }
         } else {
           uniqueCount[entry.namespace] += 1
