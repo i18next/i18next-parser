@@ -129,6 +129,7 @@ import i18nTransform from '../dist/transform.js'
   }
 
   var count = 0
+  var warnings = 0
 
   vfs
     .src(globs)
@@ -156,11 +157,15 @@ import i18nTransform from '../dist/transform.js'
           if (!program.opts().silent) {
             console.log('  [warning] '.yellow + message)
           }
+          warnings++
         })
         .on('finish', function () {
           if (!program.opts().silent) {
             console.log()
             console.log('  Stats:  '.cyan + count + ' files were parsed')
+            console.log(
+              '  Warnings:  '.yellow + warnings + ' warnings encountered'
+            )
           }
         })
     )

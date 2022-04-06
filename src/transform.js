@@ -41,6 +41,7 @@ export default class i18nTransform extends Transform {
       skipDefaultValues: false,
       customValueTemplate: null,
       failOnWarnings: false,
+      warnKeyDuplicates: false,
     }
 
     this.options = { ...this.defaults, ...options }
@@ -173,6 +174,7 @@ export default class i18nTransform extends Transform {
           useKeysAsDefaultValue: this.options.useKeysAsDefaultValue,
           skipDefaultValues: this.options.skipDefaultValues,
           customValueTemplate: this.options.customValueTemplate,
+          warnKeyDuplicates: this.options.warnKeyDuplicates,
         })
 
         if (duplicate) {
