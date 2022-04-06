@@ -20,7 +20,7 @@ jobs:
     - run: yarn install
     - run: yarn build
     - run: yarn coverage
-    - uses: codecov/codecov-action@v2
+    - uses: codecov/codecov-action@v3
       with:
         name: node-${{ matrix.node-version }}
         fail_ci_if_error: false
