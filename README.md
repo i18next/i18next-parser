@@ -201,6 +201,9 @@ export default {
   failOnUpdate: false,
   // Exit with an exit code of 1 when translations are updated (for CI purpose)
 
+  warnOnDuplicates: false,
+  // Warn against using duplicate keys
+
   customValueTemplate: null,
   // If you wish to customize the value output the value as an object, you can set your own format.
   // ${defaultValue} is the default value you set in your translation function.
