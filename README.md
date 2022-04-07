@@ -23,13 +23,11 @@ Finally, if you want to make this process even less painful, I invite you to che
 - Supports i18next features:
   - **Context**: keys of the form `key_context`
   - **Plural**: keys of the form `key_zero`, `key_one`, `key_two`, `key_few`, `key_many` and `key_other` as described [here](https://www.i18next.com/translation-function/plurals)
-- Tested on Node 10+. If you need support for 6 and 8, look at the `1.0.x` versions.
+- `6.x` is tested on Node 14 and 16.
 
 ## Versions
 
 You can find information about major releases on the [dedicated page](https://github.com/i18next/i18next-parser/releases). The [migration documentation](docs/migration.md) will help you figure out the breaking changes between versions.
-
-For legacy users on `0.x`, the code has since been entirely rewritten and there is a dedicated [branch](https://github.com/i18next/i18next-parser/tree/0.x.x) for it. You are highly encouraged to upgrade!
 
 ## Usage
 
