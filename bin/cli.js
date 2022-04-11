@@ -28,6 +28,10 @@ import i18nTransform, { KEY_REUSE_WARNING } from '../dist/transform.js'
     .option('-s, --silent', 'Disable logging to stdout')
     .option('--fail-on-warnings', 'Exit with an exit code of 1 on warnings')
     .option(
+      '--get-key-duplicates',
+      'Log key duplicates and disable all other logging'
+    )
+    .option(
       '--fail-on-update',
       'Exit with an exit code of 1 when translations are updated (for CI purpose)'
     )
@@ -69,6 +73,8 @@ import i18nTransform, { KEY_REUSE_WARNING } from '../dist/transform.js'
     program.opts().failOnWarnings || config.failOnWarnings || false
   config.failOnUpdate =
     program.opts().failOnUpdate || config.failOnUpdate || false
+  config.silent =
+    program.opts().silent || program.opts().getKeyDuplicates || false
 
   let args = program.args || []
   let globs
@@ -119,7 +125,7 @@ import i18nTransform, { KEY_REUSE_WARNING } from '../dist/transform.js'
   }
 
   // Welcome message
-  if (!program.opts().silent) {
+  if (!config.silent) {
     console.log()
     console.log('  i18next Parser'.cyan)
     console.log('  --------------'.cyan)
@@ -128,8 +134,8 @@ import i18nTransform, { KEY_REUSE_WARNING } from '../dist/transform.js'
     console.log()
   }
 
-  var count = 0
-  let warningMap = {}
+  let count = 0
+  let duplicateKeys = {}
 
   vfs
     .src(globs)
@@ -137,13 +143,13 @@ import i18nTransform, { KEY_REUSE_WARNING } from '../dist/transform.js'
     .pipe(
       new i18nTransform(config)
         .on('reading', function (file) {
-          if (!program.opts().silent) {
+          if (!config.silent) {
             console.log('  [read]    '.green + file.path)
           }
           count++
         })
         .on('data', function (file) {
-          if (!program.opts().silent) {
+          if (!config.silent) {
             console.log('  [write]   '.green + file.path)
           }
         })
@@ -154,32 +160,41 @@ import i18nTransform, { KEY_REUSE_WARNING } from '../dist/transform.js'
           console.log('  [error]   '.red + message)
         })
         .on('warning', function (message) {
-          if (!program.opts().silent) {
+          if (!config.silent) {
             console.log('  [warning] '.yellow + message)
           }
           if (message.startsWith(KEY_REUSE_WARNING)) {
             const key = message.substr(KEY_REUSE_WARNING.length)
-            const previousValue = warningMap[key] ?? 1
-            warningMap[key] = previousValue + 1
+            const previousValue = duplicateKeys[key] ?? 1
+            duplicateKeys[key] = previousValue + 1
           }
         })
         .on('finish', function () {
-          if (!program.opts().silent) {
+          if (!config.silent) {
             console.log()
             console.log('  Stats:  '.cyan + count + ' files were parsed')
-            if (config.warnOnDuplicates && Object.keys(warningMap).length > 0) {
+            if (
+              config.warnOnKeyDuplicates &&
+              Object.keys(duplicateKeys).length > 0
+            ) {
+              console.log(
+                '  Key Reuse Warning:  '.yellow + keys.length + ' keys reused'
+              )
+            }
+          }
+          if (program.opts().getKeyDuplicates) {
+            if (Object.keys(duplicateKeys).length > 0) {
               var keys = []
-              for (var key in warningMap) {
-                keys.push([key, warningMap[key]])
+              for (var key in duplicateKeys) {
+                keys.push([key, duplicateKeys[key]])
               }
 
               keys.sort(function (a, b) {
                 return b[1] - a[1]
               })
-              console.log(keys)
-              console.log(
-                '  Key Reuse Warning:  '.yellow + keys.length + ' keys reused'
-              )
+              console.dir(keys, { maxArrayLength: null })
+            } else {
+              console.log([])
             }
           }
         })

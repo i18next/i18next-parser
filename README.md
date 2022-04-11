@@ -201,7 +201,7 @@ export default {
   failOnUpdate: false,
   // Exit with an exit code of 1 when translations are updated (for CI purpose)
 
-  warnOnDuplicates: false,
+  warnOnKeyDuplicates: false,
   // Warn against using duplicate keys
 
   customValueTemplate: null,
