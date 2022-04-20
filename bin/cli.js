@@ -165,7 +165,7 @@ import i18nTransform, { KEY_REUSE_WARNING } from '../dist/transform.js'
           }
           if (message.startsWith(KEY_REUSE_WARNING)) {
             const key = message.substr(KEY_REUSE_WARNING.length)
-            const previousValue = duplicateKeys[key] ?? 1
+            const previousValue = duplicateKeys[key] ?? 0
             duplicateKeys[key] = previousValue + 1
           }
         })

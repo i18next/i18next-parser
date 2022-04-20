@@ -85,7 +85,7 @@ describe('CLI', function () {
   it('works with `--get-key-duplicates` option', async () => {
     const subprocess = await execaCommand('yarn test:cli --get-key-duplicates')
 
-    assert.include(subprocess.stdout, "[ [ 'seventh', 3 ] ]")
+    assert.include(subprocess.stdout, "[ [ 'seventh', 2 ] ]")
   })
 
   it('works with `--fail-on-warnings` option', async () => {
