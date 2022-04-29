@@ -63,7 +63,7 @@
     "mocha": "^9.0.0",
     "nyc": "^15.1.0",
     "p-event": "^5.0.1",
-    "prettier": "2.6.1",
+    "prettier": "2.6.2",
     "sinon": "^13.0.1"
   },
   "repository": {
