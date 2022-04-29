@@ -1,5 +1,9 @@
 # Changelog
 
+# 6.4.0
+
+- Fix a bug that was resetting a namespace when given an empty key #502
+
 # 6.3.0
 
 - Support keyPrefix of useTranslation hook #485 #486
