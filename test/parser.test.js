@@ -328,6 +328,30 @@ describe('parser', () => {
     i18nextParser.end(fakeFile)
   })
 
+  it.only('does not overwrite the namespace file if it already exists', (done) => {
+    let resultContent
+    const i18nextParser = new i18nTransform({
+      locales: ['en'],
+      defaultNamespace: 'test_empty',
+    })
+    const fakeFile = new Vinyl({
+      contents: Buffer.from("t('key'); t('');"),
+      path: 'file.js',
+    })
+
+    i18nextParser.on('data', (file) => {
+      if (file.relative.endsWith(path.normalize('en/test_empty.json'))) {
+        resultContent = JSON.parse(file.contents)
+      }
+    })
+    i18nextParser.on('end', () => {
+      assert.deepEqual(resultContent, { key: '' })
+      done()
+    })
+
+    i18nextParser.end(fakeFile)
+  })
+
   it('applies withTranslation namespace globally', (done) => {
     let result
     const i18nextParser = new i18nTransform()

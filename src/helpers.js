@@ -28,7 +28,9 @@ function dotPathToHash(entry, target = {}, options = {}) {
 
   // There is no key to process so we return an empty object
   if (!key) {
-    target[entry.namespace] = {}
+    if (!target[entry.namespace]) {
+      target[entry.namespace] = {}
+    }
     return { target, duplicate, conflict }
   }
 
