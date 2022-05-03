@@ -75,6 +75,8 @@ import i18nTransform, { KEY_REUSE_WARNING } from '../dist/transform.js'
     program.opts().failOnUpdate || config.failOnUpdate || false
   config.silent =
     program.opts().silent || program.opts().getKeyDuplicates || false
+  config.warnOnKeyDuplicates =
+    program.opts().getKeyDuplicates || config.warnOnKeyDuplicates || false
 
   let args = program.args || []
   let globs

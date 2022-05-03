@@ -14,7 +14,8 @@ import {
   makeDefaultSort,
 } from './helpers.js'
 import Parser from './parser.js'
-export const KEY_REUSE_WARNING = 'Found same keys with different values: '
+
+export const KEY_REUSE_WARNING = 'Found duplicate keys: '
 
 export default class i18nTransform extends Transform {
   constructor(options = {}) {
@@ -175,7 +176,6 @@ export default class i18nTransform extends Transform {
           useKeysAsDefaultValue: this.options.useKeysAsDefaultValue,
           skipDefaultValues: this.options.skipDefaultValues,
           customValueTemplate: this.options.customValueTemplate,
-          warnOnKeyDuplicates: this.options.warnOnKeyDuplicates,
         })
 
         if (duplicate) {
@@ -185,7 +185,11 @@ export default class i18nTransform extends Transform {
                 `new key already mapped to a string: ${entry.key}`
             )
           } else if (conflict === 'value') {
-            this.warn(KEY_REUSE_WARNING + entry.key)
+            this.warn(`Found same keys with different values: ${entry.key}`)
+          } else {
+            if (this.options.warnOnKeyDuplicates) {
+              this.warn(KEY_REUSE_WARNING + entry.key)
+            }
           }
         } else {
           uniqueCount[entry.namespace] += 1
