@@ -96,18 +96,6 @@ describe('dotPathToHash helper function', () => {
     done()
   })
 
-  it('detects duplicate keys with the same value when warnOnDuplicate is true', (done) => {
-    const { target, duplicate, conflict } = dotPathToHash(
-      { keyWithNamespace: 'one.two.three' },
-      { one: { two: { three: '' } } },
-      { warnOnDuplicate: true }
-    )
-    assert.deepEqual(target, { one: { two: { three: '' } } })
-    assert.equal(duplicate, true)
-    assert.equal(conflict, false)
-    done()
-  })
-
   it('detects and overwrites duplicate keys with different values', (done) => {
     const { target, duplicate, conflict } = dotPathToHash(
       { keyWithNamespace: 'one.two.three', defaultValue: 'new' },
