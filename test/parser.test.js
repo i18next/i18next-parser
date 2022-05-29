@@ -718,7 +718,7 @@ describe('parser', () => {
 
   describe('options', () => {
     describe('resetDefaultValueLocale', () => {
-      it('will not reset a key if a default value has not changed in the locale', (done) => {
+      it('will not reset (nested) keys if a default value has not changed in the locale', (done) => {
         const i18nextParser = new i18nTransform({
           resetDefaultValueLocale: 'fr',
           output: 'test/locales/$LOCALE/$NAMESPACE.json',
@@ -729,7 +729,11 @@ describe('parser', () => {
           contents: Buffer.from(
             `t('test_reset:key', {
             defaultValue: 'defaultTranslation',
-          })`
+            })
+            \n
+            t('test_reset:key2.key3', {
+            defaultValue: 'defaultTranslation',
+            })`
           ),
           path: 'file.js',
         })
@@ -747,9 +751,15 @@ describe('parser', () => {
         i18nextParser.once('end', () => {
           assert.deepEqual(enResult, {
             key: 'en_translation',
+            key2: {
+              key3: 'en_translation',
+            },
           })
           assert.deepEqual(arResult, {
             key: 'ar_translation',
+            key2: {
+              key3: 'ar_translation',
+            },
           })
           done()
         })
@@ -770,7 +780,11 @@ describe('parser', () => {
           contents: Buffer.from(
             `t('test_reset:key', {
             defaultValue: '${newString}',
-          })`
+            })
+            \n
+            t('test_reset:key2.key3', {
+            defaultValue: 'defaultTranslation',
+            })`
           ),
           path: 'file.js',
         })
@@ -788,9 +802,66 @@ describe('parser', () => {
         i18nextParser.once('end', () => {
           assert.deepEqual(enResult, {
             key: newString,
+            key2: {
+              key3: 'en_translation',
+            },
           })
           assert.deepEqual(arResult, {
             key: newString,
+            key2: {
+              key3: 'ar_translation',
+            },
+          })
+          done()
+        })
+
+        i18nextParser.end(fakeFile)
+      })
+
+      it('will reset a nested key if a default value has changed in the locale', (done) => {
+        const i18nextParser = new i18nTransform({
+          resetDefaultValueLocale: 'fr',
+          output: 'test/locales/$LOCALE/$NAMESPACE.json',
+          locales: ['en', 'ar', 'fr'],
+        })
+
+        const newString = 'newTranslation'
+
+        const fakeFile = new Vinyl({
+          contents: Buffer.from(
+            `t('test_reset:key', {
+            defaultValue: 'defaultValue',
+            })
+            \n
+            t('test_reset:key2.key3', {
+            defaultValue: '${newString}',
+            })`
+          ),
+          path: 'file.js',
+        })
+
+        let enResult, arResult
+        i18nextParser.on('data', (file) => {
+          if (file.relative.endsWith(path.normalize('en/test_reset.json'))) {
+            enResult = JSON.parse(file.contents)
+          } else if (
+            file.relative.endsWith(path.normalize('ar/test_reset.json'))
+          ) {
+            arResult = JSON.parse(file.contents)
+          }
+        })
+        i18nextParser.once('end', () => {
+          assert.deepEqual(enResult, {
+            key: 'defaultValue',
+            key2: {
+              key3: newString,
+            },
+          })
+          assert.deepEqual(arResult, {
+            key: 'defaultValue',
+            key2: {
+              key3: newString,
+            },
           })
           done()
         })

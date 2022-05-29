@@ -240,6 +240,42 @@ describe('mergeHashes helper function', () => {
     done()
   })
 
+  it('resets nested keys to the target value if they are flagged in the resetKeys object', (done) => {
+    const source = {
+      key1: {
+        key2: 'key2',
+      },
+      key3: {
+        key4: 'key4',
+      },
+    }
+    const target = {
+      key1: {
+        key2: 'changedKey2',
+      },
+      key3: {
+        key4: 'changedKey4',
+      },
+    }
+    const res = mergeHashes(source, target, {}, { key1: { key2: true } })
+
+    assert.deepEqual(res.new, {
+      key1: {
+        key2: 'changedKey2',
+      },
+      key3: {
+        key4: 'key4',
+      },
+    })
+    assert.deepEqual(res.old, {
+      key1: {
+        key2: 'key2',
+      },
+    })
+    assert.strictEqual(res.resetCount, 1)
+    done()
+  })
+
   it('ignores keys if they are plurals', (done) => {
     const source = { key1_one: 'key1', key2: 'key2' }
     const target = { key1_one: 'changedKey1', key2: 'changedKey2' }
@@ -261,6 +297,49 @@ describe('mergeHashes helper function', () => {
     assert.deepEqual(res.new, { key1: 'changedKey1', key2: 'key2' })
     assert.deepEqual(res.old, { key1: 'key1' })
     assert.deepEqual(res.reset, { key1: true })
+    assert.strictEqual(res.resetCount, 1)
+    done()
+  })
+
+  it('resets and flags nested keys if the resetAndFlag value is set', (done) => {
+    const source = {
+      key1: {
+        key2: 'key2',
+      },
+      key3: {
+        key4: 'key4',
+      },
+    }
+    const target = {
+      key1: {
+        key2: 'changedKey2',
+      },
+      key3: {
+        key4: 'key4',
+      },
+    }
+    const res = mergeHashes(source, target, {
+      resetAndFlag: true,
+    })
+
+    assert.deepEqual(res.new, {
+      key1: {
+        key2: 'changedKey2',
+      },
+      key3: {
+        key4: 'key4',
+      },
+    })
+    assert.deepEqual(res.old, {
+      key1: {
+        key2: 'key2',
+      },
+    })
+    assert.deepEqual(res.reset, {
+      key1: {
+        key2: true,
+      },
+    })
     assert.strictEqual(res.resetCount, 1)
     done()
   })
