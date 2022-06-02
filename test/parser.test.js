@@ -328,7 +328,7 @@ describe('parser', () => {
     i18nextParser.end(fakeFile)
   })
 
-  it.only('does not overwrite the namespace file if it already exists', (done) => {
+  it('does not overwrite the namespace file if it already exists', (done) => {
     let resultContent
     const i18nextParser = new i18nTransform({
       locales: ['en'],
