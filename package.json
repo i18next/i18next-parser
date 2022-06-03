@@ -15,7 +15,7 @@
     "yarn": ">=1"
   },
   "scripts": {
-    "coverage": "nyc --reporter=lcov --reporter=text yarn test",
+    "coverage": "c8 --all --include='src/**/*[.js|.jsx|.ts|.tsx]' --reporter=lcov --reporter=text yarn test",
     "test": "mocha -r @babel/register -r @babel/polyfill --recursive test/*.test.js test/**/*.test.js",
     "test:cli": "yarn -s build && ./bin/cli.js -c test/cli/i18next-parser.config.js",
     "watch": "babel src -d dist -w",
@@ -55,13 +55,13 @@
     "broccoli": "^3.5.2",
     "broccoli-cli": "^1.0.0",
     "broccoli-funnel": "^3.0.8",
+    "c8": "^7.11.3",
     "chai": "^4.1.2",
     "execa": "^6.1.0",
     "gulp": "^4.0.2",
     "husky": ">=7.0.2",
     "lint-staged": ">=11.1.2",
     "mocha": "^10.0.0",
-    "nyc": "^15.1.0",
     "p-event": "^5.0.1",
     "prettier": "2.6.2",
     "sinon": "^13.0.1"
