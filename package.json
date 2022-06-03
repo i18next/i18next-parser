@@ -64,7 +64,7 @@
     "mocha": "^10.0.0",
     "p-event": "^5.0.1",
     "prettier": "2.6.2",
-    "sinon": "^13.0.1"
+    "sinon": "^14.0.0"
   },
   "repository": {
     "type": "git",
