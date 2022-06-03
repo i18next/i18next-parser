@@ -1,5 +1,11 @@
 # Changelog
 
+# 6.5.0
+
+- Fix: coverage testing #586
+- Fix: reset nested keys if default value is changed #582
+- Update dependencies
+
 # 6.4.0
 
 - Fix a bug that was resetting a namespace when given an empty key #502
