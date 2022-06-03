@@ -145,12 +145,21 @@ function mergeHashes(source, target, options = {}, resetValues = {}) {
       typeof target[key] === 'object' && !Array.isArray(target[key])
 
     if (hasNestedEntries) {
-      const nested = mergeHashes(source[key], target[key], options)
+      const nested = mergeHashes(
+        source[key],
+        target[key],
+        options,
+        resetValues[key]
+      )
       mergeCount += nested.mergeCount
       pullCount += nested.pullCount
       oldCount += nested.oldCount
+      resetCount += nested.resetCount
       if (Object.keys(nested.old).length) {
         old[key] = nested.old
+      }
+      if (Object.keys(nested.reset).length) {
+        reset[key] = nested.reset
       }
     } else if (target[key] !== undefined) {
       if (typeof source[key] !== 'string' && !Array.isArray(source[key])) {
