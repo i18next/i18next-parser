@@ -29,7 +29,7 @@
     "broccoli-plugin": "^4.0.7",
     "cheerio": "^1.0.0-rc.2",
     "colors": "1.4.0",
-    "commander": "~9.2.0",
+    "commander": "~9.3.0",
     "concat-stream": "~2.0.0",
     "eol": "^0.9.1",
     "fs-extra": "^10.0.0",
@@ -64,7 +64,7 @@
     "mocha": "^10.0.0",
     "p-event": "^5.0.1",
     "prettier": "2.6.2",
-    "sinon": "^13.0.1"
+    "sinon": "^14.0.0"
   },
   "repository": {
     "type": "git",
