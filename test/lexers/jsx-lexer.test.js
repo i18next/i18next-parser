@@ -357,6 +357,13 @@ describe('JsxLexer', () => {
         )
         done()
       })
+
+      it('handles tags after spaces correctly', (done) => {
+        const Lexer = new JsxLexer({ transSupportBasicHtmlNodes: true })
+        const content = '<Trans>a{" "}<a>b</a></Trans>'
+        assert.equal(Lexer.extract(content)[0].defaultValue, 'a <1>b</1>')
+        done()
+      })
     })
   })
 })
