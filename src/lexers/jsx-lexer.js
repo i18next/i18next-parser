@@ -13,7 +13,7 @@ export default class JsxLexer extends JavascriptLexer {
       'i',
       'p',
     ]
-    this.omitAttributes = [this.attr, 'ns', 'defaults']
+    this.omitAttributes = [this.attr, 'ns', 'defaults', 'key']
   }
 
   extract(content, filename = '__default.jsx') {

@@ -221,6 +221,15 @@ describe('JsxLexer', () => {
       ])
       done()
     })
+
+    it("doesn't add a key for the 'key' attribute", (done) => {
+      const Lexer = new JsxLexer()
+
+      const emptyTag = `<Trans key={'foo'}></Trans>`
+      assert.deepEqual(Lexer.extract(emptyTag), [])
+
+      done()
+    })
   })
 
   describe('supports TypeScript', () => {
