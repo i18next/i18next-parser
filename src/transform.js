@@ -41,6 +41,7 @@ export default class i18nTransform extends Transform {
       skipDefaultValues: false,
       customValueTemplate: null,
       failOnWarnings: false,
+      ignoreContext: false,
     }
 
     this.options = { ...this.defaults, ...options }
@@ -330,7 +331,7 @@ export default class i18nTransform extends Transform {
   }
 
   addEntry(entry) {
-    if (entry.context) {
+    if (!this.options.ignoreContext && entry.context) {
       const contextEntry = Object.assign({}, entry)
       delete contextEntry.context
       contextEntry.key += this.options.contextSeparator + entry.context

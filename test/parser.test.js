@@ -986,6 +986,31 @@ describe('parser', () => {
       })
     })
 
+    describe('ignoreContext', () => {
+      it('adds entry without context', (done) => {
+        let result
+        const i18nextParser = new i18nTransform({ ignoreContext: true })
+        const fakeFile = new Vinyl({
+          contents: Buffer.from("t('first', {context: 'female'})"),
+          path: 'file.js',
+        })
+
+        i18nextParser.on('data', (file) => {
+          if (file.relative.endsWith(enLibraryPath)) {
+            result = JSON.parse(file.contents)
+          }
+        })
+        i18nextParser.once('end', () => {
+          assert.deepEqual(result, {
+            first: '',
+          })
+          done()
+        })
+
+        i18nextParser.end(fakeFile)
+      })
+    })
+
     it('handles output with $LOCALE and $NAMESPACE var', (done) => {
       let result
       const i18nextParser = new i18nTransform({
