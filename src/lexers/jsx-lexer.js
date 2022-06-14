@@ -203,7 +203,14 @@ export default class JsxLexer extends JavascriptLexer {
               type: 'text',
               content: '',
             }
-          } else if (child.expression.kind === ts.SyntaxKind.StringLiteral) {
+          }
+
+          // simplify trivial expressions, like TypeScript typecasts
+          if (child.expression.kind === ts.SyntaxKind.AsExpression) {
+            child = child.expression
+          }
+
+          if (child.expression.kind === ts.SyntaxKind.StringLiteral) {
             return {
               type: 'text',
               content: child.expression.text,
