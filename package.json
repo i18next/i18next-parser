@@ -5,7 +5,12 @@
   "type": "module",
   "license": "MIT",
   "author": "Karel Ledru",
-  "exports": "./dist/index.js",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
   "bin": {
     "i18next": "./bin/cli.js"
   },
