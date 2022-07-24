@@ -7,7 +7,7 @@
   "author": "Karel Ledru",
   "exports": {
     ".": {
-      "require": "./dist/index.js"
+      "default": "./dist/index.js"
     },
     "./package.json": "./package.json"
   },
