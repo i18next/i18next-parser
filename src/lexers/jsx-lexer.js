@@ -64,9 +64,9 @@ export default class JsxLexer extends JavascriptLexer {
   jsxExtractor(node, sourceText) {
     const tagNode = node.openingElement || node
 
-    const getPropValue = (node, tagName) => {
+    const getPropValue = (node, attributeName) => {
       const attribute = node.attributes.properties.find(
-        (attr) => attr.name.text === tagName
+        (attr) => attr.name !== undefined && attr.name.text === attributeName
       )
       if (!attribute) {
         return undefined
@@ -109,6 +109,14 @@ export default class JsxLexer extends JavascriptLexer {
       }
 
       tagNode.attributes.properties.forEach((property) => {
+        if (property.kind === ts.SyntaxKind.JsxSpreadAttribute) {
+          this.emit(
+            'warning',
+            `Component attribute is a JSX spread attribute : ${property.expression.text}`
+          )
+          return
+        }
+
         if (this.omitAttributes.includes(property.name.text)) {
           return
         }

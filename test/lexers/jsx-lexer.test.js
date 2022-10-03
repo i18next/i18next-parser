@@ -221,6 +221,19 @@ describe('JsxLexer', () => {
       ])
       done()
     })
+
+    it('emits a `warning` event if the component attribute is a JSX spread attribute', (done) => {
+      const Lexer = new JsxLexer()
+      const content = '<Trans defaults="bar" {...spread} />'
+      Lexer.on('warning', (message) => {
+        assert.equal(
+          message,
+          'Component attribute is a JSX spread attribute : spread'
+        )
+        done()
+      })
+      assert.deepEqual(Lexer.extract(content), [{ defaultValue: 'bar' }])
+    })
   })
 
   describe('supports TypeScript', () => {
