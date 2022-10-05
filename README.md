@@ -222,6 +222,14 @@ export default {
   // If you wish to customize options in internally used i18next instance, you can define an object with any
   // configuration property supported by i18next (https://www.i18next.com/overview/configuration-options).
   // { compatibilityJSON: 'v3' } can be used to generate v3 compatible plurals.
+
+  yamlOptions: null,
+  // If you wish to customize options for yaml output, you can define an object here.
+  // Configuration options are here (https://github.com/nodeca/js-yaml#dump-object---options-).
+  // Example:
+  // {
+  //   lineWidth: -1,
+  // }
 }
 ```
 

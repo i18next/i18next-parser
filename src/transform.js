@@ -41,6 +41,7 @@ export default class i18nTransform extends Transform {
       skipDefaultValues: false,
       customValueTemplate: null,
       failOnWarnings: false,
+      yamlOptions: null,
     }
 
     this.options = { ...this.defaults, ...options }
@@ -365,6 +366,7 @@ export default class i18nTransform extends Transform {
     if (path.endsWith('yml')) {
       text = yaml.dump(contents, {
         indent: this.options.indentation,
+        ...this.options.yamlOptions,
       })
     } else {
       text = JSON.stringify(contents, null, this.options.indentation) + '\n'

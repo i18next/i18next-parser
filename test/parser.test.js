@@ -1395,6 +1395,33 @@ describe('parser', () => {
       i18nextParser.end(fakeFile)
     })
 
+    it('supports custom output configuration for yml', (done) => {
+      let result
+      const i18nextParser = new i18nTransform({
+        output: 'locales/$LOCALE/$NAMESPACE.yml',
+        yamlOptions: {
+          forceQuotes: true,
+          quotingType: '"',
+        },
+      })
+      const fakeFile = new Vinyl({
+        contents: Buffer.from("t('first', 'test')"),
+        path: 'file.js',
+      })
+
+      i18nextParser.on('data', (file) => {
+        if (file.relative.endsWith(path.normalize('en/translation.yml'))) {
+          result = file.contents.toString('utf8')
+        }
+      })
+      i18nextParser.once('end', () => {
+        assert.equal(result.replace(/\r\n/g, '\n'), 'first: "test"\n')
+        done()
+      })
+
+      i18nextParser.end(fakeFile)
+    })
+
     it('writes non-breaking space output to yml', (done) => {
       let result
       const i18nextParser = new i18nTransform({
