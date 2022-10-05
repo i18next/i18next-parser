@@ -1,5 +1,13 @@
 # Changelog
 
+# 6.6.0
+
+- Support custom yaml output options #626
+- Do not fail on JSX spread attribute in Trans component #637
+- Support TypeScript typecasts #604
+- Add LICENSE.md
+- Update dependencies
+
 # 6.5.0
 
 - Fix: coverage testing #586
