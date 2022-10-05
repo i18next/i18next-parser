@@ -354,6 +354,15 @@ describe('JsxLexer', () => {
         done()
       })
 
+      it('erases typecasts', (done) => {
+        const Lexer = new JsxLexer()
+        const content = '<Trans>{{ key: property } as any}</Trans>'
+        assert.deepEqual(Lexer.extract(content), [
+          { key: '{{key}}', defaultValue: '{{key}}' },
+        ])
+        done()
+      })
+
       it('keeps self-closing tags untouched when transSupportBasicHtmlNodes is true', (done) => {
         const Lexer = new JsxLexer({ transSupportBasicHtmlNodes: true })
         const content = '<Trans>a<br />b</Trans>'
