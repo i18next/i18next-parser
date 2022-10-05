@@ -40,7 +40,7 @@
     "sort-keys": "^5.0.0",
     "through2": "~4.0.2",
     "typescript": "^4.2.4",
-    "vinyl": "~2.2.1",
+    "vinyl": "~3.0.0",
     "vinyl-fs": "^3.0.2",
     "vue-template-compiler": "^2.6.11"
   },
