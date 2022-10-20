@@ -28,7 +28,7 @@
 
 # 6.1.0
 
-- Add a `functionsNamespace` option to the Javascrip Lexer #512
+- Add a `namespaceFunction` option to the Javascrip Lexer #512
 
 # 6.0.1
 
