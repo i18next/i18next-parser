@@ -75,6 +75,16 @@ describe('dotPathToHash helper function', () => {
     done()
   })
 
+  it('handles a `defaultValue` option when `useKeysAsDefaultValue` is true', (done) => {
+    const { target } = dotPathToHash(
+      { keyWithNamespace: 'one' },
+      {},
+      { value: 'myDefaultValue', useKeysAsDefaultValue: true }
+    )
+    assert.deepEqual(target, { one: 'myDefaultValue' })
+    done()
+  })
+
   it('handles a `separator` option', (done) => {
     const { target } = dotPathToHash(
       { keyWithNamespace: 'one_two_three.' },

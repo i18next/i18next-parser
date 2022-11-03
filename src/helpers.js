@@ -59,7 +59,7 @@ function dotPathToHash(entry, target = {}, options = {}) {
     newValue = ''
   }
 
-  if (useKeysAsDefaultValue) {
+  if (useKeysAsDefaultValue && newValue === '') {
     newValue = key
   }
 
