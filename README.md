@@ -189,7 +189,7 @@ export default {
 
   useKeysAsDefaultValue: false,
   // Whether to use the keys as the default value; ex. "Hello": "Hello", "World": "World"
-  // This option takes precedence over the `defaultValue` and `skipDefaultValues` options
+  // Will only take effect if `defaultValue` is not present or `skipDefaultValues` is true
   // You may also specify a function accepting the locale and namespace as arguments
 
   verbose: false,
