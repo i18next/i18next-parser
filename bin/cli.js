@@ -7,7 +7,12 @@ import colors from 'colors'
 import path from 'path'
 import sort from 'gulp-sort'
 import vfs from 'vinyl-fs'
-
+import { lilconfig } from 'lilconfig'
+import {
+  esConfigLoader,
+  tsConfigLoader,
+  yamlConfigLoader,
+} from '../dist/helpers.js'
 import i18nTransform from '../dist/transform.js'
 ;(async () => {
   const pkg = JSON.parse(
@@ -18,8 +23,7 @@ import i18nTransform from '../dist/transform.js'
     .version(pkg.version)
     .option(
       '-c, --config <path>',
-      'Path to the config file (default: i18next-parser.config.js)',
-      'i18next-parser.config.js'
+      'Path to the config file (default: i18next-parser.config.{js,json,ts,yaml,yml})'
     )
     .option(
       '-o, --output <path>',
@@ -49,8 +53,22 @@ import i18nTransform from '../dist/transform.js'
 
   let config = {}
   try {
-    config = (await import(pathToFileURL(path.resolve(program.opts().config))))
-      .default
+    const result = await lilconfig(pkg.name, {
+      searchPlaces: [
+        `${pkg.name}.config.js`,
+        `${pkg.name}.config.json`,
+        `${pkg.name}.config.ts`,
+        `${pkg.name}.config.yaml`,
+        `${pkg.name}.config.yml`,
+      ],
+      loaders: {
+        '.js': esConfigLoader,
+        '.ts': tsConfigLoader,
+        '.yaml': yamlConfigLoader,
+        '.yml': yamlConfigLoader,
+      },
+    }).load(program.opts().config)
+    config = result.config
   } catch (err) {
     if (err.code === 'MODULE_NOT_FOUND') {
       console.log(
