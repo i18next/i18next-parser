@@ -127,8 +127,8 @@ export default {
   // Default namespace used in your i18next config
 
   defaultValue: '',
-  // Default value to give to empty keys
-  // You may also specify a function accepting the locale, namespace, and key as arguments
+  // Default value to give to keys with no value
+  // You may also specify a function accepting the locale, namespace, and key, and value as arguments
 
   indentation: 2,
   // Indentation of the catalog files
