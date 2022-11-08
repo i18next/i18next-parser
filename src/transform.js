@@ -36,9 +36,7 @@ export default class i18nTransform extends Transform {
       output: 'locales/$LOCALE/$NAMESPACE.json',
       resetDefaultValueLocale: null,
       sort: false,
-      useKeysAsDefaultValue: false,
       verbose: false,
-      skipDefaultValues: false,
       customValueTemplate: null,
       failOnWarnings: false,
       yamlOptions: null,
@@ -171,8 +169,6 @@ export default class i18nTransform extends Transform {
           separator: this.options.keySeparator,
           pluralSeparator: this.options.pluralSeparator,
           value: this.options.defaultValue,
-          useKeysAsDefaultValue: this.options.useKeysAsDefaultValue,
-          skipDefaultValues: this.options.skipDefaultValues,
           customValueTemplate: this.options.customValueTemplate,
         })
 

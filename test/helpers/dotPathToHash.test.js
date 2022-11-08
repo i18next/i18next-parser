@@ -35,16 +35,6 @@ describe('dotPathToHash helper function', () => {
     done()
   })
 
-  it('supports custom separator when `useKeysAsDefaultValue` is true', (done) => {
-    const { target } = dotPathToHash(
-      { keyWithNamespace: 'namespace-two-three' },
-      {},
-      { separator: '-', useKeysAsDefaultValue: true }
-    )
-    assert.deepEqual(target, { namespace: { two: { three: 'two-three' } } })
-    done()
-  })
-
   it('handles an empty namespace', (done) => {
     const { target, duplicate } = dotPathToHash({
       keyWithNamespace: 'ns.',

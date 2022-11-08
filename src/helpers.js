@@ -36,32 +36,14 @@ function dotPathToHash(entry, target = {}, options = {}) {
 
   const defaultValue =
     typeof options.value === 'function'
-      ? options.value(options.locale, entry.namespace, key)
+      ? options.value(options.locale, entry.namespace, key, entry.defaultValue)
       : options.value
 
-  const skipDefaultValues =
-    typeof options.skipDefaultValues === 'function'
-      ? options.skipDefaultValues(options.locale, entry.namespace)
-      : options.skipDefaultValues
-
-  const useKeysAsDefaultValue =
-    typeof options.useKeysAsDefaultValue === 'function'
-      ? options.useKeysAsDefaultValue(options.locale, entry.namespace)
-      : options.useKeysAsDefaultValue
-
   let newValue =
+    defaultValue ||
     entry[`defaultValue${options.suffix}`] ||
     entry.defaultValue ||
-    defaultValue ||
     ''
-
-  if (skipDefaultValues) {
-    newValue = ''
-  }
-
-  if (useKeysAsDefaultValue) {
-    newValue = key
-  }
 
   if (path.endsWith(separator)) {
     path = path.slice(0, -separator.length)
