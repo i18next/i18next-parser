@@ -1106,6 +1106,29 @@ describe('parser', () => {
       i18nextParser.end(fakeFile)
     })
 
+    it('supports a defaultValue function with empty result', (done) => {
+      let result
+      const i18nextParser = new i18nTransform({
+        defaultValue: (locale, namespace, key, value) => '',
+      })
+      const fakeFile = new Vinyl({
+        contents: Buffer.from("t('first', 'myDefault')"),
+        path: 'file.js',
+      })
+
+      i18nextParser.on('data', (file) => {
+        if (file.relative.endsWith(enLibraryPath)) {
+          result = JSON.parse(file.contents)
+        }
+      })
+      i18nextParser.once('end', () => {
+        assert.deepEqual(result, { first: '' })
+        done()
+      })
+
+      i18nextParser.end(fakeFile)
+    })
+
     it('supports a defaultValue function with conditionals', (done) => {
       let result
       const i18nextParser = new i18nTransform({
