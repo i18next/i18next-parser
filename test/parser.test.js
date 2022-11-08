@@ -1085,8 +1085,8 @@ describe('parser', () => {
     it('supports a defaultValue function', (done) => {
       let result
       const i18nextParser = new i18nTransform({
-        defaultValue: (locale, namespace, key, defaultValue) =>
-          `${locale}:${namespace}:${key}:${defaultValue}`,
+        defaultValue: (locale, namespace, key, value) =>
+          `${locale}:${namespace}:${key}:${value}`,
       })
       const fakeFile = new Vinyl({
         contents: Buffer.from("t('first', 'myDefault')"),
@@ -1635,7 +1635,7 @@ describe('parser', () => {
     it('generates plurals for defaultValue function', (done) => {
       let result
       const i18nextParser = new i18nTransform({
-        defaultValue: (locale, namespace, key, defaultValue) => `${key}`,
+        defaultValue: (locale, namespace, key, value) => `${key}`,
       })
       const fakeFile = new Vinyl({
         contents: Buffer.from("t('test {{count}}', { count: 1 })"),
@@ -1751,7 +1751,7 @@ describe('parser', () => {
     it('generates plurals for defaultValue function for languages with multiple plural forms', (done) => {
       let result
       const i18nextParser = new i18nTransform({
-        defaultValue: (locale, namespace, key, defaultValue) => `${key}`,
+        defaultValue: (locale, namespace, key, value) => `${key}`,
         locales: ['ar'],
       })
       const fakeFile = new Vinyl({
