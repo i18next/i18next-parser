@@ -42,6 +42,7 @@ export default class i18nTransform extends Transform {
       customValueTemplate: null,
       failOnWarnings: false,
       yamlOptions: null,
+      escapeNonPrintableUnicodeCharacters: true
     }
 
     this.options = { ...this.defaults, ...options }
@@ -370,12 +371,15 @@ export default class i18nTransform extends Transform {
       })
     } else {
       text = JSON.stringify(contents, null, this.options.indentation) + '\n'
-      // Convert non-printable Unicode characters to unicode escape sequence
-      // https://unicode.org/reports/tr18/#General_Category_Property
-      text = text.replace(/[\p{Z}\p{Cc}\p{Cf}]/gu, (chr) => {
-        const n = chr.charCodeAt(0)
-        return n < 128 ? chr : `\\u${`0000${n.toString(16)}`.substr(-4)}`
-      })
+
+      if(this.options.escapeNonPrintableUnicodeCharacters){
+        // Convert non-printable Unicode characters to unicode escape sequence
+        // https://unicode.org/reports/tr18/#General_Category_Property
+        text = text.replace(/[\p{Z}\p{Cc}\p{Cf}]/gu, (chr) => {
+          const n = chr.charCodeAt(0)
+          return n < 128 ? chr : `\\u${`0000${n.toString(16)}`.substr(-4)}`
+        })
+      }
     }
 
     if (this.options.lineEnding === 'auto') {

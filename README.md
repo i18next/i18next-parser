@@ -230,6 +230,10 @@ export default {
   // {
   //   lineWidth: -1,
   // }
+
+
+  escapeNonPrintableUnicodeCharacters: true
+  // If you do not want the parser to convert non printable characters to UTF-8 Character Sequences (ex : \\u00a0), put this to true.
 }
 ```
 
