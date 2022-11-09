@@ -1083,10 +1083,12 @@ describe('parser', () => {
     })
 
     it('supports a defaultValue function', (done) => {
-      let result
+      let enResult
+      let arResult
       const i18nextParser = new i18nTransform({
         defaultValue: (locale, namespace, key, value) =>
           `${locale}:${namespace}:${key}:${value}`,
+        locales: ['en', 'ar'],
       })
       const fakeFile = new Vinyl({
         contents: Buffer.from("t('first', 'myDefault')"),
@@ -1095,11 +1097,14 @@ describe('parser', () => {
 
       i18nextParser.on('data', (file) => {
         if (file.relative.endsWith(enLibraryPath)) {
-          result = JSON.parse(file.contents)
+          enResult = JSON.parse(file.contents)
+        } else if (file.relative.endsWith(arLibraryPath)) {
+          arResult = JSON.parse(file.contents)
         }
       })
       i18nextParser.once('end', () => {
-        assert.deepEqual(result, { first: 'en:translation:first:myDefault' })
+        assert.deepEqual(enResult, { first: 'en:translation:first:myDefault' })
+        assert.deepEqual(arResult, { first: 'ar:translation:first:myDefault' })
         done()
       })
 
