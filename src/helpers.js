@@ -291,7 +291,6 @@ async function esConfigLoader(filepath) {
 }
 
 async function tsConfigLoader(filepath) {
-  console.log(filepath)
   const outfile = filepath + '.bundle.js'
   await build({
     absWorkingDir: process.cwd(),
