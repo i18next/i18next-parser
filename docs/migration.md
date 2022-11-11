@@ -1,3 +1,55 @@
+# Migrating from `6.x` to `7.x`
+
+## Breaking changes
+
+- The API to manage what default value is being used was getting too complicated. This version simplifies the API by deprecating the `skipDefaultValues` and `useKeysAsDefaultValues` options and adding a `value` argument when the `defaultValue` option is used as a function. Here are couple example of how it can be used:
+
+To replace `skipDefaultValue`, make the following change:
+
+```js
+// 5.x.x
+{
+  skipDefaultValues: true
+}
+
+// 6.x.x
+{
+  defaultValue: function (locale, namespace, key, value) {
+    return '';
+  }
+}
+```
+
+To replace `useKeysAsDefaultValues`, make the following change:
+
+```js
+// 5.x.x
+{
+  useKeysAsDefaultValues: true
+}
+
+// 6.x.x
+{
+  defaultValue: function (locale, namespace, key, value) {
+    return key;
+  }
+}
+```
+
+And now you have complete control over the logic:
+
+```js
+// 6.x.x
+{
+  defaultValue: function (locale, namespace, key, value) {
+    if (locale === 'fr') {
+      return '';
+    }
+    return value || key;
+  }
+}
+```
+
 # Migrating from `5.x` to `6.x`
 
 ## Breaking changes

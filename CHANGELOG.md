@@ -1,5 +1,12 @@
 # Changelog
 
+# 7.0.0
+
+- BREAKING: change the API for `defaultValue`. Deprecate `skipDefaultValues` and `useKeysAsDefaultValues` options. #676
+- Add support for `shouldUnescape` option in jsx-lexer #678
+- Add support for .ts, .json and .yaml config #673
+- Update dependencies
+
 # 6.6.0
 
 - Support custom yaml output options #626
