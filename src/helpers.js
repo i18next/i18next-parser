@@ -1,3 +1,8 @@
+import { build } from 'esbuild'
+import { rmSync } from 'fs'
+import yaml from 'js-yaml'
+import { builtinModules } from 'module'
+
 /**
  * Take an entry for the Parser and turn it into a hash,
  * turning the key path 'foo.bar' into an hash {foo: {bar: ""}}
@@ -260,6 +265,36 @@ function makeDefaultSort(pluralSeparator) {
   }
 }
 
+async function esConfigLoader(filepath) {
+  return (await import(filepath)).default
+}
+
+async function tsConfigLoader(filepath) {
+  const outfile = filepath + '.bundle.js'
+  await build({
+    absWorkingDir: process.cwd(),
+    entryPoints: [filepath],
+    outfile,
+    write: true,
+    target: ['node14.18', 'node16'],
+    platform: 'node',
+    bundle: true,
+    format: 'esm',
+    sourcemap: 'inline',
+    external: [
+      ...builtinModules,
+      ...builtinModules.map((mod) => 'node:' + mod),
+    ],
+  })
+  const config = await esConfigLoader(outfile)
+  rmSync(outfile)
+  return config
+}
+
+function yamlConfigLoader(filepath, content) {
+  return yaml.load(content)
+}
+
 // unescape common html entities
 // code from react-18next taken from
 // https://github.com/i18next/react-i18next/blob/d3247b5c232f5d8c1a154fe5dd0090ca88c82dcf/src/unescape.js
@@ -302,5 +337,8 @@ export {
   getSingularForm,
   getPluralSuffixPosition,
   makeDefaultSort,
+  esConfigLoader,
+  tsConfigLoader,
+  yamlConfigLoader,
   unescape,
 }

@@ -1,0 +1,4 @@
+input:
+  - '**/*.html'
+output: test/cli/locales/$LOCALE/$NAMESPACE.json
+sort: true
