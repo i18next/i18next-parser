@@ -314,7 +314,7 @@ describe('JsxLexer', () => {
         done()
       })
 
-      it('invalid interpolation gets stripped', (done) => {
+      it('strips invalid interpolation', (done) => {
         const Lexer = new JsxLexer()
         const content =
           '<Trans count={count}>before{{ key1, key2 }}after</Trans>'
@@ -376,6 +376,16 @@ describe('JsxLexer', () => {
         assert.equal(
           Lexer.extract(content)[0].defaultValue,
           'a<strong></strong>b'
+        )
+        done()
+      })
+
+      it('supports the shouldUnescape options', (done) => {
+        const Lexer = new JsxLexer()
+        const content = '<Trans shouldUnescape>I&apros;m Cielquan</Trans>'
+        assert.equal(
+          Lexer.extract(content)[0].defaultValue,
+          'I&apros;m Cielquan'
         )
         done()
       })

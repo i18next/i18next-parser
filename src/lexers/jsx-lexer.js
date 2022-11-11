@@ -1,5 +1,6 @@
 import JavascriptLexer from './javascript-lexer.js'
 import ts from 'typescript'
+import { unescape } from '../helpers.js'
 
 export default class JsxLexer extends JavascriptLexer {
   constructor(options = {}) {
@@ -91,18 +92,6 @@ export default class JsxLexer extends JavascriptLexer {
       const entry = {}
       entry.key = getKey(tagNode)
 
-      const defaultsProp = getPropValue(tagNode, 'defaults')
-      const defaultValue =
-        defaultsProp || this.nodeToString.call(this, node, sourceText)
-
-      if (defaultValue !== '') {
-        entry.defaultValue = defaultValue
-
-        if (!entry.key) {
-          entry.key = entry.defaultValue
-        }
-      }
-
       const namespace = getPropValue(tagNode, 'ns')
       if (namespace) {
         entry.namespace = namespace
@@ -142,6 +131,22 @@ export default class JsxLexer extends JavascriptLexer {
           }
         } else entry[property.name.text] = true
       })
+
+      const defaultsProp = getPropValue(tagNode, 'defaults')
+      let defaultValue =
+        defaultsProp || this.nodeToString.call(this, node, sourceText)
+
+      if (entry.shouldUnescape === true) {
+        defaultValue = unescape(defaultValue)
+      }
+
+      if (defaultValue !== '') {
+        entry.defaultValue = defaultValue
+
+        if (!entry.key) {
+          entry.key = entry.defaultValue
+        }
+      }
 
       return entry.key ? entry : null
     } else if (tagNode.tagName.text === 'Interpolate') {

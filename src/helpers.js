@@ -40,33 +40,12 @@ function dotPathToHash(entry, target = {}, options = {}) {
   }
 
   const defaultValue =
-    typeof options.value === 'function'
-      ? options.value(options.locale, entry.namespace, key)
-      : options.value
-
-  const skipDefaultValues =
-    typeof options.skipDefaultValues === 'function'
-      ? options.skipDefaultValues(options.locale, entry.namespace)
-      : options.skipDefaultValues
-
-  const useKeysAsDefaultValue =
-    typeof options.useKeysAsDefaultValue === 'function'
-      ? options.useKeysAsDefaultValue(options.locale, entry.namespace)
-      : options.useKeysAsDefaultValue
+    entry[`defaultValue${options.suffix}`] || entry.defaultValue || ''
 
   let newValue =
-    entry[`defaultValue${options.suffix}`] ||
-    entry.defaultValue ||
-    defaultValue ||
-    ''
-
-  if (skipDefaultValues) {
-    newValue = ''
-  }
-
-  if (useKeysAsDefaultValue) {
-    newValue = key
-  }
+    typeof options.value === 'function'
+      ? options.value(options.locale, entry.namespace, key, defaultValue)
+      : options.value || defaultValue
 
   if (path.endsWith(separator)) {
     path = path.slice(0, -separator.length)
@@ -316,6 +295,40 @@ function yamlConfigLoader(filepath, content) {
   return yaml.load(content)
 }
 
+// unescape common html entities
+// code from react-18next taken from
+// https://github.com/i18next/react-i18next/blob/d3247b5c232f5d8c1a154fe5dd0090ca88c82dcf/src/unescape.js
+function unescape(text) {
+  const matchHtmlEntity =
+    /&(?:amp|#38|lt|#60|gt|#62|apos|#39|quot|#34|nbsp|#160|copy|#169|reg|#174|hellip|#8230|#x2F|#47);/g
+  const htmlEntities = {
+    '&amp;': '&',
+    '&#38;': '&',
+    '&lt;': '<',
+    '&#60;': '<',
+    '&gt;': '>',
+    '&#62;': '>',
+    '&apos;': "'",
+    '&#39;': "'",
+    '&quot;': '"',
+    '&#34;': '"',
+    '&nbsp;': ' ',
+    '&#160;': ' ',
+    '&copy;': '©',
+    '&#169;': '©',
+    '&reg;': '®',
+    '&#174;': '®',
+    '&hellip;': '…',
+    '&#8230;': '…',
+    '&#x2F;': '/',
+    '&#47;': '/',
+  }
+
+  const unescapeHtmlEntity = (m) => htmlEntities[m]
+
+  return text.replace(matchHtmlEntity, unescapeHtmlEntity)
+}
+
 export {
   dotPathToHash,
   mergeHashes,
@@ -327,4 +340,5 @@ export {
   esConfigLoader,
   tsConfigLoader,
   yamlConfigLoader,
+  unescape,
 }
