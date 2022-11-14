@@ -53,7 +53,7 @@ import i18nTransform from '../dist/transform.js'
 
   let config = {}
   try {
-    const result = await lilconfig(pkg.name, {
+    const configReader = lilconfig(pkg.name, {
       searchPlaces: [
         `${pkg.name}.config.js`,
         `${pkg.name}.config.json`,
@@ -67,7 +67,13 @@ import i18nTransform from '../dist/transform.js'
         '.yaml': yamlConfigLoader,
         '.yml': yamlConfigLoader,
       },
-    }).load(program.opts().config)
+    })
+    let result
+    if (program.opts().config) {
+      result = await configReader.load(program.opts().config)
+    } else {
+      result = await configReader.search()
+    }
     config = result.config
   } catch (err) {
     if (err.code === 'MODULE_NOT_FOUND') {
@@ -117,16 +123,19 @@ import i18nTransform from '../dist/transform.js'
       }
     }
 
+    let basePath = process.cwd()
+
+    if (program.opts().config) {
+      basePath = path.dirname(path.resolve(program.opts().config))
+    }
+
     globs = config.input.map(function (s) {
       var negate = ''
       if (s.startsWith('!')) {
         negate = '!'
         s = s.substr(1)
       }
-      return (
-        negate +
-        path.resolve(path.dirname(path.resolve(program.opts().config)), s)
-      )
+      return negate + path.resolve(basePath, s)
     })
   }
 
