@@ -17,7 +17,7 @@
   "scripts": {
     "coverage": "c8 --all --include='src/**/*[.js|.jsx|.ts|.tsx]' --reporter=lcov --reporter=text yarn test",
     "test": "mocha -r @babel/register -r @babel/polyfill --recursive test/*.test.js test/**/*.test.js",
-    "test:cli": "yarn -s build && ./bin/cli.js -c test/cli/i18next-parser.config.js && ./bin/cli.js -c test/cli/i18next-parser.config.ts && ./bin/cli.js -c test/cli/i18next-parser.config.yaml",
+    "test:cli": "yarn -s build && ./bin/cli.js '**/*.html' && ./bin/cli.js -c test/cli/i18next-parser.config.js && ./bin/cli.js -c test/cli/i18next-parser.config.ts && ./bin/cli.js -c test/cli/i18next-parser.config.yaml",
     "watch": "babel src -d dist -w",
     "prettify": "prettier --write \"{src,test}/**/*.js\"",
     "build": "babel src -d dist",
