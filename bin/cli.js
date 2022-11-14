@@ -128,16 +128,19 @@ import i18nTransform from '../dist/transform.js'
       }
     }
 
+    let basePath = process.cwd()
+
+    if (program.opts().config) {
+      basePath = path.dirname(path.resolve(program.opts().config))
+    }
+
     globs = config.input.map(function (s) {
       var negate = ''
       if (s.startsWith('!')) {
         negate = '!'
         s = s.substr(1)
       }
-      return (
-        negate +
-        path.resolve(path.dirname(path.resolve(program.opts().config)), s)
-      )
+      return negate + path.resolve(basePath, s)
     })
   }
 
