@@ -53,7 +53,7 @@ import i18nTransform from '../dist/transform.js'
 
   let config = {}
   try {
-    const result = await lilconfig(pkg.name, {
+    const lilcongifOptions = {
       searchPlaces: [
         `${pkg.name}.config.js`,
         `${pkg.name}.config.json`,
@@ -67,8 +67,19 @@ import i18nTransform from '../dist/transform.js'
         '.yaml': yamlConfigLoader,
         '.yml': yamlConfigLoader,
       },
-    }).load(program.opts().config)
-    config = result.config
+    }
+    let result
+    if (program.opts().config) {
+      result = await lilconfig(pkg.name, lilcongifOptions).load(
+        program.opts().config
+      )
+    } else {
+      result = await lilconfig(pkg.name, lilcongifOptions).search()
+    }
+
+    if (result) {
+      config = result.config
+    }
   } catch (err) {
     if (err.code === 'MODULE_NOT_FOUND') {
       console.log(

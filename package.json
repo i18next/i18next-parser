@@ -1,7 +1,7 @@
 {
   "name": "i18next-parser",
   "description": "Command Line tool for i18next",
-  "version": "7.0.0",
+  "version": "7.0.2",
   "type": "module",
   "license": "MIT",
   "author": "Karel Ledru",
@@ -17,7 +17,7 @@
   "scripts": {
     "coverage": "c8 --all --include='src/**/*[.js|.jsx|.ts|.tsx]' --reporter=lcov --reporter=text yarn test",
     "test": "mocha -r @babel/register -r @babel/polyfill --recursive test/*.test.js test/**/*.test.js",
-    "test:cli": "yarn -s build && ./bin/cli.js -c test/cli/i18next-parser.config.js && ./bin/cli.js -c test/cli/i18next-parser.config.ts && ./bin/cli.js -c test/cli/i18next-parser.config.yaml",
+    "test:cli": "yarn -s build && ./bin/cli.js '**/*.html' -o 'test/manual/$LOCALE/$NAMESPACE.json' && ./bin/cli.js -c test/cli/i18next-parser.config.js && ./bin/cli.js -c test/cli/i18next-parser.config.ts && ./bin/cli.js -c test/cli/i18next-parser.config.yaml",
     "test:watch": "mocha -r @babel/register -r @babel/polyfill --watch --parallel --recursive",
     "watch": "babel src -d dist -w",
     "prettify": "prettier --write \"{src,test}/**/*.js\"",

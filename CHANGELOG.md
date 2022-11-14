@@ -1,5 +1,10 @@
 # Changelog
 
+# 7.0.2
+
+- Fix a bug when using the cli and passing no config file #690
+- Update dependencies
+
 # 7.0.0
 
 - BREAKING: change the API for `defaultValue`. Deprecate `skipDefaultValues` and `useKeysAsDefaultValues` options. #676
