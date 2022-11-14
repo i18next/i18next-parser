@@ -11,6 +11,27 @@ describe('JsxLexer', () => {
     })
   })
 
+  describe('<Translation>', () => {
+    it('extracts keys from render prop', (done) => {
+      const Lexer = new JsxLexer()
+      const content = `<Translation>{(t) => <>{t("first", "Main")}{t("second")}</>}</Translation>`
+      assert.deepEqual(Lexer.extract(content), [
+        { defaultValue: 'Main', key: 'first' },
+        { key: 'second' },
+      ])
+      done()
+    })
+
+    it('sets ns (namespace) for expressions within render prop', (done) => {
+      const Lexer = new JsxLexer()
+      const content = `<Translation ns="foo">{(t) => t("first")}</Translation>`
+      assert.deepEqual(Lexer.extract(content), [
+        { key: 'first', namespace: 'foo' },
+      ])
+      done()
+    })
+  })
+
   describe('<Trans>', () => {
     it('extracts keys from i18nKey attributes from closing tags', (done) => {
       const Lexer = new JsxLexer()

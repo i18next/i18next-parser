@@ -153,6 +153,11 @@ export default class JsxLexer extends JavascriptLexer {
       const entry = {}
       entry.key = getKey(tagNode)
       return entry.key ? entry : null
+    } else if (tagNode.tagName.text === 'Translation') {
+      const namespace = getPropValue(tagNode, 'ns')
+      if (namespace) {
+        this.defaultNamespace = namespace
+      }
     }
   }
 
