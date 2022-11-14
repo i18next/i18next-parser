@@ -1,6 +1,6 @@
 # Changelog
 
-# 7.0.1
+# 7.0.2
 
 - Fix a bug when using the cli and passing no config file #690
 - Update dependencies

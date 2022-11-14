@@ -76,7 +76,10 @@ import i18nTransform from '../dist/transform.js'
     } else {
       result = await lilconfig(pkg.name, lilcongifOptions).search()
     }
-    config = result.config
+
+    if (result) {
+      config = result.config
+    }
   } catch (err) {
     if (err.code === 'MODULE_NOT_FOUND') {
       console.log(
