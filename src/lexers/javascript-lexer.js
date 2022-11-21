@@ -114,7 +114,7 @@ export default class JavascriptLexer extends BaseLexer {
         (param) =>
           param.name &&
           param.name.kind === ts.SyntaxKind.Identifier &&
-          param.name.text === 't'
+          this.functions.includes(param.name.text)
       )
 
     if (
@@ -124,7 +124,7 @@ export default class JavascriptLexer extends BaseLexer {
     ) {
       const { typeArguments } = tFunctionParam.type
       if (
-        typeArguments.length === 1 &&
+        typeArguments.length &&
         typeArguments[0].kind === ts.SyntaxKind.LiteralType
       ) {
         this.defaultNamespace = typeArguments[0].literal.text
