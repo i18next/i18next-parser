@@ -74,6 +74,13 @@ export default class JavascriptLexer extends BaseLexer {
 
       parseCommentNode(keys, node, content)
 
+      if (
+        node.kind === ts.SyntaxKind.ArrowFunction ||
+        node.kind === ts.SyntaxKind.FunctionDeclaration
+      ) {
+        this.functionParamExtractor.call(this, node)
+      }
+
       if (node.kind === ts.SyntaxKind.TaggedTemplateExpression) {
         entry = this.taggedTemplateExpressionExtractor.call(this, node)
       }
@@ -97,6 +104,32 @@ export default class JavascriptLexer extends BaseLexer {
     parseTree(sourceFile)
 
     return this.setNamespaces(keys)
+  }
+
+  /** @param {ts.FunctionLikeDeclaration} node */
+  functionParamExtractor(node) {
+    const tFunctionParam =
+      node.parameters &&
+      node.parameters.find(
+        (param) =>
+          param.name &&
+          param.name.kind === ts.SyntaxKind.Identifier &&
+          param.name.text === 't'
+      )
+
+    if (
+      tFunctionParam &&
+      tFunctionParam.type &&
+      tFunctionParam.type.typeName.text === 'TFunction'
+    ) {
+      const { typeArguments } = tFunctionParam.type
+      if (
+        typeArguments.length === 1 &&
+        typeArguments[0].kind === ts.SyntaxKind.LiteralType
+      ) {
+        this.defaultNamespace = typeArguments[0].literal.text
+      }
+    }
   }
 
   taggedTemplateExpressionExtractor(node) {
