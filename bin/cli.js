@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-import { pathToFileURL } from 'url'
 import { promises as fsp } from 'fs'
 import { program } from 'commander'
 import colors from 'colors'
@@ -53,7 +52,7 @@ import i18nTransform from '../dist/transform.js'
 
   let config = {}
   try {
-    const lilcongifOptions = {
+    const lilconfigOptions = {
       searchPlaces: [
         `${pkg.name}.config.js`,
         `${pkg.name}.config.json`,
@@ -70,11 +69,11 @@ import i18nTransform from '../dist/transform.js'
     }
     let result
     if (program.opts().config) {
-      result = await lilconfig(pkg.name, lilcongifOptions).load(
+      result = await lilconfig(pkg.name, lilconfigOptions).load(
         program.opts().config
       )
     } else {
-      result = await lilconfig(pkg.name, lilcongifOptions).search()
+      result = await lilconfig(pkg.name, lilconfigOptions).search()
     }
 
     if (result) {
