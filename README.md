@@ -93,7 +93,7 @@ npm install --save-dev i18next-parser
 
 ```javascript
 import Funnel from 'broccoli-funnel'
-import { broccoli as i18nextParser} from 'i18next-parser')
+import { broccoli as i18nextParser} from 'i18next-parser'
 
 const appRoot = 'broccoli'
 
