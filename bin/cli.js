@@ -22,7 +22,7 @@ import i18nTransform from '../dist/transform.js'
     .version(pkg.version)
     .option(
       '-c, --config <path>',
-      'Path to the config file (default: i18next-parser.config.{js,json,ts,yaml,yml})'
+      'Path to the config file (default: i18next-parser.config.{js,mjs,json,ts,yaml,yml})'
     )
     .option(
       '-o, --output <path>',
