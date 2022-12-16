@@ -55,6 +55,7 @@ import i18nTransform from '../dist/transform.js'
     const lilconfigOptions = {
       searchPlaces: [
         `${pkg.name}.config.js`,
+        `${pkg.name}.config.mjs`,
         `${pkg.name}.config.json`,
         `${pkg.name}.config.ts`,
         `${pkg.name}.config.yaml`,
@@ -62,6 +63,7 @@ import i18nTransform from '../dist/transform.js'
       ],
       loaders: {
         '.js': esConfigLoader,
+        '.mjs': esConfigLoader,
         '.ts': tsConfigLoader,
         '.yaml': yamlConfigLoader,
         '.yml': yamlConfigLoader,
