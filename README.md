@@ -45,7 +45,7 @@ Multiple globbing patterns are supported to specify complex file selections. You
 
 **IMPORTANT NOTE**: If you pass the globs as CLI argument, they must be relative to where you run the command (aka relative to `process.cwd()`). If you pass the globs via the `input` option of the config file, they must be relative to the config file.
 
-- **-c, --config <path>**: Path to the config file (default: i18next-parser.config.{js,json,ts,yaml,yml}).
+- **-c, --config <path>**: Path to the config file (default: i18next-parser.config.{js,mjs,json,ts,yaml,yml}).
 - **-o, --output <path>**: Path to the output directory (default: locales/$LOCALE/$NAMESPACE.json).
 - **-s, --silent**: Disable logging to stdout.
 - **--fail-on-warnings**: Exit with an exit code of 1 on warnings
@@ -93,17 +93,17 @@ npm install --save-dev i18next-parser
 
 ```javascript
 import Funnel from 'broccoli-funnel'
-import { broccoli as i18nextParser} from 'i18next-parser'
+import { broccoli as i18nextParser } from 'i18next-parser'
 
 const appRoot = 'broccoli'
 
 let i18n = new Funnel(appRoot, {
   files: ['handlebars.hbs', 'javascript.js'],
-  annotation: 'i18next-parser'
+  annotation: 'i18next-parser',
 })
 
 i18n = new i18nextParser([i18n], {
-  output: 'broccoli/locales/$LOCALE/$NAMESPACE.json'
+  output: 'broccoli/locales/$LOCALE/$NAMESPACE.json',
 })
 
 export default i18n
