@@ -33,7 +33,7 @@
     "commander": "~9.4.1",
     "concat-stream": "~2.0.0",
     "eol": "^0.9.1",
-    "esbuild": "^0.16.4",
+    "esbuild": "^0.17.0",
     "fs-extra": "^11.1.0",
     "gulp-sort": "^2.0.0",
     "i18next": "^22.0.4",
