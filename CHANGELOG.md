@@ -1,6 +1,16 @@
 # Changelog
 
-# 7.0.2
+# 7.2.0
+
+- Allow for .mjs as a config file extension #733 #708
+- Update dependencies
+
+# 7.1.0
+
+- Fix config loading on Windows #725 #698
+- Update dependencies
+
+# 7.0.3
 
 - Fix a bug when using the cli and passing no config file #690
 - Update dependencies

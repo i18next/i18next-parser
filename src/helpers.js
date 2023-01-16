@@ -1,3 +1,4 @@
+import { pathToFileURL } from 'url'
 import { build } from 'esbuild'
 import { rmSync } from 'fs'
 import yaml from 'js-yaml'
@@ -266,7 +267,7 @@ function makeDefaultSort(pluralSeparator) {
 }
 
 async function esConfigLoader(filepath) {
-  return (await import(filepath)).default
+  return (await import(pathToFileURL(filepath))).default
 }
 
 async function tsConfigLoader(filepath) {

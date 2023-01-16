@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-import { pathToFileURL } from 'url'
 import { promises as fsp } from 'fs'
 import { program } from 'commander'
 import colors from 'colors'
@@ -23,7 +22,7 @@ import i18nTransform from '../dist/transform.js'
     .version(pkg.version)
     .option(
       '-c, --config <path>',
-      'Path to the config file (default: i18next-parser.config.{js,json,ts,yaml,yml})'
+      'Path to the config file (default: i18next-parser.config.{js,mjs,json,ts,yaml,yml})'
     )
     .option(
       '-o, --output <path>',
@@ -53,9 +52,10 @@ import i18nTransform from '../dist/transform.js'
 
   let config = {}
   try {
-    const lilcongifOptions = {
+    const lilconfigOptions = {
       searchPlaces: [
         `${pkg.name}.config.js`,
+        `${pkg.name}.config.mjs`,
         `${pkg.name}.config.json`,
         `${pkg.name}.config.ts`,
         `${pkg.name}.config.yaml`,
@@ -63,6 +63,7 @@ import i18nTransform from '../dist/transform.js'
       ],
       loaders: {
         '.js': esConfigLoader,
+        '.mjs': esConfigLoader,
         '.ts': tsConfigLoader,
         '.yaml': yamlConfigLoader,
         '.yml': yamlConfigLoader,
@@ -70,11 +71,11 @@ import i18nTransform from '../dist/transform.js'
     }
     let result
     if (program.opts().config) {
-      result = await lilconfig(pkg.name, lilcongifOptions).load(
+      result = await lilconfig(pkg.name, lilconfigOptions).load(
         program.opts().config
       )
     } else {
-      result = await lilconfig(pkg.name, lilcongifOptions).search()
+      result = await lilconfig(pkg.name, lilconfigOptions).search()
     }
 
     if (result) {
@@ -128,16 +129,19 @@ import i18nTransform from '../dist/transform.js'
       }
     }
 
+    let basePath = process.cwd()
+
+    if (program.opts().config) {
+      basePath = path.dirname(path.resolve(program.opts().config))
+    }
+
     globs = config.input.map(function (s) {
       var negate = ''
       if (s.startsWith('!')) {
         negate = '!'
         s = s.substr(1)
       }
-      return (
-        negate +
-        path.resolve(path.dirname(path.resolve(program.opts().config)), s)
-      )
+      return negate + path.resolve(basePath, s)
     })
   }
 

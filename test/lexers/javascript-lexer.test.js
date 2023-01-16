@@ -128,6 +128,17 @@ describe('JavascriptLexer', () => {
     done()
   })
 
+  it('parses namespace from `t` type argument', (done) => {
+    const Lexer = new JavascriptLexer()
+    const content = `
+      const content = (t: TFunction<"foo">) => ({
+        title: t("bar"),
+      })
+    `
+    assert.deepEqual(Lexer.extract(content), [{ key: 'bar', namespace: 'foo' }])
+    done()
+  })
+
   it("does not parse text with `doesn't` or isolated `t` in it", (done) => {
     const Lexer = new JavascriptLexer()
     const js =
