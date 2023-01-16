@@ -1,5 +1,11 @@
 # Changelog
 
+# 7.3.0
+
+- Parse namespace from t type arguments #703 #701
+- Extract namespace for <Translation> render prop #702 #691
+- Updae dependencies
+
 # 7.2.0
 
 - Allow for .mjs as a config file extension #733 #708
