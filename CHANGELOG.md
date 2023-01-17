@@ -1,5 +1,10 @@
 # Changelog
 
+# 7.4.0
+
+- Fix esm import in cjs project #761
+- Update dependencies
+
 # 7.3.0
 
 - Parse namespace from t type arguments #703 #701
