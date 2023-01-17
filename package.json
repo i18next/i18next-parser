@@ -1,7 +1,7 @@
 {
   "name": "i18next-parser",
   "description": "Command Line tool for i18next",
-  "version": "7.4.0",
+  "version": "7.5.0",
   "type": "module",
   "license": "MIT",
   "author": "Karel Ledru",
@@ -21,7 +21,7 @@
     "test:watch": "mocha -r @babel/register -r @babel/polyfill --watch --parallel --recursive",
     "watch": "babel src -d dist -w",
     "prettify": "prettier --write \"{src,test}/**/*.js\"",
-    "build": "babel src -d dist&&cp index.d.ts dist",
+    "build": "babel src -d dist && cp index.d.ts dist",
     "prepare": "husky install",
     "prepublishOnly": "yarn -s prettify && yarn -s build"
   },

@@ -1,5 +1,9 @@
 # Changelog
 
+# 7.5.0
+
+- Add type declaration to the build #694 #695
+
 # 7.4.0
 
 - Fix esm import in cjs project #761
