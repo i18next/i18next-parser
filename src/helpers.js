@@ -17,7 +17,7 @@ import { builtinModules } from 'module'
  * {one: {two: "bla"}}), `"value"` if the same key already exists with a
  * different value, or `false`.
  */
-function dotPathToHash(entry, target = {}, options = {}) {
+async function dotPathToHash(entry, target = {}, options = {}) {
   let conflict = false
   let duplicate = false
   let path = entry.keyWithNamespace
@@ -45,7 +45,7 @@ function dotPathToHash(entry, target = {}, options = {}) {
 
   let newValue =
     typeof options.value === 'function'
-      ? options.value(options.locale, entry.namespace, key, defaultValue)
+      ? await options.value(options.locale, entry.namespace, key, defaultValue)
       : options.value || defaultValue
 
   if (path.endsWith(separator)) {

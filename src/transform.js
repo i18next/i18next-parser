@@ -136,7 +136,7 @@ export default class i18nTransform extends Transform {
     done()
   }
 
-  _flush(done) {
+  async _flush(done) {
     let maybeSortedLocales = this.options.locales
     if (this.options.resetDefaultValueLocale) {
       // ensure we process the reset locale first
@@ -155,7 +155,7 @@ export default class i18nTransform extends Transform {
       let uniqueCount = {}
       let uniquePluralsCount = {}
 
-      const transformEntry = (entry, suffix) => {
+      const transformEntry = async (entry, suffix) => {
         if (uniqueCount[entry.namespace] === undefined) {
           uniqueCount[entry.namespace] = 0
         }
@@ -163,7 +163,7 @@ export default class i18nTransform extends Transform {
           uniquePluralsCount[entry.namespace] = 0
         }
 
-        const { duplicate, conflict } = dotPathToHash(entry, catalog, {
+        const { duplicate, conflict } = await dotPathToHash(entry, catalog, {
           suffix,
           locale,
           separator: this.options.keySeparator,
@@ -192,13 +192,13 @@ export default class i18nTransform extends Transform {
       // generates plurals according to i18next rules: key_zero, key_one, key_two, key_few, key_many and key_other
       for (const entry of this.entries) {
         if (entry.count !== undefined) {
-          this.i18next.services.pluralResolver
-            .getSuffixes(locale, { ordinal: entry.ordinal })
-            .forEach((suffix) => {
-              transformEntry(entry, suffix)
-            })
+          await Promise.all(
+            this.i18next.services.pluralResolver
+              .getSuffixes(locale, { ordinal: entry.ordinal })
+              .map((suffix) => transformEntry(entry, suffix))
+          )
         } else {
-          transformEntry(entry)
+          await transformEntry(entry)
         }
       }
 
