@@ -124,6 +124,7 @@ export default class JavascriptLexer extends BaseLexer {
     ) {
       const { typeArguments } = tFunctionParam.type
       if (
+        typeArguments &&
         typeArguments.length &&
         typeArguments[0].kind === ts.SyntaxKind.LiteralType
       ) {
