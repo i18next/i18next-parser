@@ -1,6 +1,6 @@
 import { pathToFileURL } from 'url'
 import { build } from 'esbuild'
-import { rmSync } from 'fs'
+import { rm, readFile } from 'fs/promises'
 import yaml from 'js-yaml'
 import { builtinModules } from 'module'
 
@@ -272,6 +272,15 @@ async function esConfigLoader(filepath) {
 
 async function tsConfigLoader(filepath) {
   const outfile = filepath + '.bundle.mjs'
+  let packageJson = {}
+
+  try {
+    const packageJsonRaw = await readFile('package.json', 'utf-8')
+    packageJson = JSON.parse(packageJsonRaw)
+  } catch (e) {
+    packageJson = {}
+  }
+
   await build({
     absWorkingDir: process.cwd(),
     entryPoints: [filepath],
@@ -285,10 +294,12 @@ async function tsConfigLoader(filepath) {
     external: [
       ...builtinModules,
       ...builtinModules.map((mod) => 'node:' + mod),
+      ...Object.keys(packageJson.dependencies || {}),
+      ...Object.keys(packageJson.devDependencies || {}),
     ],
   })
   const config = await esConfigLoader(outfile)
-  rmSync(outfile)
+  await rm(outfile)
   return config
 }
 
