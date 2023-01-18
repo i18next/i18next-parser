@@ -120,6 +120,7 @@ export default class JavascriptLexer extends BaseLexer {
     if (
       tFunctionParam &&
       tFunctionParam.type &&
+      tFunctionParam.type.typeName &&
       tFunctionParam.type.typeName.text === 'TFunction'
     ) {
       const { typeArguments } = tFunctionParam.type
