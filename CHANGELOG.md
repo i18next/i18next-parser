@@ -1,5 +1,10 @@
 # Changelog
 
+# 7.6.0
+
+- Fix a bug: typeArguments may be undefined #764 #765
+- Update dependencies
+
 # 7.5.0
 
 - Add type declaration to the build #694 #695
