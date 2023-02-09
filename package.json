@@ -6,6 +6,7 @@
   "license": "MIT",
   "author": "Karel Ledru",
   "exports": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "bin": {
     "i18next": "./bin/cli.js"
   },
