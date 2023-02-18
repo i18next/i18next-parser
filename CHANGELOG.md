@@ -1,5 +1,10 @@
 # Changelog
 
+# 7.7.0
+
+- Added missing types property to package.json #774 #775
+- Update dependencies
+
 # 7.6.0
 
 - Fix a bug: typeArguments may be undefined #764 #765
