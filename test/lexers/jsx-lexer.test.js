@@ -132,6 +132,23 @@ describe('JsxLexer', () => {
       done()
     })
 
+    it('extracts keys from user-defined components', (done) => {
+      const Lexer = new JsxLexer({
+        componentFunctions: ['Translate', 'FooBar'],
+      })
+      const content = `<div>
+      <Translate i18nKey="something">Something to translate.</Translate>
+      <NotSupported i18nKey="jkl">asdf</NotSupported>
+      <FooBar i18nKey="asdf">Lorum Ipsum</FooBar>
+      </div>
+      `
+      assert.deepEqual(Lexer.extract(content), [
+        { key: 'something', defaultValue: 'Something to translate.' },
+        { key: 'asdf', defaultValue: 'Lorum Ipsum' },
+      ])
+      done()
+    })
+
     it('extracts keys from single line comments', (done) => {
       const Lexer = new JsxLexer()
       const content = `

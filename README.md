@@ -263,6 +263,7 @@ Default configuration:
   jsx: [{
     lexer: 'JsxLexer',
     attr: 'i18nKey', // Attribute for the keys
+    componentFunctions: ['Trans'], // Array of components to match
   }],
 }
 ```
