@@ -2530,7 +2530,23 @@ describe('parser', () => {
       i18nextParser.end(fakeFile)
     })
 
-    it('emits a `warning` event if a namespace contains a variable', (done) => {
+    it('emits a `warning` event if ns prop contains a variable', (done) => {
+      const i18nextParser = new i18nTransform({
+        output: 'test/locales/$LOCALE/$NAMESPACE.json',
+      })
+      const fakeFile = new Vinyl({
+        contents: Buffer.from('<Trans ns={variable} />'),
+        path: 'file.jsx',
+      })
+
+      i18nextParser.on('warning', (message) => {
+        assert.equal(message, '"ns" prop is not a string literal: variable')
+        done()
+      })
+      i18nextParser.end(fakeFile)
+    })
+
+    it('emits a `warning` event if a component prop contains a variable', (done) => {
       const i18nextParser = new i18nTransform({
         output: 'test/locales/$LOCALE/$NAMESPACE.json',
       })
@@ -2540,7 +2556,10 @@ describe('parser', () => {
       })
 
       i18nextParser.on('warning', (message) => {
-        assert.equal(message, 'Namespace is not a string literal: variable')
+        assert.equal(
+          message,
+          '"i18nKey" prop is not a string literal: variable'
+        )
         done()
       })
       i18nextParser.end(fakeFile)
