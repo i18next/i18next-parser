@@ -6,6 +6,7 @@ export default class JsxLexer extends JavascriptLexer {
   constructor(options = {}) {
     super(options)
 
+    this.componentFunctions = options.componentFunctions || ['Trans']
     this.transSupportBasicHtmlNodes =
       options.transSupportBasicHtmlNodes || false
     this.transKeepBasicHtmlNodesFor = options.transKeepBasicHtmlNodesFor || [
@@ -88,7 +89,7 @@ export default class JsxLexer extends JavascriptLexer {
 
     const getKey = (node) => getPropValue(node, this.attr)
 
-    if (tagNode.tagName.text === 'Trans') {
+    if (this.componentFunctions.includes(tagNode.tagName.text)) {
       const entry = {}
       entry.key = getKey(tagNode)
 
