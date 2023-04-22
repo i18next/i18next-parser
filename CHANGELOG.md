@@ -1,5 +1,10 @@
 # Changelog
 
+# 7.8.0
+
+- Add support for user-defined component functions #803 #804
+- Update dependencies
+
 # 7.7.0
 
 - Added missing types property to package.json #774 #775
