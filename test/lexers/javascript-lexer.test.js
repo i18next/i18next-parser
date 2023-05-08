@@ -27,6 +27,15 @@ describe('JavascriptLexer', () => {
     done()
   })
 
+  it('extracts the second argument string concatenation as defaultValue', (done) => {
+    const Lexer = new JavascriptLexer()
+    const content = 'i18n.t("first", "bla" + "bla" + "bla")'
+    assert.deepEqual(Lexer.extract(content), [
+      { key: 'first', defaultValue: 'blablabla' },
+    ])
+    done()
+  })
+
   it('extracts the defaultValue/context options', (done) => {
     const Lexer = new JavascriptLexer()
     const content = 'i18n.t("first", {defaultValue: "foo", context: \'bar\'})'

@@ -256,13 +256,27 @@ export default class JavascriptLexer extends BaseLexer {
 
       let optionsArgument = node.arguments.shift()
 
-      // Second argument could be a string default value
+      // Second argument could be a (concatenated) string default value
       if (
         optionsArgument &&
         (optionsArgument.kind === ts.SyntaxKind.StringLiteral ||
           optionsArgument.kind === ts.SyntaxKind.NoSubstitutionTemplateLiteral)
       ) {
         entry.defaultValue = optionsArgument.text
+        optionsArgument = node.arguments.shift()
+      } else if (
+        optionsArgument &&
+        optionsArgument.kind === ts.SyntaxKind.BinaryExpression
+      ) {
+        const concatenatedString = this.concatenateString(optionsArgument)
+        if (!concatenatedString) {
+          this.emit(
+            'warning',
+            `Default value is not a string literal: ${optionsArgument.text}`
+          )
+          return null
+        }
+        entry.defaultValue = concatenatedString
         optionsArgument = node.arguments.shift()
       }
 
