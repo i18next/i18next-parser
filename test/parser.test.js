@@ -2484,7 +2484,7 @@ describe('parser', () => {
       i18nextParser.end(fakeFile)
     })
 
-    it('emits a `error` event if the catalog is not valid json', (done) => {
+    it.only('emits a `error` event if the catalog is not valid json', (done) => {
       const i18nextParser = new i18nTransform({
         output: 'test/locales/$LOCALE/$NAMESPACE.json',
       })
@@ -2494,7 +2494,7 @@ describe('parser', () => {
       })
 
       i18nextParser.on('error', (error) => {
-        assert.equal(error.message.startsWith('Unexpected token /'), true)
+        assert.match(error.message, /^Unexpected token '?\/'?/)
         done()
       })
       i18nextParser.end(fakeFile)

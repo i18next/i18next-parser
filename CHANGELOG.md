@@ -1,5 +1,10 @@
 # Changelog
 
+# 8.0.0
+
+- Drop support for node 14
+- Add support for node 20
+
 # 7.9.0
 
 - Add support for string concatenation in default values #817
