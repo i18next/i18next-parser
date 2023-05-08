@@ -1,3 +1,9 @@
+# Migrating from `7.x` to `8.x`
+
+## Breaking changes
+
+- Support for Node 14 is dropped. Node 16, 18 and 20 are supported.
+
 # Migrating from `6.x` to `7.x`
 
 ## Breaking changes
