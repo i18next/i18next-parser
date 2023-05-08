@@ -1,5 +1,10 @@
 # Changelog
 
+# 7.9.0
+
+- Add support for string concatenation in default values #817
+- Update dependencies
+
 # 7.8.0
 
 - Add support for user-defined component functions #803 #804
