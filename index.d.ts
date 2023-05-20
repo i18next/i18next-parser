@@ -81,7 +81,7 @@ export interface UserConfig {
   contextSeparator?: string;
   createOldCatalogs?: boolean;
   defaultNamespace?: string;
-  defaultValue?: string | ((locale?: string, namespace?: string, key?: string) => string);
+  defaultValue?: string | ((locale?: string, namespace?: string, key?: string) => string | Promise<string>);
   indentation?: number;
   keepRemoved?: boolean;
   keySeparator?: string | false;

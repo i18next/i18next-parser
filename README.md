@@ -131,7 +131,8 @@ export default {
 
   defaultValue: '',
   // Default value to give to keys with no value
-  // You may also specify a function accepting the locale, namespace, key, and value as arguments
+  // You may also specify a sync/async function:
+  // (locale: string, namespace: string, key: string, value: string) => string | Promise<string>
 
   indentation: 2,
   // Indentation of the catalog files

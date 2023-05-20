@@ -1,6 +1,6 @@
 import { pathToFileURL } from 'url'
 import { build } from 'esbuild'
-import { rmSync } from 'fs'
+import { rm, readFile } from 'fs/promises'
 import yaml from 'js-yaml'
 import { builtinModules } from 'module'
 
@@ -17,7 +17,7 @@ import { builtinModules } from 'module'
  * {one: {two: "bla"}}), `"value"` if the same key already exists with a
  * different value, or `false`.
  */
-function dotPathToHash(entry, target = {}, options = {}) {
+async function dotPathToHash(entry, target = {}, options = {}) {
   let conflict = false
   let duplicate = false
   let path = entry.keyWithNamespace
@@ -45,7 +45,7 @@ function dotPathToHash(entry, target = {}, options = {}) {
 
   let newValue =
     typeof options.value === 'function'
-      ? options.value(options.locale, entry.namespace, key, defaultValue)
+      ? await options.value(options.locale, entry.namespace, key, defaultValue)
       : options.value || defaultValue
 
   if (path.endsWith(separator)) {
@@ -272,6 +272,15 @@ async function esConfigLoader(filepath) {
 
 async function tsConfigLoader(filepath) {
   const outfile = filepath + '.bundle.mjs'
+  let packageJson = {}
+
+  try {
+    const packageJsonRaw = await readFile('package.json', 'utf-8')
+    packageJson = JSON.parse(packageJsonRaw)
+  } catch (e) {
+    packageJson = {}
+  }
+
   await build({
     absWorkingDir: process.cwd(),
     entryPoints: [filepath],
@@ -285,10 +294,12 @@ async function tsConfigLoader(filepath) {
     external: [
       ...builtinModules,
       ...builtinModules.map((mod) => 'node:' + mod),
+      ...Object.keys(packageJson.dependencies || {}),
+      ...Object.keys(packageJson.devDependencies || {}),
     ],
   })
   const config = await esConfigLoader(outfile)
-  rmSync(outfile)
+  await rm(outfile)
   return config
 }
 
