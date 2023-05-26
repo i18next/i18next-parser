@@ -191,7 +191,10 @@ export default class i18nTransform extends Transform {
 
       // generates plurals according to i18next rules: key_zero, key_one, key_two, key_few, key_many and key_other
       for (const entry of this.entries) {
-        if (entry.count !== undefined) {
+        if (
+          this.options.pluralSeparator !== false &&
+          entry.count !== undefined
+        ) {
           this.i18next.services.pluralResolver
             .getSuffixes(locale, { ordinal: entry.ordinal })
             .forEach((suffix) => {
