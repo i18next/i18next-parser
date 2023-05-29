@@ -1,5 +1,10 @@
 # Changelog
 
+# 8.1.0
+
+- Allow to disable plural handling #825 #463
+- Update dependencies
+
 # 8.0.0
 
 - Drop support for node 14
