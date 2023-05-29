@@ -652,6 +652,31 @@ describe('parser', () => {
     i18nextParser.end(fakeFile)
   })
 
+  it('ignores plural values in existing catalog if pluralSeparator set to false', (done) => {
+    let result
+    const i18nextParser = new i18nTransform({
+      pluralSeparator: false,
+    })
+    const fakeFile = new Vinyl({
+      contents: Buffer.from("t('test {{count}}', { count: 1 })"),
+      path: 'file.js',
+    })
+
+    i18nextParser.on('data', (file) => {
+      if (file.relative.endsWith(enLibraryPath)) {
+        result = JSON.parse(file.contents)
+      }
+    })
+    i18nextParser.once('end', () => {
+      assert.deepEqual(result, {
+        'test {{count}}': '',
+      })
+      done()
+    })
+
+    i18nextParser.end(fakeFile)
+  })
+
   it('retrieves plural values in existing catalog', (done) => {
     let result
     const i18nextParser = new i18nTransform({
