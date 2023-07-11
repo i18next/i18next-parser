@@ -165,28 +165,45 @@ export default class JavascriptLexer extends BaseLexer {
       this.namespaceFunctions.includes(node.expression.escapedText) &&
       node.arguments.length
     ) {
-      const { text, elements } = node.arguments[0]
+      const namespaceArgument = node.arguments[0]
+      const optionsArgument = node.arguments[1]
+      // The namespace argument can be either an array of namespaces or a single namespace,
+      // so we convert it to an array in the case of a single namespace so that we can use
+      // the same code in both cases
+      const namespaces = namespaceArgument.elements || [namespaceArgument]
 
-      // useTranslation
-      if (text) {
-        this.defaultNamespace = text
-        const optionsArgument = node.arguments[1]
+      // Find the first namespace that is a string literal, or is `undefined`. In the case
+      // of `undefined`, we do nothing (see below), leaving the default namespace unchanged
+      const namespace = namespaces.find(
+        (ns) =>
+          ns.kind === ts.SyntaxKind.StringLiteral ||
+          (ns.kind === ts.SyntaxKind.Identifier && ns.text === 'undefined')
+      )
 
-        if (
-          optionsArgument &&
-          optionsArgument.kind === ts.SyntaxKind.ObjectLiteralExpression
-        ) {
-          const node = optionsArgument.properties.find(
-            (p) => p.name.escapedText === 'keyPrefix'
-          )
-          if (node != null) {
-            const keyPrefixValue = node.initializer.text
-            this.keyPrefix = keyPrefixValue
-          }
+      if (!namespace) {
+        // We know that the namespace argument was provided, so if we're unable to find a
+        // namespace, emit a warning since this will likely cause issues for the user
+        this.emit(
+          'warning',
+          namespaceArgument.kind === ts.SyntaxKind.Identifier
+            ? `Namespace is not a string literal nor an array containing a string literal: ${namespaceArgument.text}`
+            : 'Namespace is not a string literal nor an array containing a string literal'
+        )
+      } else if (namespace.kind === ts.SyntaxKind.StringLiteral) {
+        // We found a string literal namespace, so we'll use this instead of the default
+        this.defaultNamespace = namespace.text
+      }
+
+      if (
+        optionsArgument &&
+        optionsArgument.kind === ts.SyntaxKind.ObjectLiteralExpression
+      ) {
+        const keyPrefixNode = optionsArgument.properties.find(
+          (p) => p.name.escapedText === 'keyPrefix'
+        )
+        if (keyPrefixNode != null) {
+          this.keyPrefix = keyPrefixNode.initializer.text
         }
-        // withTranslation
-      } else if (elements && elements.length) {
-        this.defaultNamespace = elements[0].text
       }
     }
 
