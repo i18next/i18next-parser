@@ -122,7 +122,10 @@ function mergeHashes(source, target, options = {}, resetValues = {}) {
   let oldCount = 0
   let resetCount = 0
 
-  const keepRemoved = options.keepRemoved || false
+  const keepRemoved = typeof options.keepRemoved === "boolean" && options.keepRemoved || false
+  const keepRemovedPatterns = typeof options.keepRemoved !== "boolean" && options.keepRemoved || []
+  const fullKeyPrefix = options.fullKeyPrefix || ''
+  const keySeparator = options.keySeparator || '.'
   const pluralSeparator = options.pluralSeparator || '_'
 
   for (const key in source) {
@@ -133,7 +136,7 @@ function mergeHashes(source, target, options = {}, resetValues = {}) {
       const nested = mergeHashes(
         source[key],
         target[key],
-        options,
+        { ...options, fullKeyPrefix: fullKeyPrefix + key + keySeparator },
         resetValues[key]
       )
       mergeCount += nested.mergeCount
@@ -185,7 +188,12 @@ function mergeHashes(source, target, options = {}, resetValues = {}) {
         target[key] = source[key]
         pullCount += 1
       } else {
-        if (keepRemoved) {
+        const keepKey =
+          keepRemoved ||
+          keepRemovedPatterns.some((pattern) =>
+            pattern.test(fullKeyPrefix + key)
+          )
+        if (keepKey) {
           target[key] = source[key]
         } else {
           old[key] = source[key]

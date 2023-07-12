@@ -343,4 +343,46 @@ describe('mergeHashes helper function', () => {
     assert.strictEqual(res.resetCount, 1)
     done()
   })
+
+  it('keeps the unused keys if they match patterns in keepRemoved', (done) => {
+    const source = { key1: 'key1', key2: 'key2', dummy: 'unusedValue' }
+    const target = { key1: 'code1' }
+    const res = mergeHashes(source, target, {
+      keepRemoved: [/key.*/],
+      keySeparator: '.',
+    })
+    assert.deepEqual(res.new, {
+      key1: 'key1',
+      key2: 'key2',
+    })
+    assert.deepEqual(res.old, {
+      dummy: 'unusedValue',
+    })
+    done()
+  })
+
+  it('keeps unused nested keys if they match the patterns in keepRemoved', (done) => {
+    const source = {
+      nesting: { key1: 'key1', key2: 'key2', dummy: 'unusedValue' },
+      key2: 'rootKey2',
+    }
+    const target = { nesting: { key1: 'code1' } }
+    const res = mergeHashes(source, target, {
+      keepRemoved: [/nesting\.key.*/],
+      keySeparator: '.',
+    })
+    assert.deepEqual(res.new, {
+      nesting: {
+        key1: 'key1',
+        key2: 'key2',
+      },
+    })
+    assert.deepEqual(res.old, {
+      nesting: {
+        dummy: 'unusedValue',
+      },
+      key2: 'rootKey2',
+    })
+    done()
+  })
 })

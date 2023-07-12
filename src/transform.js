@@ -236,6 +236,7 @@ export default class i18nTransform extends Transform {
           {
             ...this.options,
             resetAndFlag,
+            fullKeyPrefix: namespace + this.options.namespaceSeparator,
           },
           resetValues[namespace]
         )

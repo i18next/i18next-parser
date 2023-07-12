@@ -1,5 +1,9 @@
 # Changelog
 
+# Unreleased
+
+- Add support for patterns in the `keepRemoved` option
+
 # 8.1.0
 
 - Allow to disable plural handling #825 #463
