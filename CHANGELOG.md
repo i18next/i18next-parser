@@ -1,8 +1,10 @@
 # Changelog
 
-# Unreleased
+# 8.2.0
 
-- Add support for patterns in the `keepRemoved` option
+- Add support for patterns in the `keepRemoved` option #693 #700
+- Improve namespace extraction from hook/HOC #854
+- Update dependencies
 
 # 8.1.0
 
