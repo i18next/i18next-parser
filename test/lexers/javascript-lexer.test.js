@@ -217,13 +217,39 @@ describe('JavascriptLexer', () => {
       ])
     })
 
-    it('extracts first namespace when it is an array', () => {
+    it('extracts the first valid namespace when it is an array', () => {
       const Lexer = new JavascriptLexer()
       const content =
-        'const ExtendedComponent = useTranslation(["foo", "baz"]); t("bar");'
+        'const ExtendedComponent = useTranslation([someVariable, "baz"]); t("bar");'
       assert.deepEqual(Lexer.extract(content), [
-        { namespace: 'foo', key: 'bar' },
+        { namespace: 'baz', key: 'bar' },
       ])
+    })
+
+    it('emits a `warning` event if the extracted namespace is not a string literal or undefined', (done) => {
+      const Lexer = new JavascriptLexer()
+      const content = 'const {t} = useTranslation(someVariable); t("bar");'
+      Lexer.on('warning', (message) => {
+        assert.equal(
+          message,
+          'Namespace is not a string literal nor an array containing a string literal: someVariable'
+        )
+        done()
+      })
+      assert.deepEqual(Lexer.extract(content), [{ key: 'bar' }])
+    })
+
+    it('leaves the default namespace unchanged if `undefined` is passed', () => {
+      const Lexer = new JavascriptLexer()
+      const content = 'const {t} = useTranslation(undefined); t("bar");'
+      assert.deepEqual(Lexer.extract(content), [{ key: 'bar' }])
+    })
+
+    it('leaves the default namespace unchanged if `undefined` is passed in an array', () => {
+      const Lexer = new JavascriptLexer()
+      const content =
+        'const {t} = useTranslation([someVariable, undefined]); t("bar");'
+      assert.deepEqual(Lexer.extract(content), [{ key: 'bar' }])
     })
 
     it('uses namespace from t function with priority', () => {
@@ -256,13 +282,41 @@ describe('JavascriptLexer', () => {
       ])
     })
 
-    it('extracts first namespace when it is an array', () => {
+    it('extracts first valid namespace when it is an array', () => {
       const Lexer = new JavascriptLexer()
       const content =
-        'const ExtendedComponent = withTranslation(["foo", "baz"])(MyComponent); t("bar");'
+        'const ExtendedComponent = withTranslation([someVariable, "baz"])(MyComponent); t("bar");'
       assert.deepEqual(Lexer.extract(content), [
-        { namespace: 'foo', key: 'bar' },
+        { namespace: 'baz', key: 'bar' },
       ])
+    })
+
+    it('emits a `warning` event if the extracted namespace is not a string literal or undefined', (done) => {
+      const Lexer = new JavascriptLexer()
+      const content =
+        'const ExtendedComponent = withTranslation(someVariable)(MyComponent); t("bar");'
+      Lexer.on('warning', (message) => {
+        assert.equal(
+          message,
+          'Namespace is not a string literal nor an array containing a string literal: someVariable'
+        )
+        done()
+      })
+      assert.deepEqual(Lexer.extract(content), [{ key: 'bar' }])
+    })
+
+    it('leaves the default namespace unchanged if `undefined` is passed', () => {
+      const Lexer = new JavascriptLexer()
+      const content =
+        'const ExtendedComponent = withTranslation(undefined)(MyComponent); t("bar");'
+      assert.deepEqual(Lexer.extract(content), [{ key: 'bar' }])
+    })
+
+    it('leaves the default namespace unchanged if `undefined` is passed in an array', () => {
+      const Lexer = new JavascriptLexer()
+      const content =
+        'const ExtendedComponent = withTranslation([someVariable, undefined])(MyComponent); t("bar");'
+      assert.deepEqual(Lexer.extract(content), [{ key: 'bar' }])
     })
 
     it('uses namespace from t function with priority', () => {
