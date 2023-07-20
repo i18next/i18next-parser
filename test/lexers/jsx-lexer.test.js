@@ -452,6 +452,35 @@ describe('JsxLexer', () => {
         )
         done()
       })
+
+      it('supports multi-step casts', (done) => {
+        const Lexer = new JsxLexer()
+        const content =
+          '<Trans>Hi, {{ name: "John" } as unknown as string}</Trans>'
+        assert.equal(Lexer.extract(content)[0].defaultValue, 'Hi, {{name}}')
+        done()
+      })
+
+      it('supports variables in identity functions', (done) => {
+        const Lexer = new JsxLexer({
+          transIdentityFunctionsToIgnore: ['funcCall'],
+        })
+        const content = '<Trans>Hi, {funcCall({ name: "John" })}</Trans>'
+        assert.equal(Lexer.extract(content)[0].defaultValue, 'Hi, {{name}}')
+        done()
+      })
+
+      it('leaves non-identify functions alone', (done) => {
+        const Lexer = new JsxLexer({
+          transIdentityFunctionsToIgnore: ['funcCall'],
+        })
+        const content = '<Trans>Hi, {anotherFuncCall({ name: "John" })}</Trans>'
+        assert.equal(
+          Lexer.extract(content)[0].defaultValue,
+          'Hi, {anotherFuncCall({ name: "John" })}'
+        )
+        done()
+      })
     })
   })
 })

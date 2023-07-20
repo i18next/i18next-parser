@@ -285,6 +285,37 @@ If your JSX files have `.js` extension (e.g. create-react-app projects) you shou
 }
 ```
 
+##### Supporting helper functions in Trans tags
+
+If you're working with i18next in Typescript, you might be using a helper function to make sure that objects in <Trans /> components pass the typechecker: e.g.,
+
+```tsx
+const SomeComponent = (props) => (
+  <Trans>
+    Visit
+    <Link to='/user/john'>{castAsString({ name: props.name })}'s profile</Link>
+    {/* Equivalent to, but resolves typechecker errors with */}
+    <Link to='/user/john'>{{ name: props.name }}'s profile</Link>
+  </Trans>
+)
+
+function castAsString(record: Record<string, unknown>): string {
+  return record as unknown as string
+}
+```
+
+In order for the parser to extract variables properly, you can add a list of
+such functions to the lexer options:
+
+```
+{
+  js: [{
+    lexer: 'JsxLexer',
+    transIdentityFunctionsToIgnore: ['castAsString']
+  }],
+}
+```
+
 #### Ts(x)
 
 Typescript is supported via Javascript and Jsx lexers. If you are using Javascript syntax (e.g. with React), follow the steps in Jsx section, otherwise Javascript section.
