@@ -1,3 +1,4 @@
+import colors from 'colors'
 import fse from 'fs-extra'
 import Plugin from 'broccoli-plugin'
 import rsvp from 'rsvp'
@@ -46,7 +47,9 @@ export default class i18nextParser extends Plugin {
             .on('finish', function () {
               if (!this.options.silent) {
                 console.log()
-                console.log('  Stats:  '.yellow + count + ' files were parsed')
+                console.log(
+                  '  Stats:  '.yellow + String(count) + ' files were parsed'
+                )
               }
 
               Promise.all(files).then(() => {

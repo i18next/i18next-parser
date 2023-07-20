@@ -1,5 +1,12 @@
 # Changelog
 
+# 8.3.0
+
+- Allow ignoring typecheck-helper functions around Trans tag variables #863
+- Skip extracting dynamic children in Trans components #862
+- Extract format parameter from Trans component interpolations #861
+- Update dependencies
+
 # 8.2.0
 
 - Add support for patterns in the `keepRemoved` option #693 #700
