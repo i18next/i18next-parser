@@ -247,10 +247,12 @@ export default class JsxLexer extends JavascriptLexer {
             child.expression.kind === ts.SyntaxKind.ObjectLiteralExpression
           ) {
             // i18next-react only accepts two props, any random single prop, and a format prop
-            // for our purposes, format prop is always ignored
 
-            let nonFormatProperties = child.expression.properties.filter(
+            const nonFormatProperties = child.expression.properties.filter(
               (prop) => prop.name.text !== 'format'
+            )
+            const formatProperty = child.expression.properties.find(
+              (prop) => prop.name.text === 'format'
             )
 
             // more than one property throw a warning in i18next-react, but still works as a key
@@ -266,9 +268,15 @@ export default class JsxLexer extends JavascriptLexer {
               }
             }
 
+            // This matches the behaviour of the Trans component in i18next as of v13.0.2:
+            // https://github.com/i18next/react-i18next/blob/0a4681e428c888fe986bcc0109eb19eab6ff2eb3/src/TransWithoutContext.js#L88
+            const value = formatProperty
+              ? `${nonFormatProperties[0].name.text}, ${formatProperty.initializer.text}`
+              : nonFormatProperties[0].name.text
+
             return {
               type: 'js',
-              content: `{{${nonFormatProperties[0].name.text}}}`,
+              content: `{{${value}}}`,
             }
           }
 

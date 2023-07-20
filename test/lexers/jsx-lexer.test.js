@@ -132,6 +132,20 @@ describe('JsxLexer', () => {
       done()
     })
 
+    it('extracts formatted interpolations correctly', (done) => {
+      const Lexer = new JsxLexer()
+      const content =
+        '<Trans count={count}>{{ key: property, format: "number" }}</Trans>'
+      assert.deepEqual(Lexer.extract(content), [
+        {
+          key: '{{key, number}}',
+          defaultValue: '{{key, number}}',
+          count: '{count}',
+        },
+      ])
+      done()
+    })
+
     it('extracts keys from user-defined components', (done) => {
       const Lexer = new JsxLexer({
         componentFunctions: ['Translate', 'FooBar'],
