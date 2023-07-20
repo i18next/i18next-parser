@@ -227,7 +227,7 @@ export default class JsxLexer extends JavascriptLexer {
           }
 
           // simplify trivial expressions, like TypeScript typecasts
-          if (child.expression.kind === ts.SyntaxKind.AsExpression) {
+          while (child.expression.kind === ts.SyntaxKind.AsExpression) {
             child = child.expression
           }
 
