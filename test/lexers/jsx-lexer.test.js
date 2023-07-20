@@ -218,6 +218,17 @@ describe('JsxLexer', () => {
       done()
     })
 
+    it('skips dynamic children', (done) => {
+      const Lexer = new JsxLexer()
+      const content =
+        '<Trans>My dogs are named: <ul i18nIsDynamicList>{["rupert", "max"].map(dog => (<li>{dog}</li>))}</ul></Trans>'
+      assert.equal(
+        Lexer.extract(content)[0].defaultValue,
+        'My dogs are named: <1></1>'
+      )
+      done()
+    })
+
     it('erases comment expressions', (done) => {
       const Lexer = new JsxLexer()
       const content = '<Trans>{/* some comment */}Some Content</Trans>'

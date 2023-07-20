@@ -208,9 +208,14 @@ export default class JsxLexer extends JavascriptLexer {
           const element = child.openingElement || child
           const name = element.tagName.escapedText
           const isBasic = !element.attributes.properties.length
+          const hasDynamicChildren = element.attributes.properties.find(
+            (prop) => prop.name.escapedText === 'i18nIsDynamicList'
+          )
           return {
             type: 'tag',
-            children: this.parseChildren(child.children, sourceText),
+            children: hasDynamicChildren
+              ? []
+              : this.parseChildren(child.children, sourceText),
             name,
             isBasic,
             selfClosing: child.kind === ts.SyntaxKind.JsxSelfClosingElement,
