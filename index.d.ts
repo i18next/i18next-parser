@@ -60,6 +60,17 @@ export interface JsxWithTypesLexerConfig {
   transKeepBasicHtmlNodesFor?: string[];
   parseGenerics: true;
   typeMap: Record<string, unknown>;
+  /**
+   * Identity functions within trans that should be parsed for their
+   * first arguments. Used for making typecheckers happy in a safe way: e.g., if in your code, you use:
+   *
+   * ```
+   * <Trans>Hello {castToString({ name })}</Trans>
+   * ```
+   *
+   * you'd want to pass in `transIdentityFunctionsToIgnore: ['castToString']`
+   */
+  transIdentityFunctionsToIgnore?: string[];
 }
 
 export interface VueLexerConfig {

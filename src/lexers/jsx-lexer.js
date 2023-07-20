@@ -16,6 +16,8 @@ export default class JsxLexer extends JavascriptLexer {
       'p',
     ]
     this.omitAttributes = [this.attr, 'ns', 'defaults']
+    this.transIdentityFunctionsToIgnore =
+      options.transIdentityFunctionsToIgnore || []
   }
 
   extract(content, filename = '__default.jsx') {
@@ -227,6 +229,31 @@ export default class JsxLexer extends JavascriptLexer {
           // simplify trivial expressions, like TypeScript typecasts
           if (child.expression.kind === ts.SyntaxKind.AsExpression) {
             child = child.expression
+          }
+
+          // Sometimes, we might want to wrap ObjectExpressions in a function
+          // for typechecker compatibility: e.g.,
+          //
+          // Instead of
+          // `<Trans>Hello, <Link to="/">{{ name }}</Link></Trans>`
+          // we might want:
+          // `<Trans>Hello, <Link to="/">{castToString({ name })}</Link></Trans>`
+          //
+          // because that way, we can have {castToString(...)} be typed
+          // in a a way to return a string, which would be type-compatible
+          // with `children?: React.ReactNode`
+          //
+          // In these cases, we want to look at the object expressions within
+          // the function call to extract the variables
+          if (
+            child.expression.kind === ts.SyntaxKind.CallExpression &&
+            child.expression.expression.kind === ts.SyntaxKind.Identifier &&
+            this.transIdentityFunctionsToIgnore.includes(
+              child.expression.expression.escapedText
+            ) &&
+            child.expression.arguments.length >= 1
+          ) {
+            child = { expression: child.expression.arguments[0] }
           }
 
           if (child.expression.kind === ts.SyntaxKind.StringLiteral) {
