@@ -94,7 +94,7 @@ export interface UserConfig {
   defaultNamespace?: string;
   defaultValue?: string | ((locale?: string, namespace?: string, key?: string) => string);
   indentation?: number;
-  keepRemoved?: boolean | readonly RegEx[];
+  keepRemoved?: boolean | readonly RegExp[];
   keySeparator?: string | false;
   lexers?: {
     hbs?: (SupportedLexer | CustomLexer | LexerConfig)[];
