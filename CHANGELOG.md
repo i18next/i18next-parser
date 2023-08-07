@@ -1,5 +1,11 @@
 # Changelog
 
+# 8.4.0
+
+- Fix extracting Trans component without key, but with default value #871 #249
+- FIX type error in index.d.ts #873 #868
+- Update dependencies
+
 # 8.3.0
 
 - Allow ignoring typecheck-helper functions around Trans tag variables #863
