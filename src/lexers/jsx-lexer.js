@@ -135,10 +135,9 @@ export default class JsxLexer extends JavascriptLexer {
         } else entry[property.name.text] = true
       })
 
+      const nodeAsString = this.nodeToString.call(this, node, sourceText)
       const defaultsProp = getPropValue(tagNode, 'defaults')
-      let defaultValue =
-        defaultsProp || this.nodeToString.call(this, node, sourceText)
-
+      let defaultValue = defaultsProp || nodeAsString
       if (entry.shouldUnescape === true) {
         defaultValue = unescape(defaultValue)
       }
@@ -147,7 +146,7 @@ export default class JsxLexer extends JavascriptLexer {
         entry.defaultValue = defaultValue
 
         if (!entry.key) {
-          entry.key = entry.defaultValue
+          entry.key = nodeAsString
         }
       }
 

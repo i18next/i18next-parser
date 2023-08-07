@@ -123,6 +123,15 @@ describe('JsxLexer', () => {
       done()
     })
 
+    it('extracts keys from Trans elements without an i18nKey, but with a defaults prop', (done) => {
+      const Lexer = new JsxLexer()
+      const content = '<Trans defaults="Steve">{{ name }}</Trans>'
+      assert.deepEqual(Lexer.extract(content), [
+        { key: '{{name}}', defaultValue: 'Steve' },
+      ])
+      done()
+    })
+
     it('extracts keys from Trans elements and ignores values of expressions and spaces', (done) => {
       const Lexer = new JsxLexer()
       const content = '<Trans count={count}>{{ key: property }}</Trans>'
