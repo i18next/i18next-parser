@@ -27,12 +27,10 @@
     "prepublishOnly": "yarn -s prettify && yarn -s build"
   },
   "dependencies": {
-    "@babel/runtime": "^7.15.4",
     "broccoli-plugin": "^4.0.7",
     "cheerio": "^1.0.0-rc.2",
     "colors": "1.4.0",
     "commander": "~10.0.0",
-    "concat-stream": "~2.0.0",
     "eol": "^0.9.1",
     "esbuild": "^0.18.11",
     "fs-extra": "^11.1.0",
@@ -42,7 +40,6 @@
     "lilconfig": "^2.0.6",
     "rsvp": "^4.8.2",
     "sort-keys": "^5.0.0",
-    "through2": "~4.0.2",
     "typescript": "^5.0.4",
     "vinyl": "~3.0.0",
     "vinyl-fs": "^3.0.2",
