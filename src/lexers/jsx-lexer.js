@@ -170,7 +170,6 @@ export default class JsxLexer extends JavascriptLexer {
       children
         .map((child, index) => {
           switch (child.type) {
-            case 'js':
             case 'text':
               return child.content
             case 'tag':
@@ -301,18 +300,20 @@ export default class JsxLexer extends JavascriptLexer {
               : nonFormatProperties[0].name.text
 
             return {
-              type: 'js',
+              type: 'text',
               content: `{{${value}}}`,
             }
           }
 
-          // slice on the expression so that we ignore comments around it
           return {
-            type: 'js',
-            content: `{${sourceText.slice(
-              child.expression.pos,
-              child.expression.end
-            )}}`,
+            type: 'tag',
+            children: [],
+            // set to `false` to match i18next's behavior (non-self closing, indexed instead of named)
+            isBasic: false,
+            // unused when `isBasic` is set to `false`
+            name: '',
+            // self-closing is only for named tags
+            selfClosing: false,
           }
         } else {
           throw new Error('Unknown ast element when parsing jsx: ' + child.kind)
