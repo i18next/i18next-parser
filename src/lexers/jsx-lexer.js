@@ -79,7 +79,7 @@ export default class JsxLexer extends JavascriptLexer {
       if (attribute.initializer.expression?.kind === ts.SyntaxKind.Identifier) {
         this.emit(
           'warning',
-          `Namespace is not a string literal: ${attribute.initializer.expression.text}`
+          `"${attributeName}" prop is not a string literal: ${attribute.initializer.expression.text}`
         )
         return undefined
       }
