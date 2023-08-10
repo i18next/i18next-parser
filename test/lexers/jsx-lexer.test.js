@@ -233,10 +233,10 @@ describe('JsxLexer', () => {
     it('erases tags from content', (done) => {
       const Lexer = new JsxLexer()
       const content =
-        '<Trans>a<b test={"</b>"}>c<c>z</c></b>{d}<br stuff={y}/></Trans>'
+        '<Trans>a<b test={"</b>"}>c<c>z</c></b><br stuff={y}/></Trans>'
       assert.equal(
         Lexer.extract(content)[0].defaultValue,
-        'a<1>c<1>z</1></1><2></2><3></3>'
+        'a<1>c<1>z</1></1><2></2>'
       )
       done()
     })
@@ -411,10 +411,10 @@ describe('JsxLexer', () => {
       it('erases tags from content', (done) => {
         const Lexer = new JsxLexer()
         const content =
-          '<Trans>a<b test={"</b>"}>c<c>z</c></b>{d}<br stuff={y}/></Trans>'
+          '<Trans>a<b test={"</b>"}>c<c>z</c></b><br stuff={y}/></Trans>'
         assert.equal(
           Lexer.extract(content)[0].defaultValue,
-          'a<1>c<1>z</1></1><2></2><3></3>'
+          'a<1>c<1>z</1></1><2></2>'
         )
         done()
       })
@@ -479,13 +479,19 @@ describe('JsxLexer', () => {
         done()
       })
 
-      it('treats non-identify functions as normal expressions', (done) => {
+      it('emits warning on non-literal child', (done) => {
         const Lexer = new JsxLexer({
           transIdentityFunctionsToIgnore: ['funcCall'],
         })
         const content = '<Trans>Hi, {anotherFuncCall({ name: "John" })}</Trans>'
+        Lexer.on('warning', (message) => {
+          assert.equal(
+            message,
+            'Child is not literal: anotherFuncCall({ name: "John" })'
+          )
+          done()
+        })
         assert.equal(Lexer.extract(content)[0].defaultValue, 'Hi, <1></1>')
-        done()
       })
     })
   })

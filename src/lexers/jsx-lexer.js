@@ -305,15 +305,17 @@ export default class JsxLexer extends JavascriptLexer {
             }
           }
 
+          this.emit(
+            'warning',
+            `Child is not literal: ${sourceText.slice(
+              child.expression.pos,
+              child.expression.end
+            )}`
+          )
+
           return {
-            type: 'tag',
-            children: [],
-            // set to `false` to match i18next's behavior (non-self closing, indexed instead of named)
-            isBasic: false,
-            // unused when `isBasic` is set to `false`
-            name: '',
-            // self-closing is only for named tags
-            selfClosing: false,
+            type: 'text',
+            content: '',
           }
         } else {
           throw new Error('Unknown ast element when parsing jsx: ' + child.kind)
