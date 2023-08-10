@@ -1,5 +1,11 @@
 # Changelog
 
+# 8.5.0
+
+- Improve warnings #805
+- Remove unused dependencies #877
+- Update dependencies
+
 # 8.4.0
 
 - Fix extracting Trans component without key, but with default value #871 #249

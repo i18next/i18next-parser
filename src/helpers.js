@@ -122,8 +122,10 @@ function mergeHashes(source, target, options = {}, resetValues = {}) {
   let oldCount = 0
   let resetCount = 0
 
-  const keepRemoved = typeof options.keepRemoved === "boolean" && options.keepRemoved || false
-  const keepRemovedPatterns = typeof options.keepRemoved !== "boolean" && options.keepRemoved || []
+  const keepRemoved =
+    (typeof options.keepRemoved === 'boolean' && options.keepRemoved) || false
+  const keepRemovedPatterns =
+    (typeof options.keepRemoved !== 'boolean' && options.keepRemoved) || []
   const fullKeyPrefix = options.fullKeyPrefix || ''
   const keySeparator = options.keySeparator || '.'
   const pluralSeparator = options.pluralSeparator || '_'
