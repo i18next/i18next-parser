@@ -489,9 +489,12 @@ describe('JsxLexer', () => {
             message,
             'Child is not literal: anotherFuncCall({ name: "John" })'
           )
-          done()
         })
-        assert.equal(Lexer.extract(content)[0].defaultValue, 'Hi, <1></1>')
+        assert.equal(
+          Lexer.extract(content)[0].defaultValue,
+          'Hi, {anotherFuncCall({ name: "John" })}'
+        )
+        done()
       })
     })
   })

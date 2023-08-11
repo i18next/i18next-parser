@@ -170,6 +170,7 @@ export default class JsxLexer extends JavascriptLexer {
       children
         .map((child, index) => {
           switch (child.type) {
+            case 'js':
             case 'text':
               return child.content
             case 'tag':
@@ -300,22 +301,22 @@ export default class JsxLexer extends JavascriptLexer {
               : nonFormatProperties[0].name.text
 
             return {
-              type: 'text',
+              type: 'js',
               content: `{{${value}}}`,
             }
           }
 
-          this.emit(
-            'warning',
-            `Child is not literal: ${sourceText.slice(
-              child.expression.pos,
-              child.expression.end
-            )}`
+          // slice on the expression so that we ignore comments around it
+          const slicedExpression = sourceText.slice(
+            child.expression.pos,
+            child.expression.end
           )
 
+          this.emit('warning', `Child is not literal: ${slicedExpression}`)
+
           return {
-            type: 'text',
-            content: '',
+            type: 'js',
+            content: `{${slicedExpression}}`,
           }
         } else {
           throw new Error('Unknown ast element when parsing jsx: ' + child.kind)
