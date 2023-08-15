@@ -233,10 +233,10 @@ describe('JsxLexer', () => {
     it('erases tags from content', (done) => {
       const Lexer = new JsxLexer()
       const content =
-        '<Trans>a<b test={"</b>"}>c<c>z</c></b><br stuff={y}/></Trans>'
+        '<Trans>a<b test={"</b>"}>c<c>z</c></b>{d}<br stuff={y}/></Trans>'
       assert.equal(
         Lexer.extract(content)[0].defaultValue,
-        'a<1>c<1>z</1></1><2></2>'
+        'a<1>c<1>z</1></1>{d}<3></3>'
       )
       done()
     })
@@ -411,10 +411,10 @@ describe('JsxLexer', () => {
       it('erases tags from content', (done) => {
         const Lexer = new JsxLexer()
         const content =
-          '<Trans>a<b test={"</b>"}>c<c>z</c></b><br stuff={y}/></Trans>'
+          '<Trans>a<b test={"</b>"}>c<c>z</c></b>{d}<br stuff={y}/></Trans>'
         assert.equal(
           Lexer.extract(content)[0].defaultValue,
-          'a<1>c<1>z</1></1><2></2>'
+          'a<1>c<1>z</1></1>{d}<3></3>'
         )
         done()
       })
