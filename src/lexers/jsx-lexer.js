@@ -307,12 +307,16 @@ export default class JsxLexer extends JavascriptLexer {
           }
 
           // slice on the expression so that we ignore comments around it
+          const slicedExpression = sourceText.slice(
+            child.expression.pos,
+            child.expression.end
+          )
+
+          this.emit('warning', `Child is not literal: ${slicedExpression}`)
+
           return {
             type: 'js',
-            content: `{${sourceText.slice(
-              child.expression.pos,
-              child.expression.end
-            )}}`,
+            content: `{${slicedExpression}}`,
           }
         } else {
           throw new Error('Unknown ast element when parsing jsx: ' + child.kind)

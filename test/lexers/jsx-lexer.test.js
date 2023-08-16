@@ -479,11 +479,17 @@ describe('JsxLexer', () => {
         done()
       })
 
-      it('leaves non-identify functions alone', (done) => {
+      it('emits warning on non-literal child', (done) => {
         const Lexer = new JsxLexer({
           transIdentityFunctionsToIgnore: ['funcCall'],
         })
         const content = '<Trans>Hi, {anotherFuncCall({ name: "John" })}</Trans>'
+        Lexer.on('warning', (message) => {
+          assert.equal(
+            message,
+            'Child is not literal: anotherFuncCall({ name: "John" })'
+          )
+        })
         assert.equal(
           Lexer.extract(content)[0].defaultValue,
           'Hi, {anotherFuncCall({ name: "John" })}'
