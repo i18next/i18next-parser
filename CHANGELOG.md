@@ -1,5 +1,10 @@
 # Changelog
 
+# 8.6.0
+
+- Emit warning on non-literal content inside of Trans #881
+- Update dependencies
+
 # 8.5.0
 
 - Improve warnings #805
