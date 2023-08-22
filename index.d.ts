@@ -44,6 +44,7 @@ export interface JsxLexerConfig {
   lexer: "JsxLexer";
   functions?: string[];
   namespaceFunctions?: string[];
+  componentFunctions?: string[];
   attr?: string;
   transSupportBasicHtmlNodes?: boolean;
   transKeepBasicHtmlNodesFor?: string[];
@@ -55,6 +56,7 @@ export interface JsxWithTypesLexerConfig {
   lexer: "JsxLexer";
   functions?: string[];
   namespaceFunctions?: string[];
+  componentFunctions?: string[];
   attr?: string;
   transSupportBasicHtmlNodes?: boolean;
   transKeepBasicHtmlNodesFor?: string[];
