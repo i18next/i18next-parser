@@ -138,7 +138,10 @@ export default class JsxLexer extends JavascriptLexer {
       const nodeAsString = this.nodeToString.call(this, node, sourceText)
       const defaultsProp = getPropValue(tagNode, 'defaults')
       let defaultValue = defaultsProp || nodeAsString
-      if (entry.shouldUnescape === true) {
+
+      // If `shouldUnescape` is not true, it means the value cannot contain HTML entities,
+      // so we need to unescape these entities now so that they can be properly rendered later
+      if (entry.shouldUnescape !== true) {
         defaultValue = unescape(defaultValue)
       }
 
@@ -146,7 +149,9 @@ export default class JsxLexer extends JavascriptLexer {
         entry.defaultValue = defaultValue
 
         if (!entry.key) {
-          entry.key = nodeAsString
+          // If there's no key, default to the unescaped default value to match react-i18next's behavior:
+          // https://github.com/i18next/react-i18next/blob/079938cc11a92e0519ad8a33a47d15595bee5636/src/TransWithoutContext.js#L335
+          entry.key = unescape(nodeAsString)
         }
       }
 

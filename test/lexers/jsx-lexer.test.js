@@ -452,12 +452,20 @@ describe('JsxLexer', () => {
         done()
       })
 
+      it('unescapes key when i18nKey is not provided', (done) => {
+        const Lexer = new JsxLexer()
+        const content = '<Trans>I&apos;m Cielquan</Trans>'
+        assert.equal(Lexer.extract(content)[0].key, "I'm Cielquan")
+        done()
+      })
+
       it('supports the shouldUnescape options', (done) => {
         const Lexer = new JsxLexer()
-        const content = '<Trans shouldUnescape>I&apros;m Cielquan</Trans>'
+        const content = '<Trans shouldUnescape>I&apos;m Cielquan</Trans>'
+        assert.equal(Lexer.extract(content)[0].key, "I'm Cielquan")
         assert.equal(
           Lexer.extract(content)[0].defaultValue,
-          'I&apros;m Cielquan'
+          'I&apos;m Cielquan'
         )
         done()
       })
