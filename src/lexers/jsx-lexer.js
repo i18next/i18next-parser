@@ -155,7 +155,7 @@ export default class JsxLexer extends JavascriptLexer {
         entry.defaultValue = defaultValue
 
         if (!entry.key) {
-          // If there's no key, default to the unescaped default value to match react-i18next's behavior:
+          // If there's no key, default to the stringified unescaped node, then to the default value:
           // https://github.com/i18next/react-i18next/blob/95f9c6a7b602a7b1fd33c1ded6dcfc23a52b853b/src/TransWithoutContext.js#L337
           entry.key = unescape(nodeAsString) || entry.defaultValue
         }
