@@ -125,9 +125,15 @@ export default class JsxLexer extends JavascriptLexer {
             ) {
               entry[property.name.text] = false
             } else {
-              entry[
-                property.name.text
-              ] = `{${property.initializer.expression.text}}`
+              entry[property.name.text] = `{${
+                property.initializer.expression.text ||
+                this.cleanMultiLineCode(
+                  sourceText.slice(
+                    property.initializer.expression.pos,
+                    property.initializer.expression.end
+                  )
+                )
+              }}`
             }
           } else {
             entry[property.name.text] = property.initializer.text
@@ -150,8 +156,8 @@ export default class JsxLexer extends JavascriptLexer {
 
         if (!entry.key) {
           // If there's no key, default to the unescaped default value to match react-i18next's behavior:
-          // https://github.com/i18next/react-i18next/blob/079938cc11a92e0519ad8a33a47d15595bee5636/src/TransWithoutContext.js#L335
-          entry.key = unescape(nodeAsString)
+          // https://github.com/i18next/react-i18next/blob/95f9c6a7b602a7b1fd33c1ded6dcfc23a52b853b/src/TransWithoutContext.js#L337
+          entry.key = unescape(nodeAsString) || entry.defaultValue
         }
       }
 
@@ -197,15 +203,19 @@ export default class JsxLexer extends JavascriptLexer {
     return elemsToString(children)
   }
 
+  cleanMultiLineCode(text) {
+    return text
+      .replace(/(^(\n|\r)\s*)|((\n|\r)\s*$)/g, '')
+      .replace(/(\n|\r)\s*/g, ' ')
+  }
+
   parseChildren(children = [], sourceText) {
     return children
       .map((child) => {
         if (child.kind === ts.SyntaxKind.JsxText) {
           return {
             type: 'text',
-            content: child.text
-              .replace(/(^(\n|\r)\s*)|((\n|\r)\s*$)/g, '')
-              .replace(/(\n|\r)\s*/g, ' '),
+            content: this.cleanMultiLineCode(child.text),
           }
         } else if (
           child.kind === ts.SyntaxKind.JsxElement ||

@@ -132,6 +132,29 @@ describe('JsxLexer', () => {
       done()
     })
 
+    it('extracts keys from Trans elements without an i18nKey, with defaults, and without children', (done) => {
+      const Lexer = new JsxLexer()
+      // Based on https://react.i18next.com/latest/trans-component#alternative-usage-components-array
+      const content = `
+<Trans
+  defaults="hello <0>{{what}}</0>"
+  values={{
+    what: "world"
+  }}
+  components={[<strong />]}
+/>
+`.trim()
+      assert.deepEqual(Lexer.extract(content), [
+        {
+          key: 'hello <0>{{what}}</0>',
+          defaultValue: 'hello <0>{{what}}</0>',
+          components: '{[<strong />]}',
+          values: '{{ what: "world" }}',
+        },
+      ])
+      done()
+    })
+
     it('extracts keys from Trans elements and ignores values of expressions and spaces', (done) => {
       const Lexer = new JsxLexer()
       const content = '<Trans count={count}>{{ key: property }}</Trans>'
