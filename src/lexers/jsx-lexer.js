@@ -125,9 +125,15 @@ export default class JsxLexer extends JavascriptLexer {
             ) {
               entry[property.name.text] = false
             } else {
-              entry[
-                property.name.text
-              ] = `{${property.initializer.expression.text}}`
+              entry[property.name.text] = `{${
+                property.initializer.expression.text ||
+                this.cleanMultiLineCode(
+                  sourceText.slice(
+                    property.initializer.expression.pos,
+                    property.initializer.expression.end
+                  )
+                )
+              }}`
             }
           } else {
             entry[property.name.text] = property.initializer.text
@@ -138,7 +144,10 @@ export default class JsxLexer extends JavascriptLexer {
       const nodeAsString = this.nodeToString.call(this, node, sourceText)
       const defaultsProp = getPropValue(tagNode, 'defaults')
       let defaultValue = defaultsProp || nodeAsString
-      if (entry.shouldUnescape === true) {
+
+      // If `shouldUnescape` is not true, it means the value cannot contain HTML entities,
+      // so we need to unescape these entities now so that they can be properly rendered later
+      if (entry.shouldUnescape !== true) {
         defaultValue = unescape(defaultValue)
       }
 
@@ -146,7 +155,9 @@ export default class JsxLexer extends JavascriptLexer {
         entry.defaultValue = defaultValue
 
         if (!entry.key) {
-          entry.key = nodeAsString
+          // If there's no key, default to the stringified unescaped node, then to the default value:
+          // https://github.com/i18next/react-i18next/blob/95f9c6a7b602a7b1fd33c1ded6dcfc23a52b853b/src/TransWithoutContext.js#L337
+          entry.key = unescape(nodeAsString) || entry.defaultValue
         }
       }
 
@@ -192,15 +203,19 @@ export default class JsxLexer extends JavascriptLexer {
     return elemsToString(children)
   }
 
+  cleanMultiLineCode(text) {
+    return text
+      .replace(/(^(\n|\r)\s*)|((\n|\r)\s*$)/g, '')
+      .replace(/(\n|\r)\s*/g, ' ')
+  }
+
   parseChildren(children = [], sourceText) {
     return children
       .map((child) => {
         if (child.kind === ts.SyntaxKind.JsxText) {
           return {
             type: 'text',
-            content: child.text
-              .replace(/(^(\n|\r)\s*)|((\n|\r)\s*$)/g, '')
-              .replace(/(\n|\r)\s*/g, ' '),
+            content: this.cleanMultiLineCode(child.text),
           }
         } else if (
           child.kind === ts.SyntaxKind.JsxElement ||
