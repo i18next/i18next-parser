@@ -1,5 +1,11 @@
 # Changelog
 
+# 8.7.0
+
+- Add missing componentFunctions properties to JsxLexerConfig types #891 #842
+- Fix unescape logic, expression props, and ICU format for Trans component #892 #886
+- Update dependencies
+
 # 8.6.0
 
 - Emit warning on non-literal content inside of Trans #881
