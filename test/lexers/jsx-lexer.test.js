@@ -537,32 +537,17 @@ describe('JsxLexer', () => {
         done()
       })
 
-      describe('when i18nKey is given', () => {
-        it('does not emit a warning when given a non-literal child', (done) => {
-          const Lexer = new JsxLexer({
-            transIdentityFunctionsToIgnore: ['funcCall'],
-          })
-          const content =
-            '<Trans i18nKey="testkey">Hi, {anotherFuncCall({ name: "John" })}</Trans>'
-          const spy = sinon.spy()
-          Lexer.on('warning', spy)
-          assert.equal(Lexer.extract(content)[0].defaultValue, 'test')
-          assert.isFalse(spy.called)
-          done()
+      it('does not emit a warning about non-literal child when defaults and i18nKey are specified', (done) => {
+        const Lexer = new JsxLexer({
+          transIdentityFunctionsToIgnore: ['funcCall'],
         })
-
-        it('does not emit a warning when defaults are specified and given a non-literal child', (done) => {
-          const Lexer = new JsxLexer({
-            transIdentityFunctionsToIgnore: ['funcCall'],
-          })
-          const content =
-            '<Trans i18nKey="testkey" defaults="test">{anotherFuncCall({ name: "John" })}</Trans>'
-          const spy = sinon.spy()
-          Lexer.on('warning', spy)
-          assert.equal(Lexer.extract(content)[0].defaultValue, 'test')
-          assert.isFalse(spy.called)
-          done()
-        })
+        const content =
+          '<Trans i18nKey="testkey" defaults="test">{anotherFuncCall({ name: "John" })}</Trans>'
+        const spy = sinon.spy()
+        Lexer.on('warning', spy)
+        assert.equal(Lexer.extract(content)[0].defaultValue, 'test')
+        assert.isFalse(spy.called)
+        done()
       })
     })
   })

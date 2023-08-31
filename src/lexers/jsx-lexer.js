@@ -65,37 +65,40 @@ export default class JsxLexer extends JavascriptLexer {
     return keysWithPrefixes
   }
 
-  jsxExtractor(node, sourceText) {
-    const tagNode = node.openingElement || node
+  getPropValue(node, attributeName, warn = true) {
+    const attribute = node.attributes.properties.find(
+      (attr) => attr.name !== undefined && attr.name.text === attributeName
+    )
+    if (!attribute) {
+      return undefined
+    }
 
-    const getPropValue = (node, attributeName) => {
-      const attribute = node.attributes.properties.find(
-        (attr) => attr.name !== undefined && attr.name.text === attributeName
-      )
-      if (!attribute) {
-        return undefined
-      }
-
-      if (attribute.initializer.expression?.kind === ts.SyntaxKind.Identifier) {
+    if (attribute.initializer.expression?.kind === ts.SyntaxKind.Identifier) {
+      if (warn) {
         this.emit(
           'warning',
           `"${attributeName}" prop is not a string literal: ${attribute.initializer.expression.text}`
         )
-        return undefined
       }
 
-      return attribute.initializer.expression
-        ? attribute.initializer.expression.text
-        : attribute.initializer.text
+      return undefined
     }
 
-    const getKey = (node) => getPropValue(node, this.attr)
+    return attribute.initializer.expression
+      ? attribute.initializer.expression.text
+      : attribute.initializer.text
+  }
+
+  jsxExtractor(node, sourceText) {
+    const tagNode = node.openingElement || node
+
+    const getKey = (node) => this.getPropValue(node, this.attr)
 
     if (this.componentFunctions.includes(tagNode.tagName.text)) {
       const entry = {}
       entry.key = getKey(tagNode)
 
-      const namespace = getPropValue(tagNode, 'ns')
+      const namespace = this.getPropValue(tagNode, 'ns')
       if (namespace) {
         entry.namespace = namespace
       }
@@ -142,7 +145,7 @@ export default class JsxLexer extends JavascriptLexer {
       })
 
       const nodeAsString = this.nodeToString.call(this, node, sourceText)
-      const defaultsProp = getPropValue(tagNode, 'defaults')
+      const defaultsProp = this.getPropValue(tagNode, 'defaults')
       let defaultValue = defaultsProp || nodeAsString
 
       // If `shouldUnescape` is not true, it means the value cannot contain HTML entities,
@@ -167,7 +170,7 @@ export default class JsxLexer extends JavascriptLexer {
       entry.key = getKey(tagNode)
       return entry.key ? entry : null
     } else if (tagNode.tagName.text === 'Translation') {
-      const namespace = getPropValue(tagNode, 'ns')
+      const namespace = this.getPropValue(tagNode, 'ns')
       if (namespace) {
         this.defaultNamespace = namespace
       }
@@ -175,7 +178,12 @@ export default class JsxLexer extends JavascriptLexer {
   }
 
   nodeToString(node, sourceText) {
-    const children = this.parseChildren.call(this, node.children, sourceText)
+    const children = this.parseChildren.call(
+      this,
+      node,
+      node.children,
+      sourceText
+    )
 
     const elemsToString = (children) =>
       children
@@ -209,7 +217,7 @@ export default class JsxLexer extends JavascriptLexer {
       .replace(/(\n|\r)\s*/g, ' ')
   }
 
-  parseChildren(children = [], sourceText) {
+  parseChildren(node, children = [], sourceText) {
     return children
       .map((child) => {
         if (child.kind === ts.SyntaxKind.JsxText) {
@@ -231,7 +239,7 @@ export default class JsxLexer extends JavascriptLexer {
             type: 'tag',
             children: hasDynamicChildren
               ? []
-              : this.parseChildren(child.children, sourceText),
+              : this.parseChildren(child, child.children, sourceText),
             name,
             isBasic,
             selfClosing: child.kind === ts.SyntaxKind.JsxSelfClosingElement,
@@ -327,7 +335,13 @@ export default class JsxLexer extends JavascriptLexer {
             child.expression.end
           )
 
-          this.emit('warning', `Child is not literal: ${slicedExpression}`)
+          const tagNode = node.openingElement || node
+          if (
+            !this.getPropValue(tagNode, this.attr, false) ||
+            !this.getPropValue(tagNode, 'defaults', false)
+          ) {
+            this.emit('warning', `Child is not literal: ${slicedExpression}`)
+          }
 
           return {
             type: 'js',
