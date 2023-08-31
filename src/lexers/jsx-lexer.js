@@ -65,40 +65,38 @@ export default class JsxLexer extends JavascriptLexer {
     return keysWithPrefixes
   }
 
-  getPropValue(node, attributeName, warn = true) {
-    const attribute = node.attributes.properties.find(
-      (attr) => attr.name !== undefined && attr.name.text === attributeName
-    )
-    if (!attribute) {
-      return undefined
-    }
+  jsxExtractor(node, sourceText) {
+    const tagNode = node.openingElement || node
 
-    if (attribute.initializer.expression?.kind === ts.SyntaxKind.Identifier) {
-      if (warn) {
+    const getPropValue = (node, attributeName) => {
+      const attribute = node.attributes.properties.find(
+        (attr) => attr.name !== undefined && attr.name.text === attributeName
+      )
+      if (!attribute) {
+        return undefined
+      }
+
+      if (attribute.initializer.expression?.kind === ts.SyntaxKind.Identifier) {
         this.emit(
           'warning',
           `"${attributeName}" prop is not a string literal: ${attribute.initializer.expression.text}`
         )
+
+        return undefined
       }
 
-      return undefined
+      return attribute.initializer.expression
+        ? attribute.initializer.expression.text
+        : attribute.initializer.text
     }
 
-    return attribute.initializer.expression
-      ? attribute.initializer.expression.text
-      : attribute.initializer.text
-  }
-
-  jsxExtractor(node, sourceText) {
-    const tagNode = node.openingElement || node
-
-    const getKey = (node) => this.getPropValue(node, this.attr)
+    const getKey = (node) => getPropValue(node, this.attr)
 
     if (this.componentFunctions.includes(tagNode.tagName.text)) {
       const entry = {}
       entry.key = getKey(tagNode)
 
-      const namespace = this.getPropValue(tagNode, 'ns')
+      const namespace = getPropValue(tagNode, 'ns')
       if (namespace) {
         entry.namespace = namespace
       }
@@ -145,7 +143,7 @@ export default class JsxLexer extends JavascriptLexer {
       })
 
       const nodeAsString = this.nodeToString.call(this, node, sourceText)
-      const defaultsProp = this.getPropValue(tagNode, 'defaults')
+      const defaultsProp = getPropValue(tagNode, 'defaults')
       let defaultValue = defaultsProp || nodeAsString
 
       // If `shouldUnescape` is not true, it means the value cannot contain HTML entities,
@@ -170,7 +168,7 @@ export default class JsxLexer extends JavascriptLexer {
       entry.key = getKey(tagNode)
       return entry.key ? entry : null
     } else if (tagNode.tagName.text === 'Translation') {
-      const namespace = this.getPropValue(tagNode, 'ns')
+      const namespace = getPropValue(tagNode, 'ns')
       if (namespace) {
         this.defaultNamespace = namespace
       }
@@ -336,10 +334,14 @@ export default class JsxLexer extends JavascriptLexer {
           )
 
           const tagNode = node.openingElement || node
-          if (
-            !this.getPropValue(tagNode, this.attr, false) ||
-            !this.getPropValue(tagNode, 'defaults', false)
-          ) {
+          const attrValues = tagNode.attributes.properties
+            .filter((attr) => [this.attr, 'defaults'].includes(attr.name?.text))
+            .map(
+              (attr) =>
+                attr.initializer.expression?.text ?? attr.initializer.text
+            )
+
+          if (attrValues.some((attr) => !attr)) {
             this.emit('warning', `Child is not literal: ${slicedExpression}`)
           }
 
