@@ -275,6 +275,17 @@ describe('JsxLexer', () => {
       done()
     })
 
+    it('handles spread attributes', (done) => {
+      const Lexer = new JsxLexer()
+      const content =
+        '<Trans>My dog is named: <span {...styles}>Spot</span></Trans>'
+      assert.equal(
+        Lexer.extract(content)[0].defaultValue,
+        'My dog is named: <1>Spot</1>'
+      )
+      done()
+    })
+
     it('erases comment expressions', (done) => {
       const Lexer = new JsxLexer()
       const content = '<Trans>{/* some comment */}Some Content</Trans>'
