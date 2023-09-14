@@ -91,7 +91,9 @@ export default class JsxLexer extends JavascriptLexer {
 
     const getKey = (node) => getPropValue(node, this.attr)
 
-    if (this.componentFunctions.includes(tagNode.tagName.text)) {
+    if (
+      this.componentFunctions.includes(this.expressionToName(tagNode.tagName))
+    ) {
       const entry = {}
       entry.key = getKey(tagNode)
 

@@ -208,9 +208,16 @@ export default class JavascriptLexer extends BaseLexer {
     }
 
     const isTranslationFunction =
+      // If the expression is a string literal, we can just check if it's in the
+      // list of functions
       (node.expression.text && this.functions.includes(node.expression.text)) ||
+      // Support the case where the function is contained in a namespace, i.e.
+      // match `i18n.t()` when this.functions = ['t'].
       (node.expression.name &&
-        this.functions.includes(node.expression.name.text))
+        this.functions.includes(node.expression.name.text)) ||
+      // Support matching the namespace as well, i.e. match `i18n.t()` but _not_
+      // `l10n.t()` when this.functions = ['i18n.t']
+      this.functions.includes(this.expressionToName(node.expression))
 
     if (isTranslationFunction) {
       const keyArgument = node.arguments.shift()
@@ -375,5 +382,25 @@ export default class JavascriptLexer extends BaseLexer {
     }
 
     return string
+  }
+
+  /**
+   * Recursively computes the name of a dot-separated expression, e.g. `t` or `t.ns`
+   * @type {(expression: ts.LeftHandSideExpression | ts.JsxTagNameExpression) => string}
+   */
+  expressionToName(expression) {
+    if (expression) {
+      if (expression.text) {
+        return expression.text
+      } else if (expression.name) {
+        return [
+          this.expressionToName(expression.expression),
+          this.expressionToName(expression.name),
+        ]
+          .filter((s) => s && s.length > 0)
+          .join('.')
+      }
+    }
+    return undefined
   }
 }
