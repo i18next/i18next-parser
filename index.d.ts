@@ -94,7 +94,7 @@ export interface UserConfig {
   contextSeparator?: string;
   createOldCatalogs?: boolean;
   defaultNamespace?: string;
-  defaultValue?: string | ((locale?: string, namespace?: string, key?: string) => string);
+  defaultValue?: string | ((locale?: string, namespace?: string, key?: string, value?: string) => string);
   indentation?: number;
   keepRemoved?: boolean | readonly RegExp[];
   keySeparator?: string | false;
