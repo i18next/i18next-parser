@@ -2,6 +2,14 @@
 
 # 8.7.0
 
+- Handle attribute spreads #909 #908
+- Fix index.d.ts #919
+- Suppress warning about non-literal child when key/defaults are specified #900 #899
+- Support custom namespaced functions and components #913 #912
+- Update dependencies
+
+# 8.7.0
+
 - Add missing componentFunctions properties to JsxLexerConfig types #891 #842
 - Fix unescape logic, expression props, and ICU format for Trans component #892 #886
 - Update dependencies
