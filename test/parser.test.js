@@ -1876,10 +1876,10 @@ describe('parser', () => {
       })
       i18nextParser.once('end', () => {
         assert.deepEqual(result, {
-          'test {{count}}_one': '',
-          'test {{count}}_two': '',
-          'test {{count}}_few': '',
-          'test {{count}}_other': '',
+          'test {{count}}_ordinal_one': '',
+          'test {{count}}_ordinal_two': '',
+          'test {{count}}_ordinal_few': '',
+          'test {{count}}_ordinal_other': '',
         })
         done()
       })
