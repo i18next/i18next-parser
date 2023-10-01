@@ -164,11 +164,13 @@ describe('JavascriptLexer', () => {
   })
 
   it('supports a `functions` option', (done) => {
-    const Lexer = new JavascriptLexer({ functions: ['tt', '_e'] })
-    const content = 'tt("first") + _e("second")'
+    const Lexer = new JavascriptLexer({ functions: ['tt', '_e', 'f.g'] })
+    const content = 'tt("first") + _e("second") + x.tt("third") + f.g("fourth")'
     assert.deepEqual(Lexer.extract(content), [
       { key: 'first' },
       { key: 'second' },
+      { key: 'third' },
+      { key: 'fourth' },
     ])
     done()
   })

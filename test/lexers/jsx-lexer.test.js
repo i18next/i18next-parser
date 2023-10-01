@@ -180,17 +180,27 @@ describe('JsxLexer', () => {
 
     it('extracts keys from user-defined components', (done) => {
       const Lexer = new JsxLexer({
-        componentFunctions: ['Translate', 'FooBar'],
+        componentFunctions: [
+          'Translate',
+          'FooBar',
+          'Namespace.A',
+          'Double.Namespace.B',
+        ],
       })
       const content = `<div>
       <Translate i18nKey="something">Something to translate.</Translate>
       <NotSupported i18nKey="jkl">asdf</NotSupported>
+      <NotSupported.Translate i18nKey="jkl">asdf</NotSupported.Translate>
       <FooBar i18nKey="asdf">Lorum Ipsum</FooBar>
+      <Namespace.A i18nKey="namespaced">Namespaced</Namespace.A>
+      <Double.Namespace.B i18nKey="namespaced2">Namespaced2</Double.Namespace.B>
       </div>
       `
       assert.deepEqual(Lexer.extract(content), [
         { key: 'something', defaultValue: 'Something to translate.' },
         { key: 'asdf', defaultValue: 'Lorum Ipsum' },
+        { key: 'namespaced', defaultValue: 'Namespaced' },
+        { key: 'namespaced2', defaultValue: 'Namespaced2' },
       ])
       done()
     })
