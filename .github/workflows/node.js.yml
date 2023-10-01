@@ -34,7 +34,7 @@ jobs:
       run: yarn build
     - name: Coverage
       run: yarn coverage
-    - uses: codecov/codecov-action@v3
+    - uses: codecov/codecov-action@v4
       with:
         name: node-${{ matrix.node-version }}
         fail_ci_if_error: false
