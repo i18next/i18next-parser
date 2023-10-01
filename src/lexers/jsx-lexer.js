@@ -81,6 +81,7 @@ export default class JsxLexer extends JavascriptLexer {
           'warning',
           `"${attributeName}" prop is not a string literal: ${attribute.initializer.expression.text}`
         )
+
         return undefined
       }
 
@@ -177,7 +178,12 @@ export default class JsxLexer extends JavascriptLexer {
   }
 
   nodeToString(node, sourceText) {
-    const children = this.parseChildren.call(this, node.children, sourceText)
+    const children = this.parseChildren.call(
+      this,
+      node,
+      node.children,
+      sourceText
+    )
 
     const elemsToString = (children) =>
       children
@@ -211,7 +217,7 @@ export default class JsxLexer extends JavascriptLexer {
       .replace(/(\n|\r)\s*/g, ' ')
   }
 
-  parseChildren(children = [], sourceText) {
+  parseChildren(node, children = [], sourceText) {
     return children
       .map((child) => {
         if (child.kind === ts.SyntaxKind.JsxText) {
@@ -235,7 +241,7 @@ export default class JsxLexer extends JavascriptLexer {
             type: 'tag',
             children: hasDynamicChildren
               ? []
-              : this.parseChildren(child.children, sourceText),
+              : this.parseChildren(child, child.children, sourceText),
             name,
             isBasic,
             selfClosing: child.kind === ts.SyntaxKind.JsxSelfClosingElement,
@@ -331,7 +337,17 @@ export default class JsxLexer extends JavascriptLexer {
             child.expression.end
           )
 
-          this.emit('warning', `Child is not literal: ${slicedExpression}`)
+          const tagNode = node.openingElement || node
+          const attrValues = tagNode.attributes.properties
+            .filter((attr) => [this.attr, 'defaults'].includes(attr.name?.text))
+            .map(
+              (attr) =>
+                attr.initializer.expression?.text ?? attr.initializer.text
+            )
+
+          if (attrValues.some((attr) => !attr)) {
+            this.emit('warning', `Child is not literal: ${slicedExpression}`)
+          }
 
           return {
             type: 'js',
