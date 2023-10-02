@@ -1,6 +1,6 @@
 # Changelog
 
-# 8.7.0
+# 8.8.0
 
 - Handle attribute spreads #909 #908
 - Fix index.d.ts #919
