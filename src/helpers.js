@@ -272,7 +272,7 @@ function makeDefaultSort(pluralSeparator) {
       return getPluralSuffixPosition(key1) - getPluralSuffixPosition(key2)
     }
 
-    return singularKey1.localeCompare(singularKey2)
+    return singularKey1.localeCompare(singularKey2, 'en')
   }
 }
 
