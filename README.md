@@ -112,6 +112,9 @@ i18n = new i18nextParser([i18n], {
 export default i18n
 ```
 
+> **Note**: You may need to configure Broccoli to place temporary files (option: tmpdir) within the current working
+> directory as I18next-parser does not traverse down beyond that.
+
 ## Options
 
 Using a config file gives you fine-grained control over how i18next-parser treats your files. Here's an example config showing all config options with their defaults.
