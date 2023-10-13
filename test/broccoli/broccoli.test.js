@@ -9,6 +9,7 @@ import PluralRulesMock from '../Intl.PluralRules.mock.js'
 
 const { Builder } = broccoli
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
+const broccoliTmpDir = path.join(__dirname, '_broccoli_tmp')
 
 describe('broccoli plugin', function () {
   // test execution time depends on I/O
@@ -18,12 +19,19 @@ describe('broccoli plugin', function () {
 
   beforeEach(async () => {
     await fs.emptyDir(path.resolve(__dirname, './src/locales'))
+    await fs.emptyDir(broccoliTmpDir)
+
     sinon.replace(Intl, 'PluralRules', PluralRulesMock)
-    builder = new Builder(brocFile)
+    builder = new Builder(brocFile, {
+      // Place temporary files someplace under the current working directory,
+      // as glob-stream doesn't look further down on the file system than that
+      tmpdir: broccoliTmpDir,
+    })
   })
 
   afterEach(async () => {
     await fs.emptyDir(path.resolve(__dirname, './src/locales'))
+
     await builder.cleanup()
     sinon.restore()
   })
