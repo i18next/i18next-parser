@@ -1,7 +1,7 @@
 {
   "name": "i18next-parser",
   "description": "Command Line tool for i18next",
-  "version": "8.8.0",
+  "version": "8.9.0",
   "type": "module",
   "license": "MIT",
   "author": "Karel Ledru",

@@ -1,5 +1,10 @@
 # Changelog
 
+# 8.9.0
+
+- Make tests work on Windows with non-English locale #931
+- Update dependencies
+
 # 8.8.0
 
 - Handle attribute spreads #909 #908
