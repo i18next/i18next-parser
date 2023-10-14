@@ -619,6 +619,36 @@ describe('parser', () => {
     i18nextParser.end(fakeFile)
   })
 
+  it('fails on sort with failOnUpdate option', (done) => {
+    const i18nextParser = new i18nTransform({
+      output: 'test/locales/$LOCALE/$NAMESPACE.json',
+      failOnUpdate: true,
+      locales: ['en'],
+      sort: true,
+    })
+    const fakeFile = new Vinyl({
+      contents: Buffer.from("t('test_sort:first'), t('test_sort:second')"),
+      path: 'file.js',
+    })
+
+    let actualError
+    i18nextParser.once('error', (error) => {
+      actualError = error
+    })
+
+    const realExit = process.exit
+    process.exit = (exitCode) => {
+      process.exit = realExit
+      assert.equal(exitCode, 1)
+      assert.equal(
+        actualError,
+        'Some keys were sorted and failOnUpdate option is enabled. Exiting...'
+      )
+      done()
+    }
+    i18nextParser.end(fakeFile)
+  })
+
   it('restores translations from the old catalog', (done) => {
     const i18nextParser = new i18nTransform({
       output: 'test/locales/$LOCALE/$NAMESPACE.json',

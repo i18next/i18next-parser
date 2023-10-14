@@ -296,7 +296,20 @@ export default class i18nTransform extends Transform {
             typeof sort === 'function'
               ? sort
               : makeDefaultSort(this.options.pluralSeparator)
-          maybeSortedNewCatalog = sortKeys(newCatalog, { deep: true, compare })
+          let wrappedCompare = this.options.failOnUpdate
+            ? (...args) => {
+                const result = compare(...args)
+                if (result > 0) {
+                  this.parserHadSortUpdate = true
+                  wrappedCompare = compare
+                }
+                return result
+              }
+            : compare
+          maybeSortedNewCatalog = sortKeys(newCatalog, {
+            deep: true,
+            compare: wrappedCompare,
+          })
           maybeSortedOldCatalog = sortKeys(oldCatalog, { deep: true, compare })
         }
 
@@ -319,12 +332,21 @@ export default class i18nTransform extends Transform {
       process.exit(1)
     }
 
-    if (this.options.failOnUpdate && this.parserHadUpdate) {
-      this.emit(
-        'error',
-        'Some translations was updated and failOnUpdate option is enabled. Exiting...'
-      )
-      process.exit(1)
+    if (this.options.failOnUpdate) {
+      if (this.parserHadUpdate) {
+        this.emit(
+          'error',
+          'Some translations was updated and failOnUpdate option is enabled. Exiting...'
+        )
+        process.exit(1)
+      }
+      if (this.parserHadSortUpdate) {
+        this.emit(
+          'error',
+          'Some keys were sorted and failOnUpdate option is enabled. Exiting...'
+        )
+        process.exit(1)
+      }
     }
 
     done()
