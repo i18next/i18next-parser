@@ -58,7 +58,6 @@ export default class i18nTransform extends Transform {
     this.entries = []
 
     this.parserHadWarnings = false
-    this.parserHadUpdate = false
     this.parser = new Parser(this.options)
     this.parser.on('error', (error) => this.error(error))
     this.parser.on('warning', (warning) => this.warn(warning))
@@ -230,6 +229,7 @@ export default class i18nTransform extends Transform {
           oldCount,
           reset: resetFlags,
           resetCount,
+          keyWasAdded,
         } = mergeHashes(
           existingCatalog,
           catalog[namespace],
@@ -276,13 +276,8 @@ export default class i18nTransform extends Transform {
           console.log('')
         }
 
-        if (this.options.failOnUpdate) {
-          const addCount = uniqueCount[namespace] - mergeCount
-          const unreferencedCount = this.options.keepRemoved ? oldCount : 0;
-          if (addCount + restoreCount + oldCount - unreferencedCount !== 0) {
-            this.parserHadUpdate = true
-            continue
-          }
+        if (this.options.failOnUpdate && keyWasAdded) {
+          continue
         }
 
         if (this.options.failOnWarnings && this.parserHadWarnings) {
@@ -320,7 +315,7 @@ export default class i18nTransform extends Transform {
       process.exit(1)
     }
 
-    if (this.options.failOnUpdate && this.parserHadUpdate) {
+    if (this.options.failOnUpdate && keyWasAdded) {
       this.emit(
         'error',
         'Some translations was updated and failOnUpdate option is enabled. Exiting...'

@@ -112,7 +112,9 @@ function dotPathToHash(entry, target = {}, options = {}) {
  * `new` and `oldCount` is the number of keys that were either added to `old` or
  * `new` (if `options.keepRemoved` is true and `target` didn't have the corresponding
  * key) and `reset` is the keys that were reset due to not matching default values,
- *  and `resetCount` which is the number of keys reset.
+ *  and `resetCount` which is the number of keys reset, and keyWasAdded which is
+ *  true if any key added.
+ *
  */
 function mergeHashes(source, target, options = {}, resetValues = {}) {
   let old = {}
@@ -121,6 +123,7 @@ function mergeHashes(source, target, options = {}, resetValues = {}) {
   let pullCount = 0
   let oldCount = 0
   let resetCount = 0
+  let keyWasAdded = false
 
   const keepRemoved =
     (typeof options.keepRemoved === 'boolean' && options.keepRemoved) || false
@@ -198,6 +201,7 @@ function mergeHashes(source, target, options = {}, resetValues = {}) {
         if (keepKey) {
           target[key] = source[key]
         } else {
+          keyWasAdded = true
           old[key] = source[key]
         }
         oldCount += 1
@@ -213,6 +217,7 @@ function mergeHashes(source, target, options = {}, resetValues = {}) {
     oldCount,
     reset,
     resetCount,
+    keyWasAdded,
   }
 }
 
