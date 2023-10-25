@@ -1348,6 +1348,7 @@ describe('parser', () => {
 
       const i18nextParser = new i18nTransform({
         output: 'locales/$LOCALE/$NAMESPACE.json',
+        lineEnding: 'lf',
       })
       const fakeFile = new Vinyl({
         contents: Buffer.from("t('nbsp', 'Oné\\u00A0Twó\\u3000Three Four')"),
@@ -1876,10 +1877,10 @@ describe('parser', () => {
       })
       i18nextParser.once('end', () => {
         assert.deepEqual(result, {
-          'test {{count}}_one': '',
-          'test {{count}}_two': '',
-          'test {{count}}_few': '',
-          'test {{count}}_other': '',
+          'test {{count}}_ordinal_one': '',
+          'test {{count}}_ordinal_two': '',
+          'test {{count}}_ordinal_few': '',
+          'test {{count}}_ordinal_other': '',
         })
         done()
       })
@@ -2339,7 +2340,7 @@ describe('parser', () => {
       it('supports sort as a function', (done) => {
         let result
         const i18nextParser = new i18nTransform({
-          sort: (a, b) => a.slice(0, -1).localeCompare(b.slice(0, -1)),
+          sort: (a, b) => a.slice(0, -1).localeCompare(b.slice(0, -1), 'ar'),
           locales: ['ar'],
         })
         const fakeFile = new Vinyl({

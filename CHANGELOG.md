@@ -1,5 +1,18 @@
 # Changelog
 
+# 8.9.0
+
+- Make tests work on Windows with non-English locale #931
+- Update dependencies
+
+# 8.8.0
+
+- Handle attribute spreads #909 #908
+- Fix index.d.ts #919
+- Suppress warning about non-literal child when key/defaults are specified #900 #899
+- Support custom namespaced functions and components #913 #912
+- Update dependencies
+
 # 8.7.0
 
 - Add missing componentFunctions properties to JsxLexerConfig types #891 #842

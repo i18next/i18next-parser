@@ -16,25 +16,25 @@ jobs:
       matrix:
         node-version: [16.x, 18.x, 20.x]
     steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        cache: yarn
-        node-version: ${{ matrix.node-version }}
-    - name: Install dependencies
-      run: yarn install
-    - name: Prettier
-      run: yarn prettify
-    - name : Tests
-      run: |
-        yarn test:cli
-        yarn test
-    - name: Build
-      run: yarn build
-    - name: Coverage
-      run: yarn coverage
-    - uses: codecov/codecov-action@v3
-      with:
-        name: node-${{ matrix.node-version }}
-        fail_ci_if_error: false
+      - uses: actions/checkout@v4
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          cache: yarn
+          node-version: ${{ matrix.node-version }}
+      - name: Install dependencies
+        run: yarn install
+      - name: Prettier
+        run: yarn prettify
+      - name: Tests
+        run: |
+          yarn test:cli
+          yarn test
+      - name: Build
+        run: yarn build
+      - name: Coverage
+        run: yarn coverage
+      - uses: codecov/codecov-action@v3
+        with:
+          name: node-${{ matrix.node-version }}
+          fail_ci_if_error: false

@@ -1,4 +1,5 @@
 import { assert } from 'chai'
+import sinon from 'sinon'
 import JsxLexer from '../../src/lexers/jsx-lexer.js'
 
 describe('JsxLexer', () => {
@@ -180,17 +181,27 @@ describe('JsxLexer', () => {
 
     it('extracts keys from user-defined components', (done) => {
       const Lexer = new JsxLexer({
-        componentFunctions: ['Translate', 'FooBar'],
+        componentFunctions: [
+          'Translate',
+          'FooBar',
+          'Namespace.A',
+          'Double.Namespace.B',
+        ],
       })
       const content = `<div>
       <Translate i18nKey="something">Something to translate.</Translate>
       <NotSupported i18nKey="jkl">asdf</NotSupported>
+      <NotSupported.Translate i18nKey="jkl">asdf</NotSupported.Translate>
       <FooBar i18nKey="asdf">Lorum Ipsum</FooBar>
+      <Namespace.A i18nKey="namespaced">Namespaced</Namespace.A>
+      <Double.Namespace.B i18nKey="namespaced2">Namespaced2</Double.Namespace.B>
       </div>
       `
       assert.deepEqual(Lexer.extract(content), [
         { key: 'something', defaultValue: 'Something to translate.' },
         { key: 'asdf', defaultValue: 'Lorum Ipsum' },
+        { key: 'namespaced', defaultValue: 'Namespaced' },
+        { key: 'namespaced2', defaultValue: 'Namespaced2' },
       ])
       done()
     })
@@ -271,6 +282,17 @@ describe('JsxLexer', () => {
       assert.equal(
         Lexer.extract(content)[0].defaultValue,
         'My dogs are named: <1></1>'
+      )
+      done()
+    })
+
+    it('handles spread attributes', (done) => {
+      const Lexer = new JsxLexer()
+      const content =
+        '<Trans>My dog is named: <span {...styles}>Spot</span></Trans>'
+      assert.equal(
+        Lexer.extract(content)[0].defaultValue,
+        'My dog is named: <1>Spot</1>'
       )
       done()
     })
@@ -533,6 +555,19 @@ describe('JsxLexer', () => {
           Lexer.extract(content)[0].defaultValue,
           'Hi, {anotherFuncCall({ name: "John" })}'
         )
+        done()
+      })
+
+      it('does not emit a warning about non-literal child when defaults and i18nKey are specified', (done) => {
+        const Lexer = new JsxLexer({
+          transIdentityFunctionsToIgnore: ['funcCall'],
+        })
+        const content =
+          '<Trans i18nKey="testkey" defaults="test">{anotherFuncCall({ name: "John" })}</Trans>'
+        const spy = sinon.spy()
+        Lexer.on('warning', spy)
+        assert.equal(Lexer.extract(content)[0].defaultValue, 'test')
+        assert.isFalse(spy.called)
         done()
       })
     })

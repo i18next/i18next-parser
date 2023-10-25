@@ -94,7 +94,7 @@ export interface UserConfig {
   contextSeparator?: string;
   createOldCatalogs?: boolean;
   defaultNamespace?: string;
-  defaultValue?: string | ((locale?: string, namespace?: string, key?: string) => string);
+  defaultValue?: string | ((locale?: string, namespace?: string, key?: string, value?: string) => string);
   indentation?: number;
   keepRemoved?: boolean | readonly RegExp[];
   keySeparator?: string | false;
@@ -117,8 +117,6 @@ export interface UserConfig {
   pluralSeparator?: string;
   input?: string | string[];
   sort?: boolean | ((a: string, b: string) => -1 | 0 | 1);
-  skipDefaultValues?: boolean | ((locale?: string, namespace?: string) => boolean);
-  useKeysAsDefaultValue?: boolean | ((locale?: string, namespace?: string) => boolean);
   verbose?: boolean;
   failOnWarnings?: boolean;
   failOnUpdate?: boolean;
