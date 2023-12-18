@@ -278,7 +278,9 @@ export default class i18nTransform extends Transform {
 
         if (this.options.failOnUpdate) {
           const addCount = uniqueCount[namespace] - mergeCount
-          if (addCount + restoreCount + oldCount !== 0) {
+          const refCount =
+            addCount + restoreCount + (this.options.keepRemoved ? 0 : oldCount)
+          if (refCount !== 0) {
             this.parserHadUpdate = true
             continue
           }
