@@ -1996,7 +1996,6 @@ describe('parser', () => {
           output: 'test/locales/$LOCALE/$NAMESPACE.json',
           failOnUpdate: true,
           locales: ['en'],
-          verbose: true,
           defaultNamespace: 'test_fail_on_update',
         })
         const fakeFile = new Vinyl({
@@ -2030,7 +2029,6 @@ describe('parser', () => {
           failOnUpdate: true,
           keepRemoved: true,
           locales: ['en'],
-          verbose: true,
           defaultNamespace: 'test_fail_on_update',
         })
         const fakeFile = new Vinyl({
