@@ -1,5 +1,10 @@
 # Changelog
 
+# 8.10.0
+
+- Fix a bug where keepRemoved option makes the failOnUpdate fails without any update #948 #666
+- Update dependencies
+
 # 8.9.0
 
 - Make tests work on Windows with non-English locale #931
