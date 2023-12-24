@@ -2,6 +2,10 @@
 
 # 8.10.0
 
+- Fix a bug where keepRemoved wasn't failing when the catalog get sorted #926 #932
+
+# 8.10.0
+
 - Fix a bug where keepRemoved option makes the failOnUpdate fails without any update #948 #666
 - Update dependencies
 
