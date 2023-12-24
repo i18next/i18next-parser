@@ -1990,6 +1990,188 @@ describe('parser', () => {
       i18nextParser.end(fakeFile)
     })
 
+    describe('failOnUpdate', () => {
+      it('fails if a translation is updated', (done) => {
+        const i18nextParser = new i18nTransform({
+          output: 'test/locales/$LOCALE/$NAMESPACE.json',
+          failOnUpdate: true,
+          locales: ['en'],
+          defaultNamespace: 'test_fail_on_update',
+        })
+        const fakeFile = new Vinyl({
+          contents: Buffer.from(
+            't("key_existing_1") t("key_existing_2") t("key_not_existing")'
+          ),
+          path: 'file.js',
+        })
+
+        let actualError
+        i18nextParser.once('error', (error) => {
+          actualError = error
+        })
+
+        const realExit = process.exit
+        process.exit = (exitCode) => {
+          process.exit = realExit
+          assert.equal(exitCode, 1)
+          assert.equal(
+            actualError,
+            'Some translations was updated and failOnUpdate option is enabled. Exiting...'
+          )
+          done()
+        }
+        i18nextParser.end(fakeFile)
+      })
+
+      it('fails if a translation is updated and keepRemoved is true', (done) => {
+        const i18nextParser = new i18nTransform({
+          output: 'test/locales/$LOCALE/$NAMESPACE.json',
+          failOnUpdate: true,
+          keepRemoved: true,
+          locales: ['en'],
+          defaultNamespace: 'test_fail_on_update',
+        })
+        const fakeFile = new Vinyl({
+          contents: Buffer.from('t("key_existing_1") t("key_not_existing")'),
+          path: 'file.js',
+        })
+
+        let actualError
+        i18nextParser.once('error', (error) => {
+          actualError = error
+        })
+
+        const realExit = process.exit
+        process.exit = (exitCode) => {
+          process.exit = realExit
+          assert.equal(exitCode, 1)
+          assert.equal(
+            actualError,
+            'Some translations was updated and failOnUpdate option is enabled. Exiting...'
+          )
+          done()
+        }
+        i18nextParser.end(fakeFile)
+      })
+
+      it('fails if a translation is updated and keepRemoved is a regex', (done) => {
+        const i18nextParser = new i18nTransform({
+          output: 'test/locales/$LOCALE/$NAMESPACE.json',
+          failOnUpdate: true,
+          keepRemoved: [/test_fail_on_update:s.*/],
+          locales: ['en'],
+          defaultNamespace: 'test_fail_on_update',
+        })
+        const fakeFile = new Vinyl({
+          contents: Buffer.from('t("key_existing_1") t("key_not_existing")'),
+          path: 'file.js',
+        })
+
+        let actualError
+        i18nextParser.once('error', (error) => {
+          actualError = error
+        })
+
+        const realExit = process.exit
+        process.exit = (exitCode) => {
+          process.exit = realExit
+          assert.equal(exitCode, 1)
+          assert.equal(
+            actualError,
+            'Some translations was updated and failOnUpdate option is enabled. Exiting...'
+          )
+          done()
+        }
+        i18nextParser.end(fakeFile)
+      })
+
+      it('passes when no translations are updated', (done) => {
+        const i18nextParser = new i18nTransform({
+          output: 'test/locales/$LOCALE/$NAMESPACE.json',
+          failOnUpdate: true,
+          locales: ['en'],
+          defaultNamespace: 'test_fail_on_update',
+        })
+        const fakeFile = new Vinyl({
+          contents: Buffer.from('t("key_existing_1") t("key_existing_2")'),
+          path: 'file.js',
+        })
+
+        i18nextParser.on('error', (error) => {
+          assert.fail(error)
+        })
+
+        i18nextParser.end(fakeFile)
+        done()
+      })
+
+      it('passes when no translations are updated and keepRemoved is true', (done) => {
+        const i18nextParser = new i18nTransform({
+          output: 'test/locales/$LOCALE/$NAMESPACE.json',
+          failOnUpdate: true,
+          keepRemoved: true,
+          locales: ['en'],
+          defaultNamespace: 'test_fail_on_update',
+        })
+
+        const fakeFile = new Vinyl({
+          contents: Buffer.from('t("key_existing_1") t("key_existing_2")'),
+          path: 'file.js',
+        })
+
+        i18nextParser.on('error', (error) => {
+          assert.fail(error)
+        })
+
+        i18nextParser.end(fakeFile)
+        done()
+      })
+
+      it('passes when no translations are updated and keepRemoved is a regex', (done) => {
+        const i18nextParser = new i18nTransform({
+          output: 'test/locales/$LOCALE/$NAMESPACE.json',
+          failOnUpdate: true,
+          keepRemoved: [/test_fail_on_update:s.*/],
+          locales: ['en'],
+          defaultNamespace: 'test_fail_on_update',
+        })
+
+        const fakeFile = new Vinyl({
+          contents: Buffer.from('t("key_existing_1") t("key_existing_2")'),
+          path: 'file.js',
+        })
+
+        i18nextParser.on('error', (error) => {
+          assert.fail(error)
+        })
+
+        i18nextParser.end(fakeFile)
+        done()
+      })
+
+      it('passes when translations are kept and keepRemoved is true', (done) => {
+        const i18nextParser = new i18nTransform({
+          output: 'test/locales/$LOCALE/$NAMESPACE.json',
+          failOnUpdate: true,
+          keepRemoved: true,
+          locales: ['en'],
+          defaultNamespace: 'test_fail_on_update',
+        })
+
+        const fakeFile = new Vinyl({
+          contents: Buffer.from('t("key_existing_1")'),
+          path: 'file.js',
+        })
+
+        i18nextParser.on('error', (error) => {
+          assert.fail(error)
+        })
+
+        i18nextParser.end(fakeFile)
+        done()
+      })
+    })
+
     describe('lexers', () => {
       it('supports custom lexers options', (done) => {
         let result
