@@ -37,7 +37,7 @@
     "gulp-sort": "^2.0.0",
     "i18next": "^23.5.1",
     "js-yaml": "4.1.0",
-    "lilconfig": "^2.0.6",
+    "lilconfig": "^3.0.0",
     "rsvp": "^4.8.2",
     "sort-keys": "^5.0.0",
     "typescript": "^5.0.4",
