@@ -627,7 +627,10 @@ describe('parser', () => {
       sort: true,
     })
     const fakeFile = new Vinyl({
-      contents: Buffer.from("t('test_sort:first'), t('test_sort:second')"),
+      contents: Buffer.from(
+        "t('test_sort_unsorted:first'), t('test_sort_unsorted:second'), " +
+          "t('test_sort_unsorted:third.a'), t('test_sort_unsorted:third.b')"
+      ),
       path: 'file.js',
     })
 
@@ -647,6 +650,35 @@ describe('parser', () => {
       done()
     }
     i18nextParser.end(fakeFile)
+  })
+
+  it('does not fail on sort with already sorted keys with failOnUpdate option', (done) => {
+    const i18nextParser = new i18nTransform({
+      output: 'test/locales/$LOCALE/$NAMESPACE.json',
+      failOnUpdate: true,
+      locales: ['en'],
+      sort: true,
+    })
+    const fakeFile = new Vinyl({
+      contents: Buffer.from(
+        "t('test_sort_sorted:first'), t('test_sort_sorted:second'), " +
+          "t('test_sort_sorted:third.a'), t('test_sort_sorted:third.b')"
+      ),
+      path: 'file.js',
+    })
+
+    const realExit = process.exit
+    process.exit = (exitCode) => {
+      process.exit = realExit
+      assert.fail('Should not have called process.exit with ' + exitCode)
+    }
+
+    i18nextParser.once('end', () => {
+      done()
+    })
+
+    i18nextParser.end(fakeFile)
+    i18nextParser.resume()
   })
 
   it('restores translations from the old catalog', (done) => {
