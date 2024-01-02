@@ -298,21 +298,21 @@ export default class i18nTransform extends Transform {
             typeof sort === 'function'
               ? sort
               : makeDefaultSort(this.options.pluralSeparator)
-          let wrappedCompare = this.options.failOnUpdate
-            ? (...args) => {
-                const result = compare(...args)
-                if (result > 0) {
-                  this.parserHadSortUpdate = true
-                  wrappedCompare = compare
-                }
-                return result
-              }
-            : compare
           maybeSortedNewCatalog = sortKeys(newCatalog, {
             deep: true,
-            compare: wrappedCompare,
+            compare,
           })
+
           maybeSortedOldCatalog = sortKeys(oldCatalog, { deep: true, compare })
+
+          if (this.options.failOnUpdate && !this.parserHadUpdate) {
+            // No updates to the catalog, so we do the deeper check to ensure it is also sorted.
+            // This is easiest to accomplish by simply converting both objects to JSON, as we'd have
+            // to do a deep comparison anyway
+            this.parserHadSortUpdate =
+              JSON.stringify(maybeSortedNewCatalog) !==
+              JSON.stringify(existingCatalog)
+          }
         }
 
         // push files back to the stream
