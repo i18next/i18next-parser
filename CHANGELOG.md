@@ -1,6 +1,11 @@
 # Changelog
 
-# 8.10.0
+# 8.12.0
+
+- Fix --fail-on-update false negatives from new sort code #957 #955
+- Update dependencies
+
+# 8.11.0
 
 - Fix a bug where keepRemoved wasn't failing when the catalog get sorted #926 #932
 
