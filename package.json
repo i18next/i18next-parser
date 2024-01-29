@@ -32,7 +32,7 @@
     "colors": "1.4.0",
     "commander": "~11.1.0",
     "eol": "^0.9.1",
-    "esbuild": "^0.19.0",
+    "esbuild": "^0.20.0",
     "fs-extra": "^11.1.0",
     "gulp-sort": "^2.0.0",
     "i18next": "^23.5.1",
