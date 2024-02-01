@@ -89,6 +89,8 @@ function dotPathToHash(entry, target = {}, options = {}) {
     entries.forEach((valueEntry) => {
       if (valueEntry[1] === '${defaultValue}') {
         inner[lastSegment][valueEntry[0]] = newValue
+      } else if (valueEntry[1] === '${filePaths}') {
+        inner[lastSegment][valueEntry[0]] = entry.filePaths
       } else {
         inner[lastSegment][valueEntry[0]] =
           entry[valueEntry[1].replace(/\${(\w+)}/, '$1')] || ''

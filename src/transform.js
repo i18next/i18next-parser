@@ -68,6 +68,10 @@ export default class i18nTransform extends Transform {
 
     this.i18next = i18next.createInstance()
     this.i18next.init(this.options.i18nextOptions)
+
+    // Track where individual keys are found, for use in customValueTemplate
+    // substitution into "${filePath}"
+    this.keyToFilePaths = {}
   }
 
   error(error) {
@@ -129,6 +133,12 @@ export default class i18nTransform extends Transform {
       key = key.replace(/\\\\/g, '\\')
       entry.key = key
       entry.keyWithNamespace = entry.namespace + this.options.keySeparator + key
+      // Add the filename so that we can use it in customValueTemplate
+      this.keyToFilePaths[key] = this.keyToFilePaths[key] || []
+      if (!this.keyToFilePaths[key].includes(file.path)) {
+        this.keyToFilePaths[key].push(file.path)
+      }
+      entry.filePaths = this.keyToFilePaths[key]
 
       this.addEntry(entry)
     }
