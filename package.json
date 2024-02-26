@@ -27,6 +27,7 @@
     "prepublishOnly": "yarn -s prettify && yarn -s build"
   },
   "dependencies": {
+    "@babel/runtime": "^7.23.2",
     "broccoli-plugin": "^4.0.7",
     "cheerio": "^1.0.0-rc.2",
     "colors": "1.4.0",
