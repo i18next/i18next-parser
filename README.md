@@ -341,9 +341,9 @@ Typescript is supported via Javascript and Jsx lexers. If you are using Javascri
 
 ```js
 {
-  // HtmlLexer default config (htm, html)
+  // HTMLLexer default config (htm, html)
   html: [{
-    lexer: 'HtmlLexer',
+    lexer: 'HTMLLexer',
     attr: 'data-i18n' // Attribute for the keys
     optionAttr: 'data-i18n-options' // Attribute for the options
   }]
