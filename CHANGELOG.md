@@ -1,5 +1,11 @@
 # Changelog
 
+# 8.13.0
+
+- Output the files in which a string is found in customValueTemplate #970
+- Fix babel dependency #976 #975
+- Update dependencies
+
 # 8.12.0
 
 - Fix --fail-on-update false negatives from new sort code #957 #955
