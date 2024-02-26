@@ -204,13 +204,33 @@ export default {
 
   customValueTemplate: null,
   // If you wish to customize the value output the value as an object, you can set your own format.
-  // ${defaultValue} is the default value you set in your translation function.
-  // Any other custom property will be automatically extracted.
+  //
+  // - ${defaultValue} is the default value you set in your translation function.
+  // - ${filePaths} will be expanded to an array that contains the absolute
+  //   file paths where the translations originated in, in case e.g., you need
+  //   to provide translators with context
+  //
+  // Any other custom property will be automatically extracted from the 2nd
+  // argument of your `t()` function or tOptions in <Trans tOptions={...} />
   //
   // Example:
-  // {
+  // For `t('my-key', {maxLength: 150, defaultValue: 'Hello'})` in
+  // /path/to/your/file.js,
+  //
+  // Using the following customValueTemplate:
+  //
+  // customValueTemplate: {
   //   message: "${defaultValue}",
-  //   description: "${maxLength}", // t('my-key', {maxLength: 150})
+  //   description: "${maxLength}",
+  //   paths: "${filePaths}",
+  // }
+  //
+  // Will result in the following item being extracted:
+  //
+  // "my-key": {
+  //   "message": "Hello",
+  //   "description": 150,
+  //   "paths": ["/path/to/your/file.js"]
   // }
 
   resetDefaultValueLocale: null,

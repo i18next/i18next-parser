@@ -1958,6 +1958,7 @@ describe('parser', () => {
           description: '${max}',
           namespace: '${namespace}',
           key: '${key}',
+          paths: '${filePaths}',
         },
       })
 
@@ -1966,6 +1967,11 @@ describe('parser', () => {
           "t('test'); t('salt', {defaultValue: 'salty', max: 150})"
         ),
         path: 'file.js',
+      })
+
+      const anotherFakeFile = new Vinyl({
+        contents: Buffer.from("t('test')"),
+        path: 'anotherFile.js',
       })
 
       i18nextParser.on('data', (file) => {
@@ -1979,18 +1985,21 @@ describe('parser', () => {
             description: '',
             namespace: 'translation',
             key: 'test',
+            paths: ['anotherFile.js', 'file.js'],
           },
           salt: {
             message: 'salty',
             description: '150',
             namespace: 'translation',
             key: 'salt',
+            paths: ['file.js'],
           },
         })
 
         done()
       })
 
+      i18nextParser.write(anotherFakeFile)
       i18nextParser.end(fakeFile)
     })
 
