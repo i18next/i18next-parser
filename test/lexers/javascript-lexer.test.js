@@ -209,6 +209,17 @@ describe('JavascriptLexer', () => {
     const content = 'i18n.t("first") as potato'
     assert.deepEqual(Lexer.extract(content), [{ key: 'first' }])
   })
+  it('supports for t function in options', () => {
+    const Lexer = new JavascriptLexer()
+    const content =
+      'i18n.t("first", {option: i18n.t("second",{option2: i18n.t("third")}), option3: i18n.t("fourth")})'
+    assert.deepEqual(Lexer.extract(content), [
+      { key: 'first' },
+      { key: 'second' },
+      { key: 'third' },
+      { key: 'fourth' },
+    ])
+  })
 
   describe('useTranslation', () => {
     it('extracts default namespace', () => {

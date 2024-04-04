@@ -32,7 +32,10 @@ export default class JsxLexer extends JavascriptLexer {
 
       switch (node.kind) {
         case ts.SyntaxKind.CallExpression:
-          entry = this.expressionExtractor.call(this, node)
+          const entries = this.expressionExtractor.call(this, node)
+          if (entries) {
+            keys.push(...entries)
+          }
           break
         case ts.SyntaxKind.TaggedTemplateExpression:
           entry = this.taggedTemplateExpressionExtractor.call(this, node)

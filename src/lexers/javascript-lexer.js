@@ -70,8 +70,6 @@ export default class JavascriptLexer extends BaseLexer {
     const parseCommentNode = this.createCommentNodeParser()
 
     const parseTree = (node) => {
-      let entry
-
       parseCommentNode(keys, node, content)
 
       if (
@@ -82,15 +80,17 @@ export default class JavascriptLexer extends BaseLexer {
       }
 
       if (node.kind === ts.SyntaxKind.TaggedTemplateExpression) {
-        entry = this.taggedTemplateExpressionExtractor.call(this, node)
+        const entry = this.taggedTemplateExpressionExtractor.call(this, node)
+        if (entry) {
+          keys.push(entry)
+        }
       }
 
       if (node.kind === ts.SyntaxKind.CallExpression) {
-        entry = this.expressionExtractor.call(this, node)
-      }
-
-      if (entry) {
-        keys.push(entry)
+        const entries = this.expressionExtractor.call(this, node)
+        if (entries) {
+          keys.push(...entries)
+        }
       }
 
       node.forEachChild(parseTree)
@@ -159,7 +159,7 @@ export default class JavascriptLexer extends BaseLexer {
   }
 
   expressionExtractor(node) {
-    const entry = {}
+    const entries = [{}]
 
     if (
       this.namespaceFunctions.includes(node.expression.escapedText) &&
@@ -230,7 +230,7 @@ export default class JavascriptLexer extends BaseLexer {
         keyArgument.kind === ts.SyntaxKind.StringLiteral ||
         keyArgument.kind === ts.SyntaxKind.NoSubstitutionTemplateLiteral
       ) {
-        entry.key = keyArgument.text
+        entries[0].key = keyArgument.text
       } else if (keyArgument.kind === ts.SyntaxKind.BinaryExpression) {
         const concatenatedString = this.concatenateString(keyArgument)
         if (!concatenatedString) {
@@ -240,7 +240,7 @@ export default class JavascriptLexer extends BaseLexer {
           )
           return null
         }
-        entry.key = concatenatedString
+        entries[0].key = concatenatedString
       } else {
         this.emit(
           'warning',
@@ -260,7 +260,7 @@ export default class JavascriptLexer extends BaseLexer {
           }
           if (typeArg.kind === ts.SyntaxKind.TypeLiteral) {
             for (const member of typeArg.members) {
-              entry[member.name.text] = ''
+              entries[0][member.name.text] = ''
             }
           } else if (
             typeArg.kind === ts.SyntaxKind.TypeReference &&
@@ -268,7 +268,7 @@ export default class JavascriptLexer extends BaseLexer {
           ) {
             const typeName = typeArg.typeName.text
             if (typeName in this.typeMap) {
-              Object.assign(entry, this.typeMap[typeName])
+              Object.assign(entries[0], this.typeMap[typeName])
             }
           } else if (Array.isArray(typeArg.types)) {
             typeArgument.types.forEach((tp) => parseTypeArgument(tp))
@@ -286,7 +286,7 @@ export default class JavascriptLexer extends BaseLexer {
         (optionsArgument.kind === ts.SyntaxKind.StringLiteral ||
           optionsArgument.kind === ts.SyntaxKind.NoSubstitutionTemplateLiteral)
       ) {
-        entry.defaultValue = optionsArgument.text
+        entries[0].defaultValue = optionsArgument.text
         optionsArgument = node.arguments.shift()
       } else if (
         optionsArgument &&
@@ -300,7 +300,7 @@ export default class JavascriptLexer extends BaseLexer {
           )
           return null
         }
-        entry.defaultValue = concatenatedString
+        entries[0].defaultValue = concatenatedString
         optionsArgument = node.arguments.shift()
       }
 
@@ -316,27 +316,32 @@ export default class JavascriptLexer extends BaseLexer {
             )
           } else if (p.initializer) {
             if (p.initializer.kind === ts.SyntaxKind.TrueKeyword) {
-              entry[p.name.text] = true
+              entries[0][p.name.text] = true
             } else if (p.initializer.kind === ts.SyntaxKind.FalseKeyword) {
-              entry[p.name.text] = false
+              entries[0][p.name.text] = false
+            } else if (p.initializer.kind === ts.SyntaxKind.CallExpression) {
+              const nestedEntries = this.expressionExtractor(p.initializer)
+              if (nestedEntries) {
+                entries.push(...nestedEntries)
+              }
             } else {
-              entry[p.name.text] = p.initializer.text || ''
+              entries[0][p.name.text] = p.initializer.text || ''
             }
           } else {
-            entry[p.name.text] = ''
+            entries[0][p.name.text] = ''
           }
         }
       }
 
-      if (entry.ns) {
-        if (typeof entry.ns === 'string') {
-          entry.namespace = entry.ns
-        } else if (typeof entry.ns === 'object' && entry.ns.length) {
-          entry.namespace = entry.ns[0]
+      if (entries[0].ns) {
+        if (typeof entries[0].ns === 'string') {
+          entries[0].namespace = entries[0].ns
+        } else if (typeof entries.ns === 'object' && entries.ns.length) {
+          entries[0].namespace = entries[0].ns[0]
         }
       }
 
-      return entry
+      return entries
     }
 
     return null
