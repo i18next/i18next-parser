@@ -3520,9 +3520,9 @@ husky@>=7.0.2:
   integrity sha512-+dQSyqPh4x1hlO1swXBiNb2HzTDN1I2IGLQx1GrBuiqFJfoMrnZWwVmatvSiO+Iz8fBUnf+lekwNo4c2LlXItg==
 
 i18next@^23.5.1:
-  version "23.7.13"
-  resolved "https://registry.yarnpkg.com/i18next/-/i18next-23.7.13.tgz#2dda870cbf63e168e1d4eb8f6f700b5c26794a3d"
-  integrity sha512-DbCPlw6VmURSZa43iOnycxq9o15e+WuBWDBZ3aj+gQZcDz4sgnuKwrcwmP1n8gSSCwCN7CRFGTpnwTd93A16Mg==
+  version "23.11.0"
+  resolved "https://registry.yarnpkg.com/i18next/-/i18next-23.11.0.tgz#3aaa38e887350db573af91eabddd71ab9fcd9ea8"
+  integrity sha512-VwFtlgy2LDbY0Qs6VfekIm6mv5/JmSJrtBf4aszl7Vby8+GcBlri0/7dkMZXmzTfiBMPUPBOmYCdQK7K4emkGQ==
   dependencies:
     "@babel/runtime" "^7.23.2"
 
