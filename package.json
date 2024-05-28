@@ -43,8 +43,7 @@
     "sort-keys": "^5.0.0",
     "typescript": "^5.0.4",
     "vinyl": "~3.0.0",
-    "vinyl-fs": "^4.0.0",
-    "vue-template-compiler": "^2.6.11"
+    "vinyl-fs": "^4.0.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.0.0",
