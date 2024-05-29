@@ -137,6 +137,19 @@ describe('mergeHashes helper function', () => {
     done()
   })
 
+  it('restores context keys when the singular one exists (custom contextSeparator)', (done) => {
+    const source = { key1: '', 'key1|context': 'value1' }
+    const target = { key1: '' }
+    const res = mergeHashes(source, target, { contextSeparator: '|' })
+
+    assert.deepEqual(res.new, { key1: '', 'key1|context': 'value1' })
+    assert.deepEqual(res.old, {})
+    assert.strictEqual(res.mergeCount, 1)
+    assert.strictEqual(res.pullCount, 1)
+    assert.strictEqual(res.oldCount, 0)
+    done()
+  })
+
   it('does not restore context keys when the singular one does not', (done) => {
     const source = { key1: '', key1_context: 'value1' }
     const target = { key2: '' }
@@ -144,6 +157,19 @@ describe('mergeHashes helper function', () => {
 
     assert.deepEqual(res.new, { key2: '' })
     assert.deepEqual(res.old, { key1: '', key1_context: 'value1' })
+    assert.strictEqual(res.mergeCount, 0)
+    assert.strictEqual(res.pullCount, 0)
+    assert.strictEqual(res.oldCount, 2)
+    done()
+  })
+
+  it('does not restore context keys when the singular one does not (custom contextSeparator)', (done) => {
+    const source = { key1: '', 'key1|context': 'value1' }
+    const target = { key2: '' }
+    const res = mergeHashes(source, target, { contextSeparator: '|' })
+
+    assert.deepEqual(res.new, { key2: '' })
+    assert.deepEqual(res.old, { key1: '', 'key1|context': 'value1' })
     assert.strictEqual(res.mergeCount, 0)
     assert.strictEqual(res.pullCount, 0)
     assert.strictEqual(res.oldCount, 2)

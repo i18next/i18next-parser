@@ -131,6 +131,7 @@ function mergeHashes(source, target, options = {}, resetValues = {}) {
   const fullKeyPrefix = options.fullKeyPrefix || ''
   const keySeparator = options.keySeparator || '.'
   const pluralSeparator = options.pluralSeparator || '_'
+  const contextSeparator = options.contextSeparator || '_'
 
   for (const key in source) {
     const hasNestedEntries =
@@ -180,7 +181,9 @@ function mergeHashes(source, target, options = {}, resetValues = {}) {
       const pluralMatch = key !== singularKey
 
       // support for context in keys
-      const contextRegex = /_([^_]+)?$/
+      const contextRegex = new RegExp(
+        `\\${contextSeparator}([^\\${contextSeparator}]+)?$`
+      )
       const contextMatch = contextRegex.test(singularKey)
       const rawKey = singularKey.replace(contextRegex, '')
 
