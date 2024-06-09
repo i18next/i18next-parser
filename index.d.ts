@@ -1,6 +1,6 @@
 import EventEmitter from "events";
 
-export type SupportedLexer = "HandlebarsLexer" | "HTMLLexer" | "JavascriptLexer" | "JsxLexer" | "VueLexer";
+export type SupportedLexer = "HandlebarsLexer" | "HTMLLexer" | "JavascriptLexer" | "JsxLexer";
 
 // BaseLexer is not importable therefore this is the best if done simple
 export class CustomLexerClass extends EventEmitter {}
@@ -75,11 +75,6 @@ export interface JsxWithTypesLexerConfig {
   transIdentityFunctionsToIgnore?: string[];
 }
 
-export interface VueLexerConfig {
-  lexer: "VueLexer";
-  functions?: string[];
-}
-
 export type LexerConfig =
   | HandlebarsLexerConfig
   | HTMLLexerConfig
@@ -87,7 +82,6 @@ export type LexerConfig =
   | JavascriptWithTypesLexerConfig
   | JsxLexerConfig
   | JsxWithTypesLexerConfig
-  | VueLexerConfig
   | CustomLexerConfig;
 
 export interface UserConfig {

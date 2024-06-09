@@ -1,3 +1,8 @@
+# Migrating from `8.x` to `9.x`
+
+## Breaking changes
+- Support for the `VueLexer` has been dropped as it creates compatibility problems when trying to parse Vue3 code bases.  You must remove any references to `VueLexer` in your configuration files.  For Vue3, you can simply use `JavascriptLexer` instead.
+
 # Migrating from `7.x` to `8.x`
 
 ## Breaking changes
