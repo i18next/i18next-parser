@@ -1,5 +1,11 @@
 # Changelog
 
+# 9.0.0
+
+- Custom contextSeparator fix #1008
+- Remove VueLexer #1007 #617
+- Fix t func in options #994 #779
+
 # 8.13.0
 
 - Output the files in which a string is found in customValueTemplate #970
