@@ -29,6 +29,7 @@ Finally, if you want to make this process even less painful, I invite you to che
 
 You can find information about major releases on the [dedicated page](https://github.com/i18next/i18next-parser/releases). The [migration documentation](docs/migration.md) will help you figure out the breaking changes between versions.
 
+- `9.x` is tested on Node 18, 20 and 22.
 - `8.x` is tested on Node 16, 18 and 20.
 - `7.x` is tested on Node 14, 16 and 18.
 - `6.x` is tested on Node 14 and 16.
