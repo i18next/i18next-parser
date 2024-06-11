@@ -1294,6 +1294,30 @@ describe('parser', () => {
       i18nextParser.end(fakeFile)
     })
 
+    it('supports insertFinalNewline', (done) => {
+      let result
+      const i18nextParser = new i18nTransform({
+        lineEnding: '\r\n',
+        insertFinalNewline: false,
+      })
+      const fakeFile = new Vinyl({
+        contents: Buffer.from("t('first')"),
+        path: 'file.js',
+      })
+
+      i18nextParser.on('data', (file) => {
+        if (file.relative.endsWith(enLibraryPath)) {
+          result = file.contents.toString()
+        }
+      })
+      i18nextParser.once('end', () => {
+        assert.equal(result, '{\r\n  "first": ""\r\n}')
+        done()
+      })
+
+      i18nextParser.end(fakeFile)
+    })
+
     it('parses Trans from js file with lexer override to JsxLexer', (done) => {
       let result
       const i18nextParser = new i18nTransform({
