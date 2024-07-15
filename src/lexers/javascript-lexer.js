@@ -323,6 +323,8 @@ export default class JavascriptLexer extends BaseLexer {
               const nestedEntries = this.expressionExtractor(p.initializer)
               if (nestedEntries) {
                 entries.push(...nestedEntries)
+              } else {
+                entries[0][p.name.text] = p.initializer.text || ''
               }
             } else {
               entries[0][p.name.text] = p.initializer.text || ''

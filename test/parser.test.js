@@ -1638,6 +1638,30 @@ describe('parser', () => {
       i18nextParser.end(fakeFile)
     })
 
+    it('generates plurals when count is an expression', (done) => {
+      let result
+      const i18nextParser = new i18nTransform()
+      const fakeFile = new Vinyl({
+        contents: Buffer.from("t('test {{count}}', { count: expr() })"),
+        path: 'file.js',
+      })
+
+      i18nextParser.on('data', (file) => {
+        if (file.relative.endsWith(enLibraryPath)) {
+          result = JSON.parse(file.contents)
+        }
+      })
+      i18nextParser.once('end', () => {
+        assert.deepEqual(result, {
+          'test {{count}}_one': '',
+          'test {{count}}_other': '',
+        })
+        done()
+      })
+
+      i18nextParser.end(fakeFile)
+    })
+
     it('generates plurals with custom plural separator', (done) => {
       let result
       const i18nextParser = new i18nTransform({
