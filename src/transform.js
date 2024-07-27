@@ -99,7 +99,7 @@ export default class i18nTransform extends Transform {
       done()
       return
     } else {
-      content = fs.readFileSync(file.path, encoding)
+      content = fs.readFileSync(file.path, encoding || 'utf-8')
     }
 
     this.emit('reading', file)
