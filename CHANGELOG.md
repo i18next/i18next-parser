@@ -1,10 +1,17 @@
 # Changelog
 
+# 9.0.1
+
+- Fix plurals not being detected when count is a CallExpression #1022 #1015
+- Use utf-8 as default encoding to read files #992
+- Update dependencies
+
 # 9.0.0
 
 - Custom contextSeparator fix #1008
 - Remove VueLexer #1007 #617
 - Fix t func in options #994 #779
+- Support for Node 16 is dropped. Node 18, 20 and 22 are supported.
 
 # 8.13.0
 
