@@ -30,6 +30,7 @@ export default class i18nTransform extends Transform {
       keySeparator: '.',
       lexers: {},
       lineEnding: 'auto',
+      insertFinalNewline: true,
       locales: ['en', 'fr'],
       namespaceSeparator: ':',
       pluralSeparator: '_',
@@ -403,7 +404,9 @@ export default class i18nTransform extends Transform {
         ...this.options.yamlOptions,
       })
     } else {
-      text = JSON.stringify(contents, null, this.options.indentation) + '\n'
+      text =
+        JSON.stringify(contents, null, this.options.indentation) +
+        (this.options.insertFinalNewline ? '\n' : '')
       // Convert non-printable Unicode characters to unicode escape sequence
       // https://unicode.org/reports/tr18/#General_Category_Property
       text = text.replace(/[\p{Z}\p{Cc}\p{Cf}]/gu, (chr) => {
