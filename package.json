@@ -21,7 +21,7 @@
     "test:cli": "yarn -s build && node ./bin/cli.js '**/*.html' -o test/manual/$LOCALE/$NAMESPACE.json && node ./bin/cli.js -c test/cli/i18next-parser.config.js && node ./bin/cli.js -c test/cli/i18next-parser.config.mjs && node ./bin/cli.js -c test/cli/i18next-parser.config.ts && node ./bin/cli.js -c test/cli/i18next-parser.config.yaml",
     "test:watch": "mocha -r @babel/register -r @babel/polyfill --watch --parallel --recursive",
     "watch": "babel src -d dist -w",
-    "prettify": "prettier --write \"{src,test}/**/*.js\"",
+    "prettify": "prettier --write --list-different .",
     "build": "babel src -d dist && cp index.d.ts dist",
     "prepare": "husky install",
     "prepublishOnly": "yarn -s prettify && yarn -s build"
