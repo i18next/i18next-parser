@@ -1,2 +1,4 @@
+test/broccoli/src/handlebars.hbs
 test/broccoli/src/javascript.js
-test/templating/javascript.js
+test/locales/en/test_invalid.json
+test/templating/
