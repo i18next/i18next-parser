@@ -105,6 +105,7 @@ export interface UserConfig {
     default?: (SupportedLexer | CustomLexer | LexerConfig)[];
   };
   lineEnding?: "auto" | "crlf" | "\r\n" | "cr" | "\r" | "lf" | "\n";
+  insertFinalNewline?: boolean;
   locales?: string[];
   namespaceSeparator?: string | false;
   output?: string;
