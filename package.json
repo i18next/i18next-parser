@@ -23,7 +23,7 @@
     "watch": "babel src -d dist -w",
     "prettify": "prettier --write --list-different .",
     "build": "babel src -d dist && cp index.d.ts dist",
-    "prepare": "husky install",
+    "prepare": "husky",
     "prepublishOnly": "yarn -s prettify && yarn -s build"
   },
   "dependencies": {
