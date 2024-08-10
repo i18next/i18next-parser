@@ -1,7 +1,7 @@
 {
   "name": "i18next-parser",
   "description": "Command Line tool for i18next",
-  "version": "9.0.1",
+  "version": "9.0.2",
   "type": "module",
   "license": "MIT",
   "author": "Karel Ledru",
@@ -29,7 +29,7 @@
   "dependencies": {
     "@babel/runtime": "^7.23.2",
     "broccoli-plugin": "^4.0.7",
-    "cheerio": "^1.0.0-rc.2",
+    "cheerio": "^1.0.0",
     "colors": "1.4.0",
     "commander": "~12.1.0",
     "eol": "^0.9.1",

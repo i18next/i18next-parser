@@ -1,5 +1,10 @@
 # Changelog
 
+# 9.0.2
+
+- Fix cheerio dependency #1045
+- Update dependencies
+
 # 9.0.1
 
 - Fix plurals not being detected when count is a CallExpression #1022 #1015
