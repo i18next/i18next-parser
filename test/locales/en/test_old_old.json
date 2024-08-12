@@ -1,6 +1,6 @@
 {
-    "parent": {
-        "some": "some"
-    },
-    "other": "other"
+  "parent": {
+    "some": "some"
+  },
+  "other": "other"
 }

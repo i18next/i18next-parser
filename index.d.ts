@@ -1,67 +1,71 @@
-import EventEmitter from "events";
+import EventEmitter from 'events'
 
-export type SupportedLexer = "HandlebarsLexer" | "HTMLLexer" | "JavascriptLexer" | "JsxLexer";
+export type SupportedLexer =
+  | 'HandlebarsLexer'
+  | 'HTMLLexer'
+  | 'JavascriptLexer'
+  | 'JsxLexer'
 
 // BaseLexer is not importable therefore this is the best if done simple
 export class CustomLexerClass extends EventEmitter {}
-export type CustomLexer = typeof CustomLexerClass;
+export type CustomLexer = typeof CustomLexerClass
 
 export interface CustomLexerConfig extends Record<string, unknown> {
-  lexer: CustomLexer;
+  lexer: CustomLexer
 }
 
 export interface HandlebarsLexerConfig {
-  lexer: "HandlebarsLexer";
-  functions?: string[];
+  lexer: 'HandlebarsLexer'
+  functions?: string[]
 }
 
 export interface HTMLLexerConfig {
-  lexer: "HTMLLexer";
-  functions?: string[];
-  attr?: string;
-  optionAttr?: string;
+  lexer: 'HTMLLexer'
+  functions?: string[]
+  attr?: string
+  optionAttr?: string
 }
 
 export interface JavascriptLexerConfig {
-  lexer: "JavascriptLexer";
-  functions?: string[];
-  namespaceFunctions?: string[];
-  attr?: string;
-  parseGenerics?: false;
-  typeMap?: Record<string, unknown>;
+  lexer: 'JavascriptLexer'
+  functions?: string[]
+  namespaceFunctions?: string[]
+  attr?: string
+  parseGenerics?: false
+  typeMap?: Record<string, unknown>
 }
 
 export interface JavascriptWithTypesLexerConfig {
-  lexer: "JavascriptLexer";
-  functions?: string[];
-  namespaceFunctions?: string[];
-  attr?: string;
-  parseGenerics: true;
-  typeMap: Record<string, unknown>;
+  lexer: 'JavascriptLexer'
+  functions?: string[]
+  namespaceFunctions?: string[]
+  attr?: string
+  parseGenerics: true
+  typeMap: Record<string, unknown>
 }
 
 export interface JsxLexerConfig {
-  lexer: "JsxLexer";
-  functions?: string[];
-  namespaceFunctions?: string[];
-  componentFunctions?: string[];
-  attr?: string;
-  transSupportBasicHtmlNodes?: boolean;
-  transKeepBasicHtmlNodesFor?: string[];
-  parseGenerics?: false;
-  typeMap?: Record<string, unknown>;
+  lexer: 'JsxLexer'
+  functions?: string[]
+  namespaceFunctions?: string[]
+  componentFunctions?: string[]
+  attr?: string
+  transSupportBasicHtmlNodes?: boolean
+  transKeepBasicHtmlNodesFor?: string[]
+  parseGenerics?: false
+  typeMap?: Record<string, unknown>
 }
 
 export interface JsxWithTypesLexerConfig {
-  lexer: "JsxLexer";
-  functions?: string[];
-  namespaceFunctions?: string[];
-  componentFunctions?: string[];
-  attr?: string;
-  transSupportBasicHtmlNodes?: boolean;
-  transKeepBasicHtmlNodesFor?: string[];
-  parseGenerics: true;
-  typeMap: Record<string, unknown>;
+  lexer: 'JsxLexer'
+  functions?: string[]
+  namespaceFunctions?: string[]
+  componentFunctions?: string[]
+  attr?: string
+  transSupportBasicHtmlNodes?: boolean
+  transKeepBasicHtmlNodesFor?: string[]
+  parseGenerics: true
+  typeMap: Record<string, unknown>
   /**
    * Identity functions within trans that should be parsed for their
    * first arguments. Used for making typecheckers happy in a safe way: e.g., if in your code, you use:
@@ -72,7 +76,7 @@ export interface JsxWithTypesLexerConfig {
    *
    * you'd want to pass in `transIdentityFunctionsToIgnore: ['castToString']`
    */
-  transIdentityFunctionsToIgnore?: string[];
+  transIdentityFunctionsToIgnore?: string[]
 }
 
 export type LexerConfig =
@@ -82,40 +86,47 @@ export type LexerConfig =
   | JavascriptWithTypesLexerConfig
   | JsxLexerConfig
   | JsxWithTypesLexerConfig
-  | CustomLexerConfig;
+  | CustomLexerConfig
 
 export interface UserConfig {
-  contextSeparator?: string;
-  createOldCatalogs?: boolean;
-  defaultNamespace?: string;
-  defaultValue?: string | ((locale?: string, namespace?: string, key?: string, value?: string) => string);
-  indentation?: number;
-  keepRemoved?: boolean | readonly RegExp[];
-  keySeparator?: string | false;
+  contextSeparator?: string
+  createOldCatalogs?: boolean
+  defaultNamespace?: string
+  defaultValue?:
+    | string
+    | ((
+        locale?: string,
+        namespace?: string,
+        key?: string,
+        value?: string
+      ) => string)
+  indentation?: number
+  keepRemoved?: boolean | readonly RegExp[]
+  keySeparator?: string | false
   lexers?: {
-    hbs?: (SupportedLexer | CustomLexer | LexerConfig)[];
-    handlebars?: (SupportedLexer | CustomLexer | LexerConfig)[];
-    htm?: (SupportedLexer | CustomLexer | LexerConfig)[];
-    html?: (SupportedLexer | CustomLexer | LexerConfig)[];
-    mjs?: (SupportedLexer | CustomLexer | LexerConfig)[];
-    js?: (SupportedLexer | CustomLexer | LexerConfig)[];
-    ts?: (SupportedLexer | CustomLexer | LexerConfig)[];
-    jsx?: (SupportedLexer | CustomLexer | LexerConfig)[];
-    tsx?: (SupportedLexer | CustomLexer | LexerConfig)[];
-    default?: (SupportedLexer | CustomLexer | LexerConfig)[];
-  };
-  lineEnding?: "auto" | "crlf" | "\r\n" | "cr" | "\r" | "lf" | "\n";
-  locales?: string[];
-  namespaceSeparator?: string | false;
-  output?: string;
-  pluralSeparator?: string;
-  input?: string | string[];
-  sort?: boolean | ((a: string, b: string) => -1 | 0 | 1);
-  verbose?: boolean;
-  failOnWarnings?: boolean;
-  failOnUpdate?: boolean;
-  customValueTemplate?: Record<string, string> | null;
-  resetDefaultValueLocale?: string | null;
-  i18nextOptions?: Record<string, unknown> | null;
-  yamlOptions?: Record<string, unknown> | null;
+    hbs?: (SupportedLexer | CustomLexer | LexerConfig)[]
+    handlebars?: (SupportedLexer | CustomLexer | LexerConfig)[]
+    htm?: (SupportedLexer | CustomLexer | LexerConfig)[]
+    html?: (SupportedLexer | CustomLexer | LexerConfig)[]
+    mjs?: (SupportedLexer | CustomLexer | LexerConfig)[]
+    js?: (SupportedLexer | CustomLexer | LexerConfig)[]
+    ts?: (SupportedLexer | CustomLexer | LexerConfig)[]
+    jsx?: (SupportedLexer | CustomLexer | LexerConfig)[]
+    tsx?: (SupportedLexer | CustomLexer | LexerConfig)[]
+    default?: (SupportedLexer | CustomLexer | LexerConfig)[]
+  }
+  lineEnding?: 'auto' | 'crlf' | '\r\n' | 'cr' | '\r' | 'lf' | '\n'
+  locales?: string[]
+  namespaceSeparator?: string | false
+  output?: string
+  pluralSeparator?: string
+  input?: string | string[]
+  sort?: boolean | ((a: string, b: string) => -1 | 0 | 1)
+  verbose?: boolean
+  failOnWarnings?: boolean
+  failOnUpdate?: boolean
+  customValueTemplate?: Record<string, string> | null
+  resetDefaultValueLocale?: string | null
+  i18nextOptions?: Record<string, unknown> | null
+  yamlOptions?: Record<string, unknown> | null
 }

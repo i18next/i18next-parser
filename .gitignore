@@ -29,8 +29,7 @@ npm-debug.log
 .idea/
 
 # manual test files
-test/manual/en
-test/manual/fr
+test/manual/
 
 # coverage
 .nyc_output
