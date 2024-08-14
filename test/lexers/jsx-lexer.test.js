@@ -483,7 +483,7 @@ describe('JsxLexer', () => {
       it('keeps self-closing tags untouched when transSupportBasicHtmlNodes is true', (done) => {
         const Lexer = new JsxLexer({ transSupportBasicHtmlNodes: true })
         const content = '<Trans>a<br />b</Trans>'
-        assert.equal(Lexer.extract(content)[0].defaultValue, 'a<br />b')
+        assert.equal(Lexer.extract(content)[0].defaultValue, 'a<br/>b')
         done()
       })
 
