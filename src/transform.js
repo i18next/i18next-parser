@@ -12,6 +12,7 @@ import {
   mergeHashes,
   transferValues,
   makeDefaultSort,
+  isPlural,
 } from './helpers.js'
 import Parser from './parser.js'
 
@@ -272,14 +273,14 @@ export default class i18nTransform extends Transform {
             if (typeof value === 'object') {
               skipIdenticalsFromCatalog(value, skipIdenticalsLocales, locale)
             } else {
-              if (shouldSkipKey(catalog, skipIdenticalsLocales, locale)) {
+              if (!isPlural(key) && shouldSkipKey(catalog, skipIdenticalsLocales, locale)) {
                 if (value === '') {
                   delete catalog[key]
                 } else if (value === key) {
                   this.warn(
                     '"' +
-                      key +
-                      '" is identical to value and you may want to remove it'
+                    key +
+                    '" is identical to value and you may want to remove it'
                   )
                 }
               }

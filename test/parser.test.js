@@ -818,7 +818,11 @@ describe('parser', () => {
             \n
             t('test_skip_identicals:key4')
             \n
-            t('test_skip_identicals:key5')`
+            t('test_skip_identicals:key5')
+            \n
+            t('test_skip_identicals:key6',{count:1})
+            \n
+            t('test_skip_identicals:key6',{count:2})`
       ),
       path: 'file.js',
     })
@@ -846,6 +850,9 @@ describe('parser', () => {
         key2: {
           key3: 'en_translation',
         },
+        key4: 'key4',
+        key6_one: "en_Key6 one",
+        key6_other: "en_Key6 other"
       })
       assert.deepEqual(arResult, {
         key: 'ar_translation',
@@ -854,12 +861,21 @@ describe('parser', () => {
         },
         key4: 'ar_translation',
         key5: '',
+        key6_few: "key6_few",
+        key6_many: "key6_many",
+        key6_one: "key6_one",
+        key6_other: "key6_other",
+        key6_two: "key6_two",
+        key6_zero: "key6_zero",
       })
       assert.deepEqual(frResult, {
         key: 'fr_translation',
         key2: {
           key3: 'fr_translation',
         },
+        key6_many: "",
+        key6_one: "fr_Key6 one",
+        key6_other: "fr_Key6 other"
       })
       done()
     })

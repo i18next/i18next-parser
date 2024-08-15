@@ -3,5 +3,11 @@
   "key2": {
     "key3": "ar_translation"
   },
-  "key4": "ar_translation"
+  "key4": "ar_translation",
+  "key6_few": "key6_few",
+  "key6_many": "key6_many",
+  "key6_one": "key6_one",
+  "key6_other": "key6_other",
+  "key6_two": "key6_two",
+  "key6_zero": "key6_zero"
 }
