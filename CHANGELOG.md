@@ -1,5 +1,9 @@
 # Changelog
 
+# X.X.X
+
+- Add skipIdenticals option #1036
+
 # 9.0.2
 
 - Fix cheerio dependency #1045
