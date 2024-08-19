@@ -5,8 +5,10 @@ updates:
     target-branch: master
     schedule:
       interval: daily
+    versioning-strategy: increase
   - package-ecosystem: github-actions
     directory: /
     target-branch: master
     schedule:
       interval: daily
+    versioning-strategy: increase
