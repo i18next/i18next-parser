@@ -11,4 +11,3 @@ updates:
     target-branch: master
     schedule:
       interval: daily
-    versioning-strategy: increase
