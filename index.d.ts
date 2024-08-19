@@ -129,4 +129,5 @@ export interface UserConfig {
   resetDefaultValueLocale?: string | null
   i18nextOptions?: Record<string, unknown> | null
   yamlOptions?: Record<string, unknown> | null
+  skipIdenticals?: string[]
 }

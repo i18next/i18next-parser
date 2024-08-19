@@ -12,6 +12,7 @@ import {
   mergeHashes,
   transferValues,
   makeDefaultSort,
+  isPlural,
 } from './helpers.js'
 import Parser from './parser.js'
 
@@ -40,6 +41,7 @@ export default class i18nTransform extends Transform {
       customValueTemplate: null,
       failOnWarnings: false,
       yamlOptions: null,
+      skipIdenticals: [],
     }
 
     this.options = { ...this.defaults, ...options }
@@ -249,6 +251,47 @@ export default class i18nTransform extends Transform {
             fullKeyPrefix: namespace + this.options.namespaceSeparator,
           },
           resetValues[namespace]
+        )
+
+        const shouldSkipKey = (entry, skipIdenticals, local) => {
+          return skipIdenticals.some((skipLocale) => {
+            return local === skipLocale
+          })
+        }
+
+        const skipIdenticalsFromCatalog = (
+          catalog,
+          skipIdenticalsLocales,
+          locale
+        ) => {
+          if (
+            typeof skipIdenticalsLocales !== 'object' ||
+            skipIdenticalsLocales.length === 0
+          )
+            return
+          for (const [key, value] of Object.entries(catalog)) {
+            if (typeof value === 'object') {
+              skipIdenticalsFromCatalog(value, skipIdenticalsLocales, locale)
+            } else {
+              if (!isPlural(key) && shouldSkipKey(catalog, skipIdenticalsLocales, locale)) {
+                if (value === '') {
+                  delete catalog[key]
+                } else if (value === key) {
+                  this.warn(
+                    '"' +
+                    key +
+                    '" is identical to value and you may want to remove it'
+                  )
+                }
+              }
+            }
+          }
+        }
+
+        skipIdenticalsFromCatalog(
+          newCatalog,
+          this.options.skipIdenticals,
+          locale
         )
 
         // record values to be reset

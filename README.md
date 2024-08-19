@@ -253,6 +253,9 @@ export default {
   // {
   //   lineWidth: -1,
   // }
+
+  skipIdenticals: [],
+  // An array of locales to skip adding entries which their keys are identical to their values or their values are empty string.
 }
 ```
 

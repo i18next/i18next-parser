@@ -803,6 +803,86 @@ describe('parser', () => {
     i18nextParser.end(fakeFile)
   })
 
+  it('skips identical keys for specified locales', (done) => {
+    const i18nextParser = new i18nTransform({
+      output: 'test/locales/$LOCALE/$NAMESPACE.json',
+      locales: ['en', 'ar', 'fr'],
+      skipIdenticals: ['en', 'fr'],
+    })
+
+    const fakeFile = new Vinyl({
+      contents: Buffer.from(
+        `t('test_skip_identicals:key')
+            \n
+            t('test_skip_identicals:key2.key3')
+            \n
+            t('test_skip_identicals:key4')
+            \n
+            t('test_skip_identicals:key5')
+            \n
+            t('test_skip_identicals:key6',{count:1})
+            \n
+            t('test_skip_identicals:key6',{count:2})`
+      ),
+      path: 'file.js',
+    })
+
+    let enResult, arResult, frResult
+    i18nextParser.on('data', (file) => {
+      if (
+        file.relative.endsWith(path.normalize('en/test_skip_identicals.json'))
+      ) {
+        enResult = JSON.parse(file.contents)
+      } else if (
+        file.relative.endsWith(path.normalize('ar/test_skip_identicals.json'))
+      ) {
+        arResult = JSON.parse(file.contents)
+      } else if (
+        file.relative.endsWith(path.normalize('fr/test_skip_identicals.json'))
+      ) {
+        frResult = JSON.parse(file.contents)
+      }
+    })
+
+    i18nextParser.once('end', () => {
+      assert.deepEqual(enResult, {
+        key: 'en_translation',
+        key2: {
+          key3: 'en_translation',
+        },
+        key4: 'key4',
+        key6_one: "en_Key6 one",
+        key6_other: "en_Key6 other"
+      })
+      assert.deepEqual(arResult, {
+        key: 'ar_translation',
+        key2: {
+          key3: 'ar_translation',
+        },
+        key4: 'ar_translation',
+        key5: '',
+        key6_few: "key6_few",
+        key6_many: "key6_many",
+        key6_one: "key6_one",
+        key6_other: "key6_other",
+        key6_two: "key6_two",
+        key6_zero: "key6_zero",
+      })
+      assert.deepEqual(frResult, {
+        key: 'fr_translation',
+        key2: {
+          key3: 'fr_translation',
+        },
+        key6_many: "",
+        key6_one: "fr_Key6 one",
+        key6_other: "fr_Key6 other"
+      })
+      done()
+    })
+
+    i18nextParser.end(fakeFile)
+  })
+
   describe('options', () => {
     describe('resetDefaultValueLocale', () => {
       it('will not reset (nested) keys if a default value has not changed in the locale', (done) => {

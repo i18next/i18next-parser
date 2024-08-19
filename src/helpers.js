@@ -357,4 +357,5 @@ export {
   tsConfigLoader,
   yamlConfigLoader,
   unescape,
+  isPlural,
 }
