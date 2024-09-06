@@ -199,7 +199,7 @@ export default class JavascriptLexer extends BaseLexer {
         optionsArgument.kind === ts.SyntaxKind.ObjectLiteralExpression
       ) {
         const keyPrefixNode = optionsArgument.properties.find(
-          (p) => p.name.escapedText === 'keyPrefix'
+          (p) => p.name?.escapedText === 'keyPrefix'
         )
         if (keyPrefixNode != null) {
           this.keyPrefix = keyPrefixNode.initializer.text
