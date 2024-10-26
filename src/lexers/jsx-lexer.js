@@ -31,6 +31,9 @@ export default class JsxLexer extends JavascriptLexer {
       parseCommentNode(keys, node, content)
 
       switch (node.kind) {
+        case ts.SyntaxKind.VariableDeclaration:
+          this.variableDeclarationExtractor.call(this, node)
+          break
         case ts.SyntaxKind.CallExpression:
           const entries = this.expressionExtractor.call(this, node)
           if (entries) {

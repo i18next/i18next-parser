@@ -435,6 +435,50 @@ describe('parser', () => {
     i18nextParser.end(fakeFile)
   })
 
+  it('applies namespaces to the corresponding translation function', (done) => {
+    let result
+    let resultCommon
+    const i18nextParser = new i18nTransform({
+      lexers: {
+        tsx: [
+          {
+            lexer: 'JsxLexer',
+            functions: ['t', 'tCommon', 'tPrefix'],
+          },
+        ],
+      },
+    })
+    const fakeFile = new Vinyl({
+      contents: fs.readFileSync(
+        path.resolve(__dirname, 'templating/multiple-translation-keys.tsx')
+      ),
+      path: 'file.tsx',
+    })
+    const expectedCommon = {
+      foo: '',
+      random: { stuff: '' },
+    }
+    const expected = {
+      bar: '',
+    }
+
+    i18nextParser.on('data', (file) => {
+      if (file.relative.endsWith(path.normalize('en/test.json'))) {
+        result = JSON.parse(file.contents)
+      }
+      if (file.relative.endsWith(path.normalize('en/common.json'))) {
+        resultCommon = JSON.parse(file.contents)
+      }
+    })
+    i18nextParser.on('end', () => {
+      assert.deepEqual(result, expected)
+      assert.deepEqual(resultCommon, expectedCommon)
+      done()
+    })
+
+    i18nextParser.end(fakeFile)
+  })
+
   it('handles escaped single and double quotes', (done) => {
     let result
     const i18nextParser = new i18nTransform()

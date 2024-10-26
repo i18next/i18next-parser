@@ -233,7 +233,7 @@ describe('JavascriptLexer', () => {
     it('extracts the first valid namespace when it is an array', () => {
       const Lexer = new JavascriptLexer()
       const content =
-        'const ExtendedComponent = useTranslation([someVariable, "baz"]); t("bar");'
+        'const {t} = useTranslation([someVariable, "baz"]); t("bar");'
       assert.deepEqual(Lexer.extract(content), [
         { namespace: 'baz', key: 'bar' },
       ])
