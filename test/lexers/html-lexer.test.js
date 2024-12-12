@@ -109,7 +109,7 @@ describe('HTMLLexer', () => {
       <button :aria-label="t('b_a_l', 'button aria label')">
         button label
       </button>
-      <button v-aria-label="$t('button v-bind aria label')">
+      <button v-bind:aria-label="$t('button v-bind aria label')">
         button label form v-bind
       </button>
     </template>

@@ -48,7 +48,7 @@ export default class HTMLLexer extends BaseLexer {
       // traverse all tags to filter bind attribute
       $('*').each((index, node) => {
         const attributes = node.attributes.filter(
-          (item) => item.name.startsWith(':') || item.name.startsWith('v-')
+          (item) => item.name.startsWith(':') || item.name.startsWith('v-bind:')
         )
         if (attributes.length > 0) {
           // there are calculation attributes.
