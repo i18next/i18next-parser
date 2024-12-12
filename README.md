@@ -372,6 +372,26 @@ Typescript is supported via Javascript and Jsx lexers. If you are using Javascri
 }
 ```
 
+#### Vue
+
+```js
+{
+  // Vue needs to parse its syntax through both JavascriptLexer and HTMLLexer
+  vue: [
+    {
+      lexer: 'JavascriptLexer',
+      functions: ['t', '$t'], // Array of functions to match
+      namespaceFunctions: ['useTranslation', 'withTranslation'],
+    },
+    {
+      lexer: 'HTMLLexer',
+      functions: ['t', '$t'], // Array of functions to match
+      vueBindAttr: true, // enable vue template syntax bind attribute
+    },
+  ],
+}
+```
+
 #### Custom lexers
 
 You can provide function instead of string as a custom lexer.
