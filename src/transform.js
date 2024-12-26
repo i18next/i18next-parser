@@ -186,10 +186,16 @@ export default class i18nTransform extends Transform {
           if (conflict === 'key') {
             this.warn(
               `Found translation key already mapped to a map or parent of ` +
-                `new key already mapped to a string: ${entry.key}`
+                `new key already mapped to a string: ${
+                  entry.namespace + this.options.namespaceSeparator + entry.key
+                }`
             )
           } else if (conflict === 'value') {
-            this.warn(`Found same keys with different values: ${entry.key}`)
+            this.warn(
+              `Found same keys with different values: ${
+                entry.namespace + this.options.namespaceSeparator + entry.key
+              }`
+            )
           }
         } else {
           uniqueCount[entry.namespace] += 1
