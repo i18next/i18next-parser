@@ -14,6 +14,7 @@ export default class JavascriptLexer extends BaseLexer {
     this.attr = options.attr || 'i18nKey'
     this.parseGenerics = options.parseGenerics || false
     this.typeMap = options.typeMap || {}
+    this.translationFunctionsWithArgs = {}
   }
 
   createCommentNodeParser() {
@@ -43,25 +44,49 @@ export default class JavascriptLexer extends BaseLexer {
   }
 
   setNamespaces(keys) {
-    if (this.defaultNamespace) {
-      return keys.map((entry) => ({
-        ...entry,
-        namespace: entry.namespace || this.defaultNamespace,
-      }))
-    }
-
-    return keys
+    return keys.map((entry) => {
+      const namespace =
+        entry.ns ??
+        this.translationFunctionsWithArgs?.[entry.functionName]?.ns ??
+        this.defaultNamespace
+      return namespace
+        ? {
+            ...entry,
+            namespace,
+          }
+        : entry
+    })
   }
 
   setKeyPrefixes(keys) {
-    if (this.keyPrefix) {
-      return keys.map((key) => ({
-        ...key,
-        keyPrefix: this.keyPrefix,
-      }))
-    }
+    return keys.map(({ functionName, ...key }) => {
+      const keyPrefix =
+        this.translationFunctionsWithArgs?.[functionName]?.keyPrefix ??
+        this.keyPrefix
+      return keyPrefix
+        ? {
+            ...key,
+            keyPrefix,
+          }
+        : key
+    })
+  }
 
-    return keys
+  variableDeclarationExtractor(node) {
+    const firstDeconstructedProp = node.name.elements?.[0]
+    if (
+      (firstDeconstructedProp?.propertyName ?? firstDeconstructedProp?.name)
+        ?.escapedText === 't' &&
+      this.functions.includes(firstDeconstructedProp?.name?.escapedText) &&
+      this.namespaceFunctions.includes(node.initializer.expression?.escapedText)
+    ) {
+      this.translationFunctionsWithArgs[
+        firstDeconstructedProp.name.escapedText
+      ] = {
+        pos: node.initializer.pos,
+        storeGlobally: !firstDeconstructedProp.propertyName?.escapedText,
+      }
+    }
   }
 
   extract(content, filename = '__default.js') {
@@ -72,6 +97,8 @@ export default class JavascriptLexer extends BaseLexer {
     const parseTree = (node) => {
       parseCommentNode(keys, node, content)
 
+      if (node.kind === ts.SyntaxKind.VariableDeclaration)
+        this.variableDeclarationExtractor.call(this, node)
       if (
         node.kind === ts.SyntaxKind.ArrowFunction ||
         node.kind === ts.SyntaxKind.FunctionDeclaration
@@ -103,7 +130,7 @@ export default class JavascriptLexer extends BaseLexer {
     )
     parseTree(sourceFile)
 
-    return this.setNamespaces(keys)
+    return this.setKeyPrefixes(this.setNamespaces(keys))
   }
 
   /** @param {ts.FunctionLikeDeclaration} node */
@@ -161,10 +188,16 @@ export default class JavascriptLexer extends BaseLexer {
   expressionExtractor(node) {
     const entries = [{}]
 
+    const functionDefinition = Object.entries(
+      this.translationFunctionsWithArgs
+    ).find(([name, translationFunc]) => translationFunc?.pos === node.pos)
+    let storeGlobally = functionDefinition?.[1].storeGlobally ?? true
+
     if (
       this.namespaceFunctions.includes(node.expression.escapedText) &&
       node.arguments.length
     ) {
+      storeGlobally |= node.expression.escapedText === 'withTranslation'
       const namespaceArgument = node.arguments[0]
       const optionsArgument = node.arguments[1]
       // The namespace argument can be either an array of namespaces or a single namespace,
@@ -191,7 +224,8 @@ export default class JavascriptLexer extends BaseLexer {
         )
       } else if (namespace.kind === ts.SyntaxKind.StringLiteral) {
         // We found a string literal namespace, so we'll use this instead of the default
-        this.defaultNamespace = namespace.text
+        if (storeGlobally) this.defaultNamespace = namespace.text
+        entries[0].ns = namespace.text
       }
 
       if (
@@ -202,7 +236,8 @@ export default class JavascriptLexer extends BaseLexer {
           (p) => p.name.escapedText === 'keyPrefix'
         )
         if (keyPrefixNode != null) {
-          this.keyPrefix = keyPrefixNode.initializer.text
+          if (storeGlobally) this.keyPrefix = keyPrefixNode.initializer.text
+          entries[0].keyPrefix = keyPrefixNode.initializer.text
         }
       }
     }
@@ -342,10 +377,17 @@ export default class JavascriptLexer extends BaseLexer {
           entries[0].namespace = entries[0].ns[0]
         }
       }
+      entries[0].functionName = node.expression.escapedText
 
       return entries
     }
 
+    const isTranslationFunctionCreation =
+      node.expression.escapedText &&
+      this.namespaceFunctions.includes(node.expression.escapedText)
+    if (isTranslationFunctionCreation) {
+      this.translationFunctionsWithArgs[functionDefinition?.[0]] = entries[0]
+    }
     return null
   }
 
