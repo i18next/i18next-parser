@@ -1,5 +1,11 @@
 # Changelog
 
+# 9.1.0
+
+- Add support for i18next 24 #1090 #1093
+- Add namespace information to duplicate warnings #1091
+- Update dependencies
+
 # 9.0.2
 
 - Fix cheerio dependency #1045
