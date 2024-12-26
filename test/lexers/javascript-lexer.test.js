@@ -274,6 +274,15 @@ describe('JavascriptLexer', () => {
       ])
     })
 
+    it('extracts namespace with spread syntax in useTranslation options', () => {
+      const Lexer = new JavascriptLexer()
+      const content =
+        'const options = {}; const {t} = useTranslation("foo", {...options}); t("bar");'
+      assert.deepEqual(Lexer.extract(content), [
+        { namespace: 'foo', key: 'bar' },
+      ])
+    })
+
     it('extracts namespace with a custom hook', () => {
       const Lexer = new JavascriptLexer({
         namespaceFunctions: ['useCustomTranslationHook'],
