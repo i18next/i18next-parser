@@ -204,7 +204,7 @@ export default class JsxLexer extends JavascriptLexer {
               const childrenString = elemsToString(child.children)
               return childrenString || !(useTagName && child.selfClosing)
                 ? `<${elementName}>${childrenString}</${elementName}>`
-                : `<${elementName} />`
+                : `<${elementName}/>`
             default:
               throw new Error('Unknown parsed content: ' + child.type)
           }
