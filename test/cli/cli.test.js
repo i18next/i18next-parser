@@ -10,6 +10,11 @@ describe('CLI', function () {
   // test execution time depends on I/O
   this.timeout(0)
 
+  // always start with a clean workspace
+  this.beforeEach(async () => {
+    await fs.remove(path.resolve(__dirname, './locales'))
+  })
+
   it('works without options', async () => {
     const subprocess = await execaCommand('yarn test:cli')
 
@@ -102,7 +107,7 @@ describe('CLI', function () {
     assert.include(subprocess.stdout, '0 files were parsed')
   })
 
-  it('works with `--fail-on-update` option', async () => {
+  it('throws error when updating translations with `--fail-on-update` option', async () => {
     try {
       await execaCommand('yarn test:cli --fail-on-update')
     } catch (error) {
@@ -112,5 +117,13 @@ describe('CLI', function () {
         'Some translations was updated and failOnUpdate option is enabled. Exiting...'
       )
     }
+  })
+
+  it('works when not updating translations with `--fail-on-update` option', async () => {
+    // Arrange state by extracting initial translation files
+    await execaCommand('yarn test:cli')
+
+    const result = await execaCommand('yarn test:cli --fail-on-update')
+    assert.strictEqual(result.exitCode, 0)
   })
 })
