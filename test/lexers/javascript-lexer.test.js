@@ -283,6 +283,16 @@ describe('JavascriptLexer', () => {
         { namespace: 'foo', key: 'bar' },
       ])
     })
+
+    it('extracts namespace with a custom hook defined as nested properties', () => {
+      const Lexer = new JavascriptLexer({
+        namespaceFunctions: ['i18n.useTranslate'],
+      })
+      const content = 'const {t} = i18n.useTranslate("foo"); t("bar");'
+      assert.deepEqual(Lexer.extract(content), [
+        { namespace: 'foo', key: 'bar' },
+      ])
+    })
   })
 
   describe('withTranslation', () => {
