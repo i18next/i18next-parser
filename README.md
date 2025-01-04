@@ -376,19 +376,16 @@ Typescript is supported via Javascript and Jsx lexers. If you are using Javascri
 
 ```js
 {
-  // Vue needs to parse its syntax through both JavascriptLexer and HTMLLexer
+  // Vue needs to parse its syntax through both VueTemplateLexer
+  // This lexer supports HTMLLexer and JavascriptLexer options
   vue: [
     {
-      lexer: 'JavascriptLexer',
+      lexer: 'VueTemplateLexer',
+      vueBindAttr: true, // enable vue template syntax bind attribute
       functions: ['t', '$t'], // Array of functions to match
       namespaceFunctions: ['useTranslation', 'withTranslation'],
     },
-    {
-      lexer: 'HTMLLexer',
-      functions: ['t', '$t'], // Array of functions to match
-      vueBindAttr: true, // enable vue template syntax bind attribute
-    },
-  ],
+  ]
 }
 ```
 
