@@ -161,10 +161,12 @@ export default class JavascriptLexer extends BaseLexer {
   expressionExtractor(node) {
     const entries = [{}]
 
-    if (
-      this.namespaceFunctions.includes(node.expression.escapedText) &&
-      node.arguments.length
-    ) {
+    const isNamespaceFunction =
+      this.namespaceFunctions.includes(node.expression.escapedText) ||
+      // Support matching the namespace as well, i.e. match `i18n.useTranslation('ns')`
+      this.namespaceFunctions.includes(this.expressionToName(node.expression))
+
+    if (isNamespaceFunction && node.arguments.length) {
       const namespaceArgument = node.arguments[0]
       const optionsArgument = node.arguments[1]
       // The namespace argument can be either an array of namespaces or a single namespace,
