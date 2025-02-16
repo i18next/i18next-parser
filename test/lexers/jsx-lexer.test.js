@@ -483,16 +483,23 @@ describe('JsxLexer', () => {
       it('keeps self-closing tags untouched when transSupportBasicHtmlNodes is true', (done) => {
         const Lexer = new JsxLexer({ transSupportBasicHtmlNodes: true })
         const content = '<Trans>a<br />b</Trans>'
-        assert.equal(Lexer.extract(content)[0].defaultValue, 'a<br />b')
+        assert.equal(Lexer.extract(content)[0].defaultValue, 'a<br/>b')
         done()
       })
 
-      it('keeps empty tag untouched when transSupportBasicHtmlNodes is true', (done) => {
+      it('converts empty tags to self-closing tags when transSupportBasicHtmlNodes is true', (done) => {
         const Lexer = new JsxLexer({ transSupportBasicHtmlNodes: true })
         const content = '<Trans>a<strong></strong>b</Trans>'
+        assert.equal(Lexer.extract(content)[0].defaultValue, 'a<strong/>b')
+        done()
+      })
+
+      it('ignores tagName when children is not a text when transSupportBasicHtmlNodes is true', (done) => {
+        const Lexer = new JsxLexer({ transSupportBasicHtmlNodes: true })
+        const content = '<Trans><p>ab</p><p>c<br />d</p><p>{"e"}f</p></Trans>'
         assert.equal(
           Lexer.extract(content)[0].defaultValue,
-          'a<strong></strong>b'
+          '<p>ab</p><1>c<br/>d</1><2>ef</2>'
         )
         done()
       })
