@@ -97,8 +97,9 @@ export default class JavascriptLexer extends BaseLexer {
     const parseTree = (node) => {
       parseCommentNode(keys, node, content)
 
-      if (node.kind === ts.SyntaxKind.VariableDeclaration)
+      if (node.kind === ts.SyntaxKind.VariableDeclaration) {
         this.variableDeclarationExtractor.call(this, node)
+      }
       if (
         node.kind === ts.SyntaxKind.ArrowFunction ||
         node.kind === ts.SyntaxKind.FunctionDeclaration
@@ -193,10 +194,12 @@ export default class JavascriptLexer extends BaseLexer {
     ).find(([name, translationFunc]) => translationFunc?.pos === node.pos)
     let storeGlobally = functionDefinition?.[1].storeGlobally ?? true
 
-    if (
-      this.namespaceFunctions.includes(node.expression.escapedText) &&
-      node.arguments.length
-    ) {
+    const isNamespaceFunction =
+      this.namespaceFunctions.includes(node.expression.escapedText) ||
+      // Support matching the namespace as well, i.e. match `i18n.useTranslation('ns')`
+      this.namespaceFunctions.includes(this.expressionToName(node.expression))
+
+    if (isNamespaceFunction && node.arguments.length) {
       storeGlobally |= node.expression.escapedText === 'withTranslation'
       const namespaceArgument = node.arguments[0]
       const optionsArgument = node.arguments[1]
@@ -224,7 +227,9 @@ export default class JavascriptLexer extends BaseLexer {
         )
       } else if (namespace.kind === ts.SyntaxKind.StringLiteral) {
         // We found a string literal namespace, so we'll use this instead of the default
-        if (storeGlobally) this.defaultNamespace = namespace.text
+        if (storeGlobally) {
+          this.defaultNamespace = namespace.text
+        }
         entries[0].ns = namespace.text
       }
 
@@ -236,7 +241,9 @@ export default class JavascriptLexer extends BaseLexer {
           (p) => p.name.escapedText === 'keyPrefix'
         )
         if (keyPrefixNode != null) {
-          if (storeGlobally) this.keyPrefix = keyPrefixNode.initializer.text
+          if (storeGlobally) {
+            this.keyPrefix = keyPrefixNode.initializer.text
+          }
           entries[0].keyPrefix = keyPrefixNode.initializer.text
         }
       }

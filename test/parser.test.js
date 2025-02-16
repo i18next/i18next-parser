@@ -1,5 +1,6 @@
 import { assert, expect } from 'chai'
 import { fileURLToPath } from 'url'
+import { createRequire } from 'module'
 import fs from 'fs'
 import path from 'path'
 import sinon from 'sinon'
@@ -9,6 +10,12 @@ import i18nTransform from '../src/transform.js'
 const enLibraryPath = path.normalize('en/translation.json')
 const arLibraryPath = path.normalize('ar/translation.json')
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
+
+function getI18NextMajorVersion() {
+  const require = createRequire(import.meta.url)
+  const pkg = require('i18next/package.json')
+  return pkg.version.split('.').map(Number)[0]
+}
 
 describe('parser', () => {
   it('parses globally on multiple lines', (done) => {
@@ -1732,7 +1739,12 @@ describe('parser', () => {
       i18nextParser.end(fakeFile)
     })
 
-    it('generates plurals according to compatibilityJSON value', (done) => {
+    it('generates plurals according to compatibilityJSON value', function (done) {
+      if (getI18NextMajorVersion() >= 24) {
+        // v24 only supports compatibilityJSON="v4"
+        this.skip()
+      }
+
       let result
       const i18nextParser = new i18nTransform({
         i18nextOptions: { compatibilityJSON: 'v3' },
@@ -1758,7 +1770,12 @@ describe('parser', () => {
       i18nextParser.end(fakeFile)
     })
 
-    it('generates plurals according to compatibilityJSON value for languages with multiple plural forms', (done) => {
+    it('generates plurals according to compatibilityJSON value for languages with multiple plural forms', function (done) {
+      if (getI18NextMajorVersion() >= 24) {
+        // v24 only supports compatibilityJSON="v4"
+        this.skip()
+      }
+
       let result
       const i18nextParser = new i18nTransform({
         locales: ['ar'],
