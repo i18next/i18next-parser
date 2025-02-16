@@ -1,5 +1,9 @@
 # Changelog
 
+# 9.3.0
+
+- Allow to use multiple translation functions with different namespaces and keyPrefixes #1083 #494 #973 #737
+
 # 9.2.0
 
 - Support nested property namespace functions in namespaceFunctions #1104 #1103
