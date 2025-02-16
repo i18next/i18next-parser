@@ -194,10 +194,12 @@ export default class JavascriptLexer extends BaseLexer {
     ).find(([name, translationFunc]) => translationFunc?.pos === node.pos)
     let storeGlobally = functionDefinition?.[1].storeGlobally ?? true
 
-    if (
-      this.namespaceFunctions.includes(node.expression.escapedText) &&
-      node.arguments.length
-    ) {
+    const isNamespaceFunction =
+      this.namespaceFunctions.includes(node.expression.escapedText) ||
+      // Support matching the namespace as well, i.e. match `i18n.useTranslation('ns')`
+      this.namespaceFunctions.includes(this.expressionToName(node.expression))
+
+    if (isNamespaceFunction && node.arguments.length) {
       storeGlobally |= node.expression.escapedText === 'withTranslation'
       const namespaceArgument = node.arguments[0]
       const optionsArgument = node.arguments[1]
