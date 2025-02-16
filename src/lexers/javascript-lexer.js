@@ -97,8 +97,9 @@ export default class JavascriptLexer extends BaseLexer {
     const parseTree = (node) => {
       parseCommentNode(keys, node, content)
 
-      if (node.kind === ts.SyntaxKind.VariableDeclaration)
+      if (node.kind === ts.SyntaxKind.VariableDeclaration) {
         this.variableDeclarationExtractor.call(this, node)
+      }
       if (
         node.kind === ts.SyntaxKind.ArrowFunction ||
         node.kind === ts.SyntaxKind.FunctionDeclaration
@@ -224,7 +225,9 @@ export default class JavascriptLexer extends BaseLexer {
         )
       } else if (namespace.kind === ts.SyntaxKind.StringLiteral) {
         // We found a string literal namespace, so we'll use this instead of the default
-        if (storeGlobally) this.defaultNamespace = namespace.text
+        if (storeGlobally) {
+          this.defaultNamespace = namespace.text
+        }
         entries[0].ns = namespace.text
       }
 
@@ -236,7 +239,9 @@ export default class JavascriptLexer extends BaseLexer {
           (p) => p.name.escapedText === 'keyPrefix'
         )
         if (keyPrefixNode != null) {
-          if (storeGlobally) this.keyPrefix = keyPrefixNode.initializer.text
+          if (storeGlobally) {
+            this.keyPrefix = keyPrefixNode.initializer.text
+          }
           entries[0].keyPrefix = keyPrefixNode.initializer.text
         }
       }
