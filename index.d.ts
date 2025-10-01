@@ -95,10 +95,10 @@ export interface UserConfig {
   defaultValue?:
     | string
     | ((
-        locale?: string,
-        namespace?: string,
-        key?: string,
-        value?: string
+        locale: string,
+        namespace: string,
+        key: string,
+        value: string
       ) => string)
   indentation?: number
   keepRemoved?: boolean | readonly RegExp[]
