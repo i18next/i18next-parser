@@ -100,7 +100,7 @@ export interface UserConfig {
         key?: string,
         value?: string
       ) => string)
-  indentation?: number
+  indentation?: string | number
   keepRemoved?: boolean | readonly RegExp[]
   keySeparator?: string | false
   lexers?: {
