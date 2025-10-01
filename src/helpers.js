@@ -32,11 +32,16 @@ function dotPathToHash(entry, target = {}, options = {}) {
     entry.keyWithNamespace.length
   )
 
-  // There is no key to process so we return an empty object
-  if (!key) {
+  // The key is empty so we return an empty object
+  if (key === '') {
     if (!target[entry.namespace]) {
       target[entry.namespace] = {}
     }
+
+    if (!options.ignoreEmptyKeys) {
+      target[entry.namespace][key] = '';
+    }
+
     return { target, duplicate, conflict }
   }
 

@@ -270,7 +270,14 @@ export default {
   // Example:
   // {
   //   lineWidth: -1,
-  // }
+
+  ignoreEmptyKeys: true,
+  // When true (default), ignores empty keys when scanning source files.
+  //
+  // This allows using t('') without adding '' to translation files or
+  // failing update checks.
+  //
+  // When false, empty keys are included in the translation files and will fail with --fail-on-update.
 }
 ```
 

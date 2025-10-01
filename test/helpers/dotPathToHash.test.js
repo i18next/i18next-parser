@@ -36,11 +36,33 @@ describe('dotPathToHash helper function', () => {
   })
 
   it('handles an empty namespace', (done) => {
-    const { target, duplicate } = dotPathToHash({
-      keyWithNamespace: 'ns.',
-      namespace: 'ns',
-    })
+    const { target, duplicate } = dotPathToHash(
+      {
+        keyWithNamespace: 'ns.',
+        namespace: 'ns',
+      },
+      {},
+      {
+        ignoreEmptyKeys: true,
+      }
+    )
     assert.deepEqual(target, { ns: {} })
+    assert.equal(duplicate, false)
+    done()
+  })
+
+  it('handles an empty namespace when ignoreEmptyKeys is false', (done) => {
+    const { target, duplicate } = dotPathToHash(
+      {
+        keyWithNamespace: 'ns.',
+        namespace: 'ns',
+      },
+      {},
+      {
+        ignoreEmptyKeys: false,
+      }
+    )
+    assert.deepEqual(target, { ns: { '': '' } })
     assert.equal(duplicate, false)
     done()
   })

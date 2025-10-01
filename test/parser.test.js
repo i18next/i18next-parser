@@ -359,6 +359,55 @@ describe('parser', () => {
     i18nextParser.end(fakeFile)
   })
 
+  it('ignores empty keys by default', (done) => {
+    let resultContent
+    const i18nextParser = new i18nTransform({
+      locales: ['en'],
+      defaultNamespace: 'test_empty_keys',
+    })
+    const fakeFile = new Vinyl({
+      contents: Buffer.from("t('key'); t('');"),
+      path: 'file.js',
+    })
+
+    i18nextParser.on('data', (file) => {
+      if (file.relative.endsWith(path.normalize('en/test_empty_keys.json'))) {
+        resultContent = JSON.parse(file.contents)
+      }
+    })
+    i18nextParser.on('end', () => {
+      assert.deepEqual(resultContent, { key: '' })
+      done()
+    })
+
+    i18nextParser.end(fakeFile)
+  })
+
+  it('includes empty keys when ignoreEmptyKeys is false', (done) => {
+    let resultContent
+    const i18nextParser = new i18nTransform({
+      locales: ['en'],
+      defaultNamespace: 'test_ignore_empty',
+      ignoreEmptyKeys: false,
+    })
+    const fakeFile = new Vinyl({
+      contents: Buffer.from("t('key'); t('');"),
+      path: 'file.js',
+    })
+
+    i18nextParser.on('data', (file) => {
+      if (file.relative.endsWith(path.normalize('en/test_ignore_empty.json'))) {
+        resultContent = JSON.parse(file.contents)
+      }
+    })
+    i18nextParser.on('end', () => {
+      assert.deepEqual(resultContent, { key: '', '': '' })
+      done()
+    })
+
+    i18nextParser.end(fakeFile)
+  })
+
   it('applies withTranslation namespace globally', (done) => {
     let result
     const i18nextParser = new i18nTransform()

@@ -40,6 +40,7 @@ export default class i18nTransform extends Transform {
       customValueTemplate: null,
       failOnWarnings: false,
       yamlOptions: null,
+      ignoreEmptyKeys: true,
     }
 
     this.options = { ...this.defaults, ...options }
@@ -180,6 +181,7 @@ export default class i18nTransform extends Transform {
           pluralSeparator: this.options.pluralSeparator,
           value: this.options.defaultValue,
           customValueTemplate: this.options.customValueTemplate,
+          ignoreEmptyKeys: this.options.ignoreEmptyKeys,
         })
 
         if (duplicate) {
@@ -197,6 +199,9 @@ export default class i18nTransform extends Transform {
               }`
             )
           }
+        } else if (entry.key === '' && this.options.ignoreEmptyKeys) {
+          // Ignore empty keys when scanning source files
+          // This allows using `t('')`
         } else {
           uniqueCount[entry.namespace] += 1
           if (suffix) {

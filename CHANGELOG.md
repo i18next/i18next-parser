@@ -1,5 +1,9 @@
 # Changelog
 
+# Unreleased
+
+- Add `ignoreEmptyKeys` option (default: true) to ignore empty keys when scanning source files #634
+
 # 9.3.0
 
 - Allow to use multiple translation functions with different namespaces and keyPrefixes #1083 #494 #973 #737
