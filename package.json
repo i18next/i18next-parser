@@ -11,9 +11,7 @@
     "i18next": "./bin/cli.js"
   },
   "engines": {
-    "node": "^18.0.0 || ^20.0.0 || ^22.0.0",
-    "npm": ">=6",
-    "yarn": ">=1"
+    "node": ">=18"
   },
   "scripts": {
     "coverage": "c8 --all --include='src/**/*[.js|.jsx|.ts|.tsx]' --reporter=lcov --reporter=text yarn test",
