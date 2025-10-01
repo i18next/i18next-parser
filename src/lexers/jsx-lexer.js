@@ -202,12 +202,14 @@ export default class JsxLexer extends JavascriptLexer {
               const useTagName =
                 child.isBasic &&
                 this.transSupportBasicHtmlNodes &&
-                this.transKeepBasicHtmlNodesFor.includes(child.name)
+                this.transKeepBasicHtmlNodesFor.includes(child.name) &&
+                child.children.length <= 1 &&
+                child.children.every((v) => v.type === 'text')
               const elementName = useTagName ? child.name : index
               const childrenString = elemsToString(child.children)
-              return childrenString || !(useTagName && child.selfClosing)
+              return childrenString || !useTagName
                 ? `<${elementName}>${childrenString}</${elementName}>`
-                : `<${elementName} />`
+                : `<${elementName}/>`
             default:
               throw new Error('Unknown parsed content: ' + child.type)
           }
@@ -250,7 +252,6 @@ export default class JsxLexer extends JavascriptLexer {
               : this.parseChildren(child, child.children, sourceText),
             name,
             isBasic,
-            selfClosing: child.kind === ts.SyntaxKind.JsxSelfClosingElement,
           }
         } else if (child.kind === ts.SyntaxKind.JsxExpression) {
           // strip empty expressions
