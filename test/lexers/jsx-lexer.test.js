@@ -43,6 +43,16 @@ describe('JsxLexer', () => {
       done()
     })
 
+    it('ignores the protected React key attribute when defined', (done) => {
+      const Lexer = new JsxLexer()
+      const content =
+        '<Trans key="foo" i18nKey="first" count={count}>Yo</Trans>'
+      assert.deepEqual(Lexer.extract(content), [
+        { key: 'first', defaultValue: 'Yo', count: '{count}' },
+      ])
+      done()
+    })
+
     it('extracts default value from string literal `defaults` prop', (done) => {
       const Lexer = new JsxLexer()
       const content =

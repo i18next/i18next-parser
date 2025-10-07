@@ -15,7 +15,7 @@ export default class JsxLexer extends JavascriptLexer {
       'i',
       'p',
     ]
-    this.omitAttributes = [this.attr, 'ns', 'defaults']
+    this.omitAttributes = [this.attr, 'ns', 'key', 'defaults']
     this.transIdentityFunctionsToIgnore =
       options.transIdentityFunctionsToIgnore || []
   }
