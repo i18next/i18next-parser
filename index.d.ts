@@ -3,6 +3,7 @@ import EventEmitter from 'events'
 export type SupportedLexer =
   | 'HandlebarsLexer'
   | 'HTMLLexer'
+  | 'PhpLexer'
   | 'JavascriptLexer'
   | 'JsxLexer'
 
@@ -24,6 +25,11 @@ export interface HTMLLexerConfig {
   functions?: string[]
   attr?: string
   optionAttr?: string
+}
+
+export interface PhpLexerConfig {
+  lexer: 'PhpLexer'
+  functions?: string[]
 }
 
 export interface JavascriptLexerConfig {
@@ -82,6 +88,7 @@ export interface JsxWithTypesLexerConfig {
 export type LexerConfig =
   | HandlebarsLexerConfig
   | HTMLLexerConfig
+  | PhpLexerConfig
   | JavascriptLexerConfig
   | JavascriptWithTypesLexerConfig
   | JsxLexerConfig
@@ -108,6 +115,7 @@ export interface UserConfig {
     handlebars?: (SupportedLexer | CustomLexer | LexerConfig)[]
     htm?: (SupportedLexer | CustomLexer | LexerConfig)[]
     html?: (SupportedLexer | CustomLexer | LexerConfig)[]
+    php?: (SupportedLexer | CustomLexer | LexerConfig)[]
     mjs?: (SupportedLexer | CustomLexer | LexerConfig)[]
     js?: (SupportedLexer | CustomLexer | LexerConfig)[]
     ts?: (SupportedLexer | CustomLexer | LexerConfig)[]

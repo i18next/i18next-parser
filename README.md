@@ -176,6 +176,7 @@ export default {
 
     htm: ['HTMLLexer'],
     html: ['HTMLLexer'],
+    php: ['PhpLexer'],
 
     mjs: ['JavascriptLexer'],
     js: ['JavascriptLexer'], // if you're writing jsx inside .js files, change this to JsxLexer
@@ -279,7 +280,7 @@ export default {
 The `lexers` option let you configure which Lexer to use for which extension. Here is the default:
 
 Note the presence of a `default` which will catch any extension that is not listed.
-There are 4 lexers available: `HandlebarsLexer`, `HTMLLexer`, `JavascriptLexer` and
+There are 5 lexers available: `HandlebarsLexer`, `HTMLLexer`, `PhpLexer`, `JavascriptLexer` and
 `JsxLexer`. Each has configurations of its own. Typescript is supported via `JavascriptLexer` and `JsxLexer`.
 If you need to change the defaults, you can do it like so:
 
@@ -386,6 +387,18 @@ Typescript is supported via Javascript and Jsx lexers. If you are using Javascri
     lexer: 'HTMLLexer',
     attr: 'data-i18n' // Attribute for the keys
     optionAttr: 'data-i18n-options' // Attribute for the options
+  }]
+}
+```
+
+#### Php
+
+```js
+{
+  // PhpLexer default config (php)
+  php: [{
+    lexer: 'PhpLexer',
+    functions: ['t'], // Array of functions to match
   }]
 }
 ```

@@ -2,6 +2,7 @@ import path from 'path'
 import EventEmitter from 'events'
 import HandlebarsLexer from './lexers/handlebars-lexer.js'
 import HTMLLexer from './lexers/html-lexer.js'
+import PhpLexer from './lexers/php-lexer.js'
 import JavascriptLexer from './lexers/javascript-lexer.js'
 import JsxLexer from './lexers/jsx-lexer.js'
 
@@ -11,6 +12,8 @@ const lexers = {
 
   htm: ['HTMLLexer'],
   html: ['HTMLLexer'],
+
+  php: ['PhpLexer'],
 
   mjs: ['JavascriptLexer'],
   js: ['JavascriptLexer'],
@@ -26,6 +29,7 @@ const lexers = {
 const lexersMap = {
   HandlebarsLexer,
   HTMLLexer,
+  PhpLexer,
   JavascriptLexer,
   JsxLexer,
 }
