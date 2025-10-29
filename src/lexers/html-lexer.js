@@ -7,6 +7,7 @@ export default class HTMLLexer extends BaseLexer {
 
     this.attr = options.attr || 'data-i18n'
     this.optionAttr = options.optionAttr || 'data-i18n-options'
+    this.innerTextDefaultValue = options.innerTextDefaultValue ?? false
   }
 
   extract(content) {
@@ -24,6 +25,17 @@ export default class HTMLLexer extends BaseLexer {
           options = JSON.parse(options)
         } finally {
         }
+      }
+
+      // whether to fill the default value
+      if (
+        (!options || options.defaultValue == undefined) &&
+        that.innerTextDefaultValue &&
+        $node.text()
+      ) {
+        if (!options) options = {}
+        const value = $node.text()
+        options.defaultValue = value
       }
 
       for (let key of keys) {
