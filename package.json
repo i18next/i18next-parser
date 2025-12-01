@@ -33,7 +33,6 @@
     "colors": "^1.4.0",
     "commander": "^12.1.0",
     "eol": "^0.9.1",
-    "esbuild": "^0.25.0",
     "fs-extra": "^11.2.0",
     "gulp-sort": "^2.0.0",
     "i18next": "^23.5.1 || ^24.2.0",
@@ -58,6 +57,7 @@
     "broccoli-funnel": "^3.0.8",
     "c8": "^10.1.2",
     "chai": "^5.1.1",
+    "esbuild": "^0.27.0",
     "execa": "^9.5.2",
     "gulp": "^5.0.0",
     "husky": "^9.1.6",
@@ -66,6 +66,14 @@
     "p-event": "^6.0.1",
     "prettier": "^3.3.3",
     "sinon": "^19.0.2"
+  },
+  "peerDependencies": {
+    "esbuild": "^0.25.0 || ^0.26.0 || ^0.27.0"
+  },
+  "peerDependenciesMeta": {
+    "esbuild": {
+      "optional": true
+    }
   },
   "repository": {
     "type": "git",

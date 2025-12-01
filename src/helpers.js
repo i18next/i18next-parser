@@ -1,5 +1,4 @@
 import { pathToFileURL } from 'url'
-import { build } from 'esbuild'
 import { rmSync } from 'fs'
 import yaml from 'js-yaml'
 import { builtinModules } from 'module'
@@ -286,7 +285,22 @@ async function esConfigLoader(filepath) {
 }
 
 async function tsConfigLoader(filepath) {
+  // Newer Node.js has --experimental-strip-types by default. Try that.
+  try {
+    return await esConfigLoader(filepath)
+  } catch (err) {
+    // Fall through.
+  }
+
   const outfile = filepath + '.bundle.mjs'
+  let build
+  try {
+    ;({ build } = await import('esbuild'))
+  } catch (err) {
+    throw new Error(
+      'esbuild is required to load TypeScript configuration files. Please install it as a peer dependency; e.g.: npm install -D esbuild'
+    )
+  }
   await build({
     absWorkingDir: process.cwd(),
     entryPoints: [filepath],
